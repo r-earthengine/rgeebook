@@ -1,0 +1,42 @@
+Package: advr
+Title: Advanced R
+Version: 1.0.0.9000
+Authors@R: c(
+  person("Hadley", "Wickham", , "hadley@rstudio.com", c("aut", "cre"))
+  )
+URL: https://github.com/hadley/adv-r
+Depends: 
+    R (>= 3.1.0)
+Imports: 
+    bench,
+    dbplyr,
+    emo,
+    ggbeeswarm,
+    ggplot2,
+    lobstr,
+    memoise,
+    profvis,
+    Rcpp,
+    rlang (>= 0.3.0),
+    RSQLite,
+    scales (>= 1.0.0),
+    sloop,
+    testthat,
+    tidyr,
+    vctrs,
+    zeallot
+Suggests:
+    bslib,
+    downlit,
+    bookdown,
+    desc,
+    jsonlite,
+    knitr,
+    png,
+    sessioninfo,
+    xml2
+Remotes: 
+    hadley/emo,
+    rstudio/bookdown,
+    rstudio/bslib,
+    rstudio/rmarkdown
