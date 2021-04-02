@@ -1,6 +1,6 @@
 bookdown::bs4_book:
   theme:
-    primary: "#0089cd"
+    primary: "#101b75"
   repo: https://github.com/r-earthengine/rgeebook
   includes:
     in_header: [ga_script.html]

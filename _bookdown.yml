@@ -10,39 +10,5 @@ rmd_files:
 
     "Foundations.Rmd",
     "Names-values.Rmd",
-    "Vectors.Rmd",
-    "Subsetting.Rmd",
-    "Control-flow.Rmd",
-    "Functions.Rmd",
-    "Environments.Rmd",
-    "Conditions.Rmd",
-#    "Connections.Rmd",
-
-    "FP.Rmd",
-    "Functionals.Rmd",
-    "Function-factories.Rmd",
-    "Function-operators.Rmd",
-
-    "OO.Rmd",
-    "base-types.Rmd",
-    "S3.Rmd",
-    "R6.Rmd",
-    "S4.Rmd",
-    "OO-tradeoffs.Rmd",
-
-    "Meta.Rmd",
-    "Big-picture.Rmd",
-    "Expressions.Rmd",
-    "Quotation.Rmd",
-    "Evaluation.Rmd",
-    "Translation.Rmd",
-
-    "Techniques.Rmd",
-    "Debugging.Rmd",
-    "Perf-measure.Rmd",
-    "Perf-improve.Rmd",
-    "Rcpp.Rmd",
-
-    "References.Rmd",
   ]
 
