@@ -6,10 +6,12 @@
 #header .title {
   margin-bottom: 0em;
 }
+
 #header h4.author {
   margin: 0;
   color: #666;
 }
+
 #header h4.author em {
   font-style: normal;
 }
@@ -72,3 +74,4 @@ div.base::before,
 .book .book-body .page-wrapper .page-inner section.normal code {
   padding: 2px 0;
 }
+

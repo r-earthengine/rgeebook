@@ -1,5 +1,5 @@
 ---
-title: "Google Earth Engine with R"
+title: "Earth Engine with R"
 author: "rgee team"
 site: bookdown::bookdown_site
 
