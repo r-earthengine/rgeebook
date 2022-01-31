@@ -12,5 +12,6 @@ rmd_files:
     "chapters/04_concepts.Rmd",
 
     'chapters/05_object_methods.Rmd',
+    'chapters/06_machi_lear.Rmd',
   ]
 
