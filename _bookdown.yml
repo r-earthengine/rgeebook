@@ -5,10 +5,12 @@ rmd_files:
   [
     "index.Rmd",
 
-    "chapters/get_started.Rmd",
-    "chapters/dev_env.Rmd",
+    "chapters/01_get_started.Rmd",
+    "chapters/02_dev_env.Rmd",
 
-    "chapters/api_tutorials.Rmd",
-    "chapters/concepts.Rmd",
+    "chapters/03_api_tutorials.Rmd",
+    "chapters/04_concepts.Rmd",
+
+    'chapters/05_object_methods.Rmd',
   ]
 
