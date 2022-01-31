@@ -5,10 +5,10 @@ rmd_files:
   [
     "index.Rmd",
 
-    "Preface.Rmd",
-    "Introduction.Rmd",
+    "chapters/get_started.Rmd",
+    "chapters/dev_env.Rmd",
 
-    "Foundations.Rmd",
-    "Names-values.Rmd",
+    "chapters/api_tutorials.Rmd",
+    "chapters/concepts.Rmd",
   ]
 
