@@ -5,6 +5,8 @@ rmd_files:
   [
     "index.Rmd",
 
+    'chapters/00_r_gui.Rmd',
+
     "chapters/01_get_started.Rmd",
     "chapters/02_dev_env.Rmd",
 
