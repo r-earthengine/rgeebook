@@ -15,5 +15,11 @@ rmd_files:
 
     'chapters/05_object_methods.Rmd',
     'chapters/06_machi_lear.Rmd',
+
+    'chapters/07_apps_user.Rmd',
+    'chapters/08_spe_algor.Rmd',
+
+    'chapters/09_asset_manag.Rmd',
+    'chapters/10_cust_appl.Rmd',
   ]
 
