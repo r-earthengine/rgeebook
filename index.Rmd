@@ -12,33 +12,52 @@ suppress-bibliography: true
 
 # Welcome {-}
 
-<a href="https://cran.r-project.org/web/packages/rgee/index.html"><img src="cover_rgeebook.png" width="250" height="400" class="cover" alt="cran's link" /></a>  __"[rgee](https://cran.r-project.org/web/packages/rgee/index.html)"__ is a binding package for calling Google Earth Engine API from within R. Additionally, several functions have been implemented to make simple the connection with the R spatial ecosystem.
+This is the official website for the book [Earth Engine with R](). The book is 
+intended for R users who wish to learn how to use R and [Google Earth Engine](https://earthengine.google.com/) together. There is a full overview of 
+the GEE API functionality, multiple real-world applications, and a detailed description 
+of all [rgee](https://github.com/r-spatial/rgee) and [rgeeExtra](https://github.com/r-earthengine/rgeeExtra/) features. The majority
+of the examples are directly adapted from the original  [Earth Engine documentation](https://developers.google.com/earth-engine/guides) and rebuilt in R.
 
-Google Earth Engine is a cloud-based platform that allows users to have an easy access to a petabyte-scale archive of remote sensing data and run geospatial analysis on Google's infrastructure. Currently, Google offers support only for Python and JavaScript. rgee will fill the gap starting to provide support to R!. 
+<center>
+<br>
+  <a href="https://github.com/r-spatial/rgee/"><img src="https://user-images.githubusercontent.com/16768318/118376965-5f7dca80-b5cb-11eb-9a82-47876680a3e6.png" alt="Markdownify" width="200"></a>
+  <a href="https://github.com/r-earthengine/rgeeExtra/"><img src="https://user-images.githubusercontent.com/16768318/118376968-63a9e800-b5cb-11eb-83e7-3f36299e17cb.png" alt="Markdownify" width="200"></a>
+  <a href="https://github.com/r-earthengine/rgeebook/"><img src="https://user-images.githubusercontent.com/16768318/118376966-60aef780-b5cb-11eb-8df2-ca70dcfe04c5.png" alt="Markdownify" width="200"></a>
+<br>
+</center>
 
-If you want to collaborate with the development and support of this package, you can enter the following link <https://www.buymeacoffee.com/csay>.
+<br>
+**If you find the book useful, please support it by**:
+
+- Starring [rgee](https://github.com/r-spatial/rgee), [rgeeExtra](https://github.com/r-earthengine/rgeeExtra), or [rgeebook](https://github.com/r-earthengine/rgeebook) GitHub repositories.
+- Communicating about the book in digital media, e.g., via Twitter.
+- Asking questions about, making suggestions, or even better, proposing a PR on Github.
+
+<br>
+This book was written by [Junior Calvo](https://github.com/junior0428), [Fernando Herrera](https://github.com/ferherreraq), [Karen Gonzales](https://github.com/andrea29-star), and [Cesar Aybar](https://github.com/csaybar). We gratefully acknowledge financial support from the 
+
+<a href="https://www.r-consortium.org/">
+<img src="https://www.r-consortium.org/wp-content/uploads/sites/13/2016/09/RConsortium_Horizontal_Pantone.png" alt="Markdownify" width="200">
+</a>
+
 
 ## License {-}
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
 
-This work, as a whole, is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
-
-The code contained in this book is simultaneously available under the [MIT license](https://opensource.org/licenses/MIT); this means that you are free to use it in your own packages, as long as you cite the source.
+This work is licensed under the <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
 ## Other books {-}
 
 You may also be interested in:
 
-* __"[Advanced R Solutions](http://advanced-r-solutions.rbind.io)"__ by
-  Malte Grosser and Henning Bumann, provides worked solutions to the exercises
-  in this book.
+* __"[Advanced R](https://adv-r.hadley.nz/)"__ by Hadley Wickham, provides a profound
+description of R syntax. **This book uses its template.**
 
-* __"[R for Data Science](http://r4ds.had.co.nz/)"__ which introduces you to R 
-  as a tool for doing data science, focussing on a consistent
-  set of packages known as the tidyverse.
+* __"[Geocomputation with R](https://geocompr.robinlovelace.net/)"__ by Robin Lovelace, Jakub Nowosad, and Jannes Muenchow, introduces R for manipulating and visualizing geographic data.
 
-* __"[R Packages](http://r-pkgs.had.co.nz/)"__ which teaches you 
-  how to make the most of R's fantastic package system.
+* __"[Spatial Data Science](https://keen-swartz-3146c4.netlify.app/)"__ by Edzer Pebesma and Roger Bivand, is another excellent great resource for geographic data but focused on analysis.
+
+* __"[R for Data Science](http://r4ds.had.co.nz/)"__ by Hadley Wickham and Garrett Grolemund, introduces you to R as a data science tool, with a particular emphasis on the tidyverse package.
 
 `r if (knitr::is_latex_output()) '-->'`
