@@ -44,54 +44,74 @@ The **Classifier** package handles supervised classification by traditional ML a
 library(vembedr)
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+<center>
 ```{r, echo=FALSE}
 embed_youtube("NPplRtH2N94")
 ```
+</center>
+
 The training data is a **FeatureCollection** with a property storing the class label and properties storing predictor variables. Class labels should be consecutive, integers starting from 0. If necessary, use **remap()** to convert class values to consecutive integers. The predictors should be numeric.
 
 Training and/or validation data can come from a variety of sources. To collect training data interactively in Earth Engine, you can use the geometry drawing tools (see the [geometry tools section of the Code Editor page](https://developers.google.com/earth-engine/guides/playground#geometry-tools)). Alternatively, you can import predefined training data from an Earth Engine table asset (see the [Importing Table Data page](https://developers.google.com/earth-engine/guides/table_upload) for details). Get a classifier from one of the constructors in **ee.Classifier**. Train the classifier using **classifier.train()**. Classify an **Image** or **FeatureCollection** using **classify()**. The following example uses a Classification and Regression Trees (CART) classifier ([Breiman et al. 1984](https://books.google.com/books?id=JwQx-WOmSyQC)) to predict three simple classes:
 
 ```{r, eval=FALSE}
 library(rgee)
-ee_Initialize('usename')
-# Make a cloud-free Landsat 8 TOA composite (from raw imagery).
-l8 <-  ee$ImageCollection('LANDSAT/LC08/C01/T1')
 
-image <- ee$Algorithms$Landsat$simpleComposite(list(
-  collection = l8$filterDate('2018-01-01', '2018-12-31'), 
-  asFloat=TRUE
-))
+ee_Initialize()
+
+# Make a cloud-free Landsat 8 TOA composite (from raw imagery).
+l8 <- ee$ImageCollection("LANDSAT/LC08/C01/T1")
+
+image <- ee$Algorithms$Landsat$simpleComposite(
+  collection = l8$filterDate("2018-01-01", "2018-12-31"),
+  asFloat = TRUE
+)
 
 # Use these bands for prediction.
-bands <- c('B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B10', 'B11')
+bands <- c("B2", "B3", "B4", "B5", "B6", "B7", "B10", "B11")
 
-#Load training points. The numeric property 'class' stores known labels.
-points <-  ee$FeatureCollection('GOOGLE/EE/DEMOS/demo_landcover_labels')
+# Load training points. The numeric property 'class' stores known labels.
+points <- ee$FeatureCollection("GOOGLE/EE/DEMOS/demo_landcover_labels")
 
-#This property stores the land cover labels as consecutive
-#integers starting from zero. 
-label <-  'landcover'
+# This property stores the land cover labels as consecutive
+# integers starting from zero.
+label <- "landcover"
 
-#Overlay the points on the imagery to get training.
-training <- image$select(bands)$sampleRegions(list(
-  collection = points, 
-  properties = c(label), 
+# Overlay the points on the imagery to get training.
+training <- image$select(bands)$sampleRegions(
+  collection = points,
+  properties = list(label),
   scale = 30
-))
+)
 
-#Train a CART classifier with default parameters.
+# Train a CART classifier with default parameters.
 trained <- ee$Classifier$smileCart()$train(training, label, bands)
 
-#Classify the image with the same bands used for training.
+# Classify the image with the same bands used for training.
 classified <- image$select(bands)$classify(trained)
 
-#Display the inputs and the results.
-Map$centerObject(points, 11)
-Map$addLayer(image, list(bands = c('B4', 'B3', 'B2'), max = 0.4), 'image')
-Map$addLayer(classified,
-             list(min = 0, max = 2, palette = c('red', 'green', 'blue')),
-             'classification');
+# Display the inputs and the results.
+Map <- R6Map$new()
+Map$centerObject(points$geometry(), 11)
+Map$addLayer(
+  eeObject = image,
+  visParams = list(bands = c("B4", "B3", "B2"), max = 0.4),
+  name = "image",
+  position = "right"
+)
+Map$addLayer(
+  eeObject = classified,
+  visParams = list(min = 0, max = 2, palette = c("red", "green", "blue")),
+  name = "classification",
+  position = "left"
+)
+Map
 ```
+
+<center>
+<img src="./images/chapter_06/figure_01.png" width=95%>
+</center>
 
 # Unsupervised Classification Algorithms 
 
