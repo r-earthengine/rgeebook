@@ -7,12 +7,91 @@ source("common.R")
 
 # Overview of ML in Earth Engine
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+## Machine Learning in Earth Engine
 
+Machine Learning (ML) in Earth Engine is supported with:
+
+  - EE API methods in the **ee.Classifier**, **ee.Clusterer**, or **ee.Reducer** packages for training and inference within Earth Engine.
+  - Export and import functions for TFRecord files to facilitate TensorFlow model development. Inference using data in Earth Engine and a trained model hosted on Google's AI Platform is supported with the **ee.Model** package.
+
+### EE API methods
+
+Training and inference using ee.Classifier or ee.Clusterer is generally effective up to a request size of approximately 100 megabytes. As a very rough guideline, assuming 32-bit (i.e. float) precision, this can accommodate training datasets that satisfy (where n is number of examples and b is the number of bands):
+$$ nb ≤ (100 * 2^{20}) / 4 $$
+
+This is only an approximate guideline due to additional overhead around the request, but note that for $b = 100$ (i.e. you have 100 properties used for prediction), $n ≅ 200,000$. Since Earth Engine processes 256x256 image tiles, inference requests on imagery must have $b < 400$ (again assuming 32-bit precision of the imagery). Examples of machine learning using the Earth Engine API can be found on the [Supervised Classification](https://developers.google.com/earth-engine/guides/classification) page or the [Unsupervised Classification](https://developers.google.com/earth-engine/guides/clustering) page. Regression is generally performed with an **ee.Reducer** as described on [this page](https://developers.google.com/earth-engine/guides/reducers_regression), but see also **ee.Reducer.RidgeRegression**.
+
+### TensorFlow
+If you require more complex models, larger training datasets, more input properties or longer training times, then [TensorFlow](https://www.tensorflow.org/) is a better option. TensorFlow models are developed, trained and deployed outside Earth Engine. For easier interoperability, the Earth Engine API provides methods to import/export data in [TFRecord](https://www.tensorflow.org/tutorials/load_data/tf_records#tfrecords_format_details) format. This facilitates generating training/evaluation data in Earth Engine and exporting them to a format where they can be readily consumed by a TensorFlow model. To perform prediction with a trained TensorFlow model, you can either export imagery in TFRecord format then import the predictions (also in TFRecord) to Earth Engine, or you can [deploy your trained model to Google AI Platform](https://cloud.google.com/ml-engine/docs/deploying-models) and perform inference directly in Earth Engine using **ee.Model.fromAiPlatformPredictor**.
+
+See [the TensorFlow page](https://developers.google.com/earth-engine/guides/tensorflow) for details and example workflows.
 
 # Supervised Classification Algorithms
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+The **Classifier** package handles supervised classification by traditional ML algorithms running in Earth Engine. These classifiers include CART, RandomForest, NaiveBayes and SVM. The general workflow for classification is:
+
+  1. Collect training data. Assemble features which have a property that stores the known class label and properties storing numeric values for the predictors.
+  
+  2. Instantiate a classifier. Set its parameters if necessary.
+  
+  3. Train the classifier using the training data.
+  
+  4. Classify an image or feature collection.
+  
+  5. Estimate classification error with independent validation data.
+  
+```{r setup, include=FALSE}
+library(vembedr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r, echo=FALSE}
+embed_youtube("NPplRtH2N94")
+```
+The training data is a **FeatureCollection** with a property storing the class label and properties storing predictor variables. Class labels should be consecutive, integers starting from 0. If necessary, use **remap()** to convert class values to consecutive integers. The predictors should be numeric.
+
+Training and/or validation data can come from a variety of sources. To collect training data interactively in Earth Engine, you can use the geometry drawing tools (see the [geometry tools section of the Code Editor page](https://developers.google.com/earth-engine/guides/playground#geometry-tools)). Alternatively, you can import predefined training data from an Earth Engine table asset (see the [Importing Table Data page](https://developers.google.com/earth-engine/guides/table_upload) for details). Get a classifier from one of the constructors in **ee.Classifier**. Train the classifier using **classifier.train()**. Classify an **Image** or **FeatureCollection** using **classify()**. The following example uses a Classification and Regression Trees (CART) classifier ([Breiman et al. 1984](https://books.google.com/books?id=JwQx-WOmSyQC)) to predict three simple classes:
+
+```{r, eval=FALSE}
+library(rgee)
+ee_Initialize('usename')
+# Make a cloud-free Landsat 8 TOA composite (from raw imagery).
+l8 <-  ee$ImageCollection('LANDSAT/LC08/C01/T1')
+
+image <- ee$Algorithms$Landsat$simpleComposite(list(
+  collection = l8$filterDate('2018-01-01', '2018-12-31'), 
+  asFloat=TRUE
+))
+
+# Use these bands for prediction.
+bands <- c('B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B10', 'B11')
+
+#Load training points. The numeric property 'class' stores known labels.
+points <-  ee$FeatureCollection('GOOGLE/EE/DEMOS/demo_landcover_labels')
+
+#This property stores the land cover labels as consecutive
+#integers starting from zero. 
+label <-  'landcover'
+
+#Overlay the points on the imagery to get training.
+training <- image$select(bands)$sampleRegions(list(
+  collection = points, 
+  properties = c(label), 
+  scale = 30
+))
+
+#Train a CART classifier with default parameters.
+trained <- ee$Classifier$smileCart()$train(training, label, bands)
+
+#Classify the image with the same bands used for training.
+classified <- image$select(bands)$classify(trained)
+
+#Display the inputs and the results.
+Map$centerObject(points, 11)
+Map$addLayer(image, list(bands = c('B4', 'B3', 'B2'), max = 0.4), 'image')
+Map$addLayer(classified,
+             list(min = 0, max = 2, palette = c('red', 'green', 'blue')),
+             'classification');
+```
 
 # Unsupervised Classification Algorithms 
 
