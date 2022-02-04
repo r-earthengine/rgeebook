@@ -5,7 +5,7 @@ source("common.R")
 ```
 
 
-# Javascript Quickstart
+# R Quickstart
 
 ## SFSF {.unnumbered}
 
