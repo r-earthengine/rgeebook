@@ -2,10 +2,9 @@
 title: "Earth Engine with R"
 author: "rgee team"
 site: bookdown::bookdown_site
-
 bibliography: book.bib
 csl: chicago-fullnote-bibliography.csl
-suppress-bibliography: true
+suppress-bibliography: yes
 ---
 
 `r if (knitr::is_latex_output()) '<!--'` 
@@ -39,7 +38,7 @@ This book was written by [Junior Calvo](https://github.com/junior0428), [Fernand
 <a href="https://www.r-consortium.org/">
 <img src="https://www.r-consortium.org/wp-content/uploads/sites/13/2016/09/RConsortium_Horizontal_Pantone.png" alt="Markdownify" width="200">
 </a>
-
+  
 
 ## License {-}
 

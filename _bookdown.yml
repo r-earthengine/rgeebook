@@ -1,4 +1,4 @@
-new_session: yes
+new_session: no
 delete_merged_file: yes
 
 rmd_files:
