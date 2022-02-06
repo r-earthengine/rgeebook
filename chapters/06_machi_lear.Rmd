@@ -5,16 +5,16 @@ source("common.R")
 ```
 
 
-# Overview of ML in Earth Engine
+# Overview of ML in Earth Engine {-}
 
-## Machine Learning in Earth Engine
+## Machine Learning in Earth Engine {-}
 
 Machine Learning (ML) in Earth Engine is supported with:
 
   - EE API methods in the __ee$Classifier__, __ee$Clusterer__, or __ee$Reducer__ packages for training and inference within Earth Engine.
   - Export and import functions for TFRecord files to facilitate TensorFlow model development. Inference using data in Earth Engine and a trained model hosted on Google's AI Platform is supported with the __ee$Model__ package.
 
-### EE API methods
+### EE API methods  {-}
 
 Training and inference using ee.Classifier or ee.Clusterer is generally effective up to a request size of approximately 100 megabytes. As a very rough guideline, assuming 32-bit (i.e. float) precision, this can accommodate training datasets that satisfy (where n is number of examples and b is the number of bands):
 $$ nb ≤ (100 * 2^{20}) / 4 $$
