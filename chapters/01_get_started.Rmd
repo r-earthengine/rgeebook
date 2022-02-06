@@ -6,7 +6,11 @@ source("common.R")
 
 # R Quickstart
 
+<<<<<<< HEAD
 ## Get Started with Earth Engine {-}
+=======
+# R Quickstart
+>>>>>>> master
 
 This Get Started guide is intended as a quick way to start programming with the Earth Engine in R API. For an introductory look at R and more in-depth exercises with the Earth Engine API, see the [tutorials]( ). For recommended R coding style, see the [R Style Guide]( ).
 
