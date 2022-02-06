@@ -121,6 +121,309 @@ Since this is a collection of many images spanning the Earth land surface, findi
 
 Feature collections are also available through the Data Catalog. Their representation is smaller than image collections, but you will find international, census, watershed, and protected areas boundaries, to name a few. Learn more about importing your own vector datasets [here]().
 
+## Filtering and Sorting {-}
+
+It is often necessary to filter a collection by space and/or time in order to limit the number of results. For example, consider the task of sorting the Landsat 8 scene collection in order to find a cloud-free scene for San Francisco. First, it’s necessary to define the region of interest. A point is often useful for that. Activate the **Inspector** tab on the right side of the Code Editor and click near the center of your area of interest, copy the coordinates from the **Inspector** tab, then construct a `Point` using:
+
+```{r, eval=FALSE}
+point <- ee$Geometry.Point(-122.262, 37.8719)
+```
+
+Construct start and end dates:
+
+```{r, eval=FALSE}
+start <- ee$Date('2014-06-01')
+finish <- ee$Date('2014-10-01')
+```
+
+Filter the Landsat 8 collection using the point and the dates, then sort using a metadata property (discovered during inspection of the Landsat 8 scene metadata):
+
+```{r, eval=FALSE}
+filteredCollection <- ee$ImageCollection("LANDSAT/LC08/C01/T1")$
+  filterDate(start, finish)$
+  filterBounds(point)$
+  sort('CLOUD_cOVER')
+
+```
+
+This collection can be safely printed and inspected. (If the collection has too many images, printing it will either be very slow, time out, or return an error). Observe that the images in the collection are a `List` stored in the ‘features’ property of the `ImageCollection`. The ID of any image in the collection can be copied into the `Image` constructor as above. Alternatively, get the first image (lowest cloud cover):
+
+```{r, eval=FALSE}
+first <- filteredCollection$first()
+
+```
+
+Access the complete Earth Engine filtering functionality using `filter()` with an `ee$Filter` as the argument. (The `filterBounds()` and `filterDate()` methods used above are shortcuts). For example, the following creates a `Filter`, uses it to filter a `FeatureCollection` and displays the result:
+
+```{r, eval=FALSE}
+## Load a feature collection.
+featureCollection = ee$FeatureCollection('TIGER/2016/States')
+
+## Filter the collection.
+filteredFC = featureCollection$filter(ee$Filter$eq('NAME', 'California'))
+
+## Display the collection.
+Map$addLayer(filteredFC, {}, 'California')
+
+```
+
+## Band math {-}
+
+Perform mathematical operations on images using `Image` methods. This may include band recombinations (spectral indices), image differencing or mathematical operations such as multiplication by a constant. For example, compute the difference between Normalized Difference Vegetation Index (NDVI) images 20 years apart:
+
+```{r, eval=FALSE}
+## This function gets NDVI from Landsat 5 imagery.
+getNDVI <- function(image) {
+  return(image$normalizedDifference('B4', 'B3'))
+}
+
+## Load two Landsat 5 images, 20 years apart.
+image1 = ee$Image('LANDSAT/LT05/C01/T1_TOA/LT05_044034_19900604')
+image2 = ee$Image('LANDSAT/LT05/C01/T1_TOA/LT05_044034_20100611')
+
+## Compute NDVI from the scenes.
+ndvi1 = getNDVI(image1)
+ndvi2 = getNDVI(image2)
+
+## Compute the difference in NDVI.
+ndviDifference = ndvi2$subtract(ndvi1)
+
+```
+
+Notice the use of a user defined `function` in this example. More on functions in the next section.
+
+## Mapping (what to do instead of a for-loop) {-}
+
+Use `map()` to iterate over items in a collection. (For loops are NOT the right way to do that in Earth Engine and should be avoided). The `map()` function can be applied to an `ImageCollection`, a `FeatureCollection` or a `List` and accepts a function as its argument. The argument of the function is an element of the collection over which it is mapped. This is useful for modifying every element of the collection in the same way, for example adding. For example, the following code adds an NDVI band to every image in an `ImageCollection`:
+
+```{r, eval=FALSE}
+## This function gets NDVI from Landsat 8 imagery.
+addNDVI <- function(image) {
+  return(image$addBands(image$normalizedDifference('B5', 'B4')))
+}
+
+## Load the Landsat 8 raw data, filter by location and date.
+collection <- ee$ImageCollection('LANDSAT/LC08/C01/T1')$
+  filterBounds(ee$Geometry$Point(-122.262, 37.8719))$
+  filterDate('2014-06-01', '2014-10-01');
+
+## Map the function over the collection.
+ndviCollection = collection$map(addNDVI)
+
+```
+
+Another common task is adding a new property (or ‘attribute’ or ‘field’) to features in a `FeatureCollection`. In the following example, the new property is a computation involving two existing attributes:
+
+```{r, eval=FALSE}
+## This function creates a new property that is the sum of two existing properties.
+addField <- function(feature) {
+  sum <- ee.Number(feature$get('property1'))$add(feature$get('property2'))
+  return(feature$set('sum': sum))
+}
+
+## Create a FeatureCollection from a list of Features.
+features <- ee$FeatureCollection(c(
+  ee$Feature(ee$Geometry$Point(-122.4536, 37.7403),
+    list(property1 = 100, property2 = 100)),
+  ee$Feature(ee$Geometry$Point(-118.2294, 34.039),
+    list(property1 = 200, property2 = 200))
+))
+## Map the function over the collection.
+featureCollection <- features$map(addField)
+
+## Print a selected property of one Feature.
+print(featureCollection$first()$get('sum')$getInfo())
+
+## Print the entire FeatureCollection.
+print(featureCollection)
+```
+
+Note the cast to `ee.Number` required for the property value to be recognized as a number in order to use the `add()` method). The type of the collection can be changed by `map()`. For example:
+
+```{r, eval=FALSE}
+## This function returns the image centroid as a new Feature.
+getGeom <- function(image) {
+  return(ee$Feature(image$geometry()$centroid(), {foo: 1}))
+}
+
+## Load a Landsat 8 collection.
+collection <- ee$ImageCollection('LANDSAT/LC08/C01/T1')$
+  filterBounds(ee$Geometry$Point(-122.262, 37.8719))$
+  filterDate('2014-06-01', '2014-10-01')
+
+## Map the function over the ImageCollection.
+featureCollection <- ee$FeatureCollection(collection$map(getGeom))
+
+## Print the collection.
+print(featureCollection)
+```
+Note the added property (`foo`) for each feature created from the image centroid. In the final line, the cast makes the resultant collection recognizable as a `FeatureCollection`.
+
+## Reducing {-}
+
+Reducing is the way to aggregate data over time, space, bands, arrays and other data structures in Earth Engine. Various methods exist for this purpose in the API. For example, to make a composite of an `ImageCollection`, use `reduce()` to reduce the images in the collection to one Image. A simple example is creating the median composite of the five least cloudy scenes in the Landsat 8 collection defined earlier:
+
+```{r, eval=FALSE}
+## Load a Landsat 8 collection.
+collection <- ee.ImageCollection('LANDSAT/LC08/C01/T1')$
+  ## Filter by date and location.
+  filterBounds(ee.Geometry.Point(-122.262, 37.8719))$
+  filterDate('2014-01-01', '2014-12-31')$
+  ## Sort by increasing cloudiness.
+  sort('CLOUD_COVER')
+
+## Compute the median of each pixel for each band of the 5 least cloudy scenes.
+median <- collection$limit(5)$reduce(ee$Reducer$median())
+```
+
+Reducing is also the way to get statistics of an image in the regions defined by a `Feature` or `FeatureCollection`. Suppose the task is to compute the mean pixel values within an area of interest. Use `reduceRegion()` for this purpose. For example:
+
+```{r, eval=FALSE}
+## Load and display a Landsat TOA image.
+image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
+Map$addLayer(image,
+             visParams = list(bands = c("B4", "B3", "B2"),
+                              max = 0.5
+             )
+
+## Create an arbitrary rectangle as a region and display it.
+region <- ee$Geometry$Rectangle(-122.2806, 37.1209, -122.0554, 37.2413)
+Map$addLayer(region)
+
+## Get a dictionary of means in the region.  Keys are bandnames.
+mean <- image$reduceRegion((
+  reducer = ee$Reducer.mean(),
+  geometry = region,
+  scale = 30
+))
+```
+
+Learn more about reducers from the [Reducers doc]().
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Coding Best Practices
 
