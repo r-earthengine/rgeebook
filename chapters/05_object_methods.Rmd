@@ -11,7 +11,190 @@ To start your journey in mastering R, the following six chapters will help you l
 
 # Image
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+## Image Overview {-}
+
+As mentioned in the [Get Started]() doc, raster data are represented as Image objects in Earth Engine. Images are composed of one or more bands and each band has its own name, data type, scale, mask and projection. Each image has metadata stored as a set of properties.
+
+### `ee$Image` constructor {-}
+
+Images can be loaded by pasting an Earth Engine asset ID into the `ee$Image` constructor. You can find image IDs in the [data catalog](https://developers.google.com/earth-engine/datasets). For example, to load [JAXA's ALOS DSM](https://developers.google.com/earth-engine/datasets/catalog/JAXA_ALOS_AW3D30_V3_2):
+
+```{r, eval=FALSE}
+loadedImage <- ee$Image('JAXA/ALOS/AW3D30/V2_2')
+```
+
+Note that finding an image through the Code Editor search tool is equivalent. When you import the asset, the image construction code is written for you in the imports section of the Code Editor. You can also use a personal asset ID as shown in this doc.
+
+### Get an `ee$Image` from an `ee$ImageCollection` {-}
+
+The standard way to get an image out of a collection is to filter the collection, with filters in order of decreasing specificity. For example, to get an image out of the [Sentinel-2 surface reflectance collection](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR):
+
+```{r, eval=FALSE}
+first <- ee$ImageCollection('COPERNICUS/S2_SR')$
+  filterBounds(ee$Geometry$Point(-70.48, 43.3631))$
+  filterDate('2019-01-01', '2019-12-31')$
+  sort('CLOUDY_PIXEL_PERCENTAGE')$
+  first()
+vizParams <- list(bands = c('B4', 'B3', 'B2'),
+                  min = 0, 
+                  max = 2000)
+Map$centerObject(first, 11);
+Map$addLayer(first, vizParams, 'first')
+```
+
+Note that the `sort` is *after* the filters. Avoid sorting the entire collection.
+
+### Images from Cloud GeoTIFFs {-}
+
+You can use `ee$Image$loadGeoTIFF()` to load images from Cloud Optimized GeoTIFFs in Google Cloud Storage. For example, the [public Landsat dataset](https://console.cloud.google.com/marketplace/details/usgs-public-data/landast) hosted in Google Cloud contains [this GeoTIFF](https://console.cloud.google.com/storage/browser/_details/gcp-public-data-landsat/LC08/01/001/002/LC08_L1GT_001002_20160817_20170322_01_T2/LC08_L1GT_001002_20160817_20170322_01_T2_B5.TIF), corresponding to band 5 from a Landsat 8 scene. You can load this image from Cloud Storage using `ee$Image$loadGeoTIFF()`:
+
+```{r, eval=FALSE}
+uri <- 'gs://gcp-public-data-landsat/LC08/01/001/002/' +
+    'LC08_L1GT_001002_20160817_20170322_01_T2/' +
+    'LC08_L1GT_001002_20160817_20170322_01_T2_B5.TIF'
+cloudImage <- ee$Image$loadGeoTIFF(uri)
+print(cloudImage)
+```
+
+Note that if you want to reload a Cloud Optimized GeoTIFF that you [export from Earth Engine to Cloud Storage](), when you do the export, set `cloudOptimized` to **true** as described [here]().
+
+### Constant images {-}
+
+In addition to loading images by ID, you can also create images from constants, lists or other suitable Earth Engine objects. The following illustrates methods for creating images, getting band subsets, and manipulating bands:
+
+```{r, eval=FALSE}
+## Create a constant image.
+image1 <- ee$Image(1)
+print(image1)
+
+## Concatenate two images into one multi-band image.
+image2 <- ee$Image(2)
+image3 <- ee$Image$cat(c(image1, image2))
+print(image3)
+
+## Create a multi-band image from a list of constants.
+multiband <- ee$Image(c(1, 2, 3))
+print(multiband)
+
+## Select and (optionally) rename bands.
+renamed = multiband$select(
+  c('constant', 'constant_1', 'constant_2'), ## old names
+  c('band1', 'band2', 'band3')               ## new names
+)
+print(renamed)
+
+## Add bands to an image.
+image4 <- image3$addBands(ee$Image(42));
+print(image4)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Image Visualization {-}
+
+The are a number of `ee$Image` methods that produce RGB visual representations of image data, for example: `visualize()`, `getThumbURL()`, `getMap()`, `getMapId()` (used in Colab Folium map display) and, `Map$addLayer()` (used in Code Editor map display, not available for Python). By default these methods assign the first three bands to red, green and blue, respectively. The default stretch is based on the type of data in the bands (e.g. floats are stretched in [0, 1], 16-bit data are stretched to the full range of possible values), which may or may not be suitable. To achieve desired visualization effects, you can provide visualization parameters:
+
+| Parameter| Description | Type | 
+|--|:--|--|
+| *bands* |Comma-delimited list of three band names to be mapped to RGB| list    |
+| *min*  | Value(s) to map to 0       | number or list of three numbers, one for each band    | 
+| *max*   | Value(s) to map to 255 | number or list of three numbers, one for each band       | 
+| *gain*  | Value(s) by which to multiply each pixel value|number or list of three numbers, one for each band | 
+| *bias*  | Value(s) to add to each DN  | number or list of three numbers, one for each band  | 
+| *gamma* | Gamma correction factor(s)  |number or list of three numbers, one for each band   | 
+| *palette* | 	List of CSS-style color strings (single-band images only)  | comma-separated list of hex strings|
+| *opacity* | The opacity of the layer (0.0 is fully transparent and 1.0 is fully opaque)| number |
+| *format*  | Either "jpg" or "png"  | string |
+
+
+### RGB composites {-}    
+
+The following illustrates the use of parameters to style a Landsat 8 image as a false-color composite:
+
+```{r, eval=FALSE}
+## Load an image.
+image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
+
+## Define the visualization parameters.
+vizParams <- list(bands = c('B5', 'B4', 'B3'),
+  min = 0,
+  max = 0.5,
+  gamma = c(0.95, 1.1, 1)
+)
+## Center the map and display the image.
+Map$setCenter(-122.1899, 37.5010, 10); ## San Francisco Bay
+Map$addLayer(image, vizParams, 'false color composite')
+```
+
+In this example, band `'B5'` is assigned to red, `'B4'` is assigned to green, and `'B3'` is assigned to blue.
+<center>
+![Figure 1. Landsat 8 false color composite of San Francisco bay area, California, USA.](F:/rgeebook/images/chapter_05/figure_01.png){width=670px}
+
+
+
+
+### Color palettes {-}
+
+To display a single band of an image in color, set the palette parameter with a color ramp represented by a list of CSS-style color strings. (See this reference for more information). The following example illustrates how to use colors from cyan ('00FFFF') to blue ('0000FF') to render a Normalized Difference Water Index (NDWI) image:
+
+```{r, eval=FALSE}
+## Load an image.
+image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
+
+## Create an NDWI image, define visualization parameters and display.
+ndwi <- image$normalizedDifference(c('B3', 'B5'))
+ndwiViz <- list(
+  min = 0.5, 
+  max = 1, 
+  palette = c('00FFFF', '0000FF')
+)
+Map$addLayer(ndwi, ndwiViz, 'NDWI')
+```
+
+In this example, note that the min and max parameters indicate the range of pixel values to which the palette should be applied. Intermediate values are linearly stretched.
+
+<center>
+![Figure 2. Landsat 8 NDWI, San Francisco bay area, USA. Cyan are low values, blue are high values.](F:/rgeebook/images/chapter_05/figure_02.png){width=670px}
 
 # ImageCollection
 

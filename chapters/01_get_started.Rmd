@@ -88,10 +88,10 @@ The second parameter of `Map$centerObject()` is a zoom level, where higher numbe
 image <- ee$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')
 
 ## Define visualization parameters in an object literal.
-vizParams <- list(bands = 'B5', 'B4', 'B3',
-                  min: 5000, 
-                  max: 15000, 
-                  gamma: 1.3)
+vizParams <- list(bands = c('B5', 'B4', 'B3'),
+                  min = 5000, 
+                  max = 15000, 
+                  gamma = 1.3)
 
 ## Center the map on the image and display.
 Map$centerObject(image, 9)
@@ -386,120 +386,6 @@ mean$get('nd_mean')$evaluate(function(val){
   print('Santa Clara spring mean NDVI:', val)
 })
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # Coding Best Practices
 
