@@ -7,18 +7,458 @@ source("common.R")
 
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
 
-## Tutorials
 
-These tutorials are an introduction to using the Earth Engine JavaScript API for advanced geospatial analysis. The tutorials assume no programming background, although they do assume a willingness to learn some JavaScript programming. Use the links below to get started on the tutorials or use the menus on the left to jump to a section of interest.
+## Tutorial 
+
+These tutorials are an introduction to using the Earth Engine R API for advanced geospatial analysis. The tutorials assume no programming background, although they do assume a willingness to learn some R programming. Use the links below to get started on the tutorials or use the menus on the left to jump to a section of interest.
 
 
 # Introduction to R for Earth Engine
 
+This tutorial covers just enough JavaScript to get you started writing Earth Engine scripts. For more thorough JavaScript tutorials, see these Mozilla developer resources. For an introduction to programming, with examples in JavaScript, see Eloquent JavaScript. For suggestions on JavaScript coding style, see the Google JavaScript Style Guide. In this tutorial, you're going to write JavaScript in the Earth Engine Code Editor. Before getting started, use the Code Editor guide to get familiar with the Code Editor environment.
+
+## Hello Word {-}
+
+Time to write your first code in R for Earth Engine! In your Rstudio,  copy the following into the Code Editor:
+
+```{R, eval=FALSE}
+print('Hello World!')
+```
+
+Click Run and observe that 'Hello world!' is printed to the Console tab. The line above is R statement. Earth Engine programs are made up of a set of statements like this one. You can prevent code from running without deleting it by commenting it. One of the ways to comment out code is by putting two forward numerals `##` before the code that you don't want to run. For example:
+
+```{R, eval=FALSE}
+## print('Hello World!')
+```
+
+It's good practice to put lots of comments in your code, to describe what you're trying to do. It's also good to delete commented code that doesn't do anything anymore. Both these practices will improve code readability.
+
+## Basic JavaScript data type {-}
+
+### Strings {-}
+
+Using variables to store objects and primitives helps code readability. For example, a variable that stores a string object is defined by single ' or double " quotes (but don't mix them), with single quotes preferred. Make a new string and store it in a variable called greetString:
+
+```{R, eval=FALSE}
+## Use single (or double) quotes to make a string.
+var greetString = 'Ahoy there!'
+## Use parentheses to pass arguments to functions.
+print(greetString)
+```
+
+### Numbers {-}
+
+Note that variables are defined with the keyword `var`. Variables can also store numbers:
+
+```{R, eval=FALSE}
+## Store a number in a variable.
+var number = 42
+print('The answer is:', number)
+```
+
+In this example, observe that when `print()` is given two arguments separated by commas, each argument is printed on a different line.
+
+### List {-}
+
+Define lists with square brackets `[]`. A list of numbers, for example:
+
+```{R, eval=FALSE}
+## Use square brackets [] to make a list.
+var listOfNumbers = [0, 1, 1, 2, 3, 5]
+print('List of numbers:', listOfNumbers)
+```
+
+Lists can also store strings or other objects. For example:
+
+```{R, eval=FALSE}
+## Make a list of strings.
+var listOfStrings = ['a', 'b', 'c', 'd']
+print('List of strings:', listOfStrings)
+```
+
+### Objects {-}
+
+Objects in R are dictionaries of `key: value` pairs. Make an object (or dictionary) using curly brackets {}, for example:
+
+```{R, eval=FALSE}
+## Use curly brackets {} to make a dictionary of key:value pairs.
+var object = {
+  foo: 'bar',
+  baz: 13,
+  stuff: ['this', 'that', 'the other thing']
+}
+print('Dictionary:', object)
+## Access dictionary items using square brackets.
+print('Print foo:', object['foo'])
+## Access dictionary items using dot notation.
+print('Print stuff:', object.stuff)
+```
+
+Note that you can get a value from a dictionary by supplying the key. This example shows you how to do that for R objects. Later you'll learn how to do it for dictionaries that are on the Earth Engine server.
+
+### Functions {-}
+
+Functions are another way to improve code readability and reusability by grouping sets of operations. Define a function with the `function` keyword. Function names start with a letter and have a pair of parentheses at the end. Functions often take parameters which tell the function what to do. These parameters go inside the parentheses `()`. The set of statements making up the function go inside curly brackets. The `return` keyword indicates what the function output is. There are several ways to declare a function, but here we'll use something like this:
+
+```{R, eval=FALSE}
+var myFunction = function(parameter1, parameter2, parameter3) {
+  statement;
+  statement;
+  statement;
+  return statement;
+}
+```
+
+Let's consider the lines one by one. The first line creates a new function and assigns it to the variable myFunction. This variable could have been named anything. It defines how to call the function later. The terms in the parentheses after the function name (i.e. parameter1, parameter2, parameter3) are the parameter names and could have been named anything as well, though it's good practice to give them unique names that are different from the code outside the function. Whatever you name them, these are the names that function will use to refer to the values that are passed into the function when it is called. The value of a parameter once it's been passed into a function is called an argument. Although functions can use variables declared outside the function (global variables), function arguments are not visible outside the function. Functions can take as many parameters as you need, even zero. Here's a simple example of a function that just returns its argument:
+
+```{R, eval=FALSE}
+## The reflect function takes a single parameter: element.
+var reflect = function(element) {
+## Return the argument.
+  return element
+}
+print('A good day to you!', reflect('Back at you!'))
+```
+
+This is an example of a user-defined function. There are also lots of built-in Earth Engine functions. Explore the Code Editor Docs tab to learn about these built-in functions. Here's a very simple example of an Earth Engine function:
+
+```{R, eval=FALSE}
+var aString = ee.Algorithms.String(42)
+```
+
+## Earth Engine Objects {-}
+
+Now that you're comfortable with R, learn how to put  objects in R and primitives into Earth Engine containers for sending to the server and processing at Google.
+
+### Strings {-}
+
+For example, define a string, then put it into the `ee.String()` container to be sent to Earth Engine:
+
+```{R, eval=FALSE}
+## Define a string, then put it into an EE container.
+var aString = 'To the cloud!'
+var eeString = ee.String(aString)
+print('Where to?', eeString)
+```
+
+Think of `ee.Thing` as a container for a thing that exists on the server. In this example, the string is defined first, then put into the container. You can also define the container and its contents all at once. For example:
+
+```{R, eval=FALSE}
+## Define a string that exists on the server.
+var serverString = ee.String('This is on the server.')
+print('String on the server:', serverString)
+```
+
+Although the first argument to `print()` is just a string on the client, the second argument is actually sent to the server to be evaluated, then sent back.
+
+### Numbers {-}
+
+Use `ee.Number()` to create number objects on the server. For example, use the `Math.E` R method to create a constant value on the server:
+
+```{R, eval=FALSE}
+## Define a number that exists on the server.
+var serverNumber = ee.Number(Math.E)
+print('e=', serverNumber)
+```
+
+The `ee.String()` and `ee.Number()` methods are constructors. A constructor takes its argument (and possibly other parameters), puts it in a container, and returns the container and its contents as an Earth Engine object that you can manipulate in your code. Any constructor starting with `ee` returns an Earth Engine object.
+
+### Methods on Earth Engine objects {-}
+
+Note that once you've created an Earth Engine object, you have to use Earth Engine methods to process it. In this example, you can't use R's `Math.log()` to process that Earth Engine object. You have to use the equivalent method defined for an `ee.Number`:
+
+```{R, eval=FALSE}
+## Use a built-in function to perform an operation on the number.
+var logE = serverNumber.log()
+print('log(e)=', logE)
+```
+
+In this example, `log()` is a method for a `ee.Number` object. (Use the Docs tab at the left side of the code editor to see a list of all the methods for every Earth Engine object type, for example ee.Number > log()). Note that the methods of Earth Engine objects return other Earth Engine objects.
+
+### List {-}
+
+To make a JavaScript list into an `ee.List` object on the server, you can put a JavaScript literal into a container as with numbers and strings. Earth Engine also provides server-side convenience methods for making sequences of numbers. For example:
+
+```{R, eval=FALSE}
+## Make a sequence the hard way.
+var eeList = ee.List([1, 2, 3, 4, 5])
+## Make a sequence the easy way!
+var sequence = ee.List.sequence(1, 5)
+print('Sequence:', sequence)
+```
+
+Since the `ee.List` objects only exist on the server, use Earth Engine provided functions to interact with them. For example, to get something out of the list, use the `get()` method of the `ee.List` object:
+
+```{R, eval=FALSE}
+## Use a method on an ee.List to extract a value.
+var value = sequence.get(2)
+print('Value at index 2:', value)
+```
+
+### Casting {-}
+
+Sometimes, Earth Engine doesn't know the type of an object that gets returned from a method. You, as the programmer, know that the `value` variable in the previous example is a number object. But if you try to use the `add()` method of an `ee.Number`, you'll get an error like:
+
+
+This is common with the `get()` function, which could return all sorts of Earth Engine objects. To correct it, use the `ee.Number` constructor to cast the result:
+
+```{R, eval=FALSE}
+## Cast the return value of get() to a number.
+print('No error:', ee.Number(value).add(3));
+```
+
+### Dictionaries {-}
+
+You can construct an Earth Engine `Dictionary` from a R object, as with strings, numbers and lists. At construction time, you can use R functionality to initialize the Earth Engine object. In this case an `ee.Dictionary` is constructed directly from a R literal object:
+
+```{R, eval=FALSE}
+## Make a Dictionary on the server.
+var dictionary = ee.Dictionary({
+  e: Math.E,
+  pi: Math.PI,
+  phi: (1 + Math.sqrt(5)) / 2
+})
+
+## Get some values from the dictionary.
+print('Euler:', dictionary.get('e'))
+print('Pi:', dictionary.get('pi'))
+print('Golden ratio:', dictionary.get('phi'))
+
+## Get all the keys:
+print('Keys: ', dictionary.keys())
+```
+
+In this example, observe that once you have an `ee.Dictionary`, you must use methods on the `ee.Dictionary` to get values (unlike the JavaScript dictionary in the previous lesson). Specifically, `get(key)` returns the value associated with `key`. Since the type of object returned by `get()` could be be anything, if you're going to do anything to the object other then print it, you need to cast it to the right type. Also note that the `keys()` method returns an `ee.List`.
+
+### Dates {-}
+
+Date objects are the way Earth Engine represents time. As in the previous examples, it is important to distinguish between a R Date object and an Earth Engine `ee.Date` object. Construct an `ee.Date` from a string, from a R `Date`, or using static methods provided by the `ee.Date` class. (See the Date section in the Docs tab for details). This example illustrates the construction of dates from strings or a JavaScript date representing milliseconds since midnight on January 1, 1970:
+
+```{R, eval=FALSE}
+## Define a date in Earth Engine.
+var date = ee.Date('2015-12-31')
+print('Date:', date)
+
+## Get the current time using the R Date.now() method.
+var now = Date.now()
+print('Milliseconds since January 1, 1970', now)
+
+## Initialize an ee.Date object.
+var eeNow = ee.Date(now)
+print('Now:', eeNow)
+```
+
+Dates are useful for filtering collections, specifically as arguments to the `filterDate()` method. See this section of the Get Started page for more information about sorting collections.
+
+### Digression: passing parameters by name {-}
+
+Arguments to Earth Engine methods can be passed in order, for example to create an `ee.Date` from year, month and day, you can pass parameters of the `fromYMD()` static method in the order year, month, day:
+
+```{R, eval=FALSE}
+var aDate = ee.Date.fromYMD(2017, 1, 13)
+print('aDate:', aDate)
+```
+
+Alternatively, you can pass the parameters by name, in any order. While it might be more code, it can improve readability and reusability. To pass parameters by name, pass in a R object in which the keys of the object are the names of the method parameters and the values are the arguments to the method. For example:
+
+```{R, eval=FALSE}
+var theDate = ee.Date.fromYMD({
+  day: 13,
+  month: 1,
+  year: 2017
+})
+print('theDate:', theDate)
+```
+
+Note that the names of the object properties (the keys) match the names specified in the `ee.Date.fromYMD()` docs. Also note that the object that is passed as an argument can be saved in a variable for reuse, as illustrated by the R object example.
+
+You now have enough of an introduction to R to start using Earth Engine! See the Client vs. Server page for a more detailed explanation of R vs. Earth Engine objects.
+
+In the next section, learn more about Functional programming concepts to effectively use for-loops, if/else conditions and iterations in Earth Engine.
+
+## Functional Programming Concepts {-}
+
+### Introduction to functional programming {-}
+
+Earth Engine uses a parallel processing system to carry out computation across a large number of machines. To enable such processing, Earth Engine takes advantage of standard techniques commonly used by functional languages, such as referential transparency and lazy evaluation, for significant optimization and efficiency gains.
+
+The main concept that sets functional programming apart from procedural programming is *the absence of side effects*. What it means is that the functions that you write doesn’t rely on or update data that is outside of the function. As you will see in the examples below, it is possible to re-structure your problem so that it can be solved using functions without side-effects - which are much better suited to be executed in parallel.
+
+#### For Loops {-}
+
+The use of for-loops is discouraged in Earth Engine. The same results can be achieved using a `map()` operation where you specify a function that can be independently applied to each element. This allows the system to distribute the processing to different machines.
+
+The example below illustrates how you would take a list of numbers and create another list with the squares of each number using `map()`:
+
+```{R, eval=FALSE}
+## This generates a list of numbers from 1 to 10.
+var myList = ee.List.sequence(1, 10)
+
+## The map() operation takes a function that works on each element independently
+## and returns a value. You define a function that can be applied to the input.
+var computeSquares = function(number) {
+  ## We define the operation using the EE API.
+  return ee.Number(number).pow(2)
+}
+
+## Apply your function to each item in the list by using the map() function.
+var squares = myList.map(computeSquares)
+print(squares)  ## [1, 4, 9, 16, 25, 36, 49, 64, 81]
+```
+
+#### If/Else Conditions {-}
+
+Another common problem faced by new users who are used to procedural programming paradigm is the proper use of if/else conditional operators in Earth Engine. While, the API does provide a `ee.Algorithms.If()` algorithm, the use of it is strongly discouraged in favor of a more functional approach using `map()` and filters. Earth Engine uses deferred execution, which means that the evaluation of an expression is delayed until its realized value is actually required. In some cases, this type of execution model will evaluate both the true and false alternatives of an `ee.Algorithms.If()` statement. This can lead to extra computation and memory usage, depending on the expressions and the resources required to execute them.
+
+Say you want to solve a variant of the above example, where the task is to compute squares of only odd numbers. A functional approach to solving this without if/else conditions, is demonstrated below:
+
+```{R, eval=FALSE}
+## The following function determines if a number is even or odd.  The mod(2)
+## function returns 0 if the number is even and 1 if it is odd (the remainder
+## after dividing by 2).  The input is multipled by this remainder so even
+## numbers get set to 0 and odd numbers are left unchanged.
+var getOddNumbers = function(number) {
+  number = ee.Number(number)   ## Cast the input to a Number so we can use mod.
+  var remainder = number.mod(2)
+  return number.multiply(remainder)
+}
+
+var newList = myList.map(getOddNumbers)
+
+## Remove the 0 values.
+var oddNumbers = newList.removeAll([0])
+
+var squares = oddNumbers.map(computeSquares)
+print(squares);  ## [1, 9, 25, 49, 81]
+```
+
+This paradigm is especially applicable when working with collections. If you wanted to apply a different algorithm to the collection based on some conditions, the preferred way is to first filter the collection based on the condition, and then `map()` a different function to each of the subsets. This allows the system to parallelize the operation. For example:
+
+```{R, eval=FALSE}
+var collection = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+
+## Divide the collection into 2 subsets and apply a different algorithm on them.
+var subset1 = collection.filter(ee.Filter.lt('SUN_ELEVATION', 40))
+var subset2 = collection.filter(ee.Filter.gte('SUN_ELEVATION', 40))
+
+var processed1 = subset1.map(function(image) {
+  return image.multiply(2);
+})
+var processed2 = subset2;
+
+## Merge the collections to get a single collection.
+var final = processed1.merge(processed2)
+print('Original collection size', collection.size())
+print('Processed collection size', final.size())
+```
+
+#### Cumulative Iteration {-}
+
+You may need to do sequential operation, where the result of each iteration is used by the subsequent iteration. Earth Engine provides a `iterate()` method for such tasks. Remember that `iterate()` is executed in a sequential manner and hence will be slow for large operations. Use it only when you are not able to use `map()` and filters to achieve the desired output.
+
+A good demonstration of `iterate()` is for creation of Fibonacci number sequence. Here, each number in the series is the sum of previous 2 numbers. The `iterate()` function takes 2 arguments, a function (algorithm) and a starting value. The function itself gets passed on 2 values, the current value in the iteration, and the result of the previous iteration. The following example demonstrates how to implement a fibonacci sequence in Earth Engine.
+
+```{R, eval=FALSE}
+var algorithm = function(current, previous) {
+  previous = ee.List(previous)
+  var n1 = ee.Number(previous.get(-1))
+  var n2 = ee.Number(previous.get(-2))
+  return previous.add(n1.add(n2))
+}
+
+## Compute 10 iterations.
+var numIteration = ee.List.repeat(1, 10)
+var start = [0, 1]
+var sequence = numIteration.iterate(algorithm, start)
+print(sequence)  ## [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+```
+
+Now that you have a good understanding of javascript concepts, you can see the API Tutorial for an introduction to the geospatial functionality of the Earth Engine API.
+
+
+# The Earth Engine API {-}
+
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
 
-# The Earth Engine API
+## Visualizing Images and Image Bands {-}
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+Now that you're ready to begin writing in R of the Earth Engine , start by copying the following code into the Code Editor:
+
+```{R, eval=FALSE}
+## Instantiate an image with the Image constructor.
+var image = ee.Image('CGIAR/SRTM90_V4')
+
+## Zoom to a location.
+Map.setCenter(-112.8598, 36.2841, 9) ## Center on the Grand Canyon.
+
+## Display the image on the map.
+Map.addLayer(image)
+```
+
+Click the Run button at the top of the Code Editor and observe that a very gray image appears on the map. Don't worry, you'll make it look better soon.
+
+## Image Constructor {-}
+
+The first new thing in this example is the image constructor `ee.Image()`. The argument provided to the constructor is the string ID of an image in the Earth Engine data catalog. (See the Docs tab, at the left of the Code Editor, to see a full list of possible arguments to the image constructor. The Docs tab represents the most up to date information about what Earth Engine can do.)
+
+To discover an image ID, search in the Earth Engine data catalog using the search tool at the top of the Code Editor. For example, type 'elevation' into the search field and note that a list of rasters is returned. Click the 'SRTM Digital Elevation Data Version 4' entry to see more information about that dataset. On the right side of the dataset description is an Image ID field. Observe that the image ID in the example is copied from the image ID shown in the dataset description.
+
+An alternative to copying and pasting image IDs is to use the Import button on the dataset description or the import link at the right side of the search results. If you click the import link or button, a variable is automatically created in a special section, named 'Imports', at the top of your script. You can rename the variable by clicking on its name in the imports section.
+
+## Configuring the Map {-}
+
+The second new part of this example is the `Map.setCenter()` call. This method on the `Map` object, which represents the Map display in the Code Editor, centers the map at the given longitude, latitude (in decimal degrees) and zoom level where 1 is zoomed out so that the map shows the entire Earth's surface. Larger numbers zoom in from there. Discover all the methods on the `Map` object by checking the Map section in the Docs tab on the left side of the Code Editor.
+
+## Adding a layer to the Map {-}
+
+The last line in the example says: use the `Map` object's `addLayer()` method to add an image to the map display in the Code Editor.
+
+Congratulations! You've created your first Earth Engine script. In the next section, you'll learn how to make that image look a little better.
+
+## Digression: Images in Earth Engine {-}
+
+Images in Earth Engine (see this page for more details) are made up of one or more bands. Each band in an image has its own name, pixel values, pixel resolution, and projection. As you'll soon discover, the SRTM image has one band: 'elevation'.
+
+When you add an image to a map using `Map.addLayer()`, Earth Engine needs to determine how to map the values in the image band(s) to colors on the display. If a single-band image is added to a map, by default Earth Engine displays the band in grayscale, where the minimum value is assigned to black, and the maximum value is assigned to white. If you don't specify what the minimum and maximum should be, Earth Engine will use default values. For example, the image you just added to the map is displayed as a grayscale image stretched to the full range of the data, or signed 16-bit integer [-32768, 32767]. (`float` bands are stretched to [0, 1] and `byte` bands are stretched to [0, 255] by default).
+
+You can discover the data type of the image by printing it and inspecting the image object in the **Console** tab. For example, paste the following after the previous code:
+
+```{R, eval=FALSE}
+print('SRTM image', image)
+```
+
+When you click run, note that an object appears in the console. To investigate the object properties, expand it by clicking on the zippy () to the left of the object or property. Expand the image object, the 'bands' property, the 'elevation' band at index '0' and the 'data_type' property of the 'elevation' band to discover that it is a `signed int16` data type.
+
+## Customizing layer visualization {-}
+
+To change the way the data are stretched, you can provide another parameter to the `Map.addLayer()` call. Specifically, the second parameter, `visParams`, lets you specify the minimum and maximum values to display. To discover what values to use, activate the Inspector tab and click around on the map to get an idea of the range of pixel values. Alternatively, use the Layer manager to interactively stretch the data, then observe the minimum and maximum corresponding to percentiles or standard deviation stretches. Suppose that through such experimentation, you determine that the data should be stretched to [0, 3000]. To display the image using this range, use:
+
+```{R, eval=FALSE}
+Map.addLayer(image, {min: 0, max: 3000}, 'custom visualization')
+```
+
+Note that the visParams parameter is an object, with properties specifying the min and the max. Note that the third parameter for `Map.addLayer()` is the name of the layer that is displayed in the Layer manager. The result should look something like Figure 1. Hover the mouse over the **Layers** box on the right to see the effect of renaming that layer.
+
+**(Figure)**
+
+To display a single band using a color palette, add a `palette` property to the `visParams` object:
+
+```{R, eval=FALSE}
+Map.addLayer(image, {min: 0, max: 3000, palette: ['blue', 'green', 'red']},
+    'custom palette')
+```
+
+The result should look something like Figure .
+
+**Figure**
+
+## Digression: Palettes {-}
+
+Palettes let you set the color scheme for single-band images. A palette is a comma delimited list of color strings which are linearly interpolated between the maximum and minimum values in the visualization parameters (or defaults according to the band type, as described previously). For example, pixels less than or equal to the minimum will be displayed with the first color in the list; pixels greater than or equal to the maximum will be displayed with the last color in the list. Intermediate colors are linearly stretched to intermediate pixel values.
+
+The colors are defined using the web standard CSS color value scheme (see this external reference to learn more). Colors can be specified by name or as hexadecimal strings indicating the combination of red, green and blue. The lowest value in any of the three positions is 00 (representing the decimal number 0), while the highest is FF (representing the decimal number 255). The string '000000' represents the color black, 'FFFFFF' is white, 'FF0000' is red, '00FF00' is green, and '0000FF' is blue. See the Color palettes section for more detail. Other stretches are possible by using Styled Layer Descriptors, as described in this section.
+
+Later in this tutorial, you'll learn how to display multi-band imagery. But first, visit the next page to learn about performing computations with images.
 
 # Global Forest Change {-}
 
@@ -278,6 +718,29 @@ Observe that there are three __addLayer()__ calls. Each __addLayer()__ call adds
 We're almost able to make the image shown at the start of the tutorial. However, the layer showing the pixels with both loss and gain is missing. It is missing because we need to know how to perform some calculations on image bands before we can calculate which pixels show both loss and gain. This is the topic of the [next section]().
 
 ## Quantifying Forest Change {-}
+
+Let's start with the calculation needed to create a band that shows pixels where the Hansen et al. data show both loss and gain.
+
+The Hansen et al. dataset has a band whose pixels are 1 where loss occurred and 0 otherwise (loss) and a band that is 1 where gain has occurred and a 0 otherwise (gain). To create a band where pixels in both the loss and the gain bands have a 1, you can use the and() logical method on images. The and() method is called like image1.and(image2) and returns an image in which pixels are 1 where both image1 and image2 are 1, and 0 elsewhere:
+
+```{js, eval=FALSE}
+// Load the data and select the bands of interest.
+var gfc2014 = ee.Image('UMD/hansen/global_forest_change_2015');
+var lossImage = gfc2014.select(['loss']);
+var gainImage = gfc2014.select(['gain']);
+
+// Use the and() method to create the lossAndGain image.
+var gainAndLoss = gainImage.and(lossImage);
+
+// Show the loss and gain image.
+Map.addLayer(gainAndLoss.updateMask(gainAndLoss),
+    {palette: 'FF00FF'}, 'Gain and Loss');
+    
+```
+
+The result, zoomed into Arkansas with satellite view, should look something like Figure 1.
+
+
 
 ## Charting Yearly Forest Loss {-}
 
