@@ -300,16 +300,92 @@ mean <- image$reduceRegion((
 
 Learn more about reducers from the [Reducers doc]().
 
+## Masking {-}
 
+Every pixel in an `ee.Image` has both a value and a mask which ranges from 0 (no data) to 1. Masked pixels (in which mask == 0) are treated as no data. Pixels with 0 < mask ≤ 1 have a value, but it is weighted by the mask for numerical computations.
 
+You can make pixels transparent or exclude them from analysis using masks. Pixels are masked when the mask value is zero. Continuing the image differencing example, use a mask to display areas of increased and decreased NDVI over the difference interval:
 
+```{r, eval=FALSE}
+## This function gets NDVI from Landsat 5 imagery.
+getNDVI <- function(image) {
+  return(image$normalizedDifference('B4', 'B3')) 
+}
 
+## Load two Landsat 5 images, 20 years apart.
+image1 <- ee$Image('LANDSAT/LT05/C01/T1_TOA/LT05_044034_19900604')
+image2 <- ee$Image('LANDSAT/LT05/C01/T1_TOA/LT05_044034_20100611')
 
+## Compute NDVI from the scenes.
+ndvi1 <- getNDVI(image1)
+ndvi2 <- getNDVI(image2)
 
+## Compute the difference in NDVI.
+ndviDifference = ndvi2$subtract(ndvi1)
+## Load the land mask from the SRTM DEM.
+landMask <- ee$Image('CGIAR/SRTM90_V4')$mask()
 
+## Update the NDVI difference mask with the land mask.
+maskedDifference <- ndviDifference$updateMask(landMask)
 
+## Display the masked result.
+vizParams <- list(
+  min = -0.5, 
+  max = 0.5, 
+  palette = c('FF0000', 'FFFFFF', '0000FF')
+)
+Map$setCenter(-122.2531, 37.6295, 9)
+Map$addLayer(maskedDifference, vizParams, 'NDVI difference')
+```
 
+In this example, note that the mask of the NDVI difference is updated by the land mask with `updateMask()`. This sets the mask of the NDVI difference pixels to the land mask wherever the NDVI difference mask is non-zero.
 
+Masking is also useful for excluding data from the analysis. Consider the `reduceRegion()` example from the [Reducing section](). Suppose the task is to compute a seasonal mean NDVI for Santa Clara county, CA, excluding cloudy pixels. The following example demonstrates multiple concepts: filtering, mapping, reducing and the use of a cloud mask:
+
+```{r, eval=FALSE}
+## This function gets NDVI from a Landsat 8 image.
+addNDVI <- function(image) {
+  return(image$addBands(image.normalizedDifference('B5', 'B4')))
+}
+
+## This function masks cloudy pixels.
+cloudMask = function(image) {
+  clouds <- ee$Algorithms$Landsat$simpleCloudScore(image)$select('cloud');
+  return(image$updateMask(clouds$lt(10)))
+}
+
+## Load a Landsat collection, map the NDVI and cloud masking functions over it.
+collection <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')$
+  filterBounds(ee$Geometry$Point([-122.262, 37.8719]))$
+  filterDate('2014-03-01', '2014-05-31')$
+  map(addNDVI)$
+  map(cloudMask)
+
+## Reduce the collection to the mean of each pixel and display.
+meanImage <- collection$reduce(ee$Reducer$mean());
+vizParams <- list(
+  bands = c('B5_mean', 'B4_mean', 'B3_mean'),
+  min = 0, 
+  max = 0.5)
+Map$addLayer(meanImage, vizParams, 'mean')
+
+## Load a region in which to compute the mean and display it.
+counties <- ee$FeatureCollection('TIGER/2016/Counties')
+santaClara <- ee$Feature(counties$filter(ee$Filter$eq('NAME', 'Santa Clara'))$first())
+Map$addLayer(santaClara)
+
+## Get the mean of NDVI in the region.
+mean <- meanImage$select('nd_mean')$reduceRegion(list(
+  reducer = ee.Reducer.mean(),
+  geometry = santaClara.geometry(),
+  scale = 30
+))
+
+## Print mean NDVI for the region.
+mean$get('nd_mean')$evaluate(function(val){
+  print('Santa Clara spring mean NDVI:', val)
+})
+```
 
 
 
