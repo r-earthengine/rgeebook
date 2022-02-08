@@ -7,6 +7,8 @@ source("common.R")
 
 # Objects and Methods Overview
 
+<div style="text-align: justify">
+
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
 
 # Image
@@ -196,6 +198,623 @@ In this example, note that the min and max parameters indicate the range of pixe
 <center>
 ![Figure 2. Landsat 8 NDWI, San Francisco bay area, USA. Cyan are low values, blue are high values.](F:/rgeebook/images/chapter_05/figure_02.png){width=670px}
 
+### Masking {-}
+
+You can use `image$updateMask()` to set the opacity of individual pixels based on where pixels in a mask image are non-zero. Pixels equal to zero in the mask are excluded from computations and the opacity is set to 0 for display. The following example uses an NDWI threshold (see the [Relational Operations section]() for information on thresholds) to update the mask on the NDWI layer created previously:
+
+```{r, eval=FALSE}
+## Mask the non-watery parts of the image, where NDWI < 0.4.
+ndwiMasked <- ndwi$updateMask(ndwi$gte(0.4))
+Map$addLayer(ndwiMasked, ndwiViz, 'NDWI masked')
+```
+
+### Visualization images {-}
+
+Use the `image.visualize()` method to convert an image into an 8-bit RGB image for display or export. For example, to convert the false-color composite and NDWI to 3-band display images, use:
+
+```{r, eval=FALSE}
+## Create visualization layers.
+imageRGB <- image$visualize(list(
+  bands = c('B5', 'B4', 'B3'), 
+  max = 0.5
+))
+
+ndwiRGB <- ndwiMasked$visualize(list(
+  min = 0.5,
+  max = 1,
+  palette = c('00FFFF', '0000FF'))
+)
+```
+
+### Mosaicking {-}
+
+You can use masking and `imageCollection.mosaic()` (see the Mosaicking section for information on mosaicking) to achieve various cartographic effects. The `mosaic()` method renders layers in the output image according to their order in the input collection. The following example uses `mosaic()` to combine the masked NDWI and the false color composite and obtain a new visualization:
+
+```{r, eval=FALSE}
+## Mosaic the visualization layers and display (or export).
+mosaic <- ee$ImageCollection(list(imageRGB, ndwiRGB))$
+  mosaic()
+Map$addLayer(mosaic, {}, 'mosaic')
+```
+
+In this example, observe that a list of the two visualization images is provided to the `ImageCollection` constructor. The order of the list determines the order in which the images are rendered on the map.
+<center>
+![Figure 3. Mosaic of a Landsat 8 false color composite and NDWI. San Francisco bay area, USA.](F:/rgeebook/images/chapter_05/figure_03.png){width=670px}
+
+
+### Clipping {-}
+
+The `image$clip()` method is useful for achieving cartographic effects. The following example clips the mosaic created previously to an arbitrary buffer zone around the city of San Francisco:
+
+```{r, eval=FALSE}
+## Create a circle by drawing a 20000 meter buffer around a point.
+roi <- ee$Geometry$Point(-122.4481, 37.7599)$buffer(20000);
+
+## Display a clipped version of the mosaic.
+Map$addLayer(mosaic$clip(roi))
+```
+
+In the previous example, note that the coordinates are provided to the `Geometry` constructor and the buffer length is specified as 20,000 meters. Learn more about geometries on the [Geometries page]().
+<center>
+![Figure 2. The mosaic shown above, clipped to a buffer around San Francisco, California, USA.](F:/rgeebook/images/chapter_05/figure_04.png){width=670px}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Rendering categorical maps {-}
+
+Palettes are also useful for rendering discrete valued maps, for example a land cover map. In the case of multiple classes, use the palette to supply a different color for each class. (The `image$remap()` method may be useful in this context, to convert arbitrary labels to consecutive integers). The following example uses a palette to render land cover categories:
+
+```{r, eval=FALSE}
+## Load 2012 MODIS land cover and select the IGBP classification.
+cover <- ee$Image('MODIS/051/MCD12Q1/2012_01_01')$
+  select('Land_Cover_Type_1')
+
+## Define a palette for the 18 distinct land cover classes.
+igbpPalette <- list(
+  'aec3d4', ## water
+  '152106', '225129', '369b47', '30eb5b', '387242', ## forest
+  '6a2325', 'c3aa69', 'b76031', 'd9903d', '91af40',  ## shrub, grass
+  '111149', ## wetlands
+  'cdb33b', ## croplands
+  'cc0013', ## urban
+  '33280d', ## crop mosaic
+  'd7cdcc', ## snow and ice
+  'f7e084', ## barren
+  '6f6f6f'  ## tundra
+)
+
+## Specify the min and max labels and the color palette matching the labels.
+Map$setCenter(-99.229, 40.413, 5);
+Map$addLayer(cover,
+             {min: 0, max: 17, palette: igbpPalette},
+             'IGBP classification');
+```
+<center>
+![Figure 4. MODIS 2012 land cover using the IGBP classification..](F:/rgeebook/images/chapter_05/figure_03.png){width=670px}
+</p>
+
+
+### Styled Layer Descriptors {-}
+
+You can use a Styled Layer Descriptor ([SLD]()) to render imagery for display. Provide `image$sldStyle()` with an XML description of the symbolization and coloring of the image, specifically the `RasterSymbolizer` element. Learn more about the `RasterSymbolizer` element [here](). For example, to render the land cover map described in the Rendering categorical maps section with an SLD, use:
+
+```{r, eval=FALSE}
+cover <- ee$Image('MODIS/051/MCD12Q1/2012_01_01')$select('Land_Cover_Type_1')
+
+## Define an SLD style of discrete intervals to apply to the image.
+sld_intervals <-
+'<RasterSymbolizer>' +
+  '<ColorMap type="intervals" extended="false">' +
+    '<ColorMapEntry color="#aec3d4" quantity="0" label="Water"/>' +
+    '<ColorMapEntry color="#152106" quantity="1" label="Evergreen Needleleaf Forest"/>' +
+    '<ColorMapEntry color="#225129" quantity="2" label="Evergreen Broadleaf Forest"/>' +
+    '<ColorMapEntry color="#369b47" quantity="3" label="Deciduous Needleleaf Forest"/>' +
+    '<ColorMapEntry color="#30eb5b" quantity="4" label="Deciduous Broadleaf Forest"/>' +
+    '<ColorMapEntry color="#387242" quantity="5" label="Mixed Deciduous Forest"/>' +
+    '<ColorMapEntry color="#6a2325" quantity="6" label="Closed Shrubland"/>' +
+    '<ColorMapEntry color="#c3aa69" quantity="7" label="Open Shrubland"/>' +
+    '<ColorMapEntry color="#b76031" quantity="8" label="Woody Savanna"/>' +
+    '<ColorMapEntry color="#d9903d" quantity="9" label="Savanna"/>' +
+    '<ColorMapEntry color="#91af40" quantity="10" label="Grassland"/>' +
+    '<ColorMapEntry color="#111149" quantity="11" label="Permanent Wetland"/>' +
+    '<ColorMapEntry color="#cdb33b" quantity="12" label="Cropland"/>' +
+    '<ColorMapEntry color="#cc0013" quantity="13" label="Urban"/>' +
+    '<ColorMapEntry color="#33280d" quantity="14" label="Crop, Natural Veg. Mosaic"/>' +
+    '<ColorMapEntry color="#d7cdcc" quantity="15" label="Permanent Snow, Ice"/>' +
+    '<ColorMapEntry color="#f7e084" quantity="16" label="Barren, Desert"/>' +
+    '<ColorMapEntry color="#6f6f6f" quantity="17" label="Tundra"/>' +
+  '</ColorMap>' +
+'</RasterSymbolizer>'
+
+Map$addLayer(cover$sldStyle(sld_intervals), {}, 'IGBP classification styled');
+```
+
+To create a visualization image with a color ramp, set the type of the ColorMap to 'ramp'. The following example compares the 'interval' and 'ramp' types for rendering a DEM:
+
+```{r, eval=FALSE}
+## Load SRTM Digital Elevation Model data.
+image <- ee$Image('CGIAR/SRTM90_V4')
+
+## Define an SLD style of discrete intervals to apply to the image.
+var sld_intervals <-
+  '<RasterSymbolizer>' +
+    '<ColorMap type="intervals" extended="false" >' +
+      '<ColorMapEntry color="#0000ff" quantity="0" label="0"/>' +
+      '<ColorMapEntry color="#00ff00" quantity="100" label="1-100" />' +
+      '<ColorMapEntry color="#007f30" quantity="200" label="110-200" />' +
+      '<ColorMapEntry color="#30b855" quantity="300" label="210-300" />' +
+      '<ColorMapEntry color="#ff0000" quantity="400" label="310-400" />' +
+      '<ColorMapEntry color="#ffff00" quantity="1000" label="410-1000" />' +
+    '</ColorMap>' +
+  '</RasterSymbolizer>'
+
+## Define an sld style color ramp to apply to the image.
+sld_ramp <-
+  '<RasterSymbolizer>' +
+    '<ColorMap type="ramp" extended="false" >' +
+      '<ColorMapEntry color="#0000ff" quantity="0" label="0"/>' +
+      '<ColorMapEntry color="#00ff00" quantity="100" label="100" />' +
+      '<ColorMapEntry color="#007f30" quantity="200" label="200" />' +
+      '<ColorMapEntry color="#30b855" quantity="300" label="300" />' +
+      '<ColorMapEntry color="#ff0000" quantity="400" label="400" />' +
+      '<ColorMapEntry color="#ffff00" quantity="500" label="500" />' +
+    '</ColorMap>' +
+  '</RasterSymbolizer>'
+
+## Add the image to the map using both the color ramp and interval schemes.
+Map$setCenter(-76.8054, 42.0289, 8)
+Map$addLayer(image$sldStyle(sld_intervals), {}, 'SLD intervals')
+Map$addLayer(image$sldStyle(sld_ramp), {}, 'SLD ramp')
+```
+
+SLDs are also useful for stretching pixel values to improve visualizations of continuous data. For example, the following code compares the results of an arbitrary linear stretch with a min-max 'Normalization' and a 'Histogram' equalization:
+
+```{r, eval=FALSE}
+## Load a Landsat 8 raw image.
+image = ee$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')
+
+## Define a RasterSymbolizer element with '_enhance_' for a placeholder.
+template_sld <-
+  '<RasterSymbolizer>' +
+    '<ContrastEnhancement><_enhance_/></ContrastEnhancement>' +
+    '<ChannelSelection>' +
+      '<RedChannel>' +
+        '<SourceChannelName>B5</SourceChannelName>' +
+      '</RedChannel>' +
+      '<GreenChannel>' +
+        '<SourceChannelName>B4</SourceChannelName>' +
+      '</GreenChannel>' +
+      '<BlueChannel>' +
+        '<SourceChannelName>B3</SourceChannelName>' +
+      '</BlueChannel>' +
+    '</ChannelSelection>' +
+  '</RasterSymbolizer>'
+
+## Get SLDs with different enhancements.
+equalize_sld <- template_sld.replace('_enhance_', 'Histogram')
+normalize_sld <- template_sld.replace('_enhance_', 'Normalize')
+
+## Display the results.
+Map$centerObject(image, 10)
+Map$addLayer(image, {bands: ['B5', 'B4', 'B3'], min: 0, max: 15000}, 'Linear')
+Map$addLayer(image.sldStyle(equalize_sld), {}, 'Equalized')
+Map$addLayer(image.sldStyle(normalize_sld), {}, 'Normalized')
+```
+
+Points of note in reference to using SLDs in Earth Engine:
+
+- OGC SLD 1.0 and OGC SE 1.1 are supported.
+- The XML document passed in can be complete, or just the RasterSymbolizer element and down.
+- Bands may be selected by their Earth Engine names or index ('1', '2', ...).
+- The Histogram and Normalize contrast stretch mechanisms are not supported for floating point imagery.
+- Opacity is only taken into account when it is 0.0 (transparent). Non-zero opacity values are treated as completely opaque.
+- The OverlapBehavior definition is currently ignored.
+- The ShadedRelief mechanism is not currently supported.
+- The ImageOutline mechanism is not currently supported.
+- The Geometry element is ignored.
+- The output image will have histogram_bandname metadata if histogram equalization or normalization is requested.
+
+### Thumbnail images {-}
+
+Use the `ee$Image.getThumbURL()` method to generate a PNG or JPEG thumbnail image for an `ee$Image` object. Printing the outcome of an expression ending with a call to `getThumbURL()` results in a URL being printed. Visiting the URL sets Earth Engine servers to work on generating the requested thumbnail on-the-fly. The image is displayed in a browser when processing completes. It can be downloaded by selecting appropriate options from the image's right-click context menu.
+ 
+ -**Note**: *The authorization token to process the thumbnail lasts 2 hours. Until it expires, anyone  with the authorization token can generate the image.*
+<center>
+![Figure 5. SRTM digital elevation model displayed as a PNG thumbnail in a browser.](F:/rgeebook/images/chapter_05/figure_05.png){width=670px}
+</div>
+
+
+
+The `getThumbURL()` method includes parameters, described in the visualization parameters table above. Additionally, it takes optional `dimensions`, `region`, and `crs` arguments that control the spatial extent, size, and display projection of the thumbnail.
+
+| Parameter| Description | Type | 
+|--|:--|--|
+| *dimensions* |Thumbnail dimensions in pixel units. If a single integer is provided, it defines the size of the image's larger aspect dimension and scales the smaller dimension proportionally. Defaults to 512 pixels for the larger image aspect dimension.| A single integer or string in the format: 'WIDTHxHEIGHT'    |
+| *region*  | The geospatial region of the image to render. The whole image by default, or the bounds of a provided geometry.|GeoJSON or a 2-D list of at least three point coordinates that define a linear ring | 
+| *crs*   | The target projection e.g. 'EPSG:3857'. Defaults to WGS84 ('EPSG:4326').|   String  |
+| *format*  | 	Defines thumbnail format as either PNG or JPEG. The default PNG format is implemented as RGBA, where the alpha channel represents valid and invalid pixels, defined by the image's mask(). Invalid pixels are transparent. The optional JPEG format is implemented as RGB, where invalid image pixels are zero filled across RGB channels.|String; either 'png' or 'jpg'  |
+
+
+
+*Caution*: **The *'WIDTHxHEIGHT'* dimensions argument can alter the original aspect ratio of the data or region extent.**
+
+
+A single-band image will default to grayscale unless a `palette` argument is supplied. A multi-band image will default to RGB visualization of the first three bands, unless a `bands` argument is supplied. If only two bands are provided, the first band will map to red, the second to blue, and the green channel will be zero filled.
+
+The following are a series of examples demonstrating various combinations of `getThumbURL()` parameter arguments. Click on the URLs printed when you run this script to view the thumbnails.
+
+```{r, eval=FALSE}
+## Fetch a digital elevation model.
+image <- ee$Image('CGIAR/SRTM90_V4')
+
+## Request a default thumbnail of the DEM with defined linear stretch.
+## Set masked pixels (ocean) to 1000 so they map as gray.
+thumbnail1 <- image$unmask(1000)$getThumbURL({
+  'min': 0,
+  'max': 3000,
+  'dimensions': 500,
+})
+print('Default extent:', thumbnail1)
+
+## Specify region by rectangle, define palette, set larger aspect dimension size.
+thumbnail2 <- image$getThumbURL({
+  'min': 0,
+  'max': 3000,
+  'palette': ['00A600','63C600','E6E600','E9BD3A','ECB176','EFC2B3','F2F2F2'],
+  'dimensions': 500,
+  'region': ee.Geometry.Rectangle([-84.6, -55.9, -32.9, 15.7]),
+})
+print('Rectangle region and palette:', thumbnail2);
+
+## Specify region by a linear ring and set display CRS as Web Mercator.
+thumbnail3 <- image.getThumbURL({
+  'min': 0,
+  'max': 3000,
+  'palette': ['00A600','63C600','E6E600','E9BD3A','ECB176','EFC2B3','F2F2F2'],
+  'region': ee.Geometry.LinearRing([[-84.6, 15.7], [-84.6, -55.9], [-32.9, -55.9]]),
+  'dimensions': 500,
+  'crs': 'EPSG:3857'
+})
+print('Linear ring region and specified crs', thumbnail3);
+```
+
+ 
+- **Note**: Thumbnail images are also available as UI elements (Code Editor only), see: [_ui.Thumbnail_]().*
+
+- **Note**: `getThumbURL` is intended as a method for producing preview images you might include in presentations, websites, and social media posts. Its size limitation is 100,000,000 pixels and the browser can timeout for complicated requests. If you want a large image or have a complex process, see the [Exporting Data page]().
+
+## Image Information and Metadata {-}
+
+Print image objects to explore band names, projection information, properties, and other metadata. The following examples demonstrate printing the entire set of image metadata as well as requesting specific metadata elements programmatically.
+
+### Getting metadata {-}
+
+```{r, eval=FALSE}
+## Load an image.
+image <- ee$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')
+
+## Display all metadata.
+print('All metadata:', image)
+
+## Get information about the bands as a list.
+var bandNames <- image$bandNames()
+print('Band names:', bandNames)  ## ee$List of band names
+
+## Get projection information from band 1.
+b1proj <- image$select('B1')$projection()
+print('Band 1 projection:', b1proj)  ## ee$Projection object
+
+## Get scale (in meters) information from band 1.
+b1scale <- image$select('B1')$projection()$nominalScale()
+print('Band 1 scale:', b1scale)  ## ee$Number
+
+## Note that different bands can have different projections and scale.
+b8scale <- image$select('B8')$projection()$nominalScale()
+print('Band 8 scale:', b8scale)  ## ee$Number
+
+## Get a list of all metadata properties.
+properties <- image$propertyNames()
+print('Metadata properties:', properties)  ## ee$List of metadata properties
+
+## Get a specific metadata property.
+cloudiness <- image$get('CLOUD_COVER')
+print('CLOUD_COVER:', cloudiness)  ## ee$Number
+
+## Get version number (ingestion timestamp as microseconds since Unix epoch).
+version <- image$get('system:version')
+print('Version:', version)  ## ee$Number
+print('Version (as ingestion date):',
+      ee$Date(ee$Number(version)$divide(1000)))  ## ee$Date
+
+## Get the timestamp and convert it to a date.
+date <- ee$Date(image$get('system:time_start'))
+print('Timestamp:', date)  ## ee$Date
+
+```
+
+
+
+
+
+
+
+
+
+
+## Mathematical Operations {-}
+
+Image math can be performed using operators like `add()` and `subtract()`, but for complex computations with more than a couple of terms, the expression() function provides a good alternative. See the following sections for more information on [operators]() and [expressions]().
+
+### Operators {-}
+
+Math operators perform basic arithmetic operations on image bands. They take two inputs: either two images or one image and a constant term, which is interpreted as a single-band constant image with no masked pixels. Operations are performed per pixel for each band.
+
+As a simple example, consider the task of calculating the Normalized Difference Vegetation Index (NDVI) using Landsat imagery, where `add()`, `subtract()`, and `divide()` operators are used:
+
+```{r, eval=FALSE}
+## Load a 5-year Landsat 7 composite 1999-2003.
+landsat1999 <- ee$Image('LANDSAT/LE7_TOA_5YEAR/1999_2003')
+
+## Compute NDVI.
+ndvi1999 <- landsat1999$select('B4')$subtract(landsat1999$select('B3'))$
+  divide(landsat1999$select('B4')$add(landsat1999$select('B3')))
+```
+
+**Note**: the normalized difference operation is available as a shortcut method: [_normalizedDifference()_]().
+
+Only the intersection of unmasked pixels between the two inputs are considered and returned as unmasked, all else are masked. In general, if either input has only one band, then it is used against all the bands in the other input. If the inputs have the same number of bands, but not the same names, they're used pairwise in the natural order. The output bands are named for the longer of the two inputs, or if they're equal in length, in the first input's order. The type of the output pixels is the union of the input types.
+
+The following example of multi-band image subtraction demonstrates how bands are matched automatically, resulting in a “change vector” for each pixel for each co-occurring band.
+
+```{r, eval=FALSE}
+## Load a 5-year Landsat 7 composite 2008-2012.
+landsat2008 <- ee$Image('LANDSAT/LE7_TOA_5YEAR/2008_2012')
+
+## Compute multi-band difference between the 2008-2012 composite and the
+## previously loaded 1999-2003 composite.
+diff <- landsat2008$subtract(landsat1999)
+Map$addLayer(diff,
+             {bands: ['B4', 'B3', 'B2'],
+               min: -32, 
+               max: 32}, 
+             'difference')
+
+## Compute the squared difference in each band.
+squaredDifference <- diff$pow(2);
+Map$addLayer(squaredDifference,
+             {bands: ['B4', 'B3', 'B2'], max: 1000}, 'squared diff.')
+```
+
+In the second part of this example, the squared difference is computed using image.pow(2). For the complete list of mathematical operators handling basic arithmetic, trigonometry, exponentiation, rounding, casting, bitwise operations and more, see the [API documentation]().
+
+### Expresions {-}
+
+To implement more complex mathematical expressions, consider using image.expression(), which parses a text representation of a math operation. The following example uses expression() to compute the Enhanced Vegetation Index (EVI):
+
+```{r, eval=FALSE}
+## Load a Landsat 8 image.
+image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
+
+## Compute the EVI using an expression.
+evi <- image.expression(
+    '2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))', {
+      'NIR': image.select('B5'),
+      'RED': image.select('B4'),
+      'BLUE': image.select('B2')
+})
+
+Map$centerObject(image, 9)
+Map$addLayer(evi, {min: -1, max: 1, palette: ['FF0000', '00FF00']})
+```
+
+Observe that the first argument to `expression()` is the textual representation of the math operation, the second argument is a dictionary where the keys are variable names used in the expression and the values are the image bands to which the variables should be mapped. Bands in the image may be referred to as `b("band name")` or `b(index)`, for example `b(0)`, instead of providing the dictionary. Bands can be defined from images other than the input when using the band map dictionary. Note that `expression()` uses "floor division", which discards the remainder and returns an integer when two integers are divided. For example `10 / 20 = 0`. To change this behavior, multiply one of the operands by `1.0: 10 * 1.0 / 20 = 0.5`. Only the intersection of unmasked pixels are considered and returned as unmasked when bands from more than one source image are evaluated. Supported expression operators are listed in the following table.
+
+**Operators for expression()**
+
+| Type | Symbol | Name | 
+|--|:--|--|
+| *Arithmetic*  |	+ - * / % **      | Add, Subtract, Multiply, Divide, Modulus, Exponent    |
+| *Relational*  | 	== != < > <= >= | Equal, Not Equal, Less Than, Greater than, etc.       | 
+| *Logical*     | && `||` ! ^       |                     And, Or, Not, Xor                 |
+| *Ternary*     | 		? :           |                      If then else                     |
+
+## Relational, Conditional, and Boolean Operations {-}
+
+`ee$Image` objects have a set of relational, conditional, and boolean methods for constructing decision-making expressions. The results of these methods are useful for limiting analysis to certain pixels or regions through masking, developing classified maps, and value reassignment.
+
+### Relational and boolean operators {-}
+
+- **Relational** methods include:
+`eq()`, `gt()`, `gte()`, `lt()`, and `lte()`.
+
+- **Boolean** methods include:
+`and()`,`or()`, and `not()`.
+
+To perform per-pixel comparisons between images, use relational operators. To extract urbanized areas in an image, this example uses relational operators to threshold spectral indices, combining the thresholds with the and operator:
+
+```{r, eval=FALSE}
+## Load a Landsat 8 image.
+image <- ee.Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
+
+## Create NDVI and NDWI spectral indices.
+ndvi <- image$normalizedDifference(c('B5', 'B4'))
+ndwi <- image$normalizedDifference(c('B3', 'B5'))
+## Create a binary layer using logical operations.
+bare <- ndvi$lt(0.2)$and(ndwi$lt(0))
+
+## Mask and display the binary layer.
+Map$setCenter(-122.3578, 37.7726, 12)
+Map$setOptions('satellite')
+Map$addLayer(bare$selfMask(), {}, 'bare')
+```
+
+As illustrated by this example, the output of relational and boolean operators is either true (1) or false (0). To mask the 0's, you can mask the resultant binary image with itself using `selfMask()`.
+
+<center>
+![Figure 6. Low NDVI and low NDWI (white) from Landsat 8, San Francisco, California, USA.](F:/rgeebook/images/chapter_05/figure_06.png){width=670px}
+</p>
+
+
+The binary images that are returned by relational and boolean operators can be used with mathematical operators. This example creates zones of urbanization in a nighttime lights image using relational operators and `add()`:
+
+```{r, eval=FALSE}
+## Load a 2012 nightlights image.
+nl2012 <- ee$Image('NOAA/DMSP-OLS/NIGHTTIME_LIGHTS/F182012')
+lights <- nl2012$select('stable_lights')
+
+## Define arbitrary thresholds on the 6-bit stable lights band.
+zones <- lights$gt(30)$add(lights$gt(55))$add(lights$gt(62))
+
+## Display the thresholded image as three distinct zones near Paris.
+palette <-c('000000', '0000FF', '00FF00', 'FF0000')
+Map$setCenter(2.373, 48.8683, 8)
+Map$addLayer(zones, {min: 0, max: 3, palette: palette}, 'development zones')
+```
+
+### Conditional operators {-}
+
+Note that the code in the previous example is equivalent to using a [ternary operator]() implemented by `expression()`:
+
+```{r, eval=FALSE}
+## Create zones using an expression, display.
+zonesExp <- nl2012.expression(
+    "(b('stable_lights') > 62) ? 3" +
+      ": (b('stable_lights') > 55) ? 2" +
+        ": (b('stable_lights') > 30) ? 1" +
+          ": 0"
+)
+Map$addLayer(zonesExp,
+             {min: 0, max: 3, palette: palette},
+             'development zones (ternary)');
+```
+
+Observe that in the previous expression example, the band of interest is referenced using the b() function, rather than a dictionary of variable names. Learn more about image expressions on [this page](). Using either mathematical operators or an expression will produce the same result.
+
+<center>
+![Figure 7. Arbitrary zones of 2012 nightlights imagery for Paris, France.](F:/rgeebook/images/chapter_05/figure_07.png){width=670px}
+</p>
+
+
+
+Another way to implement conditional operations on images is with the `where()` operator. Consider the need to replace masked pixels with some other data. In the following example, cloudy pixels are replaced by pixels from a cloud-free image using `where()`:
+
+```{r, eval=FALSE}
+## Load a cloudy Landsat 8 image.
+image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20130603')
+Map$addLayer(image,
+             {bands: ['B5', 'B4', 'B3'], min: 0, max: 0.5},
+             'original image')
+
+## Load another image to replace the cloudy pixels.
+replacement <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20130416')
+
+## Compute a cloud score band.
+cloud <- ee$Algorithms$Landsat$simpleCloudScore(image)$select('cloud')
+
+## Set cloudy pixels to the other image.
+replaced <- image$where(cloud$gt(10), replacement)
+
+## Display the result.
+Map$centerObject(image, 9);
+Map$addLayer(replaced,
+             {bands: ['B5', 'B4', 'B3'], min: 0, max: 0.5},
+             'clouds replaced');
+```
+
+In this example, observe the use of the `simpleCloudScore()` algorithm. This algorithm ranks pixels by cloudiness on a scale of 0-100, with 100 most cloudy. Learn more about `simpleCloudScore()` on the [Landsat Algorithms page]().
+
+
+## Convolutions {-}
+
+To perform linear convolutions on images, use `image.convolve()`. The only argument to convolve is an ee.Kernel which is specified by a shape and the weights in the kernel. Each pixel of the image output by `convolve()` is the linear combination of the kernel values and the input image pixels covered by the kernel. The kernels are applied to each band individually. For example, you might want to use a low-pass (smoothing) kernel to remove high-frequency information. The following illustrates a 15x15 low-pass kernel applied to a Landsat 8 image:
+
+```{r, eval=FALSE}
+## Load and display an image.
+image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
+vizParams <- list(bands = c('B5', 'B4', 'B3'),
+                  max = 0.5)
+Map$setCenter(-121.9785, 37.8694, 11)
+Map$addLayer(image,vizParams, 'input image')
+
+## Define a boxcar or low-pass kernel.
+boxcar <- ee$Kernel$square(list(
+  radius = 7,
+  units = 'pixels', 
+  normalize = TRUE
+))
+
+## Smooth the image by convolving with the boxcar kernel.
+smooth <- image$convolve(boxcar)
+Map$addLayer(smooth, {bands: ['B5', 'B4', 'B3'], max: 0.5}, 'smoothed')
+```
+
+
+The output of convolution with the low-pass filter should look something like Figure 8. Observe that the arguments to the kernel determine its size and coefficients. Specifically, with the `units` parameter set to pixels, the radius parameter specifies the number of pixels from the center that the kernel will cover. If `normalize` is set to `true`, the kernel coefficients will sum to one. If the `magnitude` parameter is set, the kernel coefficients will be multiplied by the magnitude (if `normalize` is also true, the coefficients will sum to `magnitude`). If there is a negative value in any of the kernel coefficients, setting `normalize` to true will make the coefficients sum to zero.
+
+<center>
+![Figure 8. Landsat 8 image convolved with a smoothing kernel. San Francisco Bay area, California, USA.](F:/rgeebook/images/chapter_05/figure_09.png){width=670px}
+
+
+<div style="text-align: justify">
+Use other kernels to achieve the desired image processing effect. This example uses a Laplacian kernel for isotropic edge detection:
+
+```{r, eval=FALSE}
+## Define a Laplacian, or edge-detection kernel.
+laplacian <- ee$Kernel$laplacian8({ normalize: false })
+
+## Apply the edge-detection kernel.
+edgy <- image$convolve(laplacian)
+Map$addLayer(edgy,
+             {bands: ['B5', 'B4', 'B3'], max: 0.5, format: 'png'},
+             'edges')
+```
+
+
+Note the format specifier in the visualization parameters. Earth Engine sends display tiles to the Code Editor in JPEG format for efficiency, however edge tiles are sent in PNG format to handle transparency of pixels outside the image boundary. When a visual discontinuity results, setting the format to PNG results in a consistent display. The result of convolving with the Laplacian edge detection kernel should look something like Figure 9.
+
+<center>
+![Figure 9. Landsat 8 image convolved with a Laplacian edge detection kernel. San Francisco Bay area, California,USA.](F:/rgeebook/images/chapter_05/figure_10.png){width=670px}
+</p>
+
+
+
+There are also anisotropic edge detection kernels (e.g. Sobel, Prewitt, Roberts), the direction of which can be changed with `kernel$rotate()`. Other low pass kernels include a Gaussian kernel and kernels of various shape with uniform weights. To create kernels with arbitrarily defined weights and shape, use `ee$Kernel$fixed()`. For example, this code creates a 9x9 kernel of 1’s with a zero in the middle:
+
+```{r, eval=FALSE}
+## Create a list of weights for a 9x9 kernel.
+row <- c(1, 1, 1, 1, 1, 1, 1, 1, 1)
+
+## The center of the kernel is zero.
+centerRow <- c(1, 1, 1, 1, 0, 1, 1, 1, 1)
+
+## Assemble a list of lists: the 9x9 kernel weights as a 2-D matrix.
+rows <- c(row, row, row, row, centerRow, row, row, row, row)
+
+## Create the kernel from the weights.
+kernel <- ee$Kernel$fixed(9, 9, rows, -4, -4, false)
+print(kernel)
+```
+
+
+</div>
+
 # ImageCollection
 
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
@@ -223,3 +842,4 @@ To start your journey in mastering R, the following six chapters will help you l
 # Chart
 
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+
