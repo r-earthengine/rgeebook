@@ -360,9 +360,9 @@ A good demonstration of `iterate()` is for creation of Fibonacci number sequence
 
 ```{R, eval=FALSE}
 var algorithm = function(current, previous) {
-  previous = ee.List(previous)
-  var n1 = ee.Number(previous.get(-1))
-  var n2 = ee.Number(previous.get(-2))
+  previous = ee$List(previous)
+  var n1 = ee$Number(previous.get(-1))
+  var n2 = ee$Number(previous.get(-2))
   return previous.add(n1.add(n2))
 }
 
@@ -386,13 +386,13 @@ Now that you're ready to begin writing in R of the Earth Engine , start by copyi
 
 ```{R, eval=FALSE}
 ## Instantiate an image with the Image constructor.
-var image = ee.Image('CGIAR/SRTM90_V4')
+image = ee$Image('CGIAR/SRTM90_V4')
 
 ## Zoom to a location.
-Map.setCenter(-112.8598, 36.2841, 9) ## Center on the Grand Canyon.
+Map$setCenter(-112.8598, 36.2841, 9) ## Center on the Grand Canyon.
 
 ## Display the image on the map.
-Map.addLayer(image)
+Map$addLayer(image)
 ```
 
 Click the Run button at the top of the Code Editor and observe that a very gray image appears on the map. Don't worry, you'll make it look better soon.
@@ -434,23 +434,29 @@ When you click run, note that an object appears in the console. To investigate t
 To change the way the data are stretched, you can provide another parameter to the `Map.addLayer()` call. Specifically, the second parameter, `visParams`, lets you specify the minimum and maximum values to display. To discover what values to use, activate the Inspector tab and click around on the map to get an idea of the range of pixel values. Alternatively, use the Layer manager to interactively stretch the data, then observe the minimum and maximum corresponding to percentiles or standard deviation stretches. Suppose that through such experimentation, you determine that the data should be stretched to [0, 3000]. To display the image using this range, use:
 
 ```{R, eval=FALSE}
-Map.addLayer(image, {min: 0, max: 3000}, 'custom visualization')
+Map$addLayer(image, list(min = 0, max = 3000), 'custom visualization')
 ```
 
 Note that the visParams parameter is an object, with properties specifying the min and the max. Note that the third parameter for `Map.addLayer()` is the name of the layer that is displayed in the Layer manager. The result should look something like Figure 1. Hover the mouse over the **Layers** box on the right to see the effect of renaming that layer.
 
-**(Figure)**
+<center>
+![Figure 8. Elevation image as grayscale, stretched to (0, 3000)](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_01.png){width=670px}
+
+<left>
 
 To display a single band using a color palette, add a `palette` property to the `visParams` object:
 
 ```{R, eval=FALSE}
-Map.addLayer(image, {min: 0, max: 3000, palette: ['blue', 'green', 'red']},
-    'custom palette')
+Map$addLayer(image, list(min = 0, max = 3000, palette = c('blue', 'green', 'red')), 
+             'custom palette')
 ```
 
 The result should look something like Figure .
 
-**Figure**
+<center>
+![Figure 8. Elevation image as a color ramp from blue to red, stretched to (0, 3000).](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_02.png){width=670px}
+
+<left>
 
 ## Digression: Palettes {-}
 
@@ -459,6 +465,92 @@ Palettes let you set the color scheme for single-band images. A palette is a com
 The colors are defined using the web standard CSS color value scheme (see this external reference to learn more). Colors can be specified by name or as hexadecimal strings indicating the combination of red, green and blue. The lowest value in any of the three positions is 00 (representing the decimal number 0), while the highest is FF (representing the decimal number 255). The string '000000' represents the color black, 'FFFFFF' is white, 'FF0000' is red, '00FF00' is green, and '0000FF' is blue. See the Color palettes section for more detail. Other stretches are possible by using Styled Layer Descriptors, as described in this section.
 
 Later in this tutorial, you'll learn how to display multi-band imagery. But first, visit the next page to learn about performing computations with images.
+
+
+## Computations using Images {-}
+
+Now that you know how to load and display an image, it's time to apply a computation to it. For example, you can compute the slope of terrain, by passing the SRTM elevation image to the `slope` method of the `ee.Terrain` package.
+
+```{R, eval=FALSE}
+## Load the SRTM image.
+srtm = ee$Image('CGIAR/SRTM90_V4')
+
+## Apply an algorithm to an image.
+slope = ee$Terrain$slope(srtm)
+
+## Display the result.
+Map$setCenter(-112.8598, 36.2841, 9) ## Center on the Grand Canyon.
+Map$addLayer(slope, list(min = 0, max = 60), 'slope')
+```
+
+Note that in the code `ee.Terrain.slope(srtm)`, the srtm image is provided as an argument to the slope algorithm. The result should look something like Figure 3.
+
+<center>
+![Figure 8. Slope image.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_03.png){width=670px}
+
+<left>
+
+## Image math {-}
+
+There are also methods in the `ee.Image` class that can be invoked on an image object. For example, suppose you'd like to do some math using image bands (sometimes called *band math* or *map algebra*). For example, you may be interested in trigonometric operations on an aspect image. To accomplish that, first convert an aspect image to radians, then call `sin()` on it. Reusing our `srtm` image.
+
+```{R, eval=FALSE}
+## Get the aspect (in degrees).
+aspect = ee$Terrain$aspect(srtm)
+
+## Convert to radians, compute the sin of the aspect.
+sinImage = aspect$divide(180)$multiply(Math$PI)$sin()
+
+## Display the result.
+Map$addLayer(sinImage, list(min = -1, max = 1), 'sin')
+```
+
+The result should look something like Figure . It's worth taking a closer look at the `aspect$divide(180)$multiply(Math$PI)$sin()` code. By chaining multiple methods like this, the code says, 'divide the aspect by 180, multiply the result of that by π, and finally take the sin'. You can perform complex mathematical operations on images by combining methods in this manner. See the `Image` [docs](https://developers.google.com/earth-engine/apidocs/ee-image) for a complete list of mathematical operations, `add()`, `subtract()`, `multiply()`, etc.
+
+<center>
+![Figure 8. Slope image.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_04.png){width=670px}
+
+## Image statistics {-}
+
+Another useful class of operations on images involves computing pixel statistics in image regions, or raster-vector overlays. To compute statistics in Earth Engine, use a reducer as represented by classes in the `ee.Reducer` [package](https://developers.google.com/earth-engine/guides/reducers_intro).For example, suppose you're interested in the mean of elevation in some region. You can define a region by drawing a polygon using the [geometry drawing tools](https://developers.google.com/earth-engine/guides/playground#geometry-tools) . To interactively draw a region, get the polygon drawing tool, then digitize a polygon over your area of interest and click **Exit** when you're done. Note that the resultant `ee.Geometry` object is automatically named geometry and added as an import at the top of your script. Rename that variable to 'polygon' by clicking on the variable name in the imports and typing the new name.
+
+Next, get the mean pixel value in the polygon using the following code:
+
+```{R, eval=FALSE}
+## Compute the mean elevation in the polygon.
+meanDict = srtm$reduceRegion(
+  reducer = ee$Reducer$mean(),
+  geometry = polygon,
+  scale = 90
+)
+
+## Get the mean from the dictionary and print it.
+mean = meanDict$get('elevation')
+print('Mean elevation', mean)
+```
+
+There are several things to note here. First, observe that `reduceRegion()` is a method available for `Image` objects [learn more about reducing regions here](https://developers.google.com/earth-engine/guides/reducers_reduce_region). Second, the method arguments are provided in a R object that is passed as a single argument. (Specifically, the keys of the object are the names of the method parameters. The values are the arguments to the method). Third, the `reducer` parameter specifies the type of statistic to compute and the `geometry` parameter specifies the region in which to compute the statistic. The `scale` parameter is the pixel size in meters to use. To avoid ambiguity, you should always specify scale when doing reductions as Earth Engine may not be able to automatically determine the appropriate scale from the inputs. (Learn more about scale in Earth Engine)(https://developers.google.com/earth-engine/guides/scale).
+
+Lastly, the return value of `reduceRegion()` is a dictionary in which keys are band names and values are the pixel statistics for the bands. The `get()` method on a dictionary returns the value corresponding to the key provided as an argument. In this case, the `srtm` image has one band, 'elevation', so the example code gets that statistic from the dictionary and prints it.
+
+When you run this code, if you get an error that looks like:
+
+**IMAGE**
+
+Fear not! There are several things you can do to resolve the error. The `reduceRegion()` method has a check to make sure you consider whether you really want to include so many pixels in your computation. This is intended to prevent you from accidentally doing something silly, like trying compute the mean of every one-meter pixel in the world (don't do that). To resolve the error, either set the `bestEffort` parameter to `true` by adding `bestEffort: true` to the dictionary of parameters, or set the `maxPixels` parameter to a value higher than the default of 10 million pixels, or both. If `bestEffort` is true, Earth Engine will automatically recompute the scale such that `maxPixels` is not exceeded.
+
+## Digression: Scale in Earth Engine {-}
+
+In the previous example, scale is set to approximately the native resolution of the SRTM image. You can discover the native resolution of an image with:
+
+```{R, eval=FALSE}
+scale = srtm$projection()$nominalScale()
+print('SRTM scale in meters', scale)
+```
+
+If you specify a scale smaller than the native resolution, Earth Engine will happily resample the input image using nearest neighbor, then include all those smaller pixels in the computation. If you set the scale to be larger, Earth Engine will use input pixels from an aggregated version of the input (i.e. get pixels from a higher level of the image pyramid). Learn more about how Earth Engine handles scale in this [doc](https://developers.google.com/earth-engine/guides/scale).
+
+So far, you've been working with a single image with a single band. In the next page, you'll learn about multi-band images and image collections.
 
 # Global Forest Change {-}
 
