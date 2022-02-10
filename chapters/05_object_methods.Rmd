@@ -1843,6 +1843,8 @@ print(paste0(ui$Thumbnail(sliderCol, videoArgs)))
 
 ![Figure 10. Example of a sliding transition between 12pm GMT surface temperature for summer and winter solstice.](D:/RGEE_BOOK/rgeebook/gif/chapter_05/gif_10.gif)
 
+![Figure 10. Example of a sliding transition between 12pm GMT surface temperature for summer and winter solstice.](D:/RGEE_BOOK/rgeebook/gif/chapter_05/gif_10.gif)
+
 # Geometry
 
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
