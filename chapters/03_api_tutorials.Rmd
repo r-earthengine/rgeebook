@@ -558,6 +558,11 @@ If you specify a scale smaller than the native resolution, Earth Engine will hap
 
 So far, you've been working with a single image with a single band. In the next page, you'll learn about multi-band images and image collections.
 
+## Computations using Images {-}
+
+Now that you know how to load and display an image, it's time to apply a computation to it. For example, you can compute the slope of terrain, by passing the SRTM elevation image to the `slope` [method of the] `ee.Terrain` [package](https://developers.google.com/earth-engine/apidocs/ee-terrain-slope).
+
+
 # Global Forest Change {-}
 
 ## Introduction to Forest Change Analysis in Earth Engine {-}
