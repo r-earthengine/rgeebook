@@ -1260,6 +1260,8 @@ Once you're familiar with the Code Editor, [get started on the tutorial]()!
 
 ## Water Occurrence (1984-2015) {-}
 
+The GSW dataset contains many data layers that present the surface water data in different ways. We will start by visualizing the water occurrence layer, which provides a summary of where and how often surface water occurred over the entire time-period between March 1984 and October 2015.
+
 # Video Tutorials
 
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
