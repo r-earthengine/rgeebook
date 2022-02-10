@@ -11,7 +11,7 @@ source("common.R")
 
 Machine Learning (ML) in Earth Engine is supported with:
 
-  - EE API methods in the __ee$Classifier__, __ee$Clusterer__, or __ee$Reducer__ packages for training and inference within Earth Engine.
+  - EE API methods in the __ee$Classifier__, __ee$Clusterer__, or __ee$Reducer__ packages for training and inference within Earth Engine Engine..
   - Export and import functions for TFRecord files to facilitate TensorFlow model development. Inference using data in Earth Engine and a trained model hosted on Google's AI Platform is supported with the __ee$Model__ package.
 
 ### EE API methods  {-}
