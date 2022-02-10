@@ -1087,6 +1087,132 @@ print(paste0(ee$Dictionary$getInfo(statsDictionary))
 
 ## Introduction to Forest Monitoring for Action (FORMA) data {-}
 
+FORMA is a [MODIS](http://modis.gsfc.nasa.gov/about/) based 500 x 500 meter twice-monthly deforestation alerting system for the humid tropical forests. The [FORMA 500 dataset](https://developers.google.com/earth-engine/datasets/catalog/FORMA_FORMA_500m) in Earth Engine is an image with alerts starting in January 2006 and updated monthly. Each alert has a time associated with it in a single band named **alert_date** in units of [epoch seconds](https://en.wikipedia.org/wiki/Unix_time). Filtering FORMA by dates and calculating alerts within areas of interest are two of the most important things you can do with the FORMA dataset.
+
+### Filtering FORMA by Date {-}
+
+To show just those alerts that occur in 2012, find pixels that have times between the first day of 2012 and the first day of 2013, expressed in seconds since midnight, January 1, 1970:
+
+```{r, eval=FALSE}
+# Convert dates from milliseconds to seconds.
+start <- ee$Date('2012-01-01')$millis()$divide(1000)
+end <- ee$Date('2013-01-01')$millis()$divide(1000)
+
+# Load the FORMA 500 dataset.
+forma <- ee$Image('FORMA/FORMA_500m')
+
+# Create a binary layer from the dates of interest.
+forma2012 <- forma$gte(start)$And(forma$lte(end))
+
+Map$setCenter(15.87, -0.391, 7)
+Map$addLayer(
+  forma2012$mask(forma2012),
+  list(palette = 'FF0000'),
+  'FORMA alerts in 2012'
+)
+```
+
+In this example, **forma2012** is a binary image containing only those pixels that have times occurring in 2012 (i.e. all other pixels are masked).
+
+### Counting FORMA Alerts in a Region of Interest {-}
+
+[As we did in the previous section]() with the Hansen et al. data, we can start by counting the number of FORMA alerts (pixels) in an area of interest. For example, to count the number of alerts in protected areas of the Congo Republic in 2012, build on the previous example as follows:
+
+```{r, eval=FALSE}
+# Load country features from Large Scale International Boundary (LSIB) dataset.
+countries <- ee$FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+
+# Subset the Congo Republic feature from countries.
+congo <- ee$Feature(
+  countries$
+    filter(ee$Filter$eq('country_na', 'Rep of the Congo'))$
+    first()
+)
+
+# Subset protected areas to the bounds of the congo feature
+# and other criteria. Clip to the intersection with congo.
+protectedAreas <- ee$FeatureCollection('WCMC/WDPA/current/polygons')$
+  filter(ee$Filter$And(
+  ee$Filter$bounds(congo$geometry()),
+  ee$Filter$neq('IUCN_CAT', 'VI'),
+  ee$Filter$neq('STATUS', 'proposed'),
+  ee$Filter$lt('STATUS_YR', 2010)
+))$map(function(feat){
+  return(congo$intersection(feat))
+})
+
+# Display protected areas on the map.
+Map$addLayer(
+  protectedAreas,
+  list(color = '000000'),
+  'Congo Republic protected areas'
+)
+
+# Calculate the number of FORMA pixels in protected
+# areas of the Congo Republic, 2012.
+stats <- forma2012$reduceRegion(
+  reducer = ee$Reducer$sum(),
+  geometry = protectedAreas$geometry(),
+  scale = 500
+)
+
+print(paste0('Number of FORMA pixels, 2012: ', ee$Dictionary$getInfo(stats.get('constant')))
+```
+
+### Counting FORMA Alerts in Several Regions of Interest {-}
+So far, we've been computing statistics in a single region at a time. For computing statistics in multiple regions at once, you can use **reduceRegions()**. Again building on the previous example:
+
+```{r, eval=FALSE}
+
+regionsStats <- forma2012$reduceRegions(
+  collection = protectedAreas,
+  reducer = ee$Reducer$sum(),
+  scale = forma2012$projection()$nominalScale()
+)
+
+print(ee$Dictionary$getInfo(regionsStats))
+      
+```
+
+Examine the object printed to the console and observe that the output of **reduceRegions()** is another **FeatureCollection**. Note that every region in the collection of the Congo Republic protected areas now has an additional property, **sum**, named after the reducer. The value of this property is the output of the reducer, or the number of 2012 alerts in the protected areas.
+
+#### Comparing FORMA and Hansen et al. Datasets {-}
+
+To compare the FORMA and Hansen et al. datasets, you can use logical operators. ([Learn more about logical operations]()). Specifically, we'd like to make an image in which pixels marked by both FORMA and the Hansen et al. data as deforestation are 1 and the rest are zero. This code makes such an image for 2012 and displays it along with other predicted deforestation layers:
+
+```{r, eval=FALSE}
+# Convert dates from milliseconds to seconds.
+start <- ee$Date('2012-01-01')$millis()$divide(1000)
+end <- ee$Date('2013-01-01')$millis()$divide(1000)
+region <- ee$Geometry$Rectangle(c(-59.81163, -9.43348, -59.27561, -9.22818))
+
+# Load the FORMA 500 dataset.
+forma <- ee$Image('FORMA/FORMA_500m')
+
+# Create a binary layer from the dates of interest.
+forma2012 <- forma$gte(start)$and(forma$lte(end))
+
+# Load Hansen et al. data and get change in 2012.
+gfc <- ee$Image('UMD/hansen/global_forest_change_2015')
+gfc12 <- gfc$select('lossyear')$eq(12)
+
+# Create an image which is one where the datasets
+# both show deforestation and zero elsewhere.
+gfc_forma <- gfc12$eq(1)$and(forma2012$eq(1))
+
+# Display data on the map.
+Map$setCenter(-59.58813, -9.36439, 11)
+Map$addLayer(forma$updateMask(forma), list(palette = '00FF00'), 'Forma (green)')
+Map$addLayer(gfc12$updateMask(gfc12), list(palette = 'FF0000'), 'Hansen (red)')
+Map$addLayer(
+  gfc_forma$updateMask(gfc_forma),
+  list(palette = 'FFFF00'),
+  'Hansen & FORMA (yellow)'
+)
+```
+
+This concludes the overview of forest change datasets in Earth Engine. We're looking forward to seeing what you can do with them!
+
 # Global Surface Water {-}
 
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
