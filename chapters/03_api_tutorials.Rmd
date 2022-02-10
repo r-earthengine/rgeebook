@@ -813,28 +813,277 @@ We're almost able to make the image shown at the start of the tutorial. However,
 
 Let's start with the calculation needed to create a band that shows pixels where the Hansen et al. data show both loss and gain.
 
-The Hansen et al. dataset has a band whose pixels are 1 where loss occurred and 0 otherwise (loss) and a band that is 1 where gain has occurred and a 0 otherwise (gain). To create a band where pixels in both the loss and the gain bands have a 1, you can use the and() logical method on images. The and() method is called like image1.and(image2) and returns an image in which pixels are 1 where both image1 and image2 are 1, and 0 elsewhere:
+The Hansen et al. dataset has a band whose pixels are 1 where loss occurred and 0 otherwise (**loss**) and a band that is 1 where gain has occurred and a 0 otherwise (**gain**). To create a band where pixels in both the **loss** and the **gain** bands have a 1, you can use the **And()** logical method on images. The **And()** method is called like __image1$And(image2)__ and returns an image in which pixels are 1 where both image1 and image2 are 1, and 0 elsewhere:
 
-```{js, eval=FALSE}
-// Load the data and select the bands of interest.
-var gfc2014 = ee.Image('UMD/hansen/global_forest_change_2015');
-var lossImage = gfc2014.select(['loss']);
-var gainImage = gfc2014.select(['gain']);
+```{r, eval=FALSE}
+# Load the data and select the bands of interest.
+gfc2014 <- ee$Image('UMD/hansen/global_forest_change_2015')
+lossImage <-gfc2014$select('loss')
+gainImage <- gfc2014$select('gain')
 
-// Use the and() method to create the lossAndGain image.
-var gainAndLoss = gainImage.and(lossImage);
+# Use the and() method to create the lossAndGain image.
+gainAndLoss <- gainImage$And(lossImage)
 
-// Show the loss and gain image.
-Map.addLayer(gainAndLoss.updateMask(gainAndLoss),
-    {palette: 'FF00FF'}, 'Gain and Loss');
-    
+# Show the loss and gain image.
+Map$addLayer(gainAndLoss$updateMask(gainAndLoss),
+             list(palette= 'FF00FF'), 'Gain and Loss')
 ```
 
 The result, zoomed into Arkansas with satellite view, should look something like Figure 1.
 
+<center>
+<img src="C:/Users/Junior/rgeebook/images/chapter_03/figure_QFC_01.png" width=95%>
+</center>
 
+Figure 1. Pixels with forest loss and gain in Arkansas.
+
+Combining this example with the result from the [previous section](), it's now possible to recreate the figure from the beginning of the tutorial:
+
+```{r, eval=FALSE}
+# Displaying forest, loss, gain, and pixels where both loss and gain occur.
+gfc2014 <- ee$Image('UMD/hansen/global_forest_change_2015')
+lossImage <- gfc2014$select('loss')
+gainImage <- gfc2014$select('gain')
+treeCover <- gfc2014$select('treecover2000')
+
+# Use the and() method to create the lossAndGain image.
+gainAndLoss <- gainImage$And(lossImage)
+
+# Add the tree cover layer in green.
+Map$addLayer(treeCover$updateMask(treeCover),
+             list(palette= c('000000', '00FF00'), max= 100), 'Forest Cover')
+
+# Add the loss layer in red.
+Map$addLayer(lossImage$updateMask(lossImage),
+             list(palette= 'FF0000'), 'Loss')
+
+# Add the gain layer in blue.
+Map$addLayer(gainImage$updateMask(gainImage),
+             list(palette= '0000FF'), 'Gain')
+
+# Show the loss and gain image.
+Map$addLayer(gainAndLoss$updateMask(gainAndLoss),
+             list(palette= 'FF00FF'), 'Gain and Loss')
+```
+
+### Quantifying Forest Change in a Region of Interest {-}
+
+Now that you're more familiar with the bands in the Hansen et al. dataset, we can use concepts learned so far to compute statistics about forest gain and loss in a region of interest. For this we'll need to use vector data (points, lines, and polygons). A vector dataset is represented as a **FeatureCollection** in Earth Engine. (Learn more about [feature collections]() and how to [import vector data]().)
+
+In this section, we'll compare the total amount of forest loss that happened within the Congo Republic in the year 2012 to the amount of forest loss that happened within the country's protected areas at the same time.
+
+[As you learned in the Earth Engine API tutorial](), the key method for calculating statistics in an image region is **reduceRegion()**. ([Learn more about reducing image regions]().) For example, suppose we want to calculate the number of pixels estimated to represent forest loss during the study period. For that purpose, consider the following code:
+
+```{r, eval=FALSE}
+# Load country features from Large Scale International Boundary (LSIB) dataset.
+countries <- ee$FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+
+# Subset the Congo Republic feature from countries.
+congo <- countries$filter(ee$Filter$eq('country_na', 'Rep of the Congo'))
+
+# Get the forest loss image.
+gfc2014 <- ee$Image('UMD/hansen/global_forest_change_2015')
+lossImage <- gfc2014$select('loss')
+
+# Sum the values of forest loss pixels in the Congo Republic.
+stats <- lossImage$reduceRegion(
+  reducer = ee$Reducer$sum(),
+  geometry = congo,
+  scale = 30
+)
+ee$Dictionary$getInfo(stats)
+```
+
+This example uses the __ee$Reducer$sum()__ reducer to sum the values of the pixels in **lossImage** within the **congo** feature. Because **lossImage** consists of pixels that have a value of 1 or 0 (for loss or not loss, respectively), the sum of these values is equivalent to the number of pixels of loss in the region.
+
+Unfortunately, running the script as it is results in an error. 
+
+The default maximum number of pixels in [**reduceRegion()**]() is 10 million. This error message indicates that the Congo Republic covers about 383 million Landsat pixels. Luckily, [**reduceRegion()**]() takes many parameters, one of which (**maxPixels**) lets you control how many pixels are used in the computation. Specifying this parameter allows the computation to succeed:
+
+```{r, eval=FALSE}
+# Load country features from Large Scale International Boundary (LSIB) dataset.
+countries <- ee$FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+
+# Subset the Congo Republic feature from countries.
+congo <- countries$filter(ee$Filter$eq('country_na', 'Rep of the Congo'))
+
+# Get the forest loss image.
+gfc2014 <- ee$Image('UMD/hansen/global_forest_change_2015')
+lossImage <- gfc2014$select('loss')
+
+# Sum the values of forest loss pixels in the Congo Republic.
+stats <- lossImage$reduceRegion(
+  reducer = ee$Reducer$sum(),
+  geometry = congo,
+  scale = 30,
+  maxPixels = 1e9
+)
+ee$Dictionary$getInfo(stats)
+```
+
+By expanding the object printed to the console, observe that the result is 4897933 pixels of forest lost. You can clean up the printout in the console a bit by labeling the output and getting the result of interest from the dictionary returned by **reduceRegion()**:
+
+```{r, eval=FALSE}
+print(paste0("pixels representing loss: ", ee$Dictionary$getInfo(stats$get('loss'))))
+```
+
+### Calculating Pixel Areas {-}
+
+You're almost ready to answer the question of how much area was lost in the Congo Republic, and how much of that was in protected areas. The remaining part is to convert pixels into actual area. This conversion is important because we don't necessarily know the size of the pixels input to **reduceRegion()**. To help compute areas, Earth Engine has the __ee$Image$pixelArea()__ method which generates an image in which the value of each pixel is the pixel's area in square meters. Multiplying the loss image with this area image and then summing over the result gives us a measure of area:
+
+```{r, eval=FALSE}
+# Load country features from Large Scale International Boundary (LSIB) dataset.
+countries <- ee$FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+
+# Subset the Congo Republic feature from countries.
+congo <- countries$filter(ee$Filter$eq('country_na', 'Rep of the Congo'))
+
+# Get the forest loss image.
+gfc2014 <- ee$Image('UMD/hansen/global_forest_change_2015')
+lossImage <- gfc2014$select('loss')
+areaImage <- lossImage$multiply(ee$Image$pixelArea())
+
+# Sum the values of forest loss pixels in the Congo Republic.
+stats <- areaImage$reduceRegion(
+  reducer = ee$Reducer$sum(),
+  geometry = congo,
+  scale = 30,
+  maxPixels = 1e9
+)
+
+print(paste0("pixels representing loss: ", ee$Dictionary$getInfo(stats$get('loss')), " square meters"))
+```
+
+Now the result is 4,372,566,344 square meters lost over the study period.
+
+You are now ready to answer the question at the start of this section - how much forest area was lost in the Congo Republic in 2012, and how much of that was in protected areas?
+
+```{r, eval=FALSE}
+# Load country features from Large Scale International Boundary (LSIB) dataset.
+countries <-  ee$FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+
+# Subset the Congo Republic feature from countries.
+congo <- ee$Feature(
+  countries
+  $filter(ee$Filter$eq('country_na', 'Rep of the Congo'))
+  $first()
+)
+
+# Subset protected areas to the bounds of the congo feature
+# and other criteria. Clip to the intersection with congo.
+protectedAreas <- ee$FeatureCollection('WCMC/WDPA/current/polygons')$filter(ee$Filter$And(
+  ee$Filter$bounds(congo$geometry()),
+  ee$Filter$neq('IUCN_CAT', 'VI'),
+  ee$Filter$neq('STATUS', 'proposed'),
+  ee$Filter$lt('STATUS_YR', 2010)
+))
+$map(function(feat){
+  return(congo$intersection(feat))
+})
+
+# Get the loss image.
+gfc2014 <- ee$Image('UMD/hansen/global_forest_change_2015')
+lossIn2012 <- gfc2014$select('lossyear')$eq(12)
+areaImage <- lossIn2012$multiply(ee$Image$pixelArea())
+
+# Calculate the area of loss pixels in the Congo Republic.
+stats <- areaImage$reduceRegion(
+  reducer = ee$Reducer$sum(),
+  geometry = congo$geometry(),
+  scale = 30,
+  maxPixels = 1e9
+)
+
+print(paste0("Area lost in the Congo Republic: ", 
+             ee$Dictionary$getInfo(stats$get('lossyear')),
+             " square meters")) 
+
+# Calculate the area of loss pixels in the protected areas.
+stats <- areaImage$reduceRegion(
+  reducer = ee$Reducer$sum(),
+  geometry = protectedAreas$geometry(),
+  scale = 30,
+  maxPixels = 1e9
+)
+
+print(paste0("Area lost in protected areas: ", 
+             ee$Dictionary$getInfo(stats$get('lossyear')), 
+             " square meters")) 
+```
+The output indicates that of the 348,036,295 square meters of forest lost in the Congo Republic in 2012, 11,880,976 of those were in protected areas, as represented in the [World Database on Protected Areas table]().
+
+The only changes between this script and the one just prior are the addition of the protected area information and changing the script from looking at overall loss to looking at loss in 2012. This required two changes. First, there's a new **lossIn2012** image which has a 1 where loss was recorded in 2012, 0 otherwise. Second, because the name of the band is different (**lossyear** instead of **loss**) the property name had to change in the print statement.
+
+In the [next section](), we will explore some advanced methods for computing and charting forest loss for every year, instead of just one year as we did in this section.
 
 ## Charting Yearly Forest Loss {-}
+
+### Calculating Yearly Forest Loss {-}
+
+In the previous section you learned how to [calculate total forest area lost]() in the given region of interest using the **reduceRegion** method. Instead of calculating the total loss, it would be helpful to compute the loss for each year. The way to achieve this in Earth Engine is using a [Grouped Reducer]().
+
+To group output of **reduceRegion()**, you can specify a grouping band that defines groups by integer pixel values. In the following example, we slightly modify the previous code and add the **lossYear** band to the original image. Each pixel in the **lossYear** band contain values from 0 to 14 - indicating the year in which the loss occurred. We also change the reducer to a grouped reducer, specifying the band index of the grouping band (1) so the pixel areas will be summed and grouped according to the value in the **lossYear** band.
+
+```{r, eval=FALSE}
+# Load country boundaries from LSIB.
+countries <- ee$FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+# Get a feature collection with just the Congo feature.
+congo <- countries$filter(ee$Filter$eq('country_co', 'CF'))
+
+# Get the loss image.
+# This dataset is updated yearly, so we get the latest version.
+gfc2017 <- ee$Image('UMD/hansen/global_forest_change_2017_v1_5')
+lossImage <- gfc2017$select('loss')
+lossAreaImage <- lossImage$multiply(ee$Image$pixelArea())
+
+lossYear <- gfc2017$select('lossyear')
+lossByYear <- lossAreaImage$addBands(lossYear)$reduceRegion(
+  reducer = ee$Reducer$sum()$group(
+    groupField = 1
+  ),
+  geometry = congo,
+  scale = 30,
+  maxPixels = 1e9
+)
+
+print(paste0(ee$Dictionary$getInfo(lossByYear)) 
+```
+
+Once you run the above code, you will see the yearly forest loss area printed out in a nested list called **groups**. We can format the output a little to make the result a dictionary, with year as the key and loss area as the value. Notice that we are using the **format()** method to convert the year values from 0-14 to 2000-2014.
+
+```{r, eval=FALSE}
+# Load country boundaries from LSIB.
+countries <- ee$FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+# Get a feature collection with just the Congo feature.
+congo <- countries$filter(ee$Filter$eq('country_co', 'CF'))
+
+# Get the loss image.
+# This dataset is updated yearly, so we get the latest version.
+gfc2017 <- ee$Image('UMD/hansen/global_forest_change_2017_v1_5')
+lossImage <- gfc2017$select('loss')
+lossAreaImage <- lossImage$multiply(ee$Image$pixelArea())
+
+lossYear <- gfc2017$select('lossyear')
+lossByYear <- lossAreaImage$addBands(lossYear)$reduceRegion(
+  reducer = ee$Reducer$sum()$group(
+    groupField = 1
+  ),
+  geometry = congo,
+  scale = 30,
+  maxPixels = 1e9
+)
+
+statsFormatted <- ee$List(lossByYear$get('groups'))$map(function(el){
+  d <- ee$Dictionary(el)
+  return (c(ee$Number(d$get('group'))$format("20%02d"), d$get('sum')))
+})
+
+statsDictionary <- ee$Dictionary(statsFormatted$flatten())
+
+print(paste0(ee$Dictionary$getInfo(statsDictionary))
+```
+
+### Making a chart {-}
 
 ## Introduction to Forest Monitoring for Action (FORMA) data {-}
 
