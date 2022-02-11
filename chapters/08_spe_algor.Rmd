@@ -7,7 +7,17 @@ source("common.R")
 
 # Landsat Algorithms 
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+## Landsat collection structure {-}
+
+The USGS produces data in 3 tiers (categories) for each satellite:
+
+*Tier 1 (T1) - Data that meets geometric and radiometric quality requirements
+*Tier 2 (T2) - Data that doesn't meet the Tier 1 requirements
+*Real Time (RT) - Data that hasn't yet been evaluated (it takes as much as a month).
+
+See [USGS documentation](https://www.usgs.gov/landsat-missions/landsat-collection-1?qt-science_support_page_related_con=1#qt-science_support_page_related_con) on Collection 1 Tiers for more information.
+
+To allow access to both the validated T1 data and the newest real-time data together, we've grouped the scenes into collections by tier and satellite. Examples for Landsat 8 are as follows:
 
 
 # Sentinel-1 Algorithms
