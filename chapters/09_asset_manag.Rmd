@@ -24,4 +24,173 @@ To start your journey in mastering R, the following six chapters will help you l
 
 # Exporting Data 
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+
+
+
+
+
+
+### Exporting images as they appear in the Code Editor {-}
+
+To export imagery as rendered on screen in Earth Engine, create visualization images as demonstrated in the [Visualization images]() and the [Compositing and Mosaicking]() sections. Since the Code Editor uses the 'EPSG:3857' CRS, specify a CRS of `'EPSG:3857'` in the export to get an image in the same projection as that displayed in the Code Editor map. [See the section on configuring image exports]() for details on specifying the resolution and coordinate system of the output.
+
+## Exporting tables and vector data {-}
+
+You can export a `FeatureCollection` as CSV, SHP (shapefile), GeoJSON, KML, KMZ or TFRecord using `Export.table`. The `FeatureCollection` may represent vectors or simply a table of data. In the latter case, the features in the collection will have null geometry.
+
+Note some additional constraints when working with some file formats, including:
+- **KML**: A `FeatureCollection` exported to a KML file will have all the geometries transformed to unprojected (WGS84) coordinates.
+
+- **SHP**: A `FeatureCollection` exported to a Shapefile must contain features with the same geometry type and projection and must fit within the [Shapefile size limits](). Column names are truncated to 10 characters or fewer, and this must not create duplicate column names.
+
+- **TFRecord**: See [this page]().
+
+*Note*: If you need control over the precision of geometries in your export, map() a function over the collection to be exported:
+
+```{r, eval=FALSE}
+map(function(f) { return f.transform(targetProj, maxErr) })
+```
+
+### To Drive {-}
+
+To export a `FeatureCollection` to your Drive account, use `Export.table.toDrive()`. For example:
+
+```{r, eval=FALSE}
+# Make a collection of points.
+features = ee.FeatureCollection([
+  ee.Feature(ee.Geometry.Point(30.41, 59.933), {name: 'Voronoi'}),
+  ee.Feature(ee.Geometry.Point(-73.96, 40.781), {name: 'Thiessen'}),
+  ee.Feature(ee.Geometry.Point(6.4806, 50.8012), {name: 'Dirichlet'})
+])
+
+# Export the FeatureCollection to a KML file.
+Export.table.toDrive({
+  collection: features,
+  description:'vectorsToDriveExample',
+  fileFormat: 'KML'
+})
+```
+
+Note that the output format is specified as KML to handle geographic data (SHP would also be appropriate for exporting a table with geometry). To export just a table of data, without any geographic information, export features with null geometry in CSV format. The following demonstrates using `Export.table.toDrive()` to get the results of a potentially long running reduction:
+
+```{r, eval=FALSE}
+# Load a Landsat TOA image.
+image = ee.Image('LANDSAT/LC08/T1_TOA/LC08_044034_20140318')
+
+# Create an arbitrary rectangle.
+region = ee.Geometry.Rectangle(-122.2806, 37.1209, -122.0554, 37.2413)
+
+# Get a dictionary of means in the region.
+means = image.reduceRegion({
+  reducer: ee.Reducer.mean(),
+  geometry: region,
+  crs: projection.crs,
+  crsTransform: projection.transform,
+})
+
+# Make a feature without geometry and set the properties to the dictionary of means.
+feature = ee.Feature(null, means)
+
+# Wrap the Feature in a FeatureCollection for export.
+featureCollection = ee.FeatureCollection([feature])
+
+# Export the FeatureCollection.
+Export.table.toDrive({
+  collection: featureCollection,
+  description: 'exportTableExample',
+  fileFormat: 'CSV'
+})
+```
+
+Note that the format is set to ‘CSV’ in this example since there is no geometry in the output.
+
+### to Cloud Storage {-}
+
+To export a `FeatureCollection` to Cloud Storage, use `Export.table.toCloudStorage()`. For example, using the `features` defined previously:
+
+```{r, eval=FALSE}
+# Export a KML file to Cloud Storage.
+Export.table.toCloudStorage({
+  collection: features,
+  description:'vectorsToCloudStorageExample',
+  bucket: 'your-bucket-name',
+  fileNamePrefix: 'exampleTableExport',
+  fileFormat: 'KML'
+})
+```
+
+### to Asset {-}
+
+To export a `FeatureCollection` as an Earth Engine asset, use `Export.table.toAsset()`. For example, using the `features` defined previously:
+
+```{r, eval=FALSE}
+# Export an ee.FeatureCollection as an Earth Engine asset.
+Export.table.toAsset({
+  collection: features,
+  description:'exportToTableAssetExample',
+  assetId: 'exampleAssetId',
+})
+```
+
+There are several limitations on the size and shape of Earth Engine table assets:
+
+- Maximum of 100 million features
+- Maximum of 1000 properties (columns)
+- Maximum of 100,000 vertices for each row's geometry
+- Maximum of 100,000 characters per string value
+
+## Exporting video {-}
+
+To export ordered image collections as video, where frames are defined by images in the collection, use `Export.video()`. You can configure the way the `ImageCollection` is turned into video by setting frame rate, scale and dimensions. The video will be encoded as an MP4.
+
+### to Drive {-}
+
+Export video to your Drive account with `Export.video.toDrive()`. For example, the following export makes a video from 20 years of Landsat imagery:
+
+```{r, eval=FALSE}
+# Load a Landsat 5 image collection.
+collection = ee.ImageCollection('LANDSAT/LT05/C01/T1_TOA')
+  # San Francisco Bay.
+  .filter(ee.Filter.eq('WRS_PATH', 44))
+  .filter(ee.Filter.eq('WRS_ROW', 34))
+  # Filter cloudy scenes.
+  .filter(ee.Filter.lt('CLOUD_COVER', 30))
+  # Get 20 years of imagery.
+  .filterDate('1991-01-01','2011-12-30')
+  # Need to have 3-band imagery for the video.
+  .select(['B4', 'B3', 'B2'])
+  # Need to make the data 8-bit.
+  .map(function(image) {
+    return image.multiply(512).uint8();
+  })
+
+# Define an area to export.
+polygon = ee.Geometry.Rectangle([-122.7286, 37.6325, -122.0241, 37.9592])
+
+# Export (change dimensions or scale for higher quality).
+Export.video.toDrive({
+  collection: collection,
+  description: 'sfVideoExample',
+  dimensions: 720,
+  framesPerSecond: 12,
+  region: polygon
+})
+```
+
+Note that the frame rate and dimensions can be set from a dictionary of parameters passed to the export. Adjust these parameters to customize the video. Also note that the input `ImageCollection` is required to have 3-band (RGB), 8-bit images. In this example, the 8-bit, 3-band format is explicitly set. Alternatively, map a function which calls `image.visualize()` over the collection. See [the section on Visualization images]() for details. Video exports can take a significant amount of time to complete, so it's not unusual to see the export task running for an extended period.
+
+### to Cloud Storage {-}
+
+To export a video to Cloud Storage, use `Export.video.toCloudStorage()`. For example, using the `ImageCollection` from the previous example:
+
+```{r, eval=FALSE}
+# Export video to cloud storage.
+Export.video.toCloudStorage({
+  collection: collection,
+  description: 'sfVideoExampleToCloud',
+  bucket: 'your-bucket-name',
+  dimensions: 720,
+  framesPerSecond: 12,
+  region: polygon
+})
+```
