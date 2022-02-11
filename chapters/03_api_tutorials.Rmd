@@ -3,18 +3,12 @@
 ```{r, eval = FALSE}
 source("common.R")
 ```
+
 # Overview
 
-<<<<<<< Updated upstream
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
 
-=======
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapt 
- 
 ## Tutorials
->>>>>>> Stashed changes
-
-## Tutorial 
 
 These tutorials are an introduction to using the Earth Engine R API for advanced geospatial analysis. The tutorials assume no programming background, although they do assume a willingness to learn some R programming. Use the links below to get started on the tutorials or use the menus on the left to jump to a section of interest.
 
@@ -27,13 +21,13 @@ This tutorial covers just enough JavaScript to get you started writing Earth Eng
 
 Time to write your first code in R for Earth Engine! In your Rstudio,  copy the following into the Code Editor:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 print('Hello World!')
 ```
 
 Click Run and observe that 'Hello world!' is printed to the Console tab. The line above is R statement. Earth Engine programs are made up of a set of statements like this one. You can prevent code from running without deleting it by commenting it. One of the ways to comment out code is by putting two forward numerals `##` before the code that you don't want to run. For example:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## print('Hello World!')
 ```
 
@@ -46,7 +40,7 @@ It's good practice to put lots of comments in your code, to describe what you're
 
 Using variables to store objects and primitives helps code readability. For example, a variable that stores a string object is defined by single ' or double " quotes (but don't mix them), with single quotes preferred. Make a new string and store it in a variable called greetString:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Use single (or double) quotes to make a string.
 var greetString = 'Ahoy there!'
 ## Use parentheses to pass arguments to functions.
@@ -57,7 +51,7 @@ print(greetString)
 
 Note that variables are defined with the keyword `var`. Variables can also store numbers:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Store a number in a variable.
 var number = 42
 print('The answer is:', number)
@@ -69,7 +63,7 @@ In this example, observe that when `print()` is given two arguments separated by
 
 Define lists with square brackets `[]`. A list of numbers, for example:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Use square brackets [] to make a list.
 var listOfNumbers = [0, 1, 1, 2, 3, 5]
 print('List of numbers:', listOfNumbers)
@@ -77,7 +71,7 @@ print('List of numbers:', listOfNumbers)
 
 Lists can also store strings or other objects. For example:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Make a list of strings.
 var listOfStrings = ['a', 'b', 'c', 'd']
 print('List of strings:', listOfStrings)
@@ -87,7 +81,7 @@ print('List of strings:', listOfStrings)
 
 Objects in R are dictionaries of `key: value` pairs. Make an object (or dictionary) using curly brackets {}, for example:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Use curly brackets {} to make a dictionary of key:value pairs.
 var object = {
   foo: 'bar',
@@ -107,7 +101,7 @@ Note that you can get a value from a dictionary by supplying the key. This examp
 
 Functions are another way to improve code readability and reusability by grouping sets of operations. Define a function with the `function` keyword. Function names start with a letter and have a pair of parentheses at the end. Functions often take parameters which tell the function what to do. These parameters go inside the parentheses `()`. The set of statements making up the function go inside curly brackets. The `return` keyword indicates what the function output is. There are several ways to declare a function, but here we'll use something like this:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 var myFunction = function(parameter1, parameter2, parameter3) {
   statement;
   statement;
@@ -118,7 +112,7 @@ var myFunction = function(parameter1, parameter2, parameter3) {
 
 Let's consider the lines one by one. The first line creates a new function and assigns it to the variable myFunction. This variable could have been named anything. It defines how to call the function later. The terms in the parentheses after the function name (i.e. parameter1, parameter2, parameter3) are the parameter names and could have been named anything as well, though it's good practice to give them unique names that are different from the code outside the function. Whatever you name them, these are the names that function will use to refer to the values that are passed into the function when it is called. The value of a parameter once it's been passed into a function is called an argument. Although functions can use variables declared outside the function (global variables), function arguments are not visible outside the function. Functions can take as many parameters as you need, even zero. Here's a simple example of a function that just returns its argument:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## The reflect function takes a single parameter: element.
 var reflect = function(element) {
 ## Return the argument.
@@ -129,7 +123,7 @@ print('A good day to you!', reflect('Back at you!'))
 
 This is an example of a user-defined function. There are also lots of built-in Earth Engine functions. Explore the Code Editor Docs tab to learn about these built-in functions. Here's a very simple example of an Earth Engine function:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 var aString = ee.Algorithms.String(42)
 ```
 
@@ -141,7 +135,7 @@ Now that you're comfortable with R, learn how to put  objects in R and primitive
 
 For example, define a string, then put it into the `ee.String()` container to be sent to Earth Engine:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Define a string, then put it into an EE container.
 var aString = 'To the cloud!'
 var eeString = ee.String(aString)
@@ -150,7 +144,7 @@ print('Where to?', eeString)
 
 Think of `ee.Thing` as a container for a thing that exists on the server. In this example, the string is defined first, then put into the container. You can also define the container and its contents all at once. For example:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Define a string that exists on the server.
 var serverString = ee.String('This is on the server.')
 print('String on the server:', serverString)
@@ -162,7 +156,7 @@ Although the first argument to `print()` is just a string on the client, the sec
 
 Use `ee.Number()` to create number objects on the server. For example, use the `Math.E` R method to create a constant value on the server:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Define a number that exists on the server.
 var serverNumber = ee.Number(Math.E)
 print('e=', serverNumber)
@@ -174,7 +168,7 @@ The `ee.String()` and `ee.Number()` methods are constructors. A constructor take
 
 Note that once you've created an Earth Engine object, you have to use Earth Engine methods to process it. In this example, you can't use R's `Math.log()` to process that Earth Engine object. You have to use the equivalent method defined for an `ee.Number`:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Use a built-in function to perform an operation on the number.
 var logE = serverNumber.log()
 print('log(e)=', logE)
@@ -186,7 +180,7 @@ In this example, `log()` is a method for a `ee.Number` object. (Use the Docs tab
 
 To make a JavaScript list into an `ee.List` object on the server, you can put a JavaScript literal into a container as with numbers and strings. Earth Engine also provides server-side convenience methods for making sequences of numbers. For example:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Make a sequence the hard way.
 var eeList = ee.List([1, 2, 3, 4, 5])
 ## Make a sequence the easy way!
@@ -196,7 +190,7 @@ print('Sequence:', sequence)
 
 Since the `ee.List` objects only exist on the server, use Earth Engine provided functions to interact with them. For example, to get something out of the list, use the `get()` method of the `ee.List` object:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Use a method on an ee.List to extract a value.
 var value = sequence.get(2)
 print('Value at index 2:', value)
@@ -209,7 +203,7 @@ Sometimes, Earth Engine doesn't know the type of an object that gets returned fr
 
 This is common with the `get()` function, which could return all sorts of Earth Engine objects. To correct it, use the `ee.Number` constructor to cast the result:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Cast the return value of get() to a number.
 print('No error:', ee.Number(value).add(3));
 ```
@@ -218,7 +212,7 @@ print('No error:', ee.Number(value).add(3));
 
 You can construct an Earth Engine `Dictionary` from a R object, as with strings, numbers and lists. At construction time, you can use R functionality to initialize the Earth Engine object. In this case an `ee.Dictionary` is constructed directly from a R literal object:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Make a Dictionary on the server.
 var dictionary = ee.Dictionary({
   e: Math.E,
@@ -241,7 +235,7 @@ In this example, observe that once you have an `ee.Dictionary`, you must use met
 
 Date objects are the way Earth Engine represents time. As in the previous examples, it is important to distinguish between a R Date object and an Earth Engine `ee.Date` object. Construct an `ee.Date` from a string, from a R `Date`, or using static methods provided by the `ee.Date` class. (See the Date section in the Docs tab for details). This example illustrates the construction of dates from strings or a JavaScript date representing milliseconds since midnight on January 1, 1970:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Define a date in Earth Engine.
 var date = ee.Date('2015-12-31')
 print('Date:', date)
@@ -261,14 +255,14 @@ Dates are useful for filtering collections, specifically as arguments to the `fi
 
 Arguments to Earth Engine methods can be passed in order, for example to create an `ee.Date` from year, month and day, you can pass parameters of the `fromYMD()` static method in the order year, month, day:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 var aDate = ee.Date.fromYMD(2017, 1, 13)
 print('aDate:', aDate)
 ```
 
 Alternatively, you can pass the parameters by name, in any order. While it might be more code, it can improve readability and reusability. To pass parameters by name, pass in a R object in which the keys of the object are the names of the method parameters and the values are the arguments to the method. For example:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 var theDate = ee.Date.fromYMD({
   day: 13,
   month: 1,
@@ -297,7 +291,7 @@ The use of for-loops is discouraged in Earth Engine. The same results can be ach
 
 The example below illustrates how you would take a list of numbers and create another list with the squares of each number using `map()`:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## This generates a list of numbers from 1 to 10.
 var myList = ee.List.sequence(1, 10)
 
@@ -319,7 +313,7 @@ Another common problem faced by new users who are used to procedural programming
 
 Say you want to solve a variant of the above example, where the task is to compute squares of only odd numbers. A functional approach to solving this without if/else conditions, is demonstrated below:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## The following function determines if a number is even or odd.  The mod(2)
 ## function returns 0 if the number is even and 1 if it is odd (the remainder
 ## after dividing by 2).  The input is multipled by this remainder so even
@@ -341,7 +335,7 @@ print(squares);  ## [1, 9, 25, 49, 81]
 
 This paradigm is especially applicable when working with collections. If you wanted to apply a different algorithm to the collection based on some conditions, the preferred way is to first filter the collection based on the condition, and then `map()` a different function to each of the subsets. This allows the system to parallelize the operation. For example:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 var collection = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 
 ## Divide the collection into 2 subsets and apply a different algorithm on them.
@@ -365,7 +359,7 @@ You may need to do sequential operation, where the result of each iteration is u
 
 A good demonstration of `iterate()` is for creation of Fibonacci number sequence. Here, each number in the series is the sum of previous 2 numbers. The `iterate()` function takes 2 arguments, a function (algorithm) and a starting value. The function itself gets passed on 2 values, the current value in the iteration, and the result of the previous iteration. The following example demonstrates how to implement a fibonacci sequence in Earth Engine.
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 var algorithm = function(current, previous) {
   previous = ee$List(previous)
   var n1 = ee$Number(previous.get(-1))
@@ -391,7 +385,7 @@ To start your journey in mastering R, the following six chapters will help you l
 
 Now that you're ready to begin writing in R of the Earth Engine , start by copying the following code into the Code Editor:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Instantiate an image with the Image constructor.
 image = ee$Image('CGIAR/SRTM90_V4')
 
@@ -430,7 +424,7 @@ When you add an image to a map using `Map.addLayer()`, Earth Engine needs to det
 
 You can discover the data type of the image by printing it and inspecting the image object in the **Console** tab. For example, paste the following after the previous code:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 print('SRTM image', image)
 ```
 
@@ -440,7 +434,7 @@ When you click run, note that an object appears in the console. To investigate t
 
 To change the way the data are stretched, you can provide another parameter to the `Map.addLayer()` call. Specifically, the second parameter, `visParams`, lets you specify the minimum and maximum values to display. To discover what values to use, activate the Inspector tab and click around on the map to get an idea of the range of pixel values. Alternatively, use the Layer manager to interactively stretch the data, then observe the minimum and maximum corresponding to percentiles or standard deviation stretches. Suppose that through such experimentation, you determine that the data should be stretched to [0, 3000]. To display the image using this range, use:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 Map$addLayer(image, list(min = 0, max = 3000), 'custom visualization')
 ```
 
@@ -453,7 +447,7 @@ Note that the visParams parameter is an object, with properties specifying the m
 
 To display a single band using a color palette, add a `palette` property to the `visParams` object:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 Map$addLayer(image, list(min = 0, max = 3000, palette = c('blue', 'green', 'red')), 
              'custom palette')
 ```
@@ -478,7 +472,7 @@ Later in this tutorial, you'll learn how to display multi-band imagery. But firs
 
 Now that you know how to load and display an image, it's time to apply a computation to it. For example, you can compute the slope of terrain, by passing the SRTM elevation image to the `slope` method of the `ee.Terrain` package.
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Load the SRTM image.
 srtm = ee$Image('CGIAR/SRTM90_V4')
 
@@ -501,7 +495,7 @@ Note that in the code `ee.Terrain.slope(srtm)`, the srtm image is provided as an
 
 There are also methods in the `ee.Image` class that can be invoked on an image object. For example, suppose you'd like to do some math using image bands (sometimes called *band math* or *map algebra*). For example, you may be interested in trigonometric operations on an aspect image. To accomplish that, first convert an aspect image to radians, then call `sin()` on it. Reusing our `srtm` image.
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Get the aspect (in degrees).
 aspect = ee$Terrain$aspect(srtm)
 
@@ -523,7 +517,7 @@ Another useful class of operations on images involves computing pixel statistics
 
 Next, get the mean pixel value in the polygon using the following code:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Compute the mean elevation in the polygon.
 meanDict = srtm$reduceRegion(
   reducer = ee$Reducer$mean(),
@@ -550,7 +544,7 @@ Fear not! There are several things you can do to resolve the error. The `reduceR
 
 In the previous example, scale is set to approximately the native resolution of the SRTM image. You can discover the native resolution of an image with:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 scale = srtm$projection()$nominalScale()
 print('SRTM scale in meters', scale)
 ```
@@ -563,7 +557,7 @@ So far, you've been working with a single image with a single band. In the next 
 
 An image collection refers to a set of Earth Engine images. For example, the collection of all Landsat 8 images is an `ee.ImageCollection`. Like the SRTM image you have been working with, image collections also have an ID. As with single images, you can discover the ID of an image collection by searching the [Earth Engine data catalog](https://developers.google.com/earth-engine/datasets) from the Code Editor and looking at the details page of the dataset. For example, search for 'landsat 8 toa' and click on the first result, which should correspond to the [USGS Landsat 8 Collection 1 Tier 1 TOA Reflectance](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C01_T1_TOA) dataset. Either import that dataset using the **Import** button and rename it to `l8`, or copy the ID into the image collection constructor:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 l8 = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 ```
 
@@ -571,7 +565,7 @@ l8 = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 
 It's worth noting that this collection represents every Landsat 8 scene collected, all over the Earth. Often it is useful to extract a single image, or subset of images, on which to test algorithms. The way to limit the collection by time or space is by filtering it. For example, to filter the collection to images that cover a particular location, first define your area of interest with a point (or line or polygon) using the geometry drawing tools. Pan to your area of interest, hover on the **Geometry Imports** (if you already have one or more geometries defined) and click **+new layer** (if you don't have any imports, go to the next step). Get the point drawing tool (**FIGURE**) and make a point in your area of interest. Name the import `point`. Now, filter the `l8` collection to get only the images that intersect the point, then add a second filter to limit the collection to only the images that were acquired in 2015:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 spatialFiltered = l8$filterBounds(point)
 print('spatialFiltered', spatialFiltered)
 
@@ -583,7 +577,7 @@ Here, `filterBounds()` and `filterDate()` are shortcut methods for the more gene
 
 Note that you can `print()` the filtered collections. You can't print more than 5000 things at once, so you couldn't, for example, print the entire `l8` collection. After executing the `print()` method, you can inspect the printed collections in the console. Note that when you expand the `ImageCollection` using the zippy (**IMAGE**) then expand the list of `features`, you will see a list of images, each of which also can be expanded and inspected. This is one way to discover the ID of an individual image. Another, more programmatic way to get individual images for analysis is to sort the collection in order to get the most recent, oldest, or optimal image relative to some metadata property. For example, by inspecting the image objects in the printed image collections, you may have observed a metadata property called `CLOUD_COVER`. You can use that property to get the least cloudy image in 2015 in your area of interest:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 # This will sort from least to most cloudy.
 sorted = temporalFiltered$sort('CLOUD_COVER')
 
@@ -597,7 +591,7 @@ You're now ready to display the image!
 
 When a multi-band image is added to a map, Earth Engine chooses the first three bands of the image and displays them as red, green, and blue by default, stretching them according to the data type, as described previously. Usually, this won't do. For example, if you add the Landsat image (`scene` in the previous example) to the map, the result is unsatisfactory:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 Map$centerObject(scene, 9)
 Map$addLayer(scene, {}, 'default RGB')
 ```
@@ -608,7 +602,7 @@ You also need to provide `min` and `max` values suitable for displaying reflecta
 
 You also need to provide min and max values suitable for displaying reflectance from typical Earth surface targets. Although lists can be used to specify different values for each band, here it's sufficient to specify `0.3` as `max` and use the default value of zero for the `min` parameter. Combining the visualization parameters into one object and displaying:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 visParams = {bands = ['B4', 'B3', 'B2'], max: 0.3}
 Map$addLayer(scene, visParams, 'true-color composite')
 ```
@@ -627,7 +621,7 @@ Since Earth Engine is designed to do large-scale analyses, you are not limited t
 
 Adding an image collection to a map is similar to adding an image to a map. For example, using 2016 images in the `l8` collection and the `visParams` object defined previously,
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 l8 = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 landsat2016 = l8$filterDate('2016-01-01', '2016-12-31')
 Map$addLayer(landsat2016, visParams, 'l8 collection')
@@ -691,7 +685,7 @@ Once you're familiar with R, the Earth Engine API and Rstudio, [get started on t
 
 The [Hansen et al. (2013) Global Forest Change dataset](https://developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2015_v1_3) in Earth Engine represents forest change, at 30 meters resolution, globally, between 2000 and 2014. Let's start by adding the Hansen et al. data to the map. Either import the global forest change data ([learn more about searching and importing datasets]()) by searching for "Hansen forest" and naming the import **gfc2014**, or copy the following code into the Rstudio:
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 var gfc2014 = ee.Image('UMD/hansen/global_forest_change_2015');
 Map.addLayer(gfc2014);
 ```
@@ -767,7 +761,7 @@ The bands in the Global Forest Change data are:
 
 To display forest cover in the year 2000 as a grayscale image, you can use the treecover2000 band, specified in the second argument to Map.addLayer():
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(gfc2014, {bands: ['treecover2000']}, 'treecover2000');
 ```
 
@@ -777,7 +771,7 @@ Figure 3. Grayscale image of year 2000 tree cover in the US.
 
 Here's an image that uses 3 bands, Landsat bands 5, 4, and 3 for 2015. This band combination shows healthy vegetation as green and soil as mauve::
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(
     gfc2014, {bands: ['last_b50', 'last_b40', 'last_b30']}, 'false color');
 ```
@@ -788,7 +782,7 @@ Figure 4. Landsat 7, year 2015 false color composite of the US.
 
 One nice visualization of the Global Forest Change dataset shows forest extent in 2000 as green, forest loss as red, and forest gain as blue. Specifically, make loss the first band (red), treecover2000 the second band (green), and gain the third band (blue):
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(gfc2014, {bands: ['loss', 'treecover2000', 'gain']}, 'green');
 ```
 
@@ -798,7 +792,7 @@ Figure 5. Year 2000 tree cover in the US (green).
 
 We'd like forest loss to show up as bright red and forest gain to show up as bright blue. To fix this, we can use the visualization parameter max to set the range to which the image data are stretched. Note that the max visualization parameter takes a list of values, corresponding to maxima for each band:
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(gfc2014, {
   bands: ['loss', 'treecover2000', 'gain'],
   max: [1, 255, 1]
@@ -821,7 +815,7 @@ To display each image as a different color, you can use the __palette__ paramete
 
 For example, to use a green palette to display the forest extent image, you could use:
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(gfc2014, {
   bands: ['treecover2000'],
   palette: ['000000', '00FF00']
@@ -838,7 +832,7 @@ Figure 9. Year 2000 treecover around Mariscal Estigarribia in Paraguay.
 The image shown in Figure 3 is a bit dark. The problem is that the __treecover2000__ band has a byte data type ([0, 255]), when in fact the values are precentages ([0, 100]). To brighten the image, you can set the __min__ and/or __max__ parameters accordingly. The palette is then stretched between those extrema.
 
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(gfc2014, {
   bands: ['treecover2000'],
   palette: ['000000', '00FF00'],
@@ -856,7 +850,7 @@ All of the images shown so far have had big black areas were there the data is z
 
 You can mask an image with itself. For example, if you mask the __treecover2000__ band with itself, all the areas in which forest cover is zero will be transparent:
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(gfc2014.mask(gfc2014), {
   bands: ['treecover2000'],
   palette: ['000000', '00FF00'],
@@ -872,7 +866,7 @@ Figure 10. Year 2000 tree cover, stretched and masked.
 
 It's almost possible to make a visualization of the Hansen data like the one at the beginning of the tutorial. In this example, we're putting everything together with one small difference. Instead of specifying the bands parameter in the __Map$addLayer__ call, we're creating new images using __select()__:
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 var treeCover = gfc2014.select(['treecover2000']);
 var lossImage = gfc2014.select(['loss']);
 var gainImage = gfc2014.select(['gain']);
