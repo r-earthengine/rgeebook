@@ -9,6 +9,8 @@ suppress-bibliography: yes
 
 `r if (knitr::is_latex_output()) '<!--'` 
 
+
+
 # Welcome {-}
 
 This is the official website for the book [Earth Engine with R](). The book is 
