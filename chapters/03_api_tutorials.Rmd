@@ -1,25 +1,15 @@
 # (PART) API Tutorials {-}
 
-<<<<<<< HEAD
-```{r, include = FALSE}
-=======
 
 ```{r}
->>>>>>> master
 source("common.R")
 ```
+
 # Overview
 
-<<<<<<< Updated upstream
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
 
-=======
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapt 
- 
 ## Tutorials
->>>>>>> Stashed changes
-
-## Tutorial 
 
 These tutorials are an introduction to using the Earth Engine R API for advanced geospatial analysis. The tutorials assume no programming background, although they do assume a willingness to learn some R programming. Use the links below to get started on the tutorials or use the menus on the left to jump to a section of interest.
 
@@ -32,18 +22,14 @@ This tutorial covers just enough JavaScript to get you started writing Earth Eng
 
 Time to write your first code in R for Earth Engine! In your Rstudio,  copy the following into the Code Editor:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 print('Hello World!')
 ```
 
 Click Run and observe that 'Hello world!' is printed to the Console tab. The line above is R statement. Earth Engine programs are made up of a set of statements like this one. You can prevent code from running without deleting it by commenting it. One of the ways to comment out code is by putting two forward numerals `##` before the code that you don't want to run. For example:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## print('Hello World!')
 =======
 #print('Hello World!')
@@ -52,18 +38,15 @@ Click Run and observe that 'Hello world!' is printed to the Console tab. The lin
 
 It's good practice to put lots of comments in your code, to describe what you're trying to do. It's also good to delete commented code that doesn't do anything anymore. Both these practices will improve code readability.
 
+
 ## Basic JavaScript data type {-}
 
 ### Strings {-}
 
 Using variables to store objects and primitives helps code readability. For example, a variable that stores a string object is defined by single ' or double " quotes (but don't mix them), with single quotes preferred. Make a new string and store it in a variable called greetString:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Use single (or double) quotes to make a string.
 var greetString = 'Ahoy there!'
 ## Use parentheses to pass arguments to functions.
@@ -79,12 +62,8 @@ print(greetString)
 
 Note that variables are defined with the keyword `var`. Variables can also store numbers:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Store a number in a variable.
 var number = 42
 =======
@@ -100,12 +79,8 @@ In this example, observe that when `print()` is given two arguments separated by
 
 Define lists with square brackets `[]`. A list of numbers, for example:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Use square brackets [] to make a list.
 var listOfNumbers = [0, 1, 1, 2, 3, 5]
 =======
@@ -117,12 +92,8 @@ print('List of numbers:', listOfNumbers)
 
 Lists can also store strings or other objects. For example:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Make a list of strings.
 var listOfStrings = ['a', 'b', 'c', 'd']
 =======
@@ -136,12 +107,8 @@ print('List of strings:', listOfStrings)
 
 Objects in R are dictionaries of `key: value` pairs. Make an object (or dictionary) using curly brackets {}, for example:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Use curly brackets {} to make a dictionary of key:value pairs.
 var object = {
   foo: 'bar',
@@ -168,12 +135,8 @@ Note that you can get a value from a dictionary by supplying the key. This examp
 
 Functions are another way to improve code readability and reusability by grouping sets of operations. Define a function with the `function` keyword. Function names start with a letter and have a pair of parentheses at the end. Functions often take parameters which tell the function what to do. These parameters go inside the parentheses `()`. The set of statements making up the function go inside curly brackets. The `return` keyword indicates what the function output is. There are several ways to declare a function, but here we'll use something like this:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 var myFunction = function(parameter1, parameter2, parameter3) {
 =======
 myFunction = function(parameter1, parameter2, parameter3) {
@@ -187,12 +150,8 @@ myFunction = function(parameter1, parameter2, parameter3) {
 
 Let's consider the lines one by one. The first line creates a new function and assigns it to the variable myFunction. This variable could have been named anything. It defines how to call the function later. The terms in the parentheses after the function name (i.e. parameter1, parameter2, parameter3) are the parameter names and could have been named anything as well, though it's good practice to give them unique names that are different from the code outside the function. Whatever you name them, these are the names that function will use to refer to the values that are passed into the function when it is called. The value of a parameter once it's been passed into a function is called an argument. Although functions can use variables declared outside the function (global variables), function arguments are not visible outside the function. Functions can take as many parameters as you need, even zero. Here's a simple example of a function that just returns its argument:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## The reflect function takes a single parameter: element.
 var reflect = function(element) {
 ## Return the argument.
@@ -208,7 +167,7 @@ print('A good day to you!', reflect('Back at you!'))
 
 This is an example of a user-defined function. There are also lots of built-in Earth Engine functions. Explore the Code Editor Docs tab to learn about these built-in functions. Here's a very simple example of an Earth Engine function:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 var aString = ee.Algorithms.String(42)
 ```
 
@@ -220,12 +179,8 @@ Now that you're comfortable with R, learn how to put  objects in R and primitive
 
 For example, define a string, then put it into the `ee.String()` container to be sent to Earth Engine:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Define a string, then put it into an EE container.
 var aString = 'To the cloud!'
 var eeString = ee.String(aString)
@@ -239,12 +194,8 @@ print('Where to?', eeString)
 
 Think of `ee.Thing` as a container for a thing that exists on the server. In this example, the string is defined first, then put into the container. You can also define the container and its contents all at once. For example:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Define a string that exists on the server.
 var serverString = ee.String('This is on the server.')
 =======
@@ -260,12 +211,8 @@ Although the first argument to `print()` is just a string on the client, the sec
 
 Use `ee.Number()` to create number objects on the server. For example, use the `Math.E` R method to create a constant value on the server:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Define a number that exists on the server.
 var serverNumber = ee.Number(Math.E)
 =======
@@ -281,12 +228,8 @@ The `ee.String()` and `ee.Number()` methods are constructors. A constructor take
 
 Note that once you've created an Earth Engine object, you have to use Earth Engine methods to process it. In this example, you can't use R's `Math.log()` to process that Earth Engine object. You have to use the equivalent method defined for an `ee.Number`:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Use a built-in function to perform an operation on the number.
 var logE = serverNumber.log()
 =======
@@ -302,12 +245,8 @@ In this example, `log()` is a method for a `ee.Number` object. (Use the Docs tab
 
 To make a JavaScript list into an `ee.List` object on the server, you can put a JavaScript literal into a container as with numbers and strings. Earth Engine also provides server-side convenience methods for making sequences of numbers. For example:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Make a sequence the hard way.
 var eeList = ee.List([1, 2, 3, 4, 5])
 ## Make a sequence the easy way!
@@ -323,12 +262,8 @@ print('Sequence:', sequence)
 
 Since the `ee.List` objects only exist on the server, use Earth Engine provided functions to interact with them. For example, to get something out of the list, use the `get()` method of the `ee.List` object:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Use a method on an ee.List to extract a value.
 var value = sequence.get(2)
 =======
@@ -345,12 +280,8 @@ Sometimes, Earth Engine doesn't know the type of an object that gets returned fr
 
 This is common with the `get()` function, which could return all sorts of Earth Engine objects. To correct it, use the `ee.Number` constructor to cast the result:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Cast the return value of get() to a number.
 print('No error:', ee.Number(value).add(3));
 =======
@@ -363,12 +294,8 @@ print('No error:', ee$Number(value)$add(3))
 
 You can construct an Earth Engine `Dictionary` from a R object, as with strings, numbers and lists. At construction time, you can use R functionality to initialize the Earth Engine object. In this case an `ee.Dictionary` is constructed directly from a R literal object:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Make a Dictionary on the server.
 var dictionary = ee.Dictionary({
   e: Math.E,
@@ -398,12 +325,8 @@ In this example, observe that once you have an `ee.Dictionary`, you must use met
 
 Date objects are the way Earth Engine represents time. As in the previous examples, it is important to distinguish between a R Date object and an Earth Engine `ee.Date` object. Construct an `ee.Date` from a string, from a R `Date`, or using static methods provided by the `ee.Date` class. (See the Date section in the Docs tab for details). This example illustrates the construction of dates from strings or a JavaScript date representing milliseconds since midnight on January 1, 1970:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## Define a date in Earth Engine.
 var date = ee.Date('2015-12-31')
 =======
@@ -427,12 +350,8 @@ Dates are useful for filtering collections, specifically as arguments to the `fi
 
 Arguments to Earth Engine methods can be passed in order, for example to create an `ee.Date` from year, month and day, you can pass parameters of the `fromYMD()` static method in the order year, month, day:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 var aDate = ee.Date.fromYMD(2017, 1, 13)
 =======
 aDate = ee$Date$fromYMD(2017, 1, 13)
@@ -442,12 +361,8 @@ print('aDate:', aDate)
 
 Alternatively, you can pass the parameters by name, in any order. While it might be more code, it can improve readability and reusability. To pass parameters by name, pass in a R object in which the keys of the object are the names of the method parameters and the values are the arguments to the method. For example:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 var theDate = ee.Date.fromYMD({
   day: 13,
   month: 1,
@@ -482,12 +397,8 @@ The use of for-loops is discouraged in Earth Engine. The same results can be ach
 
 The example below illustrates how you would take a list of numbers and create another list with the squares of each number using `map()`:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## This generates a list of numbers from 1 to 10.
 var myList = ee.List.sequence(1, 10)
 
@@ -519,12 +430,8 @@ Another common problem faced by new users who are used to procedural programming
 
 Say you want to solve a variant of the above example, where the task is to compute squares of only odd numbers. A functional approach to solving this without if/else conditions, is demonstrated below:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 ## The following function determines if a number is even or odd.  The mod(2)
 ## function returns 0 if the number is even and 1 if it is odd (the remainder
 ## after dividing by 2).  The input is multipled by this remainder so even
@@ -556,12 +463,8 @@ print(squares)  # [1, 9, 25, 49, 81]
 
 This paradigm is especially applicable when working with collections. If you wanted to apply a different algorithm to the collection based on some conditions, the preferred way is to first filter the collection based on the condition, and then `map()` a different function to each of the subsets. This allows the system to parallelize the operation. For example:
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 var collection = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 =======
 collection = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
@@ -588,12 +491,8 @@ You may need to do sequential operation, where the result of each iteration is u
 
 A good demonstration of `iterate()` is for creation of Fibonacci number sequence. Here, each number in the series is the sum of previous 2 numbers. The `iterate()` function takes 2 arguments, a function (algorithm) and a starting value. The function itself gets passed on 2 values, the current value in the iteration, and the result of the previous iteration. The following example demonstrates how to implement a fibonacci sequence in Earth Engine.
 
-<<<<<<< HEAD
-```{R, eval=FALSE}
-=======
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
->>>>>>> master
 var algorithm = function(current, previous) {
 =======
 algorithm = function(current, previous) {
@@ -622,7 +521,7 @@ To start your journey in mastering R, the following six chapters will help you l
 
 Now that you're ready to begin writing in R of the Earth Engine , start by copying the following code into the Code Editor:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Instantiate an image with the Image constructor.
 image = ee$Image('CGIAR/SRTM90_V4')
 
@@ -661,7 +560,7 @@ When you add an image to a map using `Map.addLayer()`, Earth Engine needs to det
 
 You can discover the data type of the image by printing it and inspecting the image object in the **Console** tab. For example, paste the following after the previous code:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 print('SRTM image', image)
 ```
 
@@ -671,7 +570,7 @@ When you click run, note that an object appears in the console. To investigate t
 
 To change the way the data are stretched, you can provide another parameter to the `Map.addLayer()` call. Specifically, the second parameter, `visParams`, lets you specify the minimum and maximum values to display. To discover what values to use, activate the Inspector tab and click around on the map to get an idea of the range of pixel values. Alternatively, use the Layer manager to interactively stretch the data, then observe the minimum and maximum corresponding to percentiles or standard deviation stretches. Suppose that through such experimentation, you determine that the data should be stretched to [0, 3000]. To display the image using this range, use:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 Map$addLayer(image, list(min = 0, max = 3000), 'custom visualization')
 ```
 
@@ -684,7 +583,7 @@ Note that the visParams parameter is an object, with properties specifying the m
 
 To display a single band using a color palette, add a `palette` property to the `visParams` object:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 Map$addLayer(image, list(min = 0, max = 3000, palette = c('blue', 'green', 'red')), 
              'custom palette')
 ```
@@ -709,7 +608,7 @@ Later in this tutorial, you'll learn how to display multi-band imagery. But firs
 
 Now that you know how to load and display an image, it's time to apply a computation to it. For example, you can compute the slope of terrain, by passing the SRTM elevation image to the `slope` method of the `ee.Terrain` package.
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Load the SRTM image.
 srtm = ee$Image('CGIAR/SRTM90_V4')
 
@@ -732,7 +631,7 @@ Note that in the code `ee.Terrain.slope(srtm)`, the srtm image is provided as an
 
 There are also methods in the `ee.Image` class that can be invoked on an image object. For example, suppose you'd like to do some math using image bands (sometimes called *band math* or *map algebra*). For example, you may be interested in trigonometric operations on an aspect image. To accomplish that, first convert an aspect image to radians, then call `sin()` on it. Reusing our `srtm` image.
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Get the aspect (in degrees).
 aspect = ee$Terrain$aspect(srtm)
 
@@ -754,7 +653,7 @@ Another useful class of operations on images involves computing pixel statistics
 
 Next, get the mean pixel value in the polygon using the following code:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 ## Compute the mean elevation in the polygon.
 meanDict = srtm$reduceRegion(
   reducer = ee$Reducer$mean(),
@@ -781,7 +680,7 @@ Fear not! There are several things you can do to resolve the error. The `reduceR
 
 In the previous example, scale is set to approximately the native resolution of the SRTM image. You can discover the native resolution of an image with:
 
-```{R, eval=FALSE}
+```{r, eval=FALSE}
 scale = srtm$projection()$nominalScale()
 print('SRTM scale in meters', scale)
 ```
@@ -790,11 +689,6 @@ If you specify a scale smaller than the native resolution, Earth Engine will hap
 
 So far, you've been working with a single image with a single band. In the next page, you'll learn about multi-band images and image collections.
 
-<<<<<<< HEAD
-## Computations using Images {-}
-
-Now that you know how to load and display an image, it's time to apply a computation to it. For example, you can compute the slope of terrain, by passing the SRTM elevation image to the `slope` [method of the] `ee.Terrain` [package](https:#developers.google.com/earth-engine/apidocs/ee-terrain-slope).
-=======
 ## Image Collections {-}
 
 An image collection refers to a set of Earth Engine images. For example, the collection of all Landsat 8 images is an `ee.ImageCollection`. Like the SRTM image you have been working with, image collections also have an ID. As with single images, you can discover the ID of an image collection by searching the [Earth Engine data catalog](https://developers.google.com/earth-engine/datasets) from the Code Editor and looking at the details page of the dataset. For example, search for 'landsat 8 toa' and click on the first result, which should correspond to the [USGS Landsat 8 Collection 1 Tier 1 TOA Reflectance](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C01_T1_TOA) dataset. Either import that dataset using the **Import** button and rename it to `l8`, or copy the ID into the image collection constructor:
@@ -1179,7 +1073,6 @@ That concludes this introduction to the Earth Engine API! You have now seen much
 Now that you know how to load and display an image, it's time to apply a computation to it. For example, you can compute the slope of terrain, by passing the SRTM elevation image to the `slope` [method of the] `ee.Terrain` [package](https:#developers.google.com/earth-engine/apidocs/ee-terrain-slope).
 >>>>>>> Stashed changes
 >>>>>>> master
->>>>>>> master
 
 
 # Global Forest Change {-}
@@ -1232,7 +1125,7 @@ Once you're familiar with R, the Earth Engine API and Rstudio, [get started on t
 
 The [Hansen et al. (2013) Global Forest Change dataset](https:#developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2015_v1_3) in Earth Engine represents forest change, at 30 meters resolution, globally, between 2000 and 2014. Let's start by adding the Hansen et al. data to the map. Either import the global forest change data ([learn more about searching and importing datasets]()) by searching for "Hansen forest" and naming the import **gfc2014**, or copy the following code into the Rstudio:
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 var gfc2014 = ee.Image('UMD/hansen/global_forest_change_2015');
 Map.addLayer(gfc2014);
 ```
@@ -1308,7 +1201,7 @@ The bands in the Global Forest Change data are:
 
 To display forest cover in the year 2000 as a grayscale image, you can use the treecover2000 band, specified in the second argument to Map.addLayer():
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(gfc2014, {bands: ['treecover2000']}, 'treecover2000');
 ```
 
@@ -1318,7 +1211,7 @@ Figure 3. Grayscale image of year 2000 tree cover in the US.
 
 Here's an image that uses 3 bands, Landsat bands 5, 4, and 3 for 2015. This band combination shows healthy vegetation as green and soil as mauve::
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(
     gfc2014, {bands: ['last_b50', 'last_b40', 'last_b30']}, 'false color');
 ```
@@ -1329,7 +1222,7 @@ Figure 4. Landsat 7, year 2015 false color composite of the US.
 
 One nice visualization of the Global Forest Change dataset shows forest extent in 2000 as green, forest loss as red, and forest gain as blue. Specifically, make loss the first band (red), treecover2000 the second band (green), and gain the third band (blue):
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(gfc2014, {bands: ['loss', 'treecover2000', 'gain']}, 'green');
 ```
 
@@ -1339,7 +1232,7 @@ Figure 5. Year 2000 tree cover in the US (green).
 
 We'd like forest loss to show up as bright red and forest gain to show up as bright blue. To fix this, we can use the visualization parameter max to set the range to which the image data are stretched. Note that the max visualization parameter takes a list of values, corresponding to maxima for each band:
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(gfc2014, {
   bands: ['loss', 'treecover2000', 'gain'],
   max: [1, 255, 1]
@@ -1362,7 +1255,7 @@ To display each image as a different color, you can use the __palette__ paramete
 
 For example, to use a green palette to display the forest extent image, you could use:
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(gfc2014, {
   bands: ['treecover2000'],
   palette: ['000000', '00FF00']
@@ -1379,7 +1272,7 @@ Figure 9. Year 2000 treecover around Mariscal Estigarribia in Paraguay.
 The image shown in Figure 3 is a bit dark. The problem is that the __treecover2000__ band has a byte data type ([0, 255]), when in fact the values are precentages ([0, 100]). To brighten the image, you can set the __min__ and/or __max__ parameters accordingly. The palette is then stretched between those extrema.
 
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(gfc2014, {
   bands: ['treecover2000'],
   palette: ['000000', '00FF00'],
@@ -1397,7 +1290,7 @@ All of the images shown so far have had big black areas were there the data is z
 
 You can mask an image with itself. For example, if you mask the __treecover2000__ band with itself, all the areas in which forest cover is zero will be transparent:
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 Map.addLayer(gfc2014.mask(gfc2014), {
   bands: ['treecover2000'],
   palette: ['000000', '00FF00'],
@@ -1413,7 +1306,7 @@ Figure 10. Year 2000 tree cover, stretched and masked.
 
 It's almost possible to make a visualization of the Hansen data like the one at the beginning of the tutorial. In this example, we're putting everything together with one small difference. Instead of specifying the bands parameter in the __Map$addLayer__ call, we're creating new images using __select()__:
 
-```{js, eval=FALSE}
+```{r, eval=FALSE}
 var treeCover = gfc2014.select(['treecover2000']);
 var lossImage = gfc2014.select(['loss']);
 var gainImage = gfc2014.select(['gain']);
@@ -1871,538 +1764,13 @@ The GSW data described in this tutorial were produced under the [Copernicus Prog
 
 If you are using the data as a layer in a published map, please include the following attribution text:
 
-### Get access to Earth Engine {-}
+### Get access to Earth Engine {}
 
 Access to Earth Engine is free, but requires signup. To get access, please fill out our [Earth Engine signup form](https:#earthengine.google.com/signup) to apply for an Evaluator account. Those granted access will receive an email within a few business days with further instructions.
 
 Once you're familiar with the Code Editor, [get started on the tutorial]()!
 
-## Water Occurrence (1984-2015) {-}
 
-The GSW dataset contains many data layers that present the surface water data in different ways. We will start by visualizing the water occurrence layer, which provides a summary of where and how often surface water occurred over the entire time-period between March 1984 and October 2015.
+# Video Tutorials
 
-This section of the tutorial will:
-
-  1. add a map layer for visualizing surface water occurrence,
-  2. show how to query values of the map layer,
-  3. add custom styling to improve the visualization,
-  4. create a binary water mask layer using a threshold value,
-  5. center the map on interesting parts of the world, and
-  6. show how to refactor the script to make it more readable and maintainable.
-  
-### Creating a Basic Visualization {-}
-
-Start by copying the following statements into the Code Editor:
-
-```{r}
-gsw <- ee$Image('JRC/GSW1_0/GlobalSurfaceWater')
-occurrence <- gsw$select('occurrence')
-Map$addLayer(occurrence)
-```
-
-The first statement references the Earth Engine [Image object]() for the GSW dataset, and stores it in a variable named **gsw**. The second statement selects a single layer of the GSW dataset, and stores it in a variable called **occurrence**. The third statement adds the occurrence image to the Rstudio's interactive map.
-
-Click on the Rstudio's "Run" button, and after a few seconds you should see a map with grey coloring along the coastlines, similar to Figure 1.
-
-<center>
-<img src="./images/chapter_03/figure_GSW_01.png" width=95%>
-</center>
-
-Figure 1. Default visualization of the global surface water occurrence data layer.
-
-In most areas, the GSW dataset appears transparent, because locations where either Landsat images were not collected (i.e. ocean areas) or where water was not detected by any observations in the 32 years are [masked out]().
-
-### Refactoring to Improve Your Code {-}
-
-Our script only contains two statements, but already we have an opportunity to refactor the code so that our final script will be easier to read and maintain over time. Currently, the __Map$addLayer()__ statement passes a single argument **occurrence**, which is the Earth Engine image object that we want to display on the map. However, the __Map$addLayer()__ method also allows for additional arguments to be passed to it. To quickly see what arguments are available, place your cursor after the opening parentheses and press the keyboard shortcut for "Show code suggestions" to bring up the help document for the **addLayer** method.
-
-The keyboard shortcuts show that there are five arguments that can be passed to __Map$addLayer__: **eeObject**, **visParams**, **name**, **shown**, and **opacity**. In our current script we are passing a single variable **occurrence** which is interpreted as the first argument, **eeObject**. To pass both the variable object and an additional argument that names the layer, we can refactor the code to use "named arguments" (**eeObject** and **name**) where are passed within to the method from within a [JSON data structure](http://www.w3schools.com/js/js_json_intro.asp) as shown below:
-
-```{r}
-Map$addLayer(eeObject = occurrence, name = 'Water Occurrence (1984-2015)')
-```
-
-Run the code again to make sure it still works after the refactoring changes. The resulting map should remain unchanged.
-
-### Adding Visualization Parameters {-}
-
-Next, we will work on improving upon the default visualization parameters, which are making our water appear gray. Add a new statement that creates a variable **VIS_OCCURRENCE** and pass it as an additional argument to the addLayer method.
-
-```{r}
-VIS_OCCURRENCE <- list(
-  min = 0,
-  max = 100,
-  palette = c('red', 'blue')
-)
-```
-
-```{r}
-Map$addLayer(
-  eeObject = occurrence$updateMask(occurrence$divide(100)),
-  name = 'Water Occurrence (1984-2015)',
-  visParams = VIS_OCCURRENCE
-)
-```
-
-The visualization parameters stored in JSON structure **VIS_OCCURRENCE** indicate that red should be used for a minimum value of 0% and blue for a maximum value of 100%. The addition of __$updateMask(occurrence$divide(100))__ causes the opacity/transparency of the pixels to be set based on the occurrence value.
-
-Run the script again, and view the revised results from our styling changes.
-
-<center>
-<img src="./images/chapter_03/figure_GSW_02.png" width=95%>
-</center>
-
-Figure 2. Screenshot of water occurrence for the Paraná Delta near Buenos Aires, using a transparent red color for the 0% minimum value endpoint and a solid blue color for the maximum value endpoint.
-
-The water areas are now blue! Progress!
-
-### Creating a Threshold Layer {-}
-
-The water occurrence image contains information on how often water is expected using a range of values from 0 to 100%. However, it is often useful to define a binary water layer (i.e. "water" vs. "non-water") based on a certain percentage of occurrence (i.e. a threshold value). We will use this simple binary layer as a clean background layer over which other GSW layers can be placed. Creating this threshold layer can be done using the following statements, which uses a threshold value of 90% to separate water and non-water.
-
-First we define a new visualization variable **VIS_WATER_MASK** for holding styling information for the water mask:
-
-```{r}
-VIS_WATER_MASK <- list(
-  palette = c('white', 'black')
-)
-```
-
-Then we calculate a water mask layer using the greater than comparison operator __$gt(90)__ and then set the previously masked areas to zero using the __$unmask()__ method:
-
-```{r}
-# Create a water mask layer, and set the image mask so that non-water areas
-# are opaque.
-water_mask <- occurrence$gt(90)$unmask(0)
-```
-
-And finally, add the layer to the map. In order to have this layer rendered under all other layers, place the following statement before any other __Map$addLayer__ statements.
-
-```{r}
-Map$addLayer(
-  eeObject = water_mask,
-  visParams = VIS_WATER_MASK,
-  name = '90% occurrence water mask'
-)
-```
-
-<center>
-<img src="./images/chapter_03/figure_GSW_03.png" width=95%>
-</center>
-
-Figure 3. Screenshot of a 90% water mask for the Paraná Delta near Buenos Aires.
-
-### Going to Interesting Parts of the World {-}
-
-It is fun to explore the world by panning and zooming around, but the world is large and sometimes it helps to jump directly to a particular location. Here is a series of statements that provide a small sample of interesting locations, in terms of surface water. Just uncomment one of the statements at a time, and your script will go to that location when it is run.
-
-```{r}
-# Uncomment one of the following statements to center the map.
-# Map$setCenter(-90.162, 29.8597, 10)   # New Orleans, USA
-# Map$setCenter(-114.9774, 31.9254, 10) # Mouth of the Colorado River, Mexico
-# Map$setCenter(-111.1871, 37.0963, 11) # Lake Powell, USA
-# Map$setCenter(149.412, -35.0789, 11)  # Lake George, Australia
-# Map$setCenter(105.26, 11.2134, 9)     # Mekong River Basin, SouthEast Asia
-# Map$setCenter(90.6743, 22.7382, 10)   # Meghna River, Bangladesh
-# Map$setCenter(81.2714, 16.5079, 11)   # Godavari River Basin Irrigation Project, India
-# Map$setCenter(14.7035, 52.0985, 12)   # River Oder, Germany & Poland
-# Map$setCenter(-59.1696, -33.8111, 9)  # Buenos Aires, Argentina
-Map$setCenter(-74.4557, -8.4289, 11)    # Ucayali River, Peru
-```
-
-This is just a small sample of interesting locations. Feel free to add your own!
-
-### Refactoring, again... {-}
-
-Before we move on to the next layer of the GSW dataset, we are going to do a little more code refactoring. Specifically, we will group our similar statements together, and add some comments that will break up our code into sections for assets, constants, calculations, centering the map and adding map layers.
-
-Here is the final refactored script:
-
-```{r}
-##########################################################
-# Asset List
-##########################################################
-  
-gsw <- ee$Image('JRC/GSW1_0/GlobalSurfaceWater')
-occurrence <- gsw$select('occurrence')
-  
-##########################################################
-# Constants
-##########################################################
-    
-VIS_OCCURRENCE = list(
-  min = 0,
-  max = 100,
-  palette = c('red', 'blue')
-)
-VIS_WATER_MASK = list(
-  palette = c('white', 'black')
-)
-    
-##########################################################
-# Calculations
-##########################################################
-      
-# Create a water mask layer, and set the image mask so that non-water areas
-# are opaque.
-water_mask <- occurrence$gt(90)$unmask(0)
-    
-##########################################################
-# Initialize Map Location
-##########################################################
-      
-# Uncomment one of the following statements to center the map.
-# Map$setCenter(-90.162, 29.8597, 10)   # New Orleans, USA
-# Map$setCenter(-114.9774, 31.9254, 10) # Mouth of the Colorado River, Mexico
-# Map$setCenter(-111.1871, 37.0963, 11) # Lake Powell, USA
-# Map$setCenter(149.412, -35.0789, 11)  # Lake George, Australia
-# Map$setCenter(105.26, 11.2134, 9)     # Mekong River Basin, SouthEast Asia
-# Map$setCenter(90.6743, 22.7382, 10)   # Meghna River, Bangladesh
-# Map$setCenter(81.2714, 16.5079, 11)   # Godavari River Basin Irrigation Project, India
-# Map$setCenter(14.7035, 52.0985, 12)   # River Oder, Germany & Poland
-# Map$setCenter(-59.1696, -33.8111, 9)  # Buenos Aires, Argentina
-Map$setCenter(-74.4557, -8.4289, 11)    # Ucayali River, Peru
-    
-##########################################################
-# Map Layers
-##########################################################
-      
-Map$addLayer(
-  eeObject = water_mask,
-  visParams = VIS_WATER_MASK,
-  name = '90% occurrence water mask',
-  shown = FALSE
-)
-Map$addLayer(
-  eeObject = occurrence$updateMask(occurrence$divide(100)),
-  name = 'Water Occurrence (1984-2015)',
-  visParams = VIS_OCCURRENCE
-)
-```
-
-In the [next section](), you explore how water occurrence has changed over time.
-
-## Water Occurrence Change Intensity {-}
-
-The Water Occurrence Change Intensity data layer provides a measure of how surface water has changed between two epochs: 1984-1999 and 2000-2015. The layer averages the change across homologous pairs of months taken from the two epochs. See the [Data Users Guide (v2)](https://storage.googleapis.com/global-surface-water/downloads_ancillary/DataUsersGuidev2.pdf) for additional details on this layer.
-
-This section of the tutorial will:
-
-  1. add a styled map layer for visualizing water occurrence change intensity, and
-  2. summarize the change intensity in a specified region-of-interest using a histogram.
-
-### Visualization {-}
-
-Similar to the water occurrence layer, we will start by adding a basic visualization of occurrence change intensity to the map and then improve upon it. Occurrence change intensity is provided in two ways, both as absolute and normalized values. We will use the absolute values in this tutorial. Start by selecting the absolute occurrence change intensity layer from the GSW image:
-
-```{r}
-change <- gsw$select("change_abs")
-```
-
-In the Constants section of the code, add a statement that creates a new variable that defines how the layer will be styled. This styling shows areas where the surface water occurrence has decreased/increased in red/green. Areas where surface water occurrence is relatively unchanged are shown in black.
-
-```{r}
-VIS_CHANGE <- list(
-    min = -50,
-    max = 50,
-    palette = c('red', 'black', 'limegreen')
-)
-```
-
-At the end of the Map Layers section of code, add a statement that adds a new layer to the map.
-
-```{r}
-Map$setCenter(-74.4557, -8.4289, 11)  # Ucayali River, Peru
-Map$addLayer(
-  eeObject = change,
-  visParams = VIS_CHANGE,
-  name = 'occurrence change intensity'
-)
-```
-
-<center>
-<img src="./images/chapter_03/figure_GSW_04.png" width=95%>
-</center>
-
-Figure 4. Screenshot of a surface water change intensity for the Ucayali River near Pucallpa, a city in the Amazonian rainforest of eastern Peru. Red/green indicates a decrease/increase in surface water occurrence between the epochs.
-
-## Water Class Transition {-}
-
-The water transition layer captures changes between three classes of water occurrence (not water, seasonal water, and permanent water) along with two additional classes for ephemeral water (ephemeral permanent and ephemeral seasonal).
-
-This section of the tutorial will:
-
-  1. add a map layer for visualizing water transition,
-  2. create a grouped reducer for summing the area of each transition class within a specified region-of-interest, and
-  3. create a chart that summarizes the area by transition class.
-
-
-### Basic Visualization {-}
-
-In the Asset List section of the script, add the following statement which creates a single band image object called **transition**:
-
-```{r}
-transition <- gsw$select('transition')
-```
-
-The GSW images contain metadata on the transition class numbers and names, and a default palette for styling the transition classes. When the transition layer is added to the map, these visualzation parameters will be used automatically.
-
-At the bottom of the Map Layers section of your script, add the following statement which adds a new map layer that displays the transition classes:
-
-```{r}
-Map$setCenter(105.26, 11.2134, 9)     # Mekong River Basin, SouthEast Asia
-Map$addLayer(
-  eeObject = transition,
-  name = 'Transition classes (1984-2015)',
-)
-```
-
-When you run the script, the transition layer will be displayed.
-
-<center>
-<img src="./images/chapter_03/figure_GSW_05.png" width=95%>
-</center>
-
-Figure 10. Screenshot of the Mekong River delta, showing a wide variation in surface water class transitions.
-
-The map key for the transition classes is:
-
-<table border="1">
-        <tr>
-          <th>Value</th>
-          <th>Symbol</th>
-          <th>Label</th>
-        </tr>
-        <tr>
-          <td>0</td>
-          <td style="background-color: #FFFFFF;"></td>
-          <td>Not water</td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td style="background-color: #0000FF;"></td>
-          <td>Permanent</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td style="background-color: #22B14C;"></td>
-          <td>New permanent</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td style="background-color: #D1102D;"></td>
-          <td>Lost permanent</td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td style="background-color: #99D9EA;"></td>
-          <td>Seasonal</td>
-        </tr>
-        <tr>
-          <td>5</td>
-          <td style="background-color: #B5E61D;"></td>
-          <td>New seasonal</td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td style="background-color: #E6A1AA;"></td>
-          <td>Lost seasonal</td>
-        </tr>
-        <tr>
-          <td>7</td>
-          <td style="background-color: #FF7F27;"></td>
-          <td>Seasonal to permanent</td>
-        </tr>
-        <tr>
-          <td>8</td>
-          <td style="background-color: #FFC90E;"></td>
-          <td>Permanent to seasonal</td>
-        </tr>
-        <tr>
-          <td>9</td>
-          <td style="background-color: #7F7F7F;"></td>
-          <td>Ephemeral permanent</td>
-        </tr>
-        <tr>
-          <td>10</td>
-          <td style="background-color: #C3C3C3;"></td>
-          <td>Ephemeral seasonal</td>
-        </tr>
-      </table>
-      
-### Summarizing Area by Transition Class {-}
-
-In this section we will once again use the geometry polygon tool to define a region-of-interest. If you want to analyze a new location, you will want to first select and delete the original polygon that you drew so that you don't get results from the combined areas. See the [Geometry tools]() section of the Code Editor docs from information on how to modify geometries.
-
-For this example we will draw a new polygon within the Mekong River delta.
-
-<center>
-<img src="./images/chapter_03/figure_GSW_06.png" width=95%>
-</center>
-
-Figure 6. The Mekong River delta in Vietnam, with a region-of-interest created by using the Code Editor's polygon drawing tool.
-
-In order to calculate the area covered by parts of an image, we will add an additional band to the transition image object that identifies the size of each pixel in square meters using the __ee$Image$pixelArea__ method.
-
-```{r}
-area_image_with_transition_class <- ee$Image$pixelArea()$addBands(transition)
-```
-
-The resulting image object (**area_image_with_transition_class**) is a two band image where the first band contains the area information in units of square meters (produced by the [__ee$Image$pixelArea__ code>]() method), and the second band contains the transition class information.
-
-We then summarize the class transitions within a region of interest (**roi**) using the [__ee$Image$reduceRegion__]() method and a [grouped reducer]() which acts to sum up the area within each transition class:
-
-```{r}
-reduction_results <- area_image_with_transition_class$reduceRegion(
-  reducer = ee$Reducer$sum()$group(
-    groupField = 1,
-    groupName = 'transition_class_value',
-  ),
-  geometry = roi,
-  scale = 30,
-  bestEffort = TRUE,
-)
-print('reduction_results', paste0(ee$Dictionary$getInfo(reduction_results)))
-```
-
-# Video Tutorials {-}
-
-## Tutorials {-}
-
-These video tutorials are from lectures or hands-on trainings conducted at Earth Engine User Summits and [Earth Outreach digital events](https://earthoutreachonair.withgoogle.com/).
-
-### Introduction to Earth Engine (condensed) {-}
-
-Learn about Earth Engine from developer advocate Noel Gorelick in this fast-paced intro.
-
-[companion slides](https://docs.google.com/presentation/d/1iZtkBNzl2HBWFT0wEhwCov89kyiBO7rSHcmMa6WNMa8)
-
-[code repository](https://code.earthengine.google.com/?accept_repo=users/gorelick/EE101-B)
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/m1ejxSi3l8s" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-### Hands-on Intermediate Training {-}
-
-Topics covered include classification, spectral unmixing and terrain visualization.
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/_CJoxXuC81s" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-
-### Tables and Vectors {-}
-
-Overview of tables and vectors in Earth Engine. Topics include how to load, manipulate, display and analyze vector and tabular data in Earth Engine.
-
-[companion slides](https://docs.google.com/presentation/d/1D7rezUHPElCfYWHMRNBChHjbEv6nXDD8xnh7_YgyK6A/edit?usp=sharing)
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/XLE-apehUCk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-
-### Importing and Exporting {-}
-
-Topics covered include importing and exporting Earth Engine data, the command line interface, and map publishing.
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/C_Yvg2XGZdI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
--
-
-### Classification {-}
-Learn all about classifiers (both supervised and unsupervised), training data, test data, the dreaded "computed value too large" message, and the awesome linear regression reducer.
-
-[companion slides](https://docs.google.com/presentation/d/1esEXY4rlyl3J2oXxfhSPBHQvxie_Fmda6wSDu_S2aQo)
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/6KIJB4A6VbI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-
-Topics covered include supervised and unsupervised classification.
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/NPplRtH2N94" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-
-### Machine Learning {-}
-
-#### Machine Learning Best Practices {-}
-
-With the pace of modern machine learning, building and training neural networks is hard. Learn some best practices and sift through the overwhelming amount of information available with a focus on remote sensing.
-
-[companion slides](https://docs.google.com/presentation/d/1FCsI_X8tD3u5naij2apyzmYOBBsfd6xVWMV76y1JEqI)
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/4cqbblDhhGc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-
-#### Neural Segmentation {-}
-
-Arguably the most common application of ML to earth observation imagery is pixel level segmentation and regression. With neural networks, a whole new set of techniques are possible that eclipse existing methods in terms of generality, but come with their own set of challenges. Learn applications and training regimens ranging from supervised to fully unsupervised.
-
-[companion slides](https://docs.google.com/presentation/d/1LRhtWkSLcFh0LPlWaOnHYlQUIDoCTaLIW-DY07E_wMA)
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/EtxJY2Zo_-g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-
-### Arrays and Matrices {-}
-
-Overview of array and matrix operations the Earth Engine way. Topics include linear modeling, matrix solving, eigen analysis, covariance reducers.
-
-[companion slides](https://docs.google.com/presentation/d/1lPtQPK008NkQ734wCRjHAQX2xFR3a0YZuRFX3SoOMZ0)
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/-qo8L5GmKO0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-
-### Time Series Analysis {-}
-
-Overview of time series analysis the Earth Engine way. Topics covered include linear modeling, auto-correlation, cross-correlation, auto-regressive models and smoothing.
-
-[companion slides](https://docs.google.com/presentation/d/1J1rUtf-bkfaJwYJY-tU17kzKI4U8FnF7Q2_VWqWdaak/edit?usp=sharing)
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/xQGNAYL7z80" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-
-### Earth Engine and the Google Cloud Platform {-}
-
-Introduction to interoperability between Earth Engine and the Google Cloud Platform.
-
-[companion slides](https://docs.google.com/presentation/d/1fEbJNe29e30s-J0vVTTLoD17nEqUUs84WNpImh6ss3U)
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/CKYPhCwyoy4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-
-### Google Maps API {-}
-Create a "Hello World" Maps API webpage, and learn how to do things like change the options (background map type, initial location, etc.), overlay data and KML layers, and start to showcase your first Earth Engine maps.
-
-[companion slides](https://docs.google.com/presentation/d/1bVZcXIog-igAXkhmq8KUbOYY3IZ5xw6BRf3TVqOcSf4)
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/pJygMsGr1eY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-
-### Publishing and storytelling with your Earth Engine results {-}
-
-Get an overview of how to use Google's geo tools to tell your stories and share your data. Topics include Google Earth, Google Maps (APIs), My Maps, Tour Builder, and Street View.
-
-[companion slides](https://docs.google.com/presentation/d/13_H2ywA0MIlkhXuK-hhqB8YpO76Bqg8l0hM2xAWnvLk)
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/URXbxzaK2ZA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
-
-### Datasets {-}
-
-#### Synthetic Aperture Radar (Sentinel-1) {-}
-
-Take a deep dive into one of the more unique datasets in the Earth Engine data catalog. This session provides an introduction to Synthetic Aperture Radar (SAR) data and working with scripts analyzing Sentinel-1 SAR data.
-
-[companion slides](https://docs.google.com/presentation/d/e/2PACX-1vTT9Cw8ROlIPMgN3_k_M-zpPC97nrmuDf9dRy3q98xY-lLvi3HPlDaGbcR_pfbJNs4TBDZli9BC8WKL/pub?start=false&loop=false&delayms=3000)
-
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/KYi6V1W28UM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</center>
+To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
