@@ -3920,7 +3920,9 @@ The size of the neighborhood in which to perform the interpolation is specified 
 
 # Reducer {-}
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+## Reducer Overview {-}
+
+Reducers are the way to aggregate data over time, space, bands, arrays and other data structures in Earth Engine. The __ee$Reducer__ class specifies how data is aggregated. The reducers in this class can specify a simple statistic to use for the aggregation (e.g. minimum, maximum, mean, median, standard deviation, etc.), or a more complex summary of the input data (e.g. histogram, linear regression, list). Reductions may occur over time ( __imageCollection$reduce()__ )ç, space ( __image$reduceRegion()__ , __image$reduceNeighborhood()__ ), bands ( __image$reduce()__ ), or the attribute space of a **FeatureCollection** ( __featureCollection$reduceColumns()__ or **FeatureCollection** methods that start with **aggregate_**).
 
 # Join {-}
 
