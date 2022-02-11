@@ -1,7 +1,7 @@
 # (PART) API Tutorials {-}
 
 
-```{r, eval = FALSE}
+```{r}
 source("common.R")
 ```
 
@@ -746,7 +746,9 @@ Map$addLayer(scene, visParams, 'true-color composite')
 The result should look something like Figure 5. Note that this code assigns the object of visualization parameters to a variable for possible future use. As you'll soon discover, that object will be useful when you visualize image collections!
 
 <center>
-<img src="C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_05" width=95%>
+![Figure 8. Landsat 8 TOA reflectance image as a true-color composite, stretched to (0, 0.3).](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_05.png){width=670px}
+
+
 </center>
 
 Try playing with visualizing different bands. Another favorite combination is 'B5', 'B4', and 'B3' which is called a false-color composite. Some other interesting false-color composites are described [here](https://www.usgs.gov/media/images/common-landsat-band-rgb-composites).
@@ -771,7 +773,7 @@ If you zoomed out enough, you probably noticed some clouds in the mosaic. When y
 
 With the [Landsat 8 TOA reflectance collection](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC8_L1T_TOA) loaded into a variable called l8, you saw that the following code results in a recent-value composite:
 
-```{r, eval=FALSE}
+```{r}
 l8 = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 landsat2016 = l8$filterDate('2016-01-01', '2016-12-31')
 Map$addLayer(landsat2016, visParams, 'l8 collection')
@@ -779,7 +781,290 @@ Map$addLayer(landsat2016, visParams, 'l8 collection')
 
 One of the problems with this composite is that it's full of clouds. Instead of just taking the last pixel in the collection (when you add a collection to the map, Earth Engine implicitly calls `mosaic()` on it), you can *reduce* the `ImageCollection` (Learn more about reducing image collections).
 
+### Compositing with Reducers {-}
 
+You were first introduced to reducers for getting statistics in an image region. That was a spatial reduction. Reducing an image collection to an image is a temporal reduction when the collection represents images over time. The type of `Reducer` you use defines how Earth Engine handles overlapping pixels. Landsat 8 visits the same spot on the Earth every 16 days. That means that over a 6 month period, there will be approximately 12 images (and more where the scenes overlap). Each pixel on the map is derived from a stack of pixels - one from each image in the collection being displayed.
+
+Merely adding the collection to the map results in selecting the most recent pixel - the one from the latest image in the stack. This behavior may be altered, using Earth Engine reducers. For example, rather than take the most recent pixel from the stack, Earth Engine can be instructed to pick the median value in the stack. This has the benefit of removing clouds (which have a high value) and shadows (which have a low value). When an image collection is reduced using the median reducer, the composite value is the median in each band, over time. For example, using Landsat scenes in 2016:
+
+```{r}
+# Get the median over time, in each band, in each pixel.
+median = l8$filterDate('2016-01-01', '2016-12-31')$median()
+
+# Make a handy variable of visualization parameters.
+visParams = list(bands = ('B4', 'B3', 'B2'), max = 0.3)
+
+# Display the median composite.
+Map$addLayer(median, visParams, 'median')
+
+```
+
+The new thing in this code is the `median()` method applied to an image collection. Like the filtering methods, this is a shortcut for the more general `reduce()` method on image collections which takes an `ee.Reducer()` as an argument. See the `ee.Reducer` package in the **Docs** tab of the Code Editor to see a list of all the Earth Engine reducers. When considering a reducer for an image collection, note that the output is an image, so reducers with non-numeric outputs, for example `histogram` or `toList` reducers, won't work with an image collection.
+
+<center>
+![Figure 8. Landsat 8 median composite.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_06.png){width=670px}
+
+</center>
+
+When you zoom out on the median composite, you should see something like Figure 6. This should look considerably better than the recent value composite you made previously. At this point, it's worth stepping back and considering what's been done to make that median composite. Earth Engine has loaded the entire Landsat 8 collection over the continental US, and has calculated the median for every pixel. That's a lot of data! Of course, you could compute annual medians, by first filtering the collection, [as you've done previously](https://developers.google.com/earth-engine/tutorials/tutorial_api_04#filtering-image-collections). The point is that if you had to download all that imagery and make this composite, it would be a big project. With Earth Engine, you get a result in seconds!
+
+Learn more about compositing and mosaicking here.
+
+### Masking {-}
+
+Although the median composite is an improvement over the recent-value composite, you may want to mask parts of the image. Masking pixels in an image makes those pixels transparent and excludes them from analysis. Each pixel in each band of an image has a mask. Those with a mask value of 0 or below will be transparent. Those with a mask of any value above 0 will be rendered. The mask of an image is set using a call like `image1.mask(image2)`. This call takes the values of `image2` and makes them the mask of `image1`. Any pixels in image2 that have the value 0 will be made transparent in `image1`.
+
+For example, suppose you would like to mask all the water pixels in the median composite. A water mask can be created using the dataset described by [Hansen et al. (2013)](https://www.science.org/doi/10.1126/science.1244693) which is in the Earth Engine data catalog. (Learn more about the Hansen et al. dataset in this tutorial.) In this dataset, water has a value of 2, land has the value 1, and 'no data' has the value 0. Use a bit of logic to create a mask image that has zeros where there's no land:
+
+```{r}
+# Load or import the Hansen et al. forest change dataset.
+hansenImage = ee$Image('UMD/hansen/global_forest_change_2015')
+
+# Select the land/water mask.
+datamask = hansenImage$select('datamask')
+
+# Create a binary mask.
+mask = datamask$eq(1)
+
+# Update the composite mask with the water mask.
+maskedComposite = median$updateMask(mask)
+Map$addLayer(maskedComposite, visParams, 'masked')
+```
+
+There are a couple new things in this code that are worth mentioning in detail. First, the `select()` function is useful for extracting the bands of interest from an image. Here, we select only the band we care about: `datamask`. The next new thing is the logical operator `eq()` which stands for "equals." We use `eq(1)` to create a binary image in which all the pixels that do not have the value of 1 in the `datamask` band (those that are water or no data) get a value of 0 in the resulting image.
+
+As a result of this masking, all the pixels in the median composite that are over land (according to the [Hansen et al. dataset](https://developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2015_v1_3)) are visible, but those over water (or nodata) are transparent and will be excluded from any analysis you do on the `maskedComposite` image.
+
+### Mosaicking {-}
+
+By combining the concepts of image collections, logical operators, masking and compositing, you can achieve interesting cartographic results. For example, suppose you want an image in which land pixels are displayed in true-color and all the other pixels are displayed in blue, you can do something like:
+
+```{r}
+water = mask$not()
+
+# Mask water with itself to mask all the zeros (non-water).
+water = water$mask(water)
+
+# Make an image collection of visualization images.
+mosaic = ee$ImageCollection([
+  median$visualize(visParams),
+  water$visualize({palette = '000044'}),
+])$mosaic()
+
+# Display the mosaic.
+Map$addLayer(mosaic, {}, 'custom mosaic')
+```
+
+There's a lot going on in that code, so let's dissect it. First, we use the `not()` logical operator to invert the mask we made earlier. Specifically, `not()` turns all the zeros into ones and all the non-zeros into zeros. It's not completely correct to call that variable `water` because it includes some nodata pixels as well, but it's OK in the present cartographic context. The next thing is to mask the "water" with itself. This results in an image in which all the water pixels are 1's and everything else is masked. The final step is to combine the images with `mosaic()`. Since `mosaic()` works on an image collection, we pass a list of images that we want to combine into the image collection constructor, then call `mosaic()` as the final step. The order of the images in that list is important. Specifically, the output image will contain the last unmasked pixel from the stack of images in the input collection. In this case, that works because the water layer is the last (top) image in the collection, and only contains un-masked pixels where water occurs.
+
+Note that the images in the collection are visualization images. When you call `[visualize()]`(https://developers.google.com/earth-engine/apidocs/ee-image-visualize) on an image, it gets turned into a 3-band, 8-bit image according to the visualization parameters you pass in. The default visualization parameters work fine for 3-band, 8-bit images, so you don't need visualization parameters when you add the image to the map. The result should look like Figure 7.
+
+<center>
+![Figure 8. Custom mosaic that makes water areas a uniform color.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_07.png){width=670px}
+
+</center>
+
+At this point, you've seen ways to visualize image collections as recent-value composites, methods for compositing image collections using reducers, and methods for making custom composites by masking and mosaicking a collection of images. In the next page, learn how to add a vegetation index to every image in a collection and use the index to make a "greenest pixel" composite.
+
+## NDVI, Mapping a Function over a Collection, Quality Mosaicking {-}
+
+Previously, you learned how to get individual Landsat scenes by doing something like this, where `l8` and `point` are imports representing the Landsat 8 TOA collection and an area-of-interest geometry:
+
+```{r}
+# Define a point of interest. Use the UI Drawing Tools to import a point
+# geometry and name it "point" or set the point coordinates with the
+# ee.Geometry.Point() function as demonstrated here.
+point = ee$Geometry$Point([-122.292, 37.9018])
+
+# Import the Landsat 8 TOA image collection.
+l8 = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+
+# Get the least cloudy image in 2015.
+image = ee$Image(
+  l8$filterBounds(point)
+    .filterDate('2015-01-01', '2015-12-31')
+    .sort('CLOUD_COVER')
+    .first()
+)
+```
+
+Suppose now that you want to compute a Normalized Difference Vegetation Index (NDVI) image from the Landsat image. Vegetation reflects light in the near-infrared (NIR) part of the electromagnetic spectrum and absorbs light in the red part [(Learn more about NIR reflectance from vegetation)](https://science.nasa.gov/ems/08_nearinfraredwaves). NDVI uses this to create a single value roughly reflecting the photosynthetic activity occurring at a pixel. The calculation is (NIR - red) / (NIR + red). This results in a number between 1 and -1, where pixels with high photosynthetic activity have a high NDVI. This is one way to compute NDVI in Earth Engine:
+
+```{r}
+# Compute the Normalized Difference Vegetation Index (NDVI).
+nir = image$select('B5')
+red = image$select('B4')
+ndvi = nir$subtract(red)$divide(nir$add(red))$rename('NDVI')
+
+# Display the result.
+Map$centerObject(image, 9)
+ndviParams = {min = -1, max = 1, palette = ['blue', 'white', 'green']}
+Map$addLayer(ndvi, ndviParams, 'NDVI image')
+```
+
+The result should look something like Figure 8. Note that we use the `select()` function you learned about in the previous section on masking to get the NIR and red bands, then compute NDVI using image mathematical operators that that you have also seen before in the section on `Image` math. Finally, display the image with a palette. Here we used color names instead of hex strings in the palette. (See [this external reference about CSS color](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for details.)
+
+<center>
+![Figure 8. NDVI for a single Landsat scene. Blue is low and green is high NDVI.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_08.png){width=670px}
+
+</center>
+
+The normalized difference operation is so ubiquitous in remote sensing, there is a [shortcut function](https://developers.google.com/earth-engine/apidocs/ee-image-normalizeddifference) on an ee.Image that is useful for simplifying the code in the previous example:
+
+```{r}
+ndvi = image$normalizedDifference(['B5', 'B4'])$rename('NDVI')
+```
+
+### Mapping a Function over a Collection {-}
+
+Suppose now that you want to add NDVI to every image in an image collection. The way to do that in Earth Engine is to `map()` a function over the collection. Don't confuse `map()` with the `Map` object. The former is a method on a collection, and uses *map* in the [parallel computing sense](https://en.wikipedia.org/wiki/Map_(parallel_pattern)) of applying a function to every element in a collection. The function defines the operations that will be applied to every element in the collection. You have seen a simple function in the R tutorial, but now we're going to make a function that includes Earth Engine functionality. For example, copy the previous NDVI code into a function which returns the input image with an NDVI band:
+
+```{r}
+addNDVI = function(image) {
+  ndvi = image$normalizedDifference(['B5', 'B4']).rename('NDVI')
+  return image$addBands(ndvi)
+}
+
+# Test the addNDVI function on a single image.
+ndvi = addNDVI(image)$select('NDVI')
+```
+
+This code might not be as efficient for computing NDVI for a single image, but this function can be used as an argument to `map()` in order to add an NDVI band to every image in the collection. It's often useful to first test a function on a single image, to make sure the function is behaving as you expect. Once you've tested the function on an individual image and have determined that it does what you want, you can map it over the collection:
+
+```{r}
+withNDVI = l8$map(addNDVI)
+```
+
+To verify that this is indeed putting an NDVI band in every image in this collection, you can add the `withNDVI` collection to the map and query a random location with the **Inspector** tab. You should notice that each image in the collection now has a band called `NDVI`.
+
+### Make a greenest pixel composite {-}
+
+Now that you've made an image collection in which each image has an NDVI band, we can explore a new way to make composites: `qualityMosaic()`. You may have noticed discontinuities between Landsat paths, even in the median pixel composite. Part of the reason for that may be due to differences in [phenology](https://en.wikipedia.org/wiki/Phenology) as a result of images in adjacent paths being collected at different times (specifically, 8 days apart). One way to minimize this is to try to set pixel values in the composite from roughly the same phenological stage, for example the time of maximum greenness of plants (when the leaves are on and photosynthetically active). If we let max greenness be defined by the maximum NDVI, we can use [`qualityMosaic()`](https://developers.google.com/earth-engine/apidocs/ee-imagecollection-qualitymosaic) to make a composite in which each pixel contains the maximum NDVI pixel from the collection. Now you can make use of the added NDVI band in your `withNDVI` collection:
+
+```{r}
+# Make a "greenest" pixel composite.
+greenest = withNDVI$qualityMosaic('NDVI')
+
+# Display the result.
+visParams = {bands = ['B4', 'B3', 'B2'], max: 0.3}
+Map$addLayer(greenest, visParams, 'Greenest pixel composite')
+```
+
+The result of this code should look something like Figure 9. Comparing Figure 9 to the median composite shown in Figure 6, observe that the greenest pixel composite is indeed much greener. However, close examination of water bodies should make a different problem apparent. Specifically, water bodies now appear cloudy. This is due to the way the `qualityMosaic()` method works: at each location, the entire time series is examined and the pixel with the maximum value in the NDVI band is set as the composite value. Because NDVI is higher over clouds than water, water areas get cloudy pixels, while vegetated areas all appear green because NDVI is highest when the vegetation in the pixel is photosynthetically active.
+
+<center>
+![Figure 8. Landsat 8 greenest pixel composite.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_09.png){width=670px}
+
+</center>
+
+Now you've seen several ways to composite and mosaic images in Earth Engine. You can make recent-value, median, or greenest-pixel composites from images filtered by time and place or all images in the collection. You've learned how to do computations on the imagery and extract information. The next page covers ways to get information out of Earth Engine, for example as a chart or a dataset exported to your Google Drive folder.
+
+## Exporting Charts and Images {-}
+
+Earth Engine is a powerful analytical tool, but you may have need to export the results of your analysis in order to embed charts, images, maps, etc. into reports or publications. In this section, you will learn how to create charts and images that can be exported and viewed in other software. Recall that in the previous section, you used code like the following to add an NDVI band to every image in a collection, where the l8 variable references the [Landsat 8 TOA reflectance collection](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC8_L1T_TOA):
+
+```{r}
+# Import the Landsat 8 TOA image collection.
+l8 = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+
+# Map a function over the Landsat 8 TOA collection to add an NDVI band.
+withNDVI = l8$map(function(image) {
+  ndvi = image$normalizedDifference(['B5', 'B4']).rename('NDVI')
+  return image$addBands(ndvi)
+})
+```
+
+### Charting {-}
+
+Suppose that what you want is actually a chart of NDVI over time at a given location. To make such a chart, the first step is to choose a location of interest. Create a point by getting the point drawing tool () and make a single point geometry in your area of interest. (If you already have imports, hover on **Geometry Imports** and click **+ new layer** first). Locate the point in an area of agriculture, deciduous forest, annual grassland or some other land cover with an annual cycle). Name the import `roi`. (See this page for information about creating geometries programmatically).
+
+Now let's use the `roi` point to make a chart of NDVI over time in the pixel under that point. The way to make charts in Earth Engine is with the `ui.Chart` package. (Learn more about making charts in Earth Engine). Specifically, to make a chart over time, you can use the `ui.Chart.image.series()` method:
+
+```{r}
+# Create a chart.
+chart = ui$Chart.image.series({
+  imageCollection = withNDVI$select('NDVI')
+  region = roi,
+  reducer = ee$Reducer$first(),
+  scale = 30
+})$setOptions({title = 'NDVI over time'})
+
+# Display the chart in the console.
+print(chart)
+```
+
+For the `roi` geometry, we chose a point in an agricultural area, resulting in a chart that looks something like Figure 10. Note that the parameters to the chart constructor include a reducer and scale like `reduceRegion()`. Since the point we are providing as a region can only intersect one pixel, it suffices to use the 'first' reducer. If you have a larger region, you should use a 'mean' or other reducer that specifies how to aggregate pixels. Also note that to visualize a chart, all you have to do is print it.
+
+<center>
+![Figure 8. Chart of Landsat NDVI over time at a point geometry.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_10.png){width=670px}
+
+</center>
+
+### Digression: Simple Cloud Masking for Landsat {-}
+
+Something you may have noticed about this chart is that the time series of NDVI values at the point looks a little noisy. This is likely due to clouds. To ameliorate this effect, Earth Engine includes a cloud-masking algorithm for Landsat sensors with a thermal band: `ee$Algorithms$Landsat$simpleCloudScore()`. It takes a Landsat TOA reflectance image as input and adds a band named cloud which is an index of cloudiness in the pixel from zero to 100, from least to most cloudy, respectively. By modifying the function you mapped over the collection, you can use an arbitrary threshold (20) on the cloud index to clean up the chart a bit:
+
+```{r}
+cloudlessNDVI = l8$map(function(image) {
+  # Get a cloud score in [0, 100].
+  cloud = ee$Algorithms4Landsat$simpleCloudScore(image)$select('cloud')
+
+  # Create a mask of cloudy pixels from an arbitrary threshold.
+  mask = cloud$lte(20)
+
+  # Compute NDVI.
+  ndvi = image$normalizedDifference(['B5', 'B4'])$rename('NDVI')
+
+  # Return the masked image with an NDVI band.
+  return image$addBands(ndvi)$updateMask(mask)
+})
+
+print(ui$Chart$image$series({
+  imageCollection = cloudlessNDVI.select('NDVI')
+  region = roi,
+  reducer = ee$Reducer$first(),
+  scale = 30
+})$setOptions({title = 'Cloud-masked NDVI over time'}))
+```
+
+The cloud-masked result is illustrated in Figure 11. Note that the time series looks a little smoother, but may still contain pixels affected by clouds. Adjust the threshold on the cloud index and observe the charted time series to learn how this threshold can affect your results.
+
+<center>
+![Figure 8. Chart of cloud-masked NDVI over time at a point geometry.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_11.png){width=670px}
+
+</center>
+
+### Exporting Images {-}
+
+You have seen a way to export a chart of data computed by Earth Engine, but what about a whole image? Suppose, for example that you have built a greenest-pixel composite as discussed in the previous section:
+
+```{r}
+greenest = cloudlessNDVI$qualityMosaic('NDVI')
+```
+
+The only difference in this code from what you did previously is that now we're using the cloud masked collection. You can export a subset (defined by a region) of this using the `Export` package. (Learn more about exporting raster and vector data from Earth Engine.) For example, to export an image that can be easily embedded in other docs, let's create a visualization image, as you've done previously, an Export it to your Google Drive folder:
+
+```{r}
+# Create a 3-band, 8-bit, color-IR composite to export.
+visualization = greenest$visualize({
+  bands = ['B5', 'B4', 'B3'],
+  max = 0.4
+});
+
+# Create a task that you can launch from the Tasks tab.
+Export$image$toDrive({
+  image = visualization,
+  description = 'Greenest_pixel_composite',
+  scale = 30
+})
+```
+
+When you run this code, note that a new task is created in the **Tasks** tab. To launch the export configuration dialog, click the **RUN** button in the **Tasks** tab. Once you've configured the task, click the **Run** button in the dialog to start the export. But before you do that, be warned:
+
+
+The reason you should exercise caution when exporting without a `region` argument is that if you set a relatively small value for `scale`, and the Map is zoomed out to large area, then you will export a potentially very large image to your Drive folder. See the `Export.image.toDrive()` docs in the **Docs** tab for more details and a list of possible configuration parameters.
+
+That concludes this introduction to the Earth Engine API! You have now seen much of the most common Earth Engine functionality and should be able to confidently proceed to more complex analyses. Be sure to read the docs and search the [forum](https://groups.google.com/g/google-earth-engine-developers) for answers to other questions. Happy coding!
 
 
 

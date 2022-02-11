@@ -9,9 +9,6 @@ suppress-bibliography: yes
 
 `r if (knitr::is_latex_output()) '<!--'` 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
-```
 
 
 # Welcome {-}
