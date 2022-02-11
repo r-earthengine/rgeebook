@@ -506,14 +506,14 @@ sinImage = aspect$divide(180)$multiply(Math$PI)$sin()
 Map$addLayer(sinImage, list(min = -1, max = 1), 'sin')
 ```
 
-The result should look something like Figure . It's worth taking a closer look at the `aspect$divide(180)$multiply(Math$PI)$sin()` code. By chaining multiple methods like this, the code says, 'divide the aspect by 180, multiply the result of that by π, and finally take the sin'. You can perform complex mathematical operations on images by combining methods in this manner. See the `Image` [docs](https://developers.google.com/earth-engine/apidocs/ee-image) for a complete list of mathematical operations, `add()`, `subtract()`, `multiply()`, etc.
+The result should look something like Figure . It's worth taking a closer look at the `aspect$divide(180)$multiply(Math$PI)$sin()` code. By chaining multiple methods like this, the code says, 'divide the aspect by 180, multiply the result of that by π, and finally take the sin'. You can perform complex mathematical operations on images by combining methods in this manner. See the `Image` [docs](https:#developers.google.com/earth-engine/apidocs/ee-image) for a complete list of mathematical operations, `add()`, `subtract()`, `multiply()`, etc.
 
 <center>
 ![Figure 8. Slope image.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_04.png){width=670px}
 
 ## Image statistics {-}
 
-Another useful class of operations on images involves computing pixel statistics in image regions, or raster-vector overlays. To compute statistics in Earth Engine, use a reducer as represented by classes in the `ee.Reducer` [package](https://developers.google.com/earth-engine/guides/reducers_intro).For example, suppose you're interested in the mean of elevation in some region. You can define a region by drawing a polygon using the [geometry drawing tools](https://developers.google.com/earth-engine/guides/playground#geometry-tools) . To interactively draw a region, get the polygon drawing tool, then digitize a polygon over your area of interest and click **Exit** when you're done. Note that the resultant `ee.Geometry` object is automatically named geometry and added as an import at the top of your script. Rename that variable to 'polygon' by clicking on the variable name in the imports and typing the new name.
+Another useful class of operations on images involves computing pixel statistics in image regions, or raster-vector overlays. To compute statistics in Earth Engine, use a reducer as represented by classes in the `ee.Reducer` [package](https:#developers.google.com/earth-engine/guides/reducers_intro).For example, suppose you're interested in the mean of elevation in some region. You can define a region by drawing a polygon using the [geometry drawing tools](https:#developers.google.com/earth-engine/guides/playground#geometry-tools) . To interactively draw a region, get the polygon drawing tool, then digitize a polygon over your area of interest and click **Exit** when you're done. Note that the resultant `ee.Geometry` object is automatically named geometry and added as an import at the top of your script. Rename that variable to 'polygon' by clicking on the variable name in the imports and typing the new name.
 
 Next, get the mean pixel value in the polygon using the following code:
 
@@ -530,7 +530,7 @@ mean = meanDict$get('elevation')
 print('Mean elevation', mean)
 ```
 
-There are several things to note here. First, observe that `reduceRegion()` is a method available for `Image` objects [learn more about reducing regions here](https://developers.google.com/earth-engine/guides/reducers_reduce_region). Second, the method arguments are provided in a R object that is passed as a single argument. (Specifically, the keys of the object are the names of the method parameters. The values are the arguments to the method). Third, the `reducer` parameter specifies the type of statistic to compute and the `geometry` parameter specifies the region in which to compute the statistic. The `scale` parameter is the pixel size in meters to use. To avoid ambiguity, you should always specify scale when doing reductions as Earth Engine may not be able to automatically determine the appropriate scale from the inputs. (Learn more about scale in Earth Engine)(https://developers.google.com/earth-engine/guides/scale).
+There are several things to note here. First, observe that `reduceRegion()` is a method available for `Image` objects [learn more about reducing regions here](https:#developers.google.com/earth-engine/guides/reducers_reduce_region). Second, the method arguments are provided in a R object that is passed as a single argument. (Specifically, the keys of the object are the names of the method parameters. The values are the arguments to the method). Third, the `reducer` parameter specifies the type of statistic to compute and the `geometry` parameter specifies the region in which to compute the statistic. The `scale` parameter is the pixel size in meters to use. To avoid ambiguity, you should always specify scale when doing reductions as Earth Engine may not be able to automatically determine the appropriate scale from the inputs. (Learn more about scale in Earth Engine)(https:#developers.google.com/earth-engine/guides/scale).
 
 Lastly, the return value of `reduceRegion()` is a dictionary in which keys are band names and values are the pixel statistics for the bands. The `get()` method on a dictionary returns the value corresponding to the key provided as an argument. In this case, the `srtm` image has one band, 'elevation', so the example code gets that statistic from the dictionary and prints it.
 
@@ -549,7 +549,7 @@ scale = srtm$projection()$nominalScale()
 print('SRTM scale in meters', scale)
 ```
 
-If you specify a scale smaller than the native resolution, Earth Engine will happily resample the input image using nearest neighbor, then include all those smaller pixels in the computation. If you set the scale to be larger, Earth Engine will use input pixels from an aggregated version of the input (i.e. get pixels from a higher level of the image pyramid). Learn more about how Earth Engine handles scale in this [doc](https://developers.google.com/earth-engine/guides/scale).
+If you specify a scale smaller than the native resolution, Earth Engine will happily resample the input image using nearest neighbor, then include all those smaller pixels in the computation. If you set the scale to be larger, Earth Engine will use input pixels from an aggregated version of the input (i.e. get pixels from a higher level of the image pyramid). Learn more about how Earth Engine handles scale in this [doc](https:#developers.google.com/earth-engine/guides/scale).
 
 So far, you've been working with a single image with a single band. In the next page, you'll learn about multi-band images and image collections.
 
@@ -633,6 +633,10 @@ If you zoomed out enough, you probably noticed some clouds in the mosaic. When y
 
 ## Compositing, Masking, and Mosaicking {-}
 
+<<<<<<< Updated upstream
+=======
+Now that you know how to load and display an image, it's time to apply a computation to it. For example, you can compute the slope of terrain, by passing the SRTM elevation image to the `slope` [method of the] `ee.Terrain` [package](https:#developers.google.com/earth-engine/apidocs/ee-terrain-slope).
+>>>>>>> Stashed changes
 
 
 # Global Forest Change {-}
@@ -661,11 +665,11 @@ If you zoomed out enough, you probably noticed some clouds in the mosaic. When y
           2000 - 2012 (left); Change in Riau, Indonesia, 2000 - 2012 (center); Change in Paraguay,
           2000 - 2012 (right)</figcaption>
   </figure>
-Welcome to the Google Earth Engine tutorial for using [Hansen et al. (2013)](http://www.sciencemag.org/content/342/6160/850) global forest cover and change data and Forest Monitoring for Action (FORMA, [Hammer et al. 2009](https://www.cgdev.org/sites/default/files/1423248_file_Hammer_Kraft_Wheeler_FORMA_FINAL.pdf)) data from [Global Forest Watch](http://www.globalforestwatch.org/). This tutorial provides examples of how to use Earth Engine to visualize these data, how to compute forest change over time and other statistics within a region of interest and how to download both the data and results of analyses.
+Welcome to the Google Earth Engine tutorial for using [Hansen et al. (2013)](http:#www.sciencemag.org/content/342/6160/850) global forest cover and change data and Forest Monitoring for Action (FORMA, [Hammer et al. 2009](https:#www.cgdev.org/sites/default/files/1423248_file_Hammer_Kraft_Wheeler_FORMA_FINAL.pdf)) data from [Global Forest Watch](http:#www.globalforestwatch.org/). This tutorial provides examples of how to use Earth Engine to visualize these data, how to compute forest change over time and other statistics within a region of interest and how to download both the data and results of analyses.
 
 ### License and Attribution {-}
 
-The data described in this tutorial are licensed under a Creative Commons Attribution 4.0 International License. Please use the recommended citation on the relevant [dataset description page](https://developers.google.com/earth-engine/datasets).
+The data described in this tutorial are licensed under a Creative Commons Attribution 4.0 International License. Please use the recommended citation on the relevant [dataset description page](https:#developers.google.com/earth-engine/datasets).
 
 ### Prerequisites {-}
 
@@ -683,7 +687,7 @@ Once you're familiar with R, the Earth Engine API and Rstudio, [get started on t
 
 ## Introduction to Hansen et al. Global Forest Change Data {-}
 
-The [Hansen et al. (2013) Global Forest Change dataset](https://developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2015_v1_3) in Earth Engine represents forest change, at 30 meters resolution, globally, between 2000 and 2014. Let's start by adding the Hansen et al. data to the map. Either import the global forest change data ([learn more about searching and importing datasets]()) by searching for "Hansen forest" and naming the import **gfc2014**, or copy the following code into the Rstudio:
+The [Hansen et al. (2013) Global Forest Change dataset](https:#developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2015_v1_3) in Earth Engine represents forest change, at 30 meters resolution, globally, between 2000 and 2014. Let's start by adding the Hansen et al. data to the map. Either import the global forest change data ([learn more about searching and importing datasets]()) by searching for "Hansen forest" and naming the import **gfc2014**, or copy the following code into the Rstudio:
 
 ```{r, eval=FALSE}
 var gfc2014 = ee.Image('UMD/hansen/global_forest_change_2015');
@@ -871,15 +875,15 @@ var treeCover = gfc2014.select(['treecover2000']);
 var lossImage = gfc2014.select(['loss']);
 var gainImage = gfc2014.select(['gain']);
 
-// Add the tree cover layer in green.
+# Add the tree cover layer in green.
 Map.addLayer(treeCover.updateMask(treeCover),
     {palette: ['000000', '00FF00'], max: 100}, 'Forest Cover');
 
-// Add the loss layer in red.
+# Add the loss layer in red.
 Map.addLayer(lossImage.updateMask(lossImage),
             {palette: ['FF0000']}, 'Loss');
 
-// Add the gain layer in blue.
+# Add the gain layer in blue.
 Map.addLayer(gainImage.updateMask(gainImage),
             {palette: ['0000FF']}, 'Gain');
 ```
@@ -1170,7 +1174,7 @@ print(paste0(ee$Dictionary$getInfo(statsDictionary))
 
 ## Introduction to Forest Monitoring for Action (FORMA) data {-}
 
-FORMA is a [MODIS](http://modis.gsfc.nasa.gov/about/) based 500 x 500 meter twice-monthly deforestation alerting system for the humid tropical forests. The [FORMA 500 dataset](https://developers.google.com/earth-engine/datasets/catalog/FORMA_FORMA_500m) in Earth Engine is an image with alerts starting in January 2006 and updated monthly. Each alert has a time associated with it in a single band named **alert_date** in units of [epoch seconds](https://en.wikipedia.org/wiki/Unix_time). Filtering FORMA by dates and calculating alerts within areas of interest are two of the most important things you can do with the FORMA dataset.
+FORMA is a [MODIS](http:#modis.gsfc.nasa.gov/about/) based 500 x 500 meter twice-monthly deforestation alerting system for the humid tropical forests. The [FORMA 500 dataset](https:#developers.google.com/earth-engine/datasets/catalog/FORMA_FORMA_500m) in Earth Engine is an image with alerts starting in January 2006 and updated monthly. Each alert has a time associated with it in a single band named **alert_date** in units of [epoch seconds](https:#en.wikipedia.org/wiki/Unix_time). Filtering FORMA by dates and calculating alerts within areas of interest are two of the most important things you can do with the FORMA dataset.
 
 ### Filtering FORMA by Date {-}
 
@@ -1300,19 +1304,19 @@ This concludes the overview of forest change datasets in Earth Engine. We're loo
 
 ## Introduction {-}
 
-Welcome to the Google Earth Engine tutorial for working with the global surface water (GSW) dataset. This dataset is described in the Nature letter [High-resolution mapping of global surface water and its long-term changes](https://www.nature.com/articles/nature20584.epdf?author_access_token=C5JSvooRop4jWxyp_qRPLNRgN0jAjWel9jnR3ZoTv0MqBuzCNsmw_DFxRd7sX93nfPzcbm_xTiPLlZMl7XrUhadm6EiT9cGdDNgn1s6EWrPWH3IeadLUjApplBoaS6xH). This tutorial provides examples of how to use Earth Engine to visualize data layers available in the GSW dataset, and presents some typical visualizations and analyses.
+Welcome to the Google Earth Engine tutorial for working with the global surface water (GSW) dataset. This dataset is described in the Nature letter [High-resolution mapping of global surface water and its long-term changes](https:#www.nature.com/articles/nature20584.epdf?author_access_token=C5JSvooRop4jWxyp_qRPLNRgN0jAjWel9jnR3ZoTv0MqBuzCNsmw_DFxRd7sX93nfPzcbm_xTiPLlZMl7XrUhadm6EiT9cGdDNgn1s6EWrPWH3IeadLUjApplBoaS6xH). This tutorial provides examples of how to use Earth Engine to visualize data layers available in the GSW dataset, and presents some typical visualizations and analyses.
 
 The tutorial is broken up into sections. Within each section, code will be built up gradually with short code snippets and explanatory text. At the end of each section, the complete working script will be presented.
 
 ### References {-}
 
-  - [High-resolution mapping of global surface water and its long-term changes](http://rdcu.be/nDd2) (online viewer)
+  - [High-resolution mapping of global surface water and its long-term changes](http:#rdcu.be/nDd2) (online viewer)
   
-  - [Get water governance on the global agenda](http://www.nature.com/news/get-water-governance-on-the-global-agenda-1.21104) (Nature editorial)
+  - [Get water governance on the global agenda](http:#www.nature.com/news/get-water-governance-on-the-global-agenda-1.21104) (Nature editorial)
   
-  - [Global Surface Water Explorer](https://global-surface-water.appspot.com/) (web application)
+  - [Global Surface Water Explorer](https:#global-surface-water.appspot.com/) (web application)
   
-  - [Data Users Guide](https://storage.googleapis.com/global-surface-water/downloads_ancillary/DataUsersGuidev2.pdf) (v2)
+  - [Data Users Guide](https:#storage.googleapis.com/global-surface-water/downloads_ancillary/DataUsersGuidev2.pdf) (v2)
   
 ### Audience {-}
 
@@ -1320,19 +1324,16 @@ This tutorial assumes you are familiar with concepts presented in the [Earth Eng
 
 ### License and Attribution {-}
 
-The GSW data described in this tutorial were produced under the [Copernicus Programme](http://www.copernicus.eu/) and are provided free of charge, without restriction of use. For the full license information see the [Copernicus Regulation](http://www.copernicus.eu/main/data-access/).
+The GSW data described in this tutorial were produced under the [Copernicus Programme](http:#www.copernicus.eu/) and are provided free of charge, without restriction of use. For the full license information see the [Copernicus Regulation](http:#www.copernicus.eu/main/data-access/).
 
 If you are using the data as a layer in a published map, please include the following attribution text:
 
 ### Get access to Earth Engine {}
 
-Access to Earth Engine is free, but requires signup. To get access, please fill out our [Earth Engine signup form](https://earthengine.google.com/signup) to apply for an Evaluator account. Those granted access will receive an email within a few business days with further instructions.
+Access to Earth Engine is free, but requires signup. To get access, please fill out our [Earth Engine signup form](https:#earthengine.google.com/signup) to apply for an Evaluator account. Those granted access will receive an email within a few business days with further instructions.
 
 Once you're familiar with the Code Editor, [get started on the tutorial]()!
 
-## Water Occurrence (1984-2015) {-}
-
-The GSW dataset contains many data layers that present the surface water data in different ways. We will start by visualizing the water occurrence layer, which provides a summary of where and how often surface water occurred over the entire time-period between March 1984 and October 2015.
 
 # Video Tutorials
 
