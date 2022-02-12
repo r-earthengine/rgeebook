@@ -4881,6 +4881,320 @@ print('Residuals:', residuals);
 
 Joins are used to combine elements from different collections (e.g. `ImageCollection` or `FeatureCollection`) based on a condition specified by an `ee$Filter`. The filter is constructed with arguments for the properties in each collection that are related to each other. Specifically, `leftField` specifies the property in the primary collection that is related to the `rightField` in the secondary collection. The type of filter (e.g. `equals`, `greaterThanOrEquals`, `lessThan`, etc.) indicates the relationship between the fields. The type of join indicates one-to-many or one-to-one relationships between the elements in the collections and how many matches to retain. The output of a join is produced by `join$apply()` and will vary according to the type of join.
 
+## Simple Joins {-}
+
+A simple join returns elements from the `primary` collection that match any element in the `secondary` collection according to the match condition in the filter. To perform a simple join, use an `ee$Join$simple()`. This might be useful for finding the common elements among different collections or filtering one collection by another. For example, consider two image collections which (might) have some matching elements, where “matching” is defined by the condition specified in a filter. For example, let matching mean the image IDs are equal. Since the matching images in both collections are the same, use a simple join to discover this set of matching images:
+
+```{js}
+// Load a Landsat 8 image collection at a point of interest.
+var collection = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+    .filterBounds(ee.Geometry.Point(-122.09, 37.42));
+
+// Define start and end dates with which to filter the collections.
+var april = '2014-04-01';
+var may = '2014-05-01';
+var june = '2014-06-01';
+var july = '2014-07-01';
+
+// The primary collection is Landsat images from April to June.
+var primary = collection.filterDate(april, june);
+
+// The secondary collection is Landsat images from May to July.
+var secondary = collection.filterDate(may, july);
+
+// Use an equals filter to define how the collections match.
+var filter = ee.Filter.equals({
+  leftField: 'system:index',
+  rightField: 'system:index'
+});
+
+// Create the join.
+var simpleJoin = ee.Join.simple();
+
+// Apply the join.
+var simpleJoined = simpleJoin.apply(primary, secondary, filter);
+
+// Display the result.
+print('Simple join: ', simpleJoined);
+```
+
+In the previous example, observe that the collections to join temporally overlap by about a month. Note that when this join is applied, the output will be an `ImageCollection` with only the matching images in the `primary` collection.
+
+## Inverted Joins {-}
+
+Suppose that the purpose of the join is to retain all images in the `primary` collection that are not in the `secondary` collection. You can perform this type of inverted join using `ee$Join$inverted()`. Using the filter, `primary` and `secondary` collections as defined in the [simple join example](), specify the inverted join as:
+
+```{js}
+// Define the join.
+var invertedJoin = ee.Join.inverted();
+
+// Apply the join.
+var invertedJoined = invertedJoin.apply(primary, secondary, filter);
+```
+
+The inverted join contains the images from April 3 and April 19, indicating the images that are present in the `primary` collection but not in the `secondary` collection.
+
+## Inner Joins {-}
+
+To enumerate all matches between the elements of two collections, use an `ee$Join$inner()`. The output of an inner join is a `FeatureCollection` (even if joining one `ImageCollection` to another `ImageCollection`). Each feature in the output represents a match, where the matching elements are stored in two properties of the feature. For example, `feature$get('primary')` is the element in the primary collection that matches the element from the secondary collection stored in `feature$get('secondary')`. (Different names for these properties can be specified as arguments to `inner()`, but `‘primary’` and `‘secondary’` are the defaults). One-to-many relationships are represented by multiple features in the output. If an element in either collection doesn’t have a match, it is not present in the output.
+
+Join examples using `ImageCollection` inputs apply without modification to `FeatureCollection` inputs. It is also possible to join a `FeatureCollection` to an `ImageCollection` and vice versa. Consider the following toy example of inner join:
+
+```{js}
+// Create the primary collection.
+var primaryFeatures = ee.FeatureCollection([
+  ee.Feature(null, {foo: 0, label: 'a'}),
+  ee.Feature(null, {foo: 1, label: 'b'}),
+  ee.Feature(null, {foo: 1, label: 'c'}),
+  ee.Feature(null, {foo: 2, label: 'd'}),
+]);
+
+// Create the secondary collection.
+var secondaryFeatures = ee.FeatureCollection([
+  ee.Feature(null, {bar: 1, label: 'e'}),
+  ee.Feature(null, {bar: 1, label: 'f'}),
+  ee.Feature(null, {bar: 2, label: 'g'}),
+  ee.Feature(null, {bar: 3, label: 'h'}),
+]);
+
+// Use an equals filter to specify how the collections match.
+var toyFilter = ee.Filter.equals({
+  leftField: 'foo',
+  rightField: 'bar'
+});
+
+// Define the join.
+var innerJoin = ee.Join.inner('primary', 'secondary');
+
+// Apply the join.
+var toyJoin = innerJoin.apply(primaryFeatures, secondaryFeatures, toyFilter);
+
+// Print the result.
+print('Inner join toy example:', toyJoin);
+```
+
+In the previous example, notice that the relationship between the tables is defined in the filter, which indicates that fields `‘foo’` and `‘bar’` are the join fields. An inner join is then specified and applied to the collections. Inspect the output and observe that each possible match is represented as one `Feature`.
+
+For a motivated example, consider joining MODIS `ImageCollection` objects. MODIS quality data are sometimes stored in a separate collection from the image data, so an inner join is convenient for joining the two collections in order to apply the quality data. In this case, the image acquisition times are identical, so an equals filter handles the job of specifying this relationship between the two collections:
+
+```{js}
+// Make a date filter to get images in this date range.
+var dateFilter = ee.Filter.date('2014-01-01', '2014-02-01');
+
+// Load a MODIS collection with EVI data.
+var mcd43a4 = ee.ImageCollection('MODIS/MCD43A4_006_EVI')
+    .filter(dateFilter);
+
+// Load a MODIS collection with quality data.
+var mcd43a2 = ee.ImageCollection('MODIS/006/MCD43A2')
+    .filter(dateFilter);
+
+// Define an inner join.
+var innerJoin = ee.Join.inner();
+
+// Specify an equals filter for image timestamps.
+var filterTimeEq = ee.Filter.equals({
+  leftField: 'system:time_start',
+  rightField: 'system:time_start'
+});
+
+// Apply the join.
+var innerJoinedMODIS = innerJoin.apply(mcd43a4, mcd43a2, filterTimeEq);
+
+// Display the join result: a FeatureCollection.
+print('Inner join output:', innerJoinedMODIS);
+```
+
+To make use of the joined images in the output `FeatureCollection`, `map()` a combining function over the output. For example, the matching images can be stacked together such that the quality bands are added to the image data:
+
+```{js}
+// Map a function to merge the results in the output FeatureCollection.
+var joinedMODIS = innerJoinedMODIS.map(function(feature) {
+  return ee.Image.cat(feature.get('primary'), feature.get('secondary'));
+});
+
+// Print the result of merging.
+print('Inner join, merged bands:', joinedMODIS);
+```
+
+Although this function is mapped over a `FeatureCollection`, the result is an `ImageCollection`. Each image in the resultant `ImageCollection` has all the bands of the images in the primary collection (in this example just `‘EVI’`) and all the bands of the matching image in the secondary collection (the quality bands).
+
+## Save-All Joins {-}
+
+Saving joins are one way of representing one-to-many relationships in Earth Engine. Unlike an [inner join](), a saving join stores matches from the `secondary` collection as a named property of the features in the `primary` collection. To save all such matches, use an `ee$Join$saveAll()`. If there is a one-to-many relationship, a `saveAll()` join stores all matching features as an `ee$List`. Unmatched elements in the `primary` collection are dropped. For example, suppose there is a need to get all MODIS imagery acquired within two days of each Landsat image in a collection. This example uses a `saveAll()` join for that purpose:
+
+```{js}
+// Load a primary collection: Landsat imagery.
+var primary = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+    .filterDate('2014-04-01', '2014-06-01')
+    .filterBounds(ee.Geometry.Point(-122.092, 37.42));
+
+// Load a secondary collection: MODIS imagery.
+var modSecondary = ee.ImageCollection('MODIS/006/MOD09GA')
+    .filterDate('2014-03-01', '2014-07-01');
+
+// Define an allowable time difference: two days in milliseconds.
+var twoDaysMillis = 2 * 24 * 60 * 60 * 1000;
+
+// Create a time filter to define a match as overlapping timestamps.
+var timeFilter = ee.Filter.or(
+  ee.Filter.maxDifference({
+    difference: twoDaysMillis,
+    leftField: 'system:time_start',
+    rightField: 'system:time_end'
+  }),
+  ee.Filter.maxDifference({
+    difference: twoDaysMillis,
+    leftField: 'system:time_end',
+    rightField: 'system:time_start'
+  })
+);
+
+// Define the join.
+var saveAllJoin = ee.Join.saveAll({
+  matchesKey: 'terra',
+  ordering: 'system:time_start',
+  ascending: true
+});
+
+// Apply the join.
+var landsatModis = saveAllJoin.apply(primary, modSecondary, timeFilter);
+
+// Display the result.
+print('Join.saveAll:', landsatModis);
+```
+
+In this example, note that the `secondary` MODIS collection is pre-filtered to be chronologically similar to the `primary` Landsat collection for efficiency. To compare the Landsat acquisition time to the MODIS composite time, which has a daily range, the filter compares the endpoints of the image timestamps. The join is defined with the name of the property used to store the list of matches for each Landsat image (`‘terra’`) and optional parameter to sort the list of matches by the `system:time_start` property
+
+Inspection of the result indicates that images within the primary collection have the added `terra` property which stores a list of the matching MODIS images.
+
+## Save-Best Joins {-}
+
+To save only the best match for each element in a collection, use an `ee$Join$saveBest()`. The `saveBest()` join functions in an equivalent way to the `saveAll()` join, except for each element in the `primary` collection, it saves the element from the `secondary` collection with the best match. Unmatched elements in the primary collection are dropped. Suppose the intention is to find a meteorological image closest in time to each Landsat image in the `primary` collection. To perform this join, the `ee$Filter` must be redefined for a single join condition (combined filters will not work with `saveBest()` since it is ambiguous how to combine ranks from multiple sub-Filters):
+
+```{js}
+// Load a primary collection: Landsat imagery.
+var primary = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+    .filterDate('2014-04-01', '2014-06-01')
+    .filterBounds(ee.Geometry.Point(-122.092, 37.42));
+
+// Load a secondary collection: GRIDMET meteorological data
+var gridmet = ee.ImageCollection('IDAHO_EPSCOR/GRIDMET');
+
+// Define a max difference filter to compare timestamps.
+var maxDiffFilter = ee.Filter.maxDifference({
+  difference: 2 * 24 * 60 * 60 * 1000,
+  leftField: 'system:time_start',
+  rightField: 'system:time_start'
+});
+
+// Define the join.
+var saveBestJoin = ee.Join.saveBest({
+  matchKey: 'bestImage',
+  measureKey: 'timeDiff'
+});
+
+// Apply the join.
+var landsatMet = saveBestJoin.apply(primary, gridmet, maxDiffFilter);
+
+// Print the result.
+print(landsatMet);
+```
+
+Note that a `saveBest()` join defines the name of the property with which to store the best match (`‘bestImage’`) and the name of the property with which to store the goodness of the match metric (`‘timeDiff’`). Inspection of the results indicates that a matching DAYMET image has been added to the property `bestImage` for each Landsat scene in the `primary` collection. Each of these DAYMET images has the property `timeDiff` indicating the time difference in milliseconds between the DAYMET image and the Landsat image, which will be minimum among the DAYMET images passing the condition in the filter.
+
+## Save-First Joins {-}
+
+To save only the first match for each element in a collection, use an `ee$Join$saveFirst()`. The `saveFirst()` join functions in an equivalent way to the `saveAll()` join, except for each element in the `primary` collection, it simply saves the first element from the `secondary` collection matching the condition specified in the `ee.Filter`. Unmatched elements in the `primary` collection are dropped. Unless a sorting property and an order are supplied (as in the [saveAll example]()), the first element saved might be any of the elements in the list found by `saveAll()` with the same filter.
+
+## Spatial Joins {-}
+
+Collections can be joined by spatial location as well as by property values. To join based on spatial location, use a `withinDistance()` filter with `.geo` join fields specified. The `.geo` field indicates that the item's geometry is to be used to compute the distance metric. For example, consider the task of finding all [power plants]() within 100 kilometers of Yosemite National Park, USA. For that purpose, use a filter on the geometry fields, with the maximum distance set to 100 kilometers using the `distance` parameter:
+
+```{js}
+// Load a primary collection: protected areas (Yosemite National Park).
+var primary = ee.FeatureCollection("WCMC/WDPA/current/polygons")
+  .filter(ee.Filter.eq('NAME', 'Yosemite National Park'));
+
+// Load a secondary collection: power plants.
+var powerPlants = ee.FeatureCollection('WRI/GPPD/power_plants');
+
+// Define a spatial filter, with distance 100 km.
+var distFilter = ee.Filter.withinDistance({
+  distance: 100000,
+  leftField: '.geo',
+  rightField: '.geo',
+  maxError: 10
+});
+
+// Define a saveAll join.
+var distSaveAll = ee.Join.saveAll({
+  matchesKey: 'points',
+  measureKey: 'distance'
+});
+
+// Apply the join.
+var spatialJoined = distSaveAll.apply(primary, powerPlants, distFilter);
+
+// Print the result.
+print(spatialJoined);
+```
+
+Note that the previous example joins a `FeatureCollection` to another `FeatureCollection`. The `saveAll()` join sets a property (`points`) on each feature in the `primary` collection which stores a list of the points within 100 km of the feature. The distance of each point to the feature is stored in the `distance` property of each joined point.
+
+Spatial joins can also be used to identify which features in one collection intersect those in another. For example, consider two feature collections: a `primary` collection containing polygons representing the boundaries of US states, a `secondary` collection containing point locations representing power plants. Suppose there is need to determine the number intersecting each state. This can be accomplished with a spatial join as follows:
+
+```{js}
+// Load the primary collection: US state boundaries.
+var states = ee.FeatureCollection('TIGER/2018/States');
+
+// Load the secondary collection: power plants.
+var powerPlants = ee.FeatureCollection('WRI/GPPD/power_plants');
+
+// Define a spatial filter as geometries that intersect.
+var spatialFilter = ee.Filter.intersects({
+  leftField: '.geo',
+  rightField: '.geo',
+  maxError: 10
+});
+
+// Define a save all join.
+var saveAllJoin = ee.Join.saveAll({
+  matchesKey: 'power_plants',
+});
+
+// Apply the join.
+var intersectJoined = saveAllJoin.apply(states, powerPlants, spatialFilter);
+
+// Add power plant count per state as a property.
+intersectJoined = intersectJoined.map(function(state) {
+  // Get "power_plant" intersection list, count how many intersected this state.
+  var nPowerPlants = ee.List(state.get('power_plants')).size();
+  // Return the state feature with a new property: power plant count.
+  return state.set('n_power_plants', nPowerPlants);
+});
+
+// Make a bar chart for the number of power plants per state.
+var chart = ui.Chart.feature.byFeature(intersectJoined, 'NAME', 'n_power_plants')
+  .setChartType('ColumnChart')
+  .setSeriesNames({n_power_plants: 'Power plants'})
+  .setOptions({
+    title: 'Power plants per state',
+    hAxis: {title: 'State'},
+    vAxis: {title: 'Frequency'}});
+
+// Print the chart to the console.
+print(chart);
+```
+
+In the previous example, note that the intersects() filter doesn’t store a distance as the withinDistance() filter does. The output should look something like Figure 1.
+
+<center>
+<img src="./images/chapter_05/figure_joi_01.png" width=90%>
+</center>
+
+Figure 1. Bar chart showing the number of power plants intersecting each US state.
+
 # Array {-}
 
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
