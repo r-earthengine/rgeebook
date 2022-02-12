@@ -26,7 +26,7 @@ If you require more complex models, larger training datasets, more input propert
 
 See [the TensorFlow page]() for details and example workflows.
 
-# Supervised Classification Algorithms
+# Supervised Classification Algorithms {-}
 
 The **Classifier** package handles supervised classification by traditional ML algorithms running in Earth Engine. These classifiers include CART, RandomForest, NaiveBayes and SVM. The general workflow for classification is:
 

@@ -5,18 +5,26 @@
 source("common.R")
 ```
 
-# Overview
+# Overview {-}
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+## Tutorials {-}
 
-## Tutorials
+## Self-paced tutorials {-}
 
 These tutorials are an introduction to using the Earth Engine R API for advanced geospatial analysis. The tutorials assume no programming background, although they do assume a willingness to learn some R programming. Use the links below to get started on the tutorials or use the menus on the left to jump to a section of interest.
 
+  - [Introduction to R for Earth Engine]()
+  - [Introduction to the Earth Engine R API]()
+  - [Introduction to Global Forest Change datasets]()
+  - [Introduction to the JRC Global Surface Water dataset]()
+  
+## Video tutorials {-}
 
-# Introduction to R for Earth Engine
+Visit the [Video Tutorials]() page to view lectures and hands-on trainings presented at Earth Engine User Summits and [Earth Outreach digital events]().
 
-This tutorial covers just enough JavaScript to get you started writing Earth Engine scripts. For more thorough JavaScript tutorials, see these Mozilla developer resources. For an introduction to programming, with examples in JavaScript, see Eloquent JavaScript. For suggestions on JavaScript coding style, see the Google JavaScript Style Guide. In this tutorial, you're going to write JavaScript in the Earth Engine Code Editor. Before getting started, use the Code Editor guide to get familiar with the Code Editor environment.
+# Introduction to R for Earth Engine {-}
+
+This tutorial covers just enough R to get you started writing Earth Engine scripts. For more thorough R tutorials, see these Mozilla developer resources. For an introduction to programming, with examples in R, see Eloquent R. For suggestions on R coding style, see the Google R Style Guide. In this tutorial, you're going to write R in the Earth Engine Code Editor. Before getting started, use the Code Editor guide to get familiar with the Code Editor environment.
 
 ## Hello Word {-}
 
@@ -39,7 +47,7 @@ Click Run and observe that 'Hello world!' is printed to the Console tab. The lin
 It's good practice to put lots of comments in your code, to describe what you're trying to do. It's also good to delete commented code that doesn't do anything anymore. Both these practices will improve code readability.
 
 
-## Basic JavaScript data type {-}
+## Basic R data type {-}
 
 ### Strings {-}
 
@@ -243,7 +251,7 @@ In this example, `log()` is a method for a `ee.Number` object. (Use the Docs tab
 
 ### List {-}
 
-To make a JavaScript list into an `ee.List` object on the server, you can put a JavaScript literal into a container as with numbers and strings. Earth Engine also provides server-side convenience methods for making sequences of numbers. For example:
+To make a R list into an `ee.List` object on the server, you can put a R literal into a container as with numbers and strings. Earth Engine also provides server-side convenience methods for making sequences of numbers. For example:
 
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
@@ -319,11 +327,11 @@ print('Golden ratio:', dictionary$get('phi'))
 print('Keys: ', dictionary.keys())
 ```
 
-In this example, observe that once you have an `ee.Dictionary`, you must use methods on the `ee.Dictionary` to get values (unlike the JavaScript dictionary in the previous lesson). Specifically, `get(key)` returns the value associated with `key`. Since the type of object returned by `get()` could be be anything, if you're going to do anything to the object other then print it, you need to cast it to the right type. Also note that the `keys()` method returns an `ee.List`.
+In this example, observe that once you have an `ee.Dictionary`, you must use methods on the `ee.Dictionary` to get values (unlike the R dictionary in the previous lesson). Specifically, `get(key)` returns the value associated with `key`. Since the type of object returned by `get()` could be be anything, if you're going to do anything to the object other then print it, you need to cast it to the right type. Also note that the `keys()` method returns an `ee.List`.
 
 ### Dates {-}
 
-Date objects are the way Earth Engine represents time. As in the previous examples, it is important to distinguish between a R Date object and an Earth Engine `ee.Date` object. Construct an `ee.Date` from a string, from a R `Date`, or using static methods provided by the `ee.Date` class. (See the Date section in the Docs tab for details). This example illustrates the construction of dates from strings or a JavaScript date representing milliseconds since midnight on January 1, 1970:
+Date objects are the way Earth Engine represents time. As in the previous examples, it is important to distinguish between a R Date object and an Earth Engine `ee.Date` object. Construct an `ee.Date` from a string, from a R `Date`, or using static methods provided by the `ee.Date` class. (See the Date section in the Docs tab for details). This example illustrates the construction of dates from strings or a R date representing milliseconds since midnight on January 1, 1970:
 
 ```{r, eval=FALSE}
 <<<<<<< Updated upstream
@@ -510,7 +518,7 @@ sequence = numIteration.iterate(algorithm, start)
 print(sequence)  ## [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
 ```
 
-Now that you have a good understanding of javascript concepts, you can see the API Tutorial for an introduction to the geospatial functionality of the Earth Engine API.
+Now that you have a good understanding of R concepts, you can see the API Tutorial for an introduction to the geospatial functionality of the Earth Engine API.
 
 
 # The Earth Engine API {-}

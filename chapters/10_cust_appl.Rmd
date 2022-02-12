@@ -5,18 +5,17 @@ source("common.R")
 ```
 
 
-# App Engine & Earth Engine Overview  
+# Usage Quota {-}
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+To prevent errant or resource-intensive scripts from negatively impacting the availability of the service, Earth Engine has a per user quota on concurrent queries. There are separate limits for computation requests (that is, requests with paths that begin with `/api/…`) and map tile requests (that is, requests with paths that begin with `/map/…`).
 
-# Service Accounts 
+## Service accounts and quota {-}
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+Applications that proxy API requests through a single [service account]() are subject to the same concurrent request quota as individual users. If the quota is exceeded, Earth Engine may return `HTTP 429: Too Many Requests` errors. Generally, these errors are handled by the Earth Engine client library, which [wraps requests in exponential backoff](), retrying the query until it succeeds. The Earth Engine client library will retry the request five times. To help avoid receiving 429 errors, you may want to enable caching for your application, for example using [memcache](), to avoid redundant queries when possible. If using an older version of the Earth Engine client library that does not retry queries automatically, or if a query is still not completed after five retries, you may need to implement exponential backoff around requests.
 
-# Usage Quota 
+In special cases, we may raise the limits for specific uses. Contact [earthengine@google.com]() if your app is consistently hitting request limits and you would like to be considered for a quota increase.
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+## App Engine deadlines {-}
 
-# NPM Installation 
+Although recent versions of the Earth Engine client library retry queries for you, computationally intensive queries may take longer than App Engine deadlines. Specifically, you may need to increase the default deadline for queries to external endpoints by specifying a `urlfetch` deadline as shown in [this example](). Another approach is to wrap the App Engine requests in exponential backoff. For example, you can use the [R]() [backoff library]() to decorate `get` calls. Note: these deadlines are App Engine limits (not Earth Engine limits), but strategies to deal with them are presented here for convenience. See `this article` for more details.
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
