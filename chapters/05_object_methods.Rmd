@@ -20,7 +20,7 @@ As mentioned in the [Get Started]() doc, raster data are represented as Image ob
 
 Images can be loaded by pasting an Earth Engine asset ID into the `ee$Image` constructor. You can find image IDs in the [data catalog](https://developers.google.com/earth-engine/datasets). For example, to load [JAXA's ALOS DSM](https://developers.google.com/earth-engine/datasets/catalog/JAXA_ALOS_AW3D30_V3_2):
 
-```{r, eval=FALSE}
+```{r}
 loadedImage <- ee$Image('JAXA/ALOS/AW3D30/V2_2')
 ```
 
@@ -30,7 +30,7 @@ Note that finding an image through the Code Editor search tool is equivalent. Wh
 
 The standard way to get an image out of a collection is to filter the collection, with filters in order of decreasing specificity. For example, to get an image out of the [Sentinel-2 surface reflectance collection](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR):
 
-```{r, eval=FALSE}
+```{r}
 first <- ee$ImageCollection('COPERNICUS/S2_SR')$
   filterBounds(ee$Geometry$Point(-70.48, 43.3631))$
   filterDate('2019-01-01', '2019-12-31')$
@@ -49,7 +49,7 @@ Note that the `sort` is *after* the filters. Avoid sorting the entire collection
 
 You can use `ee$Image$loadGeoTIFF()` to load images from Cloud Optimized GeoTIFFs in Google Cloud Storage. For example, the [public Landsat dataset](https://console.cloud.google.com/marketplace/details/usgs-public-data/landast) hosted in Google Cloud contains [this GeoTIFF](https://console.cloud.google.com/storage/browser/_details/gcp-public-data-landsat/LC08/01/001/002/LC08_L1GT_001002_20160817_20170322_01_T2/LC08_L1GT_001002_20160817_20170322_01_T2_B5.TIF), corresponding to band 5 from a Landsat 8 scene. You can load this image from Cloud Storage using `ee$Image$loadGeoTIFF()`:
 
-```{r, eval=FALSE}
+```{r}
 uri <- 'gs://gcp-public-data-landsat/LC08/01/001/002/' +
     'LC08_L1GT_001002_20160817_20170322_01_T2/' +
     'LC08_L1GT_001002_20160817_20170322_01_T2_B5.TIF'
@@ -63,7 +63,7 @@ Note that if you want to reload a Cloud Optimized GeoTIFF that you [export from 
 
 In addition to loading images by ID, you can also create images from constants, lists or other suitable Earth Engine objects. The following illustrates methods for creating images, getting band subsets, and manipulating bands:
 
-```{r, eval=FALSE}
+```{r}
 # Create a constant image.
 image1 <- ee$Image(1)
 print(image1)
@@ -111,7 +111,7 @@ The are a number of `ee$Image` methods that produce RGB visual representations o
 
 The following illustrates the use of parameters to style a Landsat 8 image as a false-color composite:
 
-```{r, eval=FALSE}
+```{r}
 # Load an image.
 image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
 
@@ -137,7 +137,7 @@ In this example, band `'B5'` is assigned to red, `'B4'` is assigned to green, an
 
 To display a single band of an image in color, set the palette parameter with a color ramp represented by a list of CSS-style color strings. (See this reference for more information). The following example illustrates how to use colors from cyan ('00FFFF') to blue ('0000FF') to render a Normalized Difference Water Index (NDWI) image:
 
-```{r, eval=FALSE}
+```{r}
 # Load an image.
 image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
 
@@ -155,13 +155,14 @@ In this example, note that the min and max parameters indicate the range of pixe
 
 <center>
 ![Figure 2. Landsat 8 NDWI, San Francisco bay area, USA. Cyan are low values, blue are high values.](../images/chapter_05/figure_02.png){width=670px}
+
 </center>
 
 ### Masking {-}
 
 You can use `image$updateMask()` to set the opacity of individual pixels based on where pixels in a mask image are non-zero. Pixels equal to zero in the mask are excluded from computations and the opacity is set to 0 for display. The following example uses an NDWI threshold (see the [Relational Operations section]() for information on thresholds) to update the mask on the NDWI layer created previously:
 
-```{r, eval=FALSE}
+```{r}
 # Mask the non-watery parts of the image, where NDWI < 0.4.
 ndwiMasked <- ndwi$updateMask(ndwi$gte(0.4))
 Map$addLayer(ndwiMasked, ndwiViz, 'NDWI masked')
@@ -171,7 +172,7 @@ Map$addLayer(ndwiMasked, ndwiViz, 'NDWI masked')
 
 Use the `image.visualize()` method to convert an image into an 8-bit RGB image for display or export. For example, to convert the false-color composite and NDWI to 3-band display images, use:
 
-```{r, eval=FALSE}
+```{r}
 # Create visualization layers.
 imageRGB <- image$visualize(list(
   bands = c('B5', 'B4', 'B3'), 
@@ -189,7 +190,7 @@ ndwiRGB <- ndwiMasked$visualize(list(
 
 You can use masking and `imageCollection.mosaic()` (see the Mosaicking section for information on mosaicking) to achieve various cartographic effects. The `mosaic()` method renders layers in the output image according to their order in the input collection. The following example uses `mosaic()` to combine the masked NDWI and the false color composite and obtain a new visualization:
 
-```{r, eval=FALSE}
+```{r}
 # Mosaic the visualization layers and display (or export).
 mosaic <- ee$ImageCollection(list(imageRGB, ndwiRGB))$
   mosaic()
@@ -205,7 +206,7 @@ In this example, observe that a list of the two visualization images is provided
 
 The `image$clip()` method is useful for achieving cartographic effects. The following example clips the mosaic created previously to an arbitrary buffer zone around the city of San Francisco:
 
-```{r, eval=FALSE}
+```{r}
 # Create a circle by drawing a 20000 meter buffer around a point.
 roi <- ee$Geometry$Point(-122.4481, 37.7599)$buffer(20000);
 
@@ -222,7 +223,7 @@ In the previous example, note that the coordinates are provided to the `Geometry
 
 Palettes are also useful for rendering discrete valued maps, for example a land cover map. In the case of multiple classes, use the palette to supply a different color for each class. (The `image$remap()` method may be useful in this context, to convert arbitrary labels to consecutive integers). The following example uses a palette to render land cover categories:
 
-```{r, eval=FALSE}
+```{r}
 # Load 2012 MODIS land cover and select the IGBP classification.
 cover <- ee$Image('MODIS/051/MCD12Q1/2012_01_01')$
   select('Land_Cover_Type_1')
@@ -255,7 +256,7 @@ Map$addLayer(cover,
 
 You can use a Styled Layer Descriptor ([SLD]()) to render imagery for display. Provide `image$sldStyle()` with an XML description of the symbolization and coloring of the image, specifically the `RasterSymbolizer` element. Learn more about the `RasterSymbolizer` element [here](). For example, to render the land cover map described in the Rendering categorical maps section with an SLD, use:
 
-```{r, eval=FALSE}
+```{r}
 cover <- ee$Image('MODIS/051/MCD12Q1/2012_01_01')$select('Land_Cover_Type_1')
 
 # Define an SLD style of discrete intervals to apply to the image.
@@ -288,7 +289,7 @@ Map$addLayer(cover$sldStyle(sld_intervals), {}, 'IGBP classification styled');
 
 To create a visualization image with a color ramp, set the type of the ColorMap to 'ramp'. The following example compares the 'interval' and 'ramp' types for rendering a DEM:
 
-```{r, eval=FALSE}
+```{r}
 # Load SRTM Digital Elevation Model data.
 image <- ee$Image('CGIAR/SRTM90_V4')
 
@@ -326,7 +327,7 @@ Map$addLayer(image$sldStyle(sld_ramp), {}, 'SLD ramp')
 
 SLDs are also useful for stretching pixel values to improve visualizations of continuous data. For example, the following code compares the results of an arbitrary linear stretch with a min-max 'Normalization' and a 'Histogram' equalization:
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 raw image.
 image = ee$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')
 
@@ -398,7 +399,7 @@ A single-band image will default to grayscale unless a `palette` argument is sup
 
 The following are a series of examples demonstrating various combinations of `getThumbURL()` parameter arguments. Click on the URLs printed when you run this script to view the thumbnails.
 
-```{r, eval=FALSE}
+```{r}
 # Fetch a digital elevation model.
 image <- ee$Image('CGIAR/SRTM90_V4')
 
@@ -444,7 +445,7 @@ Print image objects to explore band names, projection information, properties, a
 
 ### Getting metadata {-}
 
-```{r, eval=FALSE}
+```{r}
 # Load an image.
 image <- ee$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')
 
@@ -497,7 +498,7 @@ Math operators perform basic arithmetic operations on image bands. They take two
 
 As a simple example, consider the task of calculating the Normalized Difference Vegetation Index (NDVI) using Landsat imagery, where `add()`, `subtract()`, and `divide()` operators are used:
 
-```{r, eval=FALSE}
+```{r}
 # Load a 5-year Landsat 7 composite 1999-2003.
 landsat1999 <- ee$Image('LANDSAT/LE7_TOA_5YEAR/1999_2003')
 
@@ -512,7 +513,7 @@ Only the intersection of unmasked pixels between the two inputs are considered a
 
 The following example of multi-band image subtraction demonstrates how bands are matched automatically, resulting in a “change vector” for each pixel for each co-occurring band.
 
-```{r, eval=FALSE}
+```{r}
 # Load a 5-year Landsat 7 composite 2008-2012.
 landsat2008 <- ee$Image('LANDSAT/LE7_TOA_5YEAR/2008_2012')
 
@@ -537,7 +538,7 @@ In the second part of this example, the squared difference is computed using ima
 
 To implement more complex mathematical expressions, consider using image.expression(), which parses a text representation of a math operation. The following example uses expression() to compute the Enhanced Vegetation Index (EVI):
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 image.
 image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
 
@@ -578,7 +579,7 @@ Observe that the first argument to `expression()` is the textual representation 
 
 To perform per-pixel comparisons between images, use relational operators. To extract urbanized areas in an image, this example uses relational operators to threshold spectral indices, combining the thresholds with the and operator:
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 image.
 image <- ee.Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
 
@@ -602,7 +603,7 @@ As illustrated by this example, the output of relational and boolean operators i
 
 The binary images that are returned by relational and boolean operators can be used with mathematical operators. This example creates zones of urbanization in a nighttime lights image using relational operators and `add()`:
 
-```{r, eval=FALSE}
+```{r}
 # Load a 2012 nightlights image.
 nl2012 <- ee$Image('NOAA/DMSP-OLS/NIGHTTIME_LIGHTS/F182012')
 lights <- nl2012$select('stable_lights')
@@ -620,7 +621,7 @@ Map$addLayer(zones, {min: 0, max: 3, palette: palette}, 'development zones')
 
 Note that the code in the previous example is equivalent to using a [ternary operator]() implemented by `expression()`:
 
-```{r, eval=FALSE}
+```{r}
 # Create zones using an expression, display.
 zonesExp <- nl2012.expression(
     "(b('stable_lights') > 62) ? 3" +
@@ -641,7 +642,7 @@ Observe that in the previous expression example, the band of interest is referen
 
 Another way to implement conditional operations on images is with the `where()` operator. Consider the need to replace masked pixels with some other data. In the following example, cloudy pixels are replaced by pixels from a cloud-free image using `where()`:
 
-```{r, eval=FALSE}
+```{r}
 # Load a cloudy Landsat 8 image.
 image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20130603')
 Map$addLayer(image,
@@ -671,7 +672,7 @@ In this example, observe the use of the `simpleCloudScore()` algorithm. This alg
 
 To perform linear convolutions on images, use `image.convolve()`. The only argument to convolve is an ee.Kernel which is specified by a shape and the weights in the kernel. Each pixel of the image output by `convolve()` is the linear combination of the kernel values and the input image pixels covered by the kernel. The kernels are applied to each band individually. For example, you might want to use a low-pass (smoothing) kernel to remove high-frequency information. The following illustrates a 15x15 low-pass kernel applied to a Landsat 8 image:
 
-```{r, eval=FALSE}
+```{r}
 # Load and display an image.
 image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
 vizParams <- list(bands = c('B5', 'B4', 'B3'),
@@ -700,7 +701,7 @@ The output of convolution with the low-pass filter should look something like Fi
 
 Use other kernels to achieve the desired image processing effect. This example uses a Laplacian kernel for isotropic edge detection:
 
-```{r, eval=FALSE}
+```{r}
 # Define a Laplacian, or edge-detection kernel.
 laplacian <- ee$Kernel$laplacian8({ normalize: false })
 
@@ -720,7 +721,7 @@ Note the format specifier in the visualization parameters. Earth Engine sends di
 
 There are also anisotropic edge detection kernels (e.g. Sobel, Prewitt, Roberts), the direction of which can be changed with `kernel$rotate()`. Other low pass kernels include a Gaussian kernel and kernels of various shape with uniform weights. To create kernels with arbitrarily defined weights and shape, use `ee$Kernel$fixed()`. For example, this code creates a 9x9 kernel of 1’s with a zero in the middle:
 
-```{r, eval=FALSE}
+```{r}
 # Create a list of weights for a 9x9 kernel.
 row <- c(1, 1, 1, 1, 1, 1, 1, 1, 1)
 
@@ -740,7 +741,7 @@ print(kernel)
 
 Earth Engine implements morphological operations as focal operations, specifically `focalMax()`, `focalMin()`, `focalMedian()`, and `focalMode()` instance methods in the `Image` class. (These are shortcuts for the more general reduceNeighborhood(), which can input the pixels in a kernel to any reducer with a numeric output. See this [page]() for more information on reducing neighborhoods). The morphological operators are useful for performing operations such as erosion, dilation, opening and closing. For example, to perform an [opening operation](), use `focalMin()` followed by `focalMax()`:
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 image, select the NIR band, threshold, display.
 image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')$
   select(4).gt(0.2);
@@ -764,7 +765,7 @@ Note that in the previous example, a kernel argument is provided to the morpholo
 
 You can compute the gradient of each band of an image with `image.gradient()`. For example, the following code computes the gradient magnitude and direction of the Landsat 8 panchromatic band:
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 image and select the panchromatic band.
 image <- ee$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')$select('B8')
 
@@ -793,7 +794,7 @@ Note that `gradient()` outputs two bands: the gradient in the X-direction and th
 
 [Edge detection](https://en.wikipedia.org/wiki/Edge_detection) is applicable to a wide range of image processing tasks. In addition to the edge detection kernels described in the [convolutions section](), there are several specialized edge detection algorithms in Earth Engine. The Canny edge detection algorithm ([Canny 1986](https://ieeexplore.ieee.org/document/)) uses four separate filters to identify the diagonal, vertical, and horizontal edges. The calculation extracts the first derivative value for the horizontal and vertical directions and computes the gradient magnitude. Gradients of smaller magnitude are suppressed. To eliminate high-frequency noise, optionally pre-filter the image with a Gaussian kernel. For example:
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 image, select the panchromatic band.
 image <- ee.$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')$select('B8')
 
@@ -809,7 +810,7 @@ Map$addLayer(canny, {}, 'canny')
 
 Note that the `threshold` parameter determines the minimum gradient magnitude and the `sigma` parameter is the standard deviation (SD) of a Gaussian pre-filter to remove high-frequency noise. For line extraction from an edge detector, Earth Engine implements the Hough transform ([Duda and Hart 1972](https://dl.acm.org/doi/10.1145/361237.361242)). Continuing the previous example, extract lines from the Canny detector with:
 
-```{r, eval=FALSE}
+```{r}
 # Perform Hough transform of the Canny result and display.
 hough <- ee$Algorithms$HoughTransform(canny, 256, 600, 100)
 Map$addLayer(hough, {}, 'hough');
@@ -817,7 +818,7 @@ Map$addLayer(hough, {}, 'hough');
 
 Another specialized algorithm in Earth Engine is `zeroCrossing()`. A zero-crossing is defined as any pixel where the right, bottom, or diagonal bottom-right pixel has the opposite sign. If any of these pixels is of opposite sign, the current pixel is set to 1 (zero-crossing); otherwise it's set to zero. To detect edges, the zero-crossings algorithm can be applied to an estimate of the image second derivative. The following demonstrates using `zeroCrossing()` for edge detection:
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 image, select the panchromatic band.
 image <- ee$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')$select('B8')
 Map$addLayer(image, list(max: 12000))
@@ -864,7 +865,7 @@ There are several spectral transformation methods in Earth Engine. These include
 
 Pan sharpening improves the resolution of a multiband image through enhancement provided by a corresponding panchromatic image with finer resolution. The `rgbToHsv()` and `hsvToRgb()` methods are useful for pan sharpening.  
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 top-of-atmosphere reflectance image.
 image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
 Map$addLayer(
@@ -891,7 +892,7 @@ Map$addLayer(sharpened,
 
 Spectral unmixing is implemented in Earth Engine as the `image.unmix()` method. (For more flexible methods, see the [Array Transformations page]()). The following is an example of unmixing Landsat 5 with predetermined urban, vegetation and water endmembers:
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 5 image and select the bands we want to unmix.
 bands <- ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7']
 image <- ee$Image('LANDSAT/LT05/C01/T1/LT05_044034_20080214')$
@@ -921,7 +922,7 @@ Map$addLayer(fractions, {}, 'unmixed');
 
 Earth Engine has several special methods for estimating spatial texture. When the image is discrete valued (not floating point), you can use `image$entropy()` to compute the [entropy](http://en.wikipedia.org/wiki/Entropy_(information_theory)) in a neighborhood:
 
-```{r, eval=FALSE}
+```{r}
 # Load a high-resolution NAIP image.
 image <- ee$Image('USDA/NAIP/DOQQ/m_3712213_sw_10_1_20140613')
 
@@ -946,7 +947,7 @@ Note that the NIR band is scaled to 8-bits prior to calling `entropy()` since th
 
 Another way to measure texture is with a gray-level co-occurrence matrix (GLCM). Using the image and kernel from the previous example, compute the GLCM-based contrast as follows:
 
-```{r, eval=FALSE}
+```{r}
 # Compute the gray-level co-occurrence matrix (GLCM), get contrast.
 glcm <- nir$glcmTexture(size = 4)
 contrast <- glcm$select('N_contrast')
@@ -959,7 +960,7 @@ Many measures of texture are output by `image$glcm()`. For a complete reference 
 
 Local measures of spatial association such as Geary’s C (Anselin 1995) can be computed in Earth Engine using `image$neighborhoodToBands()`. Using the image from the previous example:
 
-```{r, eval=FALSE}
+```{r}
 # Create a list of weights for a 9x9 kernel.
 row <- c(1, 1, 1, 1, 1, 1, 1, 1, 1)
 # The center of the kernel is zero.
@@ -1006,7 +1007,7 @@ Take special note of scale determined by Map zoom level. Results of object-based
 
 The following sections provide examples of object-based methods applied to Landsat 8 surface temperature with each section building on the former. Run the next snippet to generate the base image: thermal hotspots (> 303 degrees Kelvin) for a small region of San Francisco.
 
-```{r, eval=FALSE}
+```{r}
 # Make an area of interest geometry centered on San Francisco.
 point <- ee.Geometry.Point(-122.1899, 37.5010);
 aoi <- point.buffer(10000);
@@ -1039,7 +1040,7 @@ Map$addLayer(hotspots, list(palette = 'FF0000'), 'Hotspots')
 
 Labeling objects is often the first step in object analysis. Here, the `connectedComponents()` function is used to identify image objects and assign a unique ID to each; all pixels belonging to an object are assigned the same integer ID value. The result is a copy of the input image with an additional "labels" band associating pixels with an object ID value based on connectivity of pixels in the first band of the image.
 
-```{r, eval=FALSE}
+```{r}
 # Uniquely label the hotspot image objects.
 objectId <- hotspots$connectedComponents(list(
   connectedness = ee.Kernel.plus(1),
@@ -1062,7 +1063,7 @@ Note that the maximum patch size is set to 128 pixels; objects composed of more 
 #### Number of pixels {-}
 Calculate the number of pixels composing objects using the `connectedPixelCount()` image method. Knowing the number of pixels in an object can be helpful for masking objects by size and calculating object area. The following snippet applies `connectedPixelCount()` to the "labels" band of the `objectId` image defined in the previous section.
 
-```{r, eval=FALSE}
+```{r}
 # Compute the number of pixels in each object defined by the "labels" band.
 objectSize <- objectId$select('labels')$
   connectedPixelCount(list(
@@ -1083,7 +1084,7 @@ Map$addLayer(objectSize, null, 'Object n pixels');
 #### Area {-}
 Calculate object area by multiplying the area of a single pixel by the number of pixels composing an object (determined by `connectedPixelCount()`). Pixel area is provided by an image generated from `ee$Image$pixelArea()`.
 
-```{r, eval=FALSE}
+```{r}
 # Get a pixel area image.
 pixelArea <- ee$Image$pixelArea()
 
@@ -1103,7 +1104,7 @@ The result is an image where each pixel of an object relates the area of the obj
 ### Filter objects by size {-}
 Object size can be used as a mask condition to focus your analysis on objects of a certain size (e.g., mask out objects that are too small). Here the `objectArea` image calculated in the previous step is used as a mask to remove objects whose area are less than one hectare.
 
-```{r, eval=FALSE}
+```{r}
 # Threshold the `objectArea` image to define a mask that will mask out
 # objects below a given size (1 hectare in this case).
 areaMask <- objectArea$gte(10000)
@@ -1116,15 +1117,15 @@ Map$addLayer(objectId, null, 'Large hotspots')
 
 The result is a copy of the `objectId` image where objects less than one hectare are masked out.
 
-Figure 16a. Thermal hotspot objects labeled and styled by unique ID.             |  Figure 16b. Thermal hotspot objects filtered by minimum area (1 hectare).
-:-------------------------:|:-------------------------:
-![](../images/chapter_05/figure_16a.png){width=300px}  |  ![](../images/chapter_05/figure_16b.png){width=300px}
+|Figure 16a. Thermal hotspot objects labeled and styled by unique ID. |  Figure 16b. Thermal hotspot objects filtered by minimum area (1 hectare).|
+|:-------------------------:|:-------------------------:|
+|![](../images/chapter_05/figure_16a.png){width=300px}  |  ![](../images/chapter_05/figure_16b.png){width=300px}|
 
 ### Zonal statistics {-}
 
 The `reduceConnectedComponents()` method applies a reducer to the pixels composing unique objects. The following snippet uses it to calculate the mean temperature of hotspot objects. `reduceConnectedComponents()` requires an input image with a band (or bands) to be reduced and a band that defines object labels. Here, the `objectID` "labels" image band is added to the `kelvin` temperature image to construct a suitable input image.
 
-```{r, eval=FALSE}
+```{r}
 # Make a suitable image for `reduceConnectedComponents()` by adding a label
 # band to the `kelvin` temperature image.
 kelvin <- kelvin$addBands(objectId$select('labels'))
@@ -1160,7 +1161,7 @@ The result is a copy of the input image without the band used to define objects,
 Use `image$cumulativeCost()` to compute a cost map where every pixel contains the total cost of the lowest cost path to the nearest source location. This process is useful in a variety of contexts such as habitat analysis ([Adriaensen et al. 2003](http://www.sciencedirect.com/science/article/pii/S0169204602002426)), watershed delineation ([Melles et al. 2011](https://www.sciencedirect.com/science/article/pii/S1878029611001691)) and image segmentation ([Falcao et al. 2004](http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=1261076)). Call the cumulative cost function on an image in which each pixel represents the cost per meter to traverse it. Paths are computed through any of a pixel's eight neighbors. Required inputs include a `source` image, in which each non-zero pixel represents a potential source (or start of a path), and a `maxDistance` (in meters) over which to compute paths. The algorithm finds the cumulative cost of all paths less than *maxPixels* = `maxDistance`/*scale* in length, where scale is the pixel resolution, or [scale of analysis in Earth Engine]().
 
 The following example demonstrates computing least-cost paths across a land cover image:
-```{r, eval=FALSE}
+```{r}
 # A rectangle representing Bangui, Central African Republic.
 geometry <- ee$Geometry$Rectangle(c(18.5229, 4.3491, 18.5833, 4.4066))
 
@@ -1234,7 +1235,7 @@ The output is a displacement image with the following bands:
 
 The following example computes the magnitude and angle of displacement between two high-resolution [Terra Bella]() images:
 
-```{r, eval=FALSE}
+```{r}
 # Load the two images to be registered.
 image1 <- ee$Image('SKYSAT/GEN-A/PUBLIC/ORTHO/MULTISPECTRAL/s01_20150502T082736Z')
 image2 <- ee$Image('SKYSAT/GEN-A/PUBLIC/ORTHO/MULTISPECTRAL/s01_20150305T081019Z')
@@ -1268,7 +1269,7 @@ Map$setCenter(37.44,0.58, 15)
 
 There are two ways to warp an image to match another image: `displace()` or `register()`. The `displace()` algorithm takes a displacement image having `dx` and `dy` bands as the first two bands, and warps the image accordingly. The output image will be the result of warping the bands of the input image by the offsets present in the displacement image. Using the displacements computed in the previous example:
 
-```{r, eval=FALSE}
+```{r}
 # Use the computed displacement to register all original bands.
 registered <- image2Orig$displace(displacement)
 
@@ -1281,7 +1282,7 @@ Map$addLayer(registered, visParams, 'After Registration')
 
 If you don't need the displacement bands, Earth Engine provides the `register()` method, which is a shortcut for calling `displacement()` followed by `displace()`. For example:
 
-```{r, eval=FALSE}
+```{r}
 alsoRegistered <- image2Orig$register(list(
   referenceImage = image1Orig,
   maxOffset = 50.0,
@@ -1297,9 +1298,9 @@ In this example, the results of `register()` differ from the results of `displac
 
 ## ImageCollection Overview {-}
 
-An **`ImageCollection`** is a stack or sequence of images. An **`ImageCollection`** can be loaded by pasting an Earth Engine asset ID into the **`ImageCollection`** constructor. You can find **`ImageCollection`** IDs in the [data catalog](https://developers.google.com/earth-engine/datasets). For example, to load the [Sentinel-2 surface reflectance collection](https://developers.google.com/earth-engine/guides/datasets/catalog/COPERNICUS_S2_SR):
+An `ImageCollection` is a stack or sequence of images. An `ImageCollection` can be loaded by pasting an Earth Engine asset ID into the `ImageCollection` constructor. You can find `ImageCollection` IDs in the [data catalog](https://developers.google.com/earth-engine/datasets). For example, to load the [Sentinel-2 surface reflectance collection](https://developers.google.com/earth-engine/guides/datasets/catalog/COPERNICUS_S2_SR):
 
-```{r, eval=FALSE}
+```{r}
 sentinelCollection <- ee$ImageCollection('COPERNICUS/S2_SR')
 ```
 
@@ -1308,7 +1309,7 @@ This collection contains every Sentinel-2 image in the public catalog. There are
 
 In addition to loading an `ImageCollection` using an Earth Engine collection ID, Earth Engine has methods to create image collections. The constructor `ee$ImageCollection()` or the convenience method `ee$ImageCollection$fromImages()` create image collections from lists of images. You can also create new image collections by merging existing collections. For example:
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 image and select the panchromatic band.
 image <- ee$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')$select('B8')
 
@@ -1362,11 +1363,11 @@ images <- features$map(
 print(paste0('Image collection: ', ee$images$getInfo(Image collection)))
 ```
 
-Note that in this example an **`ImageCollection`** is created by mapping a function that returns an **`Image`** over a **`FeatureCollection`**. Learn more about mapping in the [Mapping over an ImageCollection section](https://developers.google.com/earth-engine/guides/ic_mapping). Learn more about feature collections from the [FeatureCollection section](https://developers.google.com/earth-engine/guides/feature_collections).
+Note that in this example an `ImageCollection` is created by mapping a function that returns an `Image` over a `FeatureCollection`. Learn more about mapping in the [Mapping over an ImageCollection section](https://developers.google.com/earth-engine/guides/ic_mapping). Learn more about feature collections from the [FeatureCollection section](https://developers.google.com/earth-engine/guides/feature_collections).
 
-You can also create an **`ImageCollection`** from GeoTiffs in Cloud Storage. For example:
+You can also create an `ImageCollection` from GeoTiffs in Cloud Storage. For example:
 
-```{r, eval=FALSE}
+```{r}
 # All the GeoTiffs are in this folder.
 uriBase <- 'gs://gcp-public-data-landsat/LC08/01/001/002/' + 
   'LC08_L1GT_001002_20160817_20170322_01_T2/'
@@ -1393,20 +1394,20 @@ Map$addLayer(rgb, {bands <- c('B4', 'B3', 'B2'), min: 0, max: 20000}, 'rgb')
 
 ## ImageCollection Visualization {-}
 
-Images composing an **`ImageCollection`** can be visualized as either an animation or a series of thumbnails referred to as a “filmstrip”. These methods provide a quick assessment of the contents of an **`ImageCollection`** and an effective medium for witnessing spatiotemporal change (Figure 1).
+Images composing an `ImageCollection` can be visualized as either an animation or a series of thumbnails referred to as a “filmstrip”. These methods provide a quick assessment of the contents of an `ImageCollection` and an effective medium for witnessing spatiotemporal change (Figure 1).
 
 * [getVideoThumbURL()]()  produces an animated image series
 * [getFilmstripThumbURL()]() produces a thumbnail image series
 
-The following sections describe how to prepare an **`ImageCollection`** for visualization, provide example code for each collection visualization method, and cover several advanced animation techniques.
+The following sections describe how to prepare an `ImageCollection` for visualization, provide example code for each collection visualization method, and cover several advanced animation techniques.
 
-<img src="./gif/chapter_05/gif_01.gif" width=95%>
-</center>
-Figure 1. Animation showing a three-day progression of Atlantic hurricanes in September, 2017.
+|<img src="./gif/chapter_05/gif_01.gif" width=95%>|
+|:-------------------------------------------------|
+|Figure 1. Animation showing a three-day progression of Atlantic hurricanes in September, 2017.|
 
 ### Collection preparation {-}
 
-Filter, composite, sort, and style images within a collection to display only those of interest or emphasize a phenomenon. Any **`ImageCollection`** can be provided as input to the visualization functions, but a curated collection with consideration of inter- and intra-annual date ranges, observation interval, regional extent, quality and representation can achieve better results.
+Filter, composite, sort, and style images within a collection to display only those of interest or emphasize a phenomenon. Any `ImageCollection` can be provided as input to the visualization functions, but a curated collection with consideration of inter- and intra-annual date ranges, observation interval, regional extent, quality and representation can achieve better results.
 
 
 #### Filtering {-}
@@ -1417,7 +1418,7 @@ For instance, filter a Sentinel-2 surface reflectance collection by:
 
 a single date range,
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 image, select the panchromatic band.
 image <- ee.$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')$select('B8')
 
@@ -1429,25 +1430,25 @@ canny <- ee$Algorithms$CannyEdgeDetector(list(
   )
 Map$setCenter(-122.054, 37.7295, 10)
 Map$addLayer(canny, {}, 'canny')
-=======
+
 s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
   filterDate('2018-01-01', '2019-01-01')
 ```
 
 a serial day-of-year range,
 
-```{r, eval=FALSE}
+```{r}
 # Perform Hough transform of the Canny result and display.
 hough <- ee$Algorithms$HoughTransform(canny, 256, 600, 100)
 Map$addLayer(hough, {}, 'hough');
-=======
+
 s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
   filter(ee$Filter$calendarRange(171, 242, 'day_of_year'))
 ```
 
 a region of interest,
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 image, select the panchromatic band.
 image <- ee$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')$select('B8')
 Map$addLayer(image, list(max: 12000))
@@ -1483,14 +1484,14 @@ s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
 
 or an image property.
 
-```{r, eval=FALSE}
+```{r}
 s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
   filter(ee$Filter$lt('CLOUDY_PIXEL_PERCENTAGE', 50))
 ```
 
 Chain multiple filters.
 
-```{r, eval=FALSE}
+```{r}
 s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
   filterDate('2018-01-01', '2019-01-01')$
   filterBounds(ee$Geometry$Point(-122.1, 37.2))$
@@ -1504,10 +1505,9 @@ Composite intra- and inter-annual date ranges to reduce the number of images in 
 
 <center>
 ![Figure 11. Zero-crossings output (red) with the Landsat 8 panchromatic band in the background for an area near the San Francisco, California airport (right).](../images/chapter_05/figure_11.png){width=670px}
-
 </center>
 
-```{r, eval=FALSE}
+```{r}
 ndviCol <- ee$ImageCollection('MODIS/006/MOD13A2')$
   filterDate('2018-01-01', '2019-01-01')$
   select('NDVI')
@@ -1517,7 +1517,7 @@ ndviCol <- ee$ImageCollection('MODIS/006/MOD13A2')$
 
 Visualization of the above collection shows considerable noise in the forested regions where cloud cover is heavy (Figure 2a). A better representation can be achieved by reducing serial date ranges by median across all years in the MODIS collection.
 
-```{r, eval=FALSE}
+```{r}
 # Make a day-of-year sequence from 1 to 365 with a 16-day step.
 doyList <- ee$List$sequence(1, 365, 16)
 
@@ -1579,7 +1579,7 @@ The animation resulting from this collection is less noisy, as each image repres
 
 The previous example applies inter-annual compositing. It can also be helpful to composite a series of intra-annual observations. For example, Landsat data are collected every sixteen days for a given scene per sensor, but often some portion of the images are obscured by clouds. Masking out the clouds and compositing several images from the same season can produce a more cloud-free representation. Consider the following example where Landsat 5 images from July and August are composited using median for each year from 1985 to 2011.
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 top-of-atmosphere reflectance image.
 image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
 Map$addLayer(
@@ -1666,7 +1666,7 @@ lsCompCol <- ee$ImageCollection$fromImages(lsCompList)
 
 Note that the previous two compositing methods map over a List of days and years to incrementally define new dates to filter and composite over. Applying a join is another method for achieving this operation. In the following snippet, a unique year collection is defined and then a saveAll join is applied to identify all images that correspond to a given year. Images belonging to a given year are grouped into a List object which is stored as a property of the respective year representative in the distinct year collection. Annual composites are generated from these lists by reducing ImageCollections defined by them in a function mapped over the distinct year collection.
 
-```{r, eval=FALSE}
+```{r}
 # Assemble a collection of Landsat surface reflectance images for a given
 # region and day-of-year range.
 lsCol <- ee$ImageCollection('LANDSAT/LT05/C02/T1_L2')$
@@ -1741,7 +1741,7 @@ lsCompCol <- ee$ImageCollection(lsCompList)
 
 An additional case for compositing is to create spatially contiguous image mosaics. Suppose your region of interest spans two Landsat rows within the same path and your objective is to display an image mosaic of the two images for each Landsat 8 orbit in 2017 and 2018. Here, after filtering the collection by path and row, a join operation is used to mosaic Landsat images from the same obit, defined by acquisition date.
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 5 image and select the bands we want to unmix.
 bands <- ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7']
 image <- ee$Image('LANDSAT/LT05/C01/T1/LT05_044034_20080214')$
@@ -1795,7 +1795,7 @@ lsColMos <- ee$ImageCollection(
 
 Sort a collection by time to ensure proper chronological sequence, or order by a property of your choice. By default, the visualization frame series is sorted in natural order of the collection. The arrangement of the series can be altered using the sort collection method, whereby an Image property is selected for sorting in either ascending or descending order. For example, to sort by time of observation, use the ubiquitous `system:time_start` property.
 
-```{r, eval=FALSE}
+```{r}
 s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
   filterBounds(ee$Geometry$Point(-122.1, 37.2))$
   sort('system:time_start')
@@ -1803,7 +1803,7 @@ s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
 
 Or perhaps the order should be defined by increasing cloudiness, as in this case of Sentinel-2 imagery.
 
-```{r, eval=FALSE}
+```{r}
 s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
   filterBounds(ee$Geometry$Point(-122.1, 37.2))$
   sort('CLOUDY_PIXEL_PERCENTAGE')
@@ -1814,7 +1814,7 @@ Order can also be defined by a derived property, such as mean regional NDVI. Her
 
 ## Texture {-}
 
-```{r, eval=FALSE}
+```{r}
 # Define an area of interest geometry.
 aoi <- ee$Geometry$Point(-122.1, 37.2)$buffer(1e4)
 
@@ -1906,7 +1906,7 @@ Use the bands argument to select the band(s) you wish to visualize. Provide a li
 
 Data range scaling is an important consideration when visualizing images. By default, floating point data values between 0 and 1 (inclusive) are scaled between 0 and 255 (inclusive). Values outside this range are forced to 0 and 255 depending on whether they are less than 0 or greater than 1, respectively. With regard to integer data, the full capacity defined by its type is scaled between 0 and 255 (e.g., signed 16-bit data has a range from −32,768 to 32,767, which scales to [0, 255], by default). Accepting the defaults can often result in visualizations with little to no contrast between image features. Use min and max to improve contrast and emphasize a particular data range. A good rule of thumb is to set min and max to values that represent the 2nd and 98th percentile of the data within your area of interest. See the following example of calculating these values for a digital elevation model.
 
-```{r, eval=FALSE}
+```{r}
 # Load a high-resolution NAIP image.
 image <- ee$Image('USDA/NAIP/DOQQ/m_3712213_sw_10_1_20140613')
 
@@ -1975,7 +1975,7 @@ out.</span></aside>
 
 An example of mapping a visualization function over a single-band image collection follows. A MODIS NDVI collection is imported, visualization arguments for the **`visualization`** method are set, and a function that transforms values into RGB image representations is mapped over the NDVI collection.
 
-```{r, eval=FALSE}
+```{r}
 # Filter MODIS NDVI image collection by a date range.
 ndviCol <- ee$ImageCollection('MODIS/006/MOD13A1')$
   filterDate('2018-01-01', '2019-01-01')$
@@ -2349,7 +2349,7 @@ tempCol <- ee$ImageCollection(c(
   winterSolTemp$set('season', 'winter')
 ))
 
-```{r, eval=FALSE}
+```{r}
 # Compute the number of pixels in each object defined by the "labels" band.
 objectSize <- objectId$select('labels')$
   connectedPixelCount(list(
@@ -2520,7 +2520,7 @@ Figure 10. Example of a sliding transition between 12pm GMT surface temperature 
 
 As with Images, there are a variety of ways to get information about an **`ImageCollection`**. The collection can be printed directly to the console, but the console printout is limited to 5000 elements. Collections larger than 5000 images will need to be filtered before printing. Printing a large collection will be correspondingly slower. The following example shows various ways of getting information about image collections programmatically:
 
-```{r, eval=FALSE}
+```{r}
 
 # Get a pixel area image.
 pixelArea <- ee$Image$pixelArea()
@@ -2567,7 +2567,7 @@ print(paste0('Recent images: ', ee$recent$getInfo(Recent images)))
 
 As illustrated in the [Get Started section]() and the [ImageCollection Information section](), Earth Engine provides a variety of convenience methods for filtering image collections. Specifically, many common use cases are handled by **`imageCollection$filterDate()`**, and **`imageCollection$filterBounds()`**. For general purpose filtering, use **` imageCollection$filter()`** with an **`ee$Filter`** as an argument. The following example demonstrates both convenience methods and **`filter()`** to identify and remove images with bad registration from an **`ImageCollection`**:
 
-```{r, eval=FALSE}
+```{r}
 # Load Landsat 5 data, filter by date and bounds.
 collection <- ee$ImageCollection('LANDSAT/LT05/C01/T2')$
   filterDate('1987-01-01', '1990-05-01')$
@@ -2596,7 +2596,7 @@ Map$addLayer(goodComposite,
 
 To apply a function to every **`Image`** in an **`ImageCollection`** use **`imageCollection$map()`** . The only argument to **`map()`** is a function which takes one parameter: an **`ee$Image`**. For example, the following code adds a timestamp band to every image in the collection:
 
-```{r, eval=FALSE}
+```{r}
 
 # Threshold the `objectArea` image to define a mask that will mask out
 # objects below a given size (1 hectare in this case).
@@ -2625,7 +2625,7 @@ Note that in the predefined function, the **`metadata()`** method is used to cre
 
 The mapped function is limited in the operations it can perform. Specifically, it can’t modify variables outside the function; it can’t print anything; it can’t use JavaScript ‘if’ or ‘for’ statements. However, you can use **`ee$Algorithms$If()`** to perform conditional operations in a mapped function. For example:
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 collection for a single path-row.
 collection <- ee$ImageCollection('LANDSAT/LC8_L1T_TOA')$
   filter(ee$Filter$eq('WRS_PATH', 44))$
@@ -2656,7 +2656,7 @@ Figure 16a. Thermal hotspot objects labeled and styled by unique ID.            
 To composite images in an **`ImageCollection`**, use **`imageCollection$reduce()`**. This will composite all the images in the collection to a single image representing, for example, the min, max, mean or standard deviation of the images. (See the [Reducers section]() for more information about reducers). For example, to create a median value image from a collection:
 
 
-```{r, eval=FALSE}
+```{r}
 # Load a Landsat 8 collection for a single path-row.
 collection <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')$
   filter(ee$Filter$eq('WRS_PATH', 44))$
@@ -2671,7 +2671,7 @@ Map$addLayer(median, {bands <- c('B4', 'B3', 'B2'), max <- 0.3}, 'median')
 
 At each location in the output image, in each band, the pixel value is the median of all unmasked pixels in the input imagery (the images in the collection). In the previous example, **`median()`** is a convenience method for the following call:
 
-```{r, eval=FALSE}
+```{r}
 # Reduce the collection with a median reducer.
 median <- collection$reduce(ee$Reducer$median())
 
@@ -2685,7 +2685,7 @@ Note that the band names differ as a result of using **`reduce()`** instead of t
 
 More complex reductions are also possible using **`reduce()`**. For example, to compute the long term linear trend over a collection, use one of the linear regression reducers. The following code computes the linear trend of MODIS Enhanced Vegetation Index (EVI):
 
-```{r, eval=FALSE}
+```{r}
 # This function adds a band representing the image timestamp.
 addTime <- function(image) {
   return(image$addBands(image$metadata('system:time_start')$
@@ -2737,7 +2737,7 @@ Composite images created by reducing an image collection are able to produce pix
 
 In general, compositing refers to the process of combining spatially overlapping images into a single image based on an aggregation function. Mosaicking refers to the process of spatially assembling image datasets to produce a spatially continuous image. In Earth Engine, these terms are used interchangeably, though both compositing and mosaicking are supported. For example, consider the task of compositing multiple images in the same location. For example, using one National Agriculture Imagery Program (NAIP) Digital Orthophoto Quarter Quadrangle (DOQQ) at different times, the following example demonstrates making a maximum value composite:
 
-```{r, eval=FALSE}
+```{r}
 # Load three NAIP quarter quads in the same location, different times.
 naip2004_2012 <- ee$ImageCollection('USDA/NAIP/DOQQ')$
   filterBounds(ee$Geometry$Point(-71.08841, 42.39823))$
@@ -2752,7 +2752,7 @@ Map$addLayer(composite, {}, 'max value composite')
 
 Consider the need to mosaic four different DOQQs at the same time, but different locations. The following example demonstrates that using **`imageCollection$mosaic()`** :
 
-```{r, eval=FALSE}
+```{r}
 
 # A rectangle representing Bangui, Central African Republic.
 geometry <- ee$Geometry$Rectangle(c(18.5229, 4.3491, 18.5833, 4.4066))
@@ -2802,7 +2802,7 @@ Map$addLayer(mosaic, {}, 'spatial mosaic')
 
 Note that there is some overlap in the DOQQs in the previous example. The **`mosaic()`** method composites overlapping images according to their order in the collection (last on top). To control the source of pixels in a mosaic (or a composite), use image masks. For example, the following uses thresholds on spectral indices to mask the image data in a mosaic:
 
-```{r, eval=FALSE}
+```{r}
 # Load a NAIP quarter quad, display.
 naip <- ee$Image('USDA/NAIP/DOQQ/m_4207148_nw_19_1_20120710')
 Map$setCenter(-71.0915, 42.3443, 14)
@@ -2839,7 +2839,7 @@ Map$addLayer(mosaic, {}, 'Visualization mosaic')
 
 To make a composite which maximizes an arbitrary band in the input, use **`imageCollection$qualityMosaic()`** . The **`qualityMosaic()`** method sets each pixel in the composite based on which image in the collection has a maximum value for the specified band. For example, the following code demonstrates making a greenest pixel composite and a recent value composite:
 
-```{r, eval=FALSE}
+```{r}
 # This function masks clouds in Landsat 8 imagery.
 maskClouds <- function(image) {
   scored <- ee$Algorithms$Landsat$simpleCloudScore(image)
@@ -2899,7 +2899,7 @@ Use the Code Editor [Inspector tab]() to check pixel values at different locatio
       added to the running sum and the result is added to the list.  The final result is
       passed to the <b><code translate="no" dir="ltr">ImageCollection</code></b> constructor to get a new sequence of images:</p>
 
-```{r, eval=FALSE}
+```{r}
 # Load MODIS EVI imagery.
 collection <- ee$ImageCollection('MODIS/006/MYD13A1')$select('EVI')
 
@@ -3083,7 +3083,7 @@ print(paste0('Polygon area: ', ee$Geometry$getInfo(polygon$area()$divide(1000 * 
 print(paste0('Polygon perimeter: ', ee$Geometry$getInfo(polygon$perimeter()$divide(1000))))
 
 
-```{r, eval=FALSE}
+```{r}
 # Load the two images to be registered.
 image1 <- ee$Image('SKYSAT/GEN-A/PUBLIC/ORTHO/MULTISPECTRAL/s01_20150502T082736Z')
 image2 <- ee$Image('SKYSAT/GEN-A/PUBLIC/ORTHO/MULTISPECTRAL/s01_20150305T081019Z')
@@ -3130,7 +3130,7 @@ Observe that the perimeter (or length) of a geometry is returned in meters and t
 ## Geometric Operations {-}
 
 
-```{r, eval=FALSE}
+```{r}
 # Use the computed displacement to register all original bands.
 registered <- image2Orig$displace(displacement)
 
@@ -3191,8 +3191,8 @@ The previous example demonstrates how the order of coordinates provided to the *
 
 
 
-# ImageCollection
-=======
+# ImageCollection {-}
+
 The following example computes and visualizes derived geometries based on the relationship between two polygons:
 
 
