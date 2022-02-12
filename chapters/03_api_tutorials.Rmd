@@ -1067,12 +1067,6 @@ The reason you should exercise caution when exporting without a `region` argumen
 
 That concludes this introduction to the Earth Engine API! You have now seen much of the most common Earth Engine functionality and should be able to confidently proceed to more complex analyses. Be sure to read the docs and search the [forum](https://groups.google.com/g/google-earth-engine-developers) for answers to other questions. Happy coding!
 
-=======
-<<<<<<< Updated upstream
-=======
-Now that you know how to load and display an image, it's time to apply a computation to it. For example, you can compute the slope of terrain, by passing the SRTM elevation image to the `slope` [method of the] `ee.Terrain` [package](https:#developers.google.com/earth-engine/apidocs/ee-terrain-slope).
->>>>>>> Stashed changes
->>>>>>> master
 
 
 # Global Forest Change {-}
