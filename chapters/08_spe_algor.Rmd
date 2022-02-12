@@ -165,10 +165,212 @@ Map$addLayer(customComposite, {bands = ['B4', 'B3', 'B2'], max: 128},
 
 Note that the input to the simple composite is a collection of raw imagery. Also note that by default, reflective band output is reflectance scaled to 8-bits and thermal band output is Kelvin minus 100, to fit in the 8-bit range. You can change this behavior by setting the `asFloat` parameter to true, to get un-scaled, un-shifted float output.
 
-# Sentinel-1 Algorithms
+# Sentinel-1 Algorithms {-}
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+[Sentinel-1]() is a space mission funded by the European Union and carried out by the European Space Agency (ESA) within the Copernicus Programme. Sentinel-1 collects C-band synthetic aperture radar (SAR) imagery at a variety of polarizations and resolutions. Since radar data requires several specialized algorithms to obtain calibrated, orthorectified imagery, this document describes pre-processing of Sentinel-1 data in Earth Engine.
 
-# Resampling and Reducing Resolution  
+Sentinel-1 data is collected with several different instrument configurations, resolutions, band combinations during both ascending and descending orbits. Because of this heterogeneity, it's usually necessary to filter the data to down to a homogeneous subset before starting processing. This process is outlined below in the [Metadata and Filtering]() section.
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+## Metadata and Filtering {-}
+
+To create a homogeneous subset of Sentinel-1 data, it will usually be necessary to filter the collection using metadata properties. The common metadata fields used for filtering include these properties:
+
+  1. `transmitterReceiverPolarisation`: ['VV'], ['HH'], ['VV', 'VH'], or ['HH', 'HV']
+  2. `instrumentMode`: 'IW' (Interferometric Wide Swath), 'EW' (Extra Wide Swath) or 'SM' (Strip Map). See [this reference]() for details.
+  3. `orbitProperties_pass`: 'ASCENDING' or 'DESCENDING'
+  4. `resolution_meters`: 10, 25 or 40
+  5. `resolution`: 'M' (medium) or 'H' (high). See [this reference]() for details.
+  
+The following code filters the Sentinel-1 collection by `transmitterReceiverPolarisation`, `instrumentMode`, and `orbitProperties_pass` properties, then calculates composites for several observation combinations that are displayed in the map to demonstrate how these characteristics affect the data.
+
+```{r}
+// Load the Sentinel-1 ImageCollection, filter to Jun-Sep 2020 observations.
+var sentinel1 = ee.ImageCollection('COPERNICUS/S1_GRD')
+                    .filterDate('2020-06-01', '2020-10-01');
+
+// Filter the Sentinel-1 collection by metadata properties.
+var vvVhIw = sentinel1
+  // Filter to get images with VV and VH dual polarization.
+  .filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VV'))
+  .filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VH'))
+  // Filter to get images collected in interferometric wide swath mode.
+  .filter(ee.Filter.eq('instrumentMode', 'IW'));
+
+// Separate ascending and descending orbit images into distinct collections.
+var vvVhIwAsc = vvVhIw.filter(
+  ee.Filter.eq('orbitProperties_pass', 'ASCENDING'));
+var vvVhIwDesc = vvVhIw.filter(
+  ee.Filter.eq('orbitProperties_pass', 'DESCENDING'));
+
+// Calculate temporal means for various observations to use for visualization.
+// Mean VH ascending.
+var vhIwAscMean = vvVhIwAsc.select('VH').mean();
+// Mean VH descending.
+var vhIwDescMean = vvVhIwDesc.select('VH').mean();
+// Mean VV for combined ascending and descending image collections.
+var vvIwAscDescMean = vvVhIwAsc.merge(vvVhIwDesc).select('VV').mean();
+// Mean VH for combined ascending and descending image collections.
+var vhIwAscDescMean = vvVhIwAsc.merge(vvVhIwDesc).select('VH').mean();
+
+// Display the temporal means for various observations, compare them.
+Map.addLayer(vvIwAscDescMean, {min: -12, max: -4}, 'vvIwAscDescMean');
+Map.addLayer(vhIwAscDescMean, {min: -18, max: -10}, 'vhIwAscDescMean');
+Map.addLayer(vhIwAscMean, {min: -18, max: -10}, 'vhIwAscMean');
+Map.addLayer(vhIwDescMean, {min: -18, max: -10}, 'vhIwDescMean');
+Map.setCenter(-73.8719, 4.512, 9);  // Bogota, Colombia
+```
+
+## Sentinel-1 Preprocessing {-}
+
+Imagery in the Earth Engine `'COPERNICUS/S1_GRD'` Sentinel-1 `ImageCollection` is consists of Level-1 Ground Range Detected (GRD) scenes processed to backscatter coefficient (σ°) in decibels (dB). The backscatter coefficient represents target backscattering area (radar cross-section) per unit ground area. Because it can vary by several orders of magnitude, it is converted to dB as 10*log10σ°. It measures whether the radiated terrain scatters the incident microwave radiation preferentially away from the SAR sensor dB < 0) or towards the SAR sensor dB > 0). This scattering behavior depends on the physical characteristics of the terrain, primarily the geometry of the terrain elements and their electromagnetic characteristics.
+
+Earth Engine uses the following preprocessing steps (as implemented by the [Sentinel-1 Toolbox]()) to derive the backscatter coefficient in each pixel:
+  
+  1. **Apply orbit file**
+  
+  - Updates orbit metadata with a restituted [orbit file]() (or a precise orbit file if the restituted one is not available).
+    
+  2. **GRD border noise removal**
+  
+  - Removes low intensity noise and invalid data on scene edges. (As of January 12, 2018)
+    
+  3. **Thermal noise removal**
+  
+  - Removes additive noise in sub-swaths to help reduce discontinuities between sub-swaths for scenes in multi-swath acquisition modes. (This operation cannot be applied to images produced before July 2015)
+    
+  4. **Radiometric calibration**
+  
+  - Computes backscatter intensity using sensor calibration parameters in the GRD metadata.
+    
+  5. **Terrain correction** (orthorectification)
+  
+  - Converts data from ground range geometry, which does not take terrain into account, to σ° using the [SRTM 30 meter DEM]() or the [ASTER DEM]() for high latitudes (greater than 60° or less than -60°).
+
+## Dataset Notes {-}
+
+  - Radiometric Terrain Flattening is not being applied due to artifacts on mountain slopes.
+  - The unitless backscatter coefficient is converted to dB as described above.
+  - Sentinel-1 SLC data cannot currently be ingested, as Earth Engine does not support images with complex values due to inability to average them during pyramiding without losing phase information.
+  - GRD SM assets are not ingested because the `computeNoiseScalingFactor()` function in the [border noise removal operation in the S1 toolbox]() does not support the SM mode.
+
+# Resampling and Reducing Resolution {-}
+
+As noted in the Projections doc, Earth Engine performs nearest neighbor resampling by default during reprojection. You can change this behavior with the resample() or reduceResolution() methods. Specifically, when one of these methods is applied to an input image, any required reprojection of the input will be done using the indicated resampling or aggregation method.
+
+## Resampling {-}
+
+`resample()` causes the indicated resampling method (`'bilinear'` or `'bicubic'`) to be used at the next reprojection. Since inputs are requested in the output projection, an implicit reprojection may happen before any other operation on the input. For this reason, call `resample()` directly on the input image. Consider the following simple example:
+
+```{js}
+// Load a Landsat image over San Francisco, California, UAS.
+var landsat = ee.Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20160323');
+
+// Set display and visualization parameters.
+Map.setCenter(-122.37383, 37.6193, 15);
+var visParams = {bands: ['B4', 'B3', 'B2'], max: 0.3};
+
+// Display the Landsat image using the default nearest neighbor resampling.
+// when reprojecting to Mercator for the Code Editor map.
+Map.addLayer(landsat, visParams, 'original image');
+
+// Force the next reprojection on this image to use bicubic resampling.
+var resampled = landsat.resample('bicubic');
+
+// Display the Landsat image using bicubic resampling.
+Map.addLayer(resampled, visParams, 'resampled');
+```
+
+Note that the 'bicubic' resampling results in the output pixels appearing smooth relative to the original image (Figure 1).
+
+|<img src="./images/chapter_08/figure_RRR_01a.png" width=90%>| <img src="./images/chapter_08/figure_RRR_01b.png" width=90%>|
+| :------- | :------: |
+| Figure 1a. Landsat imagery resampled with nearest neighbor |  1b. Landsat imagery resampled with bicubic resampling. |
+
+
+The order of operations for this code sample is diagrammed in Figure 2. Specifically, the implicit reprojection to the maps mercator projection takes place with the resampling method specified on the input image.
+
+<center>
+<img src="./images/chapter_08/figure_RRR_02.png" width=50%>
+</center>
+
+Figure 2. Flow chart of operations when `resample()` is called on the input image prior to display in the Code Editor. Curved lines indicate the flow of information to the reprojection: specifically, the output projection, scale and resampling method to use.
+
+## Reduce Resolution {-}
+
+Suppose that instead of resampling during reprojection, your goal is to aggregate pixels to larger pixels in a different projection. This is useful when comparing image datasets at different scales, for example 30-meter pixels from a Landsat-based product to coarse pixels (higher scale) from a MODIS-based product. You can control this aggregation process with the `reduceResolution()` method. As with `resample()`, call `reduceResolution()` on the input, in order to affect the next reprojection of the image. The following example uses `reduceResolution()` to compare forest cover data at 30-meters resolution to a vegetation index at 500-meters resolution:
+
+```{js}
+// Load a MODIS EVI image.
+var modis = ee.Image(ee.ImageCollection('MODIS/006/MOD13A1').first())
+    .select('EVI');
+
+// Display the EVI image near La Honda, California.
+Map.setCenter(-122.3616, 37.5331, 12);
+Map.addLayer(modis, {min: 2000, max: 5000}, 'MODIS EVI');
+
+// Get information about the MODIS projection.
+var modisProjection = modis.projection();
+print('MODIS projection:', modisProjection);
+
+// Load and display forest cover data at 30 meters resolution.
+var forest = ee.Image('UMD/hansen/global_forest_change_2015')
+    .select('treecover2000');
+Map.addLayer(forest, {max: 80}, 'forest cover 30 m');
+
+// Get the forest cover data at MODIS scale and projection.
+var forestMean = forest
+    // Force the next reprojection to aggregate instead of resampling.
+    .reduceResolution({
+      reducer: ee.Reducer.mean(),
+      maxPixels: 1024
+    })
+    // Request the data at the scale and projection of the MODIS image.
+    .reproject({
+      crs: modisProjection
+    });
+
+// Display the aggregated, reprojected forest cover data.
+Map.addLayer(forestMean, {max: 80}, 'forest cover at MODIS scale');
+```
+
+In this example, note that the output projection is explicitly set with [`reproject()`](). During the reprojection to the MODIS sinusoidal projection, rather than resampling, the smaller pixels are aggregated with the specified reducer (`ee$Reducer$mean()` in the example). This sequence of operations is illustrated in Figure 3. Although this example uses `reproject()` to help visualize the effect of `reduceResolution()`, most scripts don't need to explicitly reproject; see the warning [here]().
+
+<center>
+<img src="./images/chapter_08/figure_RRR_03.png" width=50%>
+</center>
+
+Figure 3. Flow chart of operations when `reduceResolution()` is called on an input image prior to `reproject()`. Curved lines indicate the flow of information to the reprojection: specifically, the output projection, scale and pixel aggregation method to use.
+
+Note that a second reprojection occurs (implicitly) to display the data on the Code Editor map. Visually inspect the results and observe the correspondence between the pixels from the MODIS layer and the forest cover data reprojected to MODIS scale and projection. In general, you should rarely need to explicitly `reproject()` in Earth Engine.
+
+### Pixel weights for ReduceResolution {-}
+
+The weights of pixels used during the `reduceResolution()` aggregation process are based on the overlap between the smaller pixels being aggregated and the larger pixels specified by the output projection. This is illustrated in Figure 4.
+
+<center>
+<img src="./images/chapter_08/figure_RRR_04.png" width=60%>
+</center>
+
+Figure 4. Input pixels (black) and output pixel (blue) for `reduceResolution()`.
+
+The default behavior is that input pixel weights are computed as the fraction of the output pixel area covered by the input pixel. In the diagram, the output pixel has area a, the weight of the input pixel with intersection area b is computed as b/a and the weight of the input pixel with intersection area c is computed as c/a. This behavior can result in unexpected results when using a reducer other than the mean reducer. For example, to compute forested area per pixel, use the mean reducer to compute the fraction of a pixel covered, then multiply by area (instead of computing areas in the smaller pixels then adding them up with the sum reducer):
+
+```{js}
+// Compute forest area per MODIS pixel.
+var forestArea = forest.gt(0)
+    // Force the next reprojection to aggregate instead of resampling.
+    .reduceResolution({
+      reducer: ee.Reducer.mean(),
+      maxPixels: 1024
+    })
+    // The reduce resolution returns the fraction of the MODIS pixel
+    // that's covered by 30 meter forest pixels.  Convert to area
+    // after the reduceResolution() call.
+    .multiply(ee.Image.pixelArea())
+    // Request the data at the scale and projection of the MODIS image.
+    .reproject({
+      crs: modisProjection
+    });
+Map.addLayer(forestArea, {max: 500 * 500}, 'forested area at MODIS scale');
+```
+
