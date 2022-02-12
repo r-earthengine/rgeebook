@@ -342,3 +342,170 @@ Export.video.toCloudStorage({
   region: polygon
 })
 ```
+
+## Exporting maps {-}
+
+To export a publicly viewable map to Cloud Storage, use **`Export.map.toCloudStorage()`**. This function exports map tiles suitable for display using the [Google Maps Platform API]() or [Google Earth]() for web.
+
+### Generate a Google Maps Platform API Key {-}
+    
+When you export map tiles from Earth Engine, we generate a sample HTML page stored in the output directory for you to preview the tiles using the Google Maps Platform JavaScript API. You can optionally provide a Google Maps Platform API Key at the time of export, which will be used for the sample viewer's API calls.
+
+There are four steps to follow:
+
+- Click the "Create Maps Platform API Key" button below.
+
+- Select the Cloud project for your API key, and click [NEXT]().
+
+- <html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<p>Click
+<i class="material-icons">&#xe14d;</i> to copy the new key, and paste it into the Export map dialog in the Code Editor.</p>
+</body>
+</html>
+
+- (Recommended) Click the API Console link under the new key to set referrer restrictions. See [referrer and application restrictions]() for more details.
+
+
+[Create Maps Platform API Key]()
+
+
+<figure style="text-align: center">
+      <img alt="" src="./images/chapter_09/image_12.png" width="45%" style="vertical-align: top">
+      <span class="material-icons" style="vertical-align: top" aria-hidden="true" translate="no"> ► </span>
+      <img alt="" src="./images/chapter_09/image_13.png" width="45%" style="vertical-align: top">
+</figure>
+
+### Adding Referrer Restrictions {-}
+
+Referrer restrictions ensure that only the designated app(s) can use your key. You can set or edit referrer restrictions at any time by visiting the [Credentials]() page on the Cloud Console:
+
+- Make sure the correct project name is selected in the dropdown at the top of the screen.
+
+- Click the Maps Platform API key generated above to view the details for the key.
+
+- Select **HTTP referrers (websites)**, and specify the Cloud Storage bucket specified in **`Export.map.toCloudStorage`** using the following template: **`https://storage.googleapis.com/{bucket}/*`**
+
+- Hit Save. The "Saving..." indicator should appear.
+
+<center>
+![](../images/chapter_09/image_14.png){width=400, height=340}
+</center>
+
+### To Cloud Storage {-}
+
+The following example exports a global accessibility map that displays a custom image over Kenya.
+
+```{r,eval=FALSE}
+# Load the global Accessibility to Cities image.
+accessibility <- ee$Image('Oxford/MAP/accessibility_to_cities_2015_v1_0')
+
+# Color palette for visualizing accessibility data.
+accessibilityPalette <- c('f2fef8', 'defce1', 'c9f3bc', 'cbeca7', 'd6e793',
+  'e2d87b', 'd4a561', 'c46c49', 'ab3a38', '922f4b', '7d285d', '672069',
+  '3a1453', '1b0c3c', '050526', '00030f', '000000')
+
+# Apply the color palette to the log of travel time.
+accessibilityVis <- {min: 0, max: 10, palette: accessibilityPalette}
+logAccessibility <- accessibility$where(accessibility$gt(0), accessibility$log())
+accessibilityRgb <- logAccessibility$visualize(accessibilityVis)
+
+# Composite onto a solid-color background to fill in the oceans.
+background <- ee$Image(0)$visualize({palette: c('11101e')})
+accessibilityBlended <- background$blend(accessibilityRgb)$updateMask(1)
+
+# Check the visualization.
+Map$addLayer(accessibilityBlended, {}, 'accessibilityBlended')
+
+# Define an export region.
+exportRegion <- ee$Geometry$Rectangle(c(34, -3, 40, 1))
+Map$centerObject(exportRegion)
+Map$addLayer(exportRegion, {}, 'exportRegion')
+
+# Export the visualization image as map tiles.
+Export$map$toCloudStorage({
+  # All tiles that intersect the region get exported in their entirety.
+  # Clip the image to prevent low resolution tiles from appearing outside
+  # of the region.
+  image: accessibilityBlended$clip(exportRegion),
+  description: 'mapToCloudExample',
+  bucket: 'your-bucket-name',
+  maxZoom: 13,
+  region: exportRegion
+})
+
+```
+
+Note that this creates a new directory in the specified Cloud Storage bucket, named according to the **`description`** parameter by default. You can change the name of the directory or specify subdirectories with the **`path`** parameter.
+
+To allow public access (and Earth Engine app access) to your tiles, the exported files will be public by default (you are assumed to be the owner of the output bucket). If you are a writer on the specified output bucket (but not the owner), set **`writePublicTiles`** to **false** to use the output bucket's default object ACL. ACLs and CORS can be set from the **`writePublicTiles`** and **`bucketCorsUris`** parameters, respectively, or from the export dialog:
+
+<center>
+![](../images/chapter_09/image_15.png){width=372, height=396}
+</center>
+
+The **`Export.map.toCloudStorage()`** dialog.
+
+### ACLs and CORS options details {-}
+
+- **View/download access**. If you want access at all (e.g. from the Code Editor or EE Apps), then you will need to make the tiles 'Publicly accessible.'
+
+- **JS access**. The bucket into which the map is exported must allow for readability by other web apps if you want the Code Editor or EE Apps to have access to the tiles. These cross-origin request settings (CORS) must be configured at the bucket level ( [learn more](https://cloud.google.com/storage/docs/configuring-cors) ). For convenience, the Earth Engine export dialog allows you to configure CORS for your bucket at the time of export.
+
+After the export in the previous example has successfully completed, the output directory will contain a file like this [index.html]() file that displays the exported map using the Google Maps Platform JavaScript API. If you provided a [Maps Platform API Key]() at the time of export, this page is publicly viewable, can be embedded on other pages, and does not require the viewer to be a registered Earth Engine user. If you did not provide an API Key, your exported map tiles will display over watermarked Google Basemap tiles.
+
+<p>
+      The output directory will also contain a file like this
+      <a href="https://storage.googleapis.com/ee-docs-demos/mapToCloudExample/earth.html">earth.html</a>
+      file. The earth.html file is a page containing a link to the display of
+      your map in Google Earth. To view your data in Google Earth, click the
+      <a href="https://earth.google.com/web/?kml=https://earth-kml.appspot.com/?link%3Dhttps://storage.googleapis.com/ee-docs-demos/mapToCloudExample/$%255Blevel%255D/$%255Bx%255D/$%255By%255D%26icon%3Dhttps://storage.googleapis.com/earth-kml.appspot.com/no_icon.png%26name%3DmapToCloudExample%26north%3D1.001372066747515%26south%3D-3.004109501935332%26east%3D40.0%26west%3D34.0%26minLevel%3D0%26maxLevel%3D13"><span style="color: #fff; background-color: #3367d6">Open in Google Earth</span></a>
+      link on the earth.html page. To download a KML file that contains a link
+      to your data, click the <span class="material-icons" aria-hidden="true" translate="no">more_vert</span> in
+      Google Earth and select 'Export as KML file'.
+    </p>
+    
+**Note:** The KML file generated in this manner is not compatible with desktop versions of Google Earth. The link is not compatible with mobile versions of Earth.
+
+<p>
+      You can share your dataset by sharing the link to the earth.html file, by
+      sharing the
+      <span style="color: #fff; background-color: #3367d6">Open in Google Earth</span>
+      link, or by sharing the downloaded KML file. The actual data tiles are
+      served from Google Cloud Storage, and Google Earth will read them from
+      there.
+    </p>
+
+### Scale and Zoom {-}
+
+Note that in the previous example, **`maxZoom`** is set to **`13`**. Zoom levels correspond to different sized grids of pixels with which to display a global map. (See [this reference]() for details.) Due to Earth's curvature, the resolution of pixels at a given zoom level varies by latitude. Specifically, meters per pixel goes down by a factor of cos(*latitude*). The following table shows meters per pixel, at each zoom level, **at the equator** for the Google Mercator projection:
+
+| **Zoom Level** |  **Pixel Size (at equator)** | 
+|----------------------| ----------------------|
+| 0 | 156 km |
+| 1 | 78 km |
+| 2 | 39 km |
+| 3 | 20 km |
+| 4 | 10 km |
+| 5 | 4.9 km |
+| 6 | 2.4 km |
+| 7 | 1.2 km |
+| 8 | 611 m |
+| 9 | 305 m |
+| 10 | 152 m |
+| 11 | 76 m |
+| 12 | 38 m |
+| 13 | 19 m |
+| 14 | 9.6 m |
+| 15 | 4.8 m |
+| 16 | 2.4 m |
+| 17 | 1.2 m |
+| 18 | 0.6 m |
+| 19 | 0.3 m |
+| 20 | 0.15 m |
+
+Observe from the previous table that the **`maxZoom`** set in the example corresponds to 19 meters at the equator, smaller at higher latitudes. This is less than the nominal 30 arc-seconds per pixel resolution of the input image. As a result, the map displayed in the output [index.html]() can be zoomed in until pixels in native resolution are visible in the map. To limit the map display to native pixel resolution, set **`maxZoom`** to a value that corresponds to the native resolution or less.
