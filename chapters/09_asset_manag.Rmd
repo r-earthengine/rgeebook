@@ -24,4 +24,321 @@ To start your journey in mastering R, the following six chapters will help you l
 
 # Exporting Data 
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+You can export images, map tiles, tables and video from Earth Engine. The exports can be sent to your Google Drive account, to [Google Cloud Storage](https://cloud.google.com/storage/) or to a new Earth Engine asset.
+
+To use Google Cloud Storage (a fee-based service), you'll need to set up a project, enable billing for the project, and create a storage bucket. See the [Cloud Storage Quickstart](https://cloud.google.com/storage/docs/quickstart-console) page for instructions. See [this guide](https://cloud.google.com/storage/docs/naming-buckets) for information on storage bucket naming. Data exported to a Cloud Storage bucket will have the bucket's [default object Access Control List (ACL)](https://cloud.google.com/storage/docs/access-control/create-manage-lists#defaultobjects). You must have write permission for the specified bucket.
+
+The following sections describe each type of export in detail.
+
+## Exporting images {-}
+
+You can export images from Earth Engine in [GeoTIFF] (https://trac.osgeo.org/geotiff/) or TFRecord format. See [Configuration Parameters](https://developers.google.com/earth-engine/guides/exporting#configuration-parameters) for more output options.
+
+### Example Setup {-}
+
+Start by defining the image data that will be exported:
+
+```{r, eval=FALSE}
+# Load a landsat image and select three bands.
+landsat = ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_123032_20140515')
+  .select(['B4', 'B3', 'B2'])
+
+# Create a geometry representing an export region.
+geometry = ee$Geometry$Rectangle([116.2621, 39.8412, 116.4849, 40.01236])
+```
+
+Next define the projection parameters that will be used in the following exports. We use the crs parameter to specify the coordinate system, and the `crsTransform` parameter to precisely specify the pixel grid. The `crsTransform` parameter is a list of parameters from an affine transformation matrix in row-major order `[xScale, xShearing, xTranslation, yShearing, yScale, yTranslation]`. An image's origin is defined by the `xTranslation` and `yTranslation` values, and the image's pixel size is defined by the `xScale` and `yScale` values. See [examples of affine matrices](https://en.wikipedia.org/wiki/Affine_transformation#Image_transformation).
+
+```{r, eval=FALSE}
+# Retrieve the projection information from a band of the original image.
+# Call getInfo() on the projection to request a client-side object containing
+# the crs and transform information needed for the client-side Export function.
+projection = landsat$select('B2')$projection()$getInfo()
+```
+
+### to Drive {-}
+
+To export an image to your Drive account, use `Export$image$toDrive()`. For example, to export portions of a Landsat image, define a region to export, then call `Export$image$toDrive()`:
+
+```{r, eval=FALSE}
+# Export the image, specifying the CRS, transform, and region.
+Export$image$toDrive({
+  image = landsat,
+  description = 'imageToDriveExample_transform',
+  crs = projection.crs,
+  crsTransform = projection.transform,
+  region = geometry
+})
+```
+
+When this code is run, an export task will be created in the Code Editor **Tasks** tab. Click the **Run** button next to the task to start it. (Learn more about the Task Manager from the Code Editor section). The image will be created in your Drive account with the specified `fileFormat`.
+
+### to Cloud Storage {-}
+
+To export an image to a Google Cloud Storage bucket, use `Export$image$toCloudStorage()`. To export the Landsat image in the previous example to Cloud Storage instead of Drive, use:
+
+```{r, eval=FALSE}
+# Export the image to Cloud Storage.
+Export.image.toCloudStorage({
+  image = landsat,
+  description = 'imageToCloudExample',
+  bucket = 'your-bucket-name',
+  fileNamePrefix = 'exampleExport',
+  crs = projection$crs,
+  crsTransform = projection.transform,
+  region = geometry
+})
+```
+
+As with exports to Drive, start the export from the **Tasks** tab.
+
+### to Asset {-}
+
+To export an image to an asset in your Earth Engine assets folder, use `Export.image.toAsset()`. To manage your Earth Engine assets, or check how much of your storage quota is in use, use the Asset Manager. The following example illustrates exporting portions of a Landsat image using different pyramiding policies for the same band. The pyramiding policy indicates how Earth Engine computes lower-resolution versions of the asset. Learn more about how Earth Engine handles multiple resolutions in the scale doc.
+
+```{r, eval=FALSE}
+# Get band 4 from the Landsat image, copy it.
+band4 = landsat$select('B4').rename('b4_mean')
+  .addBands(landsat$select('B4')$rename('b4_sample'))
+  .addBands(landsat$select('B4')$rename('b4_max'))
+
+# Export the image to an Earth Engine asset.
+Export$image$toAsset({
+  image = band4,
+  description = 'imageToAssetExample',
+  assetId = 'exampleExport',
+  crs = projection.crs,
+  crsTransform = projection.transform,
+  region = geometry,
+  pyramidingPolicy: {
+    'b4_mean' = 'mean',
+    'b4_sample' = 'sample',
+    'b4_max' = 'max'
+  }
+})
+```
+
+You can provide a default pyramiding policy for every band that isn't explicitly specified by using the `'.default'` key. You may also pass in just the `'.default'` key. For example, to make all bands default to the 'sample' pyramiding policy, use `{'.default': 'sample'}`.
+
+### Configuration parameters {-}
+
+Observe that the dictionary of configuration parameters passed to `Export$image` includes `scale` (in meters) and the export region as an `ee$Geometry`. The exported image will cover the specified region with pixels at the specified scale. If not explicitly specified, the CRS of the output will be taken from the first band of the image to be exported.
+
+You may also specify the `dimensions`, crs and/or `crsTransform` of the exported image. See [the glossary](https://developers.google.com/earth-engine/glossary) for more information on crs and `crsTransform`. For example, to get a block of pixels precisely aligned to another data source, specify `dimensions`, crs and `crsTransform`. To get a block of pixels of predefined size (for example a 256x256 thumbnail image) that covers a region, specify `dimensions` and `region`.
+
+You can specify image output format (if the destination is not `toAsset()`) with the `fileFormat` parameter (`'GeoTIFF'` by default).
+
+#### formatOptions parameter {-}
+
+Other configuration options are set with the `formatOptions` parameter, which should be a dictionary keyed by other format options, specific to each `fileFormat` as described below.
+
+#### GeoTiff {-}
+
+to export a [cloud optimized GeoTIFF](https://www.cogeo.org/), pass a JavaScript literal for `formatOptions` in which the `cloudOptimized` key is set to **true**. Continuing the previous example:
+
+```{r, eval=FALSE}
+# Export a cloud-optimized GeoTIFF.
+Export$image.toDrive({
+  image = landsat,
+  description = 'imageToCOGeoTiffExample',
+  crs = projection.crs,
+  crsTransform = projection.transform,
+  region = geometry,
+  fileFormat = 'GeoTIFF',
+  formatOptions = {
+    cloudOptimized = true
+  }
+})
+```
+
+Cloud optimized GeoTIFFs can be releaded from Cloud Storage into an `Image`. See the `Image` overview docs for details
+
+#### TFRecord {-}
+
+See this page
+
+### maxPixels {-}
+
+The `maxPixels` parameter is intended to prevent very large exports from inadvertently being created. If the default value is too low for your intended output image, you can increase `maxPixels`. For example:
+
+```{r, eval=FALSE}
+Export$image$toDrive({
+  image = landsat,
+  description = 'maxPixelsExample',
+  crs = projection.crs,
+  crsTransform = projection.transform,
+  region = geometry,
+  maxPixels = 1e9
+})
+```
+
+### Large file exports {-}
+
+If the output image is large, it will be exported as multiple files. If you are exporting to GeoTIFF(s), the image is split into tiles. The filename of each tile will be in the form` baseFilename-yMin-xMin` where `xMin` and `yMin` are the coordinates of each tile within the overall bounding box of the exported image.
+
+If you are exporting to TFRecord, the files will be appended by `-00000`, `-00001`,... `-0000N` for N+1 files. Maintaining this order is important if you intend to perform inference on the files and upload the predictions back to Earth Engine as an image. See uploading images as TFRecord files for details.
+
+### Exporting images as they appear in the Code Editor {-}
+
+To export imagery as rendered on screen in Earth Engine, create visualization images as demonstrated in the [Visualization images]() and the [Compositing and Mosaicking]() sections. Since the Code Editor uses the 'EPSG:3857' CRS, specify a CRS of `'EPSG:3857'` in the export to get an image in the same projection as that displayed in the Code Editor map. [See the section on configuring image exports]() for details on specifying the resolution and coordinate system of the output.
+
+## Exporting tables and vector data {-}
+
+You can export a `FeatureCollection` as CSV, SHP (shapefile), GeoJSON, KML, KMZ or TFRecord using `Export.table`. The `FeatureCollection` may represent vectors or simply a table of data. In the latter case, the features in the collection will have null geometry.
+
+Note some additional constraints when working with some file formats, including:
+- **KML**: A `FeatureCollection` exported to a KML file will have all the geometries transformed to unprojected (WGS84) coordinates.
+
+- **SHP**: A `FeatureCollection` exported to a Shapefile must contain features with the same geometry type and projection and must fit within the [Shapefile size limits](). Column names are truncated to 10 characters or fewer, and this must not create duplicate column names.
+
+- **TFRecord**: See [this page]().
+
+*Note*: If you need control over the precision of geometries in your export, map() a function over the collection to be exported:
+
+```{r, eval=FALSE}
+map(function(f) { return f.transform(targetProj, maxErr) })
+```
+
+### To Drive {-}
+
+To export a `FeatureCollection` to your Drive account, use `Export.table.toDrive()`. For example:
+
+```{r, eval=FALSE}
+# Make a collection of points.
+features = ee.FeatureCollection([
+  ee.Feature(ee.Geometry.Point(30.41, 59.933), {name: 'Voronoi'}),
+  ee.Feature(ee.Geometry.Point(-73.96, 40.781), {name: 'Thiessen'}),
+  ee.Feature(ee.Geometry.Point(6.4806, 50.8012), {name: 'Dirichlet'})
+])
+
+# Export the FeatureCollection to a KML file.
+Export.table.toDrive({
+  collection: features,
+  description:'vectorsToDriveExample',
+  fileFormat: 'KML'
+})
+```
+
+Note that the output format is specified as KML to handle geographic data (SHP would also be appropriate for exporting a table with geometry). To export just a table of data, without any geographic information, export features with null geometry in CSV format. The following demonstrates using `Export.table.toDrive()` to get the results of a potentially long running reduction:
+
+```{r, eval=FALSE}
+# Load a Landsat TOA image.
+image = ee.Image('LANDSAT/LC08/T1_TOA/LC08_044034_20140318')
+
+# Create an arbitrary rectangle.
+region = ee.Geometry.Rectangle(-122.2806, 37.1209, -122.0554, 37.2413)
+
+# Get a dictionary of means in the region.
+means = image.reduceRegion({
+  reducer: ee.Reducer.mean(),
+  geometry: region,
+  crs: projection.crs,
+  crsTransform: projection.transform,
+})
+
+# Make a feature without geometry and set the properties to the dictionary of means.
+feature = ee.Feature(null, means)
+
+# Wrap the Feature in a FeatureCollection for export.
+featureCollection = ee.FeatureCollection([feature])
+
+# Export the FeatureCollection.
+Export.table.toDrive({
+  collection: featureCollection,
+  description: 'exportTableExample',
+  fileFormat: 'CSV'
+})
+```
+
+Note that the format is set to ‘CSV’ in this example since there is no geometry in the output.
+
+### to Cloud Storage {-}
+
+To export a `FeatureCollection` to Cloud Storage, use `Export.table.toCloudStorage()`. For example, using the `features` defined previously:
+
+```{r, eval=FALSE}
+# Export a KML file to Cloud Storage.
+Export.table.toCloudStorage({
+  collection: features,
+  description:'vectorsToCloudStorageExample',
+  bucket: 'your-bucket-name',
+  fileNamePrefix: 'exampleTableExport',
+  fileFormat: 'KML'
+})
+```
+
+### to Asset {-}
+
+To export a `FeatureCollection` as an Earth Engine asset, use `Export.table.toAsset()`. For example, using the `features` defined previously:
+
+```{r, eval=FALSE}
+# Export an ee.FeatureCollection as an Earth Engine asset.
+Export.table.toAsset({
+  collection: features,
+  description:'exportToTableAssetExample',
+  assetId: 'exampleAssetId',
+})
+```
+
+There are several limitations on the size and shape of Earth Engine table assets:
+
+- Maximum of 100 million features
+- Maximum of 1000 properties (columns)
+- Maximum of 100,000 vertices for each row's geometry
+- Maximum of 100,000 characters per string value
+
+## Exporting video {-}
+
+To export ordered image collections as video, where frames are defined by images in the collection, use `Export.video()`. You can configure the way the `ImageCollection` is turned into video by setting frame rate, scale and dimensions. The video will be encoded as an MP4.
+
+### to Drive {-}
+
+Export video to your Drive account with `Export.video.toDrive()`. For example, the following export makes a video from 20 years of Landsat imagery:
+
+```{r, eval=FALSE}
+# Load a Landsat 5 image collection.
+collection = ee.ImageCollection('LANDSAT/LT05/C01/T1_TOA')
+  # San Francisco Bay.
+  .filter(ee.Filter.eq('WRS_PATH', 44))
+  .filter(ee.Filter.eq('WRS_ROW', 34))
+  # Filter cloudy scenes.
+  .filter(ee.Filter.lt('CLOUD_COVER', 30))
+  # Get 20 years of imagery.
+  .filterDate('1991-01-01','2011-12-30')
+  # Need to have 3-band imagery for the video.
+  .select(['B4', 'B3', 'B2'])
+  # Need to make the data 8-bit.
+  .map(function(image) {
+    return image.multiply(512).uint8();
+  })
+
+# Define an area to export.
+polygon = ee.Geometry.Rectangle([-122.7286, 37.6325, -122.0241, 37.9592])
+
+# Export (change dimensions or scale for higher quality).
+Export.video.toDrive({
+  collection: collection,
+  description: 'sfVideoExample',
+  dimensions: 720,
+  framesPerSecond: 12,
+  region: polygon
+})
+```
+
+Note that the frame rate and dimensions can be set from a dictionary of parameters passed to the export. Adjust these parameters to customize the video. Also note that the input `ImageCollection` is required to have 3-band (RGB), 8-bit images. In this example, the 8-bit, 3-band format is explicitly set. Alternatively, map a function which calls `image.visualize()` over the collection. See [the section on Visualization images]() for details. Video exports can take a significant amount of time to complete, so it's not unusual to see the export task running for an extended period.
+
+### to Cloud Storage {-}
+
+To export a video to Cloud Storage, use `Export.video.toCloudStorage()`. For example, using the `ImageCollection` from the previous example:
+
+```{r, eval=FALSE}
+# Export video to cloud storage.
+Export.video.toCloudStorage({
+  collection: collection,
+  description: 'sfVideoExampleToCloud',
+  bucket: 'your-bucket-name',
+  dimensions: 720,
+  framesPerSecond: 12,
+  region: polygon
+})
+```
