@@ -5,23 +5,342 @@ source("common.R")
 ```
 
 
-# How Earth Engine works
+# How Earth Engine works {-}
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+## Overview {-}
 
+Earth Engine is not like any GIS you have ever used before! Because Earth Engine is a cloud-based platform, it is incredibly powerful. It is also strange and wondrous. The purpose of the docs in the How Earth Engine works section is to demystify some potentially surprising behavior you may encounter when running scripts in the Rstuio. This includes:
 
-# Client vs Server
+  - Distinguishing between R objects in the client and Earth Engine objects on the server. See [Client vs. Server]().
+  - The lazy computation model. See [Deferred Execution]().
+  - How Earth Engine handles scale (pixel resolution). See [Scale]().
+  - How Earth Engine handles map projections. See [Projections]().
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+# Client vs Server {-}
 
-# Deferred exacution
+It is important to distinguish Earth Engine objects from other R objects or primitives that might be in your code. You can manipulate objects on the server by manipulating client-side “proxy” objects in your script. You can recognize a proxy object as anything starting with `ee`. These Earth Engine proxy objects do not contain any actual data and are just handles for objects on the server. To start, consider a client-side R string object (which is NOT a proxy object):
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+```{js}
+var clientString = 'I am a String';
+print(typeof clientString);  // string
+```
 
-# Scale
+Observe from the console output that the web browser (which is called the 'client' in this doc) has interpreted this code and run it, determining that the `clientString` is type `string`. Now suppose you want Earth Engine to be able to do something with this string. To do that, you need to wrap up the string in a nice container and send it to Google. That container is the proxy object. Here's an example:
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+```{js}
+var serverString = ee.String('I am not a String!');
+print(typeof serverString);  // object
+print('Is this an EE object?',
+    serverString instanceof ee.ComputedObject);  // true
+```
 
-# Projections 
+Observe from the console output that the `ee$String` is an `object`, NOT a `string`. More specifically, it's an `ee$computedObject`, which means it's a proxy object for something on the server. Think of `ee$Thing` as the way to put a thing in a container for sending to Google. Your client doesn't know what's in the container, but you can find out what's in it by printing it:
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+```{js}
+print(serverString);  // I am not a String
+```
+
+To see what the container itself looks like, call `toString()` on the object:
+
+```{js}
+print(serverString.toString());  // ee.String("I am not a String!")
+```
+
+If all you need to do is find out what's in the container, then just `print()` and inspect the result in the console. If, for some reason, you need to use R running in the client to manipulate whatever is in the container, then use `getInfo()` to get the contents of the container and assign it to a variable:
+
+```{js}
+var someString = serverString.getInfo();
+var strings = someString + '  Am I?';
+print(strings);  // I am not a String!  Am I?
+```
+
+You shouldn't use `getInfo()` unless you absolutely need to. If you call `getInfo()` in your code, Earth Engine will open the container and tell you what's inside, but it will block the rest of your code until that's done. (You can optionally provide a callback function to avoid that, but the better option is to do everything on the server, if possible.)
+
+## Looping {-}
+
+Because the client doesn't know what's in server-side `ee$Thing` objects, R functionality such as conditionals and for-loops does not work with them. For that reason, and to avoid synchronous calls to `getInfo()`, use server functions to the extent possible. For example, consider the following two ways of creating a list:
+
+**Not recommended** — client-side for-loop
+
+```{js}
+var clientList = [];
+for(var i = 0; i < 8; i++) {
+  clientList.push(i + 1);
+}
+print(clientList);
+```
+
+`Recommended` — server-side mapping
+
+```{js}
+var serverList = ee.List.sequence(0, 7);
+serverList = serverList.map(function(n) {
+  return ee.Number(n).add(1);
+});
+print(serverList);
+```
+
+The server-side mapping example is a little silly because you could make the same list simply with `ee$List$sequence(1, 8)`, but it illustrates some important concepts. The first concept is `map()` which simply applies the same function to everything in the list. Because this function is executed on the server, client-side functions such as `print()` won't work in a mapped function. For that reason, the `i + 1` code has to be replaced with the equivalent server-side code: `ee$Number(n)$add(1)`. Importantly, `n` is an object that only exists on the server. Because the function doesn't know the type of its argument, it needs to be cast to an `ee.Number`.
+
+(See [the section on Client and Server functions]() for a description of which functions run on the client.)
+
+It's also worth noting that occasionally client-side functionality is convenient. For example, the previous for loop could be used to build a list and wrap it with a server-side object:
+
+```{js}
+var toServerList = ee.List(clientList);
+```
+
+Realize that client-side processing is done in your browser, using your machine's CPU, so it can be less efficient than using Earth Engine to do the work on the server. Also, to avoid potentially surprising results, it is good practice to avoid mixing client and server functionality in your scripts. The Conditionals section provides an example of possibly unintended consequences.
+
+## Conditionals {-}
+
+Server-side objects don't necessarily work with client side functions and vice versa. For example, consider the case of a server-side Boolean variable:
+
+```{js}
+var myList = ee.List([1, 2, 3]);
+var serverBoolean = myList.contains(5);
+print(serverBoolean);  // false
+```
+
+Note that the server-side Boolean results from executing a method on a server object. It appears to be a client variable when you `print()` it because `print()` opens the container and tells you what's inside. However, as shown in the following example, the variable does not behave in a client-side conditional because it is a server-side object. To correctly check a server-side boolean, use a server-side function:
+
+**Not recommended** — client-side conditional
+
+```{js}
+var clientConditional;
+if (serverBoolean) {
+  clientConditional = true;
+} else {
+  clientConditional = false;
+}
+print('Should be false:', clientConditional);  // True!
+```
+
+**Recommended** — server-side conditional
+
+```{js}
+var serverConditional = ee.Algorithms.If(serverBoolean, 'True!', 'False!');
+print('Should be false:', serverConditional);  // False!
+```
+
+## Client and Server Functions {-}
+
+The previous sections describe several reasons why it is inefficient or illogical to mix client and server objects and functions. Which objects and functions are client-side and which are server-side? In general, any thing initialized as `ee$Thing` is a server object and any method on that object, `ee$Thing$method()`, is a server function. In contrast, any class in the Rstudio API reference that doesn't start with `ee` is client-side as well. Examples include `print()`, `Map`, `Export` and `Chart`. Objects and functions that appear in the [R reference]() are client-side. Any [R literal object]() you create is a client-side object. As noted previously, you can use client-side functionality to create an object, then wrap it by supplying the client-side object to an Earth Engine constructor, for example `ee$String()`.
+
+# Deferred exacution {-}
+
+The [Client vs. Server]() doc describes how objects referenced in your script can be either client-side or server-side. The complete script contains not only the objects you want to use, but also a set of instructions that tell Earth Engine what to do with them. This doc describes how those instructions are sent to Google for processing and how the results are sent back to your web browser (the client) for display.
+
+When you write a script in Earth Engine (R), that code does NOT run directly on Earth Engine servers at Google. Instead, the [client library]() encodes the script into a set of [JSON]() objects, sends the objects to Google and waits for a response. Each object represents a set of operations required to get a particular output, an image to display in the client, for example. Consider the following R code, run in the Rstudio:
+
+```{js}
+var image = ee.Image('CGIAR/SRTM90_V4');
+var operation = image.add(10);
+print(operation.toString());
+print(operation);
+```
+
+The first print statement will output the JSON structure that the client library uses to describe that image to the server at Google:
+
+```{js}
+ee.Image({
+  "type": "Invocation",
+  "arguments": {
+    "image1": {
+      "type": "Invocation",
+      "arguments": {
+        "id": "CGIAR/SRTM90_V4"
+      },
+      "functionName": "Image.load"
+    },
+    "image2": {
+      "type": "Invocation",
+      "arguments": {
+        "value": 10
+      },
+      "functionName": "Image.constant"
+    }
+  },
+  "functionName": "Image.add"
+})
+    
+```
+
+The second print statement will send the request to Google and output the [POST]() response from Google servers. To see the response in all its JSON glory, click the `JSON` link on the right side of the console, next to the printed object:
+
+```{js}
+{
+  "type": "Image",
+  "bands": [
+    {
+      "id": "elevation",
+      "data_type": {
+        "type": "PixelType",
+        "precision": "int",
+        "min": -32758,
+        "max": 32777
+      },
+      "crs": "EPSG:4326",
+      "crs_transform": [
+        0.0008333333535119891,
+        0,
+        -180,
+        0,
+        -0.0008333333535119891,
+        60
+      ]
+    }
+  ]
+}
+    
+```
+
+Nothing is sent to Google for processing until there is a request for it. In this example, `print()` is sufficient to request the result of the computation. (In R, it's necessary to call `getInfo()` on the object being printed; otherwise the request JSON is printed). No processing is done on the server until that result is explicitly requested.
+
+Another example of requesting something is displaying it on the map with `Map$addLayer()`. When this request is sent to Google, only the tiles necessary to display the result in the Rstudio are returned. Specifically, the position of the map and the zoom level determine which data get processed and turned into images that can be displayed on the map. If you pan or zoom, note that other tiles are computed lazily. This on-demand system allows for parallelization and efficient processing, but also means that the image displayed on the map is produced from different inputs depending on the zoom level and location of the map bounds as visible in the Rstudio. Learn more about how inputs to a computation are determined from the request in the [Scale]() doc.
+
+# Scale {-}
+
+Understanding how Earth Engine handles scale is crucial to interpreting scientific results obtained from Earth Engine. Here, scale means pixel resolution. Unlike other GIS and image processing platforms, the scale of analysis is determined from the output, rather than the input. Specifically, when you make a request for results, an image to display or a statistic, for example, you specify the scale at which data is input to the analysis. This concept is illustrated in Figure 1.
+
+<center>
+<img src="./images/chapter_04/figure_SC_01.png" width=80%>
+</center>
+
+Figure 1. A graphic representation of an image dataset in Earth Engine. Dashed lines represent the pyramiding policy for aggregating 2x2 blocks of 4 pixels. Earth Engine uses the scale specified by the output to determine the appropriate level of the image pyramid to use as input.
+
+## Image Pyramids {-}
+
+Image assets in Earth Engine exist at multiple scales, in [image pyramids](). The pyramiding policy (represented by dashed lines in Figure 1) determines how each pixel at a given level of the pyramid is computed from the aggregation of a 2x2 block of pixels at the next lower level. For continuous valued images, the pixel values of upper levels of the pyramid are the mean of pixels at the next lower level. For discrete valued images, pixel values of upper levels of the pyramid are a sample (usually the top left pixel) of pixels at the next lower level.
+
+The lowest level of the image pyramid represents image data at native resolution, when it is ingested into Earth Engine. During ingestion, the data are aggregated (according to the pyramiding policy) to create higher pyramid levels. The data are aggregated until the entire image fits within a 256x256 pixel tile. When you use an image in your code, Earth Engine chooses a level of the pyramid with the closest scale less than or equal to the scale specified by your analysis and resamples (using nearest neighbor by default) as necessary.
+
+## Scale of analysis {-}
+
+Scale of analysis in Earth Engine is determined on a "pull" basis. The scale at which to request inputs to a computation is determined from the output. For example, if you add an image to the map with `Map$addLayer()`, the zoom level of the map in the Rstudio determines the scale at which inputs are requested from the image pyramid. For other computations, you specify `scale` as an argument. For example, using the NIR band of a Landsat image, which has 30 meters native resolution:
+
+```{js}
+var image = ee.Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318').select('B4');
+
+var printAtScale = function(scale) {
+  print('Pixel value at '+scale+' meters scale',
+    image.reduceRegion({
+      reducer: ee.Reducer.first(),
+      geometry: image.geometry().centroid(),
+      // The scale determines the pyramid level from which to pull the input
+      scale: scale
+  }).get('B4'));
+};
+
+printAtScale(10); // 8883
+printAtScale(30); // 8883
+printAtScale(50); // 8337
+printAtScale(70); // 9215
+printAtScale(200); // 8775
+printAtScale(500); // 8300
+```
+
+In this example, note that the pixel value at a constant location (the image centroid) varies based on scale. This is due to the fact that different pyramid levels are selected for different scales. For similar scales, nearest neighbor resampling results in the same pixel value being returned. The important point is that by varying the scale, different image inputs are requested.
+
+**Note**: To avoid ambiguity, always specify scale when you use a function which has a scale parameter.
+
+When you visualize an image by adding it to the map, Earth Engine determines scale from the zoom level. Consider the following simple example, which simply displays a Landsat image:
+
+```{js}
+var image = ee.Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318');
+Map.centerObject(image, 17);
+Map.addLayer(image, {bands: ['B4', 'B3', 'B2'], max: 12000}, 'image');
+```
+
+The map starts zoomed all the way in, such that the native resolution pixels are clearly visible. Zooming out far enough will not display the same pixels, but will instead display higher levels of the image pyramid. It is also worth noting that the Rstudio map uses the [maps mercator (EPSG:3857)]() projection, so the appropriate level of the image pyramid also needs to be reprojected prior to display. Learn more about how Earth Engine handles projections from the [projections doc]().
+
+# Projections {-}
+
+Earth Engine is designed so that you rarely have to worry about map projections when doing computations. As with scale, the projection in which computations take place is determined on a "pull" basis. Specifically, inputs are requested in the output projection. The output may be determined from a function parameter (e.g. `crs`), the `Map` in the Rstudio (which has a [maps mercator (EPSG:3857)]() projection), or with a `reproject()` call. When you display images in the Rstudio, inputs are requested in [maps mercator](). Consider the following simple operation on a MODIS image, which has a [sinusoidal]() projection:
+
+```{js}
+// The input image has a SR-ORG:6974 (sinusoidal) projection.
+var image = ee.Image('MODIS/006/MOD13A1/2014_05_09').select(0);
+
+// Normalize the image and add it to the map.
+var rescaled = image.unitScale(-2000, 10000);
+var visParams = {min: 0.15, max: 0.7};
+Map.addLayer(rescaled, visParams, 'Rescaled');
+```
+
+The order of operations for this code sample is diagrammed in Figure 1. Note that the projection of the input is determined by the output, specifically the [maps mercator]() projection of the map display in the Rstudio. This projection propagates back through the sequence of operations such that the inputs are requested in maps mercator, at a scale determined by the zoom level of the map.
+
+<center>
+<img src="./images/chapter_04/figure_PRJ_01.png" width=60%>
+</center>
+
+Figure 1. Flow chart of operations corresponding to the display of a MODIS image in the Rstudio map. Projections (left side of flow chart) of each operation are determined from the output. Curved lines indicate the flow of information to the reprojection: specifically, the output projection and scale.
+
+In Earth Engine, projections are specified by a Coordinate Reference System (CRS or the `crs` parameter of many methods). You can check the projection of an image by calling `projection()` on it:
+
+```{js}
+var image = ee.Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318').select(0);
+print('Projection, crs, and crs_transform:', image.projection());
+print('Scale in meters:', image.projection().nominalScale());
+```
+
+Note that by calling `nominalScale()` on the `ee$Projection` returned by `projection()`, you can determine the native resolution of the image. The native resolution is the nominal pixel scale in meters of the lowest level of the [image pyramid](). Because each band of an image can have a different scale and/or projection, if you call `projection()` on an image with at least one band that doesn't have the same projection as the others, you may see an error like:
+
+## The default projection {-}
+
+Unless you need your computation to occur in a specific projection, there is generally no need to specify a projection. Only for output that's ambiguous will Earth Engine require you to specify a projection and/or scale. Ambiguity can result from reducing an `ImageCollection` containing images with different projections (i.e. [creating a composite]()). An image which is a composite or mosaic of input images with different projections will have the default projection, which is [WGS84]() with 1-degree scale. For example:
+
+```{js}
+var collection = ee.ImageCollection('LANDSAT/LC08/C01/T1');
+var mosaic = collection.mosaic();
+print(mosaic.projection());
+```
+
+If you try to use an image like this in a computation, you may see an error like:
+
+Generally, an aggregation at 1-degree scale is not desired or intended, so Earth Engine gives this friendly reminder to provide a complete specification for the output.
+
+Users often find this behavior confusing and worry about the "lost" projection information, but the pixels aren't actually computed until they're needed ([learn more]()), and at that point, there's always an output projection that accompanies the request that specified how to compute the composite.
+
+In the vast majority of use cases, having no projection is not a problem and is actually a valuable optimization, as it allows previewing the results at any zoom level without having to wait for the full resolution computation to complete. But it does mean that the output can appear different at different zoom levels.
+
+If the optimized display image somehow isn't sufficient, computation in a specific projection can be forced by reprojecting the output as described in the following section.
+
+## Reprojecting {-}
+
+You can force operations to be performed in a specific projection with the `reproject()` method. Using `reproject()` results in the inputs being requested in the projection specified in the `reproject()` call. Computations in your code before the `reproject()` call will be done in the specified projection. For example, to force a composite to be produced in a specific projection:
+
+```{js}
+// Some projection that is suitable for your area of interest.
+var proj = ee.Projection(...);
+var output = collection.reduce(...).reproject(proj);
+```
+
+A few cases that require a fixed projection include:
+
+  - Computing gradients (e.g. `ee$Terrain$gradient` or `ee$Terrain$slope`).
+  - `reduceResolution`, for when you want to aggregate higher resolution pixels into lower resolution. ([Learn more about reducing resolution]()).
+
+There are several reasons you should avoid using `reproject()` unless you absolutely need to. Suppose, for example, you reproject something and add it to the map. If the scale you specified in the `reproject()` call is much smaller than the zoom level of the map, Earth Engine will request all the inputs at very small scale, over a very wide spatial extent. This can result in much too much data being requested at once and lead to an error.
+
+If the eventual output is in a different projection from that specified in the `reproject()` call, that will result in another reprojection. This is another reason to be cautious about using `reproject()` in your code. Consider the following example, which forces the MODIS image to first be reprojected to [WGS84](), then reprojected to [maps mercator]() for display in the Rstudio map:
+
+```{js}
+// The input image has a SR-ORG:6974 (sinusoidal) projection.
+var image = ee.Image('MODIS/006/MOD13A1/2014_05_09').select(0);
+
+// Operations *before* the reproject call will be done in the projection
+// specified by reproject().  The output results in another reprojection.
+var reprojected = image
+    .unitScale(-2000, 10000)
+    .reproject('EPSG:4326', null, 500);
+Map.addLayer(reprojected, visParams, 'Reprojected');
+```
+
+Figure 2 diagrams the flow of operations corresponding to this simple reprojection example. Note that the first reprojection is explicit, as specified in the `reproject()` call. The second reprojection is implicit, performed by Earth Engine automatically in order to display the result on the map. Also observe that the information about what projection to use propagates back from the request to the input.
+
+<center>
+<img src="./images/chapter_04/figure_PRJ_02.png" width=60%>
+</center>
+
+Figure 2. Flow chart of operations corresponding to the reprojection of a MODIS image in the Rstudio map. Curved lines indicate the flow of information to the reprojections: specifically, the output projection and scale.
