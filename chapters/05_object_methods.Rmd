@@ -4877,7 +4877,9 @@ print('Residuals:', residuals);
 
 # Join {-}
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+## Join Overview {-}
+
+Joins are used to combine elements from different collections (e.g. `ImageCollection` or `FeatureCollection`) based on a condition specified by an `ee$Filter`. The filter is constructed with arguments for the properties in each collection that are related to each other. Specifically, `leftField` specifies the property in the primary collection that is related to the `rightField` in the secondary collection. The type of filter (e.g. `equals`, `greaterThanOrEquals`, `lessThan`, etc.) indicates the relationship between the fields. The type of join indicates one-to-many or one-to-one relationships between the elements in the collections and how many matches to retain. The output of a join is produced by `join$apply()` and will vary according to the type of join.
 
 # Array {-}
 
