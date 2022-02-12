@@ -1765,6 +1765,142 @@ Access to Earth Engine is free, but requires signup. To get access, please fill 
 Once you're familiar with the Code Editor, [get started on the tutorial]()!
 
 
-# Video Tutorials
+## Tutorials {-}
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+These video tutorials are from lectures or hands-on trainings conducted at Earth Engine User Summits and [Earth Outreach digital events](https://earthoutreachonair.withgoogle.com/).
+
+### Introduction to Earth Engine (condensed) {-}
+
+Learn about Earth Engine from developer advocate Noel Gorelick in this fast-paced intro.
+
+[companion slides](https://docs.google.com/presentation/d/1iZtkBNzl2HBWFT0wEhwCov89kyiBO7rSHcmMa6WNMa8)
+
+[code repository](https://code.earthengine.google.com/?accept_repo=users/gorelick/EE101-B)
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/m1ejxSi3l8s" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+### Hands-on Intermediate Training {-}
+
+Topics covered include classification, spectral unmixing and terrain visualization.
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_CJoxXuC81s" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+
+### Tables and Vectors {-}
+
+Overview of tables and vectors in Earth Engine. Topics include how to load, manipulate, display and analyze vector and tabular data in Earth Engine.
+
+[companion slides](https://docs.google.com/presentation/d/1D7rezUHPElCfYWHMRNBChHjbEv6nXDD8xnh7_YgyK6A/edit?usp=sharing)
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/XLE-apehUCk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+
+### Importing and Exporting {-}
+
+Topics covered include importing and exporting Earth Engine data, the command line interface, and map publishing.
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/C_Yvg2XGZdI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+-
+
+### Classification {-}
+Learn all about classifiers (both supervised and unsupervised), training data, test data, the dreaded "computed value too large" message, and the awesome linear regression reducer.
+
+[companion slides](https://docs.google.com/presentation/d/1esEXY4rlyl3J2oXxfhSPBHQvxie_Fmda6wSDu_S2aQo)
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/6KIJB4A6VbI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+
+Topics covered include supervised and unsupervised classification.
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NPplRtH2N94" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+
+### Machine Learning {-}
+
+#### Machine Learning Best Practices {-}
+
+With the pace of modern machine learning, building and training neural networks is hard. Learn some best practices and sift through the overwhelming amount of information available with a focus on remote sensing.
+
+[companion slides](https://docs.google.com/presentation/d/1FCsI_X8tD3u5naij2apyzmYOBBsfd6xVWMV76y1JEqI)
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/4cqbblDhhGc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+
+#### Neural Segmentation {-}
+
+Arguably the most common application of ML to earth observation imagery is pixel level segmentation and regression. With neural networks, a whole new set of techniques are possible that eclipse existing methods in terms of generality, but come with their own set of challenges. Learn applications and training regimens ranging from supervised to fully unsupervised.
+
+[companion slides](https://docs.google.com/presentation/d/1LRhtWkSLcFh0LPlWaOnHYlQUIDoCTaLIW-DY07E_wMA)
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/EtxJY2Zo_-g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+
+### Arrays and Matrices {-}
+
+Overview of array and matrix operations the Earth Engine way. Topics include linear modeling, matrix solving, eigen analysis, covariance reducers.
+
+[companion slides](https://docs.google.com/presentation/d/1lPtQPK008NkQ734wCRjHAQX2xFR3a0YZuRFX3SoOMZ0)
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-qo8L5GmKO0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+
+### Time Series Analysis {-}
+
+Overview of time series analysis the Earth Engine way. Topics covered include linear modeling, auto-correlation, cross-correlation, auto-regressive models and smoothing.
+
+[companion slides](https://docs.google.com/presentation/d/1J1rUtf-bkfaJwYJY-tU17kzKI4U8FnF7Q2_VWqWdaak/edit?usp=sharing)
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xQGNAYL7z80" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+
+### Earth Engine and the Google Cloud Platform {-}
+
+Introduction to interoperability between Earth Engine and the Google Cloud Platform.
+
+[companion slides](https://docs.google.com/presentation/d/1fEbJNe29e30s-J0vVTTLoD17nEqUUs84WNpImh6ss3U)
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CKYPhCwyoy4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+
+### Google Maps API {-}
+Create a "Hello World" Maps API webpage, and learn how to do things like change the options (background map type, initial location, etc.), overlay data and KML layers, and start to showcase your first Earth Engine maps.
+
+[companion slides](https://docs.google.com/presentation/d/1bVZcXIog-igAXkhmq8KUbOYY3IZ5xw6BRf3TVqOcSf4)
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/pJygMsGr1eY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+
+### Publishing and storytelling with your Earth Engine results {-}
+
+Get an overview of how to use Google's geo tools to tell your stories and share your data. Topics include Google Earth, Google Maps (APIs), My Maps, Tour Builder, and Street View.
+
+[companion slides](https://docs.google.com/presentation/d/13_H2ywA0MIlkhXuK-hhqB8YpO76Bqg8l0hM2xAWnvLk)
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/URXbxzaK2ZA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
+
+### Datasets {-}
+
+#### Synthetic Aperture Radar (Sentinel-1) {-}
+
+Take a deep dive into one of the more unique datasets in the Earth Engine data catalog. This session provides an introduction to Synthetic Aperture Radar (SAR) data and working with scripts analyzing Sentinel-1 SAR data.
+
+[companion slides](https://docs.google.com/presentation/d/e/2PACX-1vTT9Cw8ROlIPMgN3_k_M-zpPC97nrmuDf9dRy3q98xY-lLvi3HPlDaGbcR_pfbJNs4TBDZli9BC8WKL/pub?start=false&loop=false&delayms=3000)
+
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/KYi6V1W28UM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>

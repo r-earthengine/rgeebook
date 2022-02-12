@@ -11,18 +11,18 @@ source("common.R")
 
 Machine Learning (ML) in Earth Engine is supported with:
 
-  - EE API methods in the __ee$Classifier__, __ee$Clusterer__, or __ee$Reducer__ packages for training and inference within Earth Engine Engine..
-  - Export and import functions for TFRecord files to facilitate TensorFlow model development. Inference using data in Earth Engine and a trained model hosted on Google's AI Platform is supported with the __ee$Model__ package.
+  - EE API methods in the `ee$Classifier`, `ee$Clusterer`, or `ee$Reducer` packages for training and inference within Earth Engine Engine..
+  - Export and import functions for TFRecord files to facilitate TensorFlow model development. Inference using data in Earth Engine and a trained model hosted on Google's AI Platform is supported with the `ee$Model` package.
 
 ### EE API methods  {-}
 
-Training and inference using ee.Classifier or ee.Clusterer is generally effective up to a request size of approximately 100 megabytes. As a very rough guideline, assuming 32-bit (i.e. float) precision, this can accommodate training datasets that satisfy (where n is number of examples and b is the number of bands):
+Training and inference using `ee$Classifier` or `ee$Clusterer` is generally effective up to a request size of approximately 100 megabytes. As a very rough guideline, assuming 32-bit (i.e. float) precision, this can accommodate training datasets that satisfy (where n is number of examples and b is the number of bands):
 $$ nb ≤ (100 * 2^{20}) / 4 $$
 
-This is only an approximate guideline due to additional overhead around the request, but note that for $b = 100$ (i.e. you have 100 properties used for prediction), $n ≅ 200,000$. Since Earth Engine processes 256x256 image tiles, inference requests on imagery must have $b < 400$ (again assuming 32-bit precision of the imagery). Examples of machine learning using the Earth Engine API can be found on the [Supervised Classification]() page or the [Unsupervised Classification]() page. Regression is generally performed with an __ee$Reducer__ as described on [this page](), but see also __ee$Reducer$RidgeRegression__.
+This is only an approximate guideline due to additional overhead around the request, but note that for $b = 100$ (i.e. you have 100 properties used for prediction), $n ≅ 200,000$. Since Earth Engine processes 256x256 image tiles, inference requests on imagery must have $b < 400$ (again assuming 32-bit precision of the imagery). Examples of machine learning using the Earth Engine API can be found on the [Supervised Classification]() page or the [Unsupervised Classification]() page. Regression is generally performed with an `ee$Reducer` as described on [this page](), but see also `ee$Reducer$RidgeRegression`.
 
 ### TensorFlow
-If you require more complex models, larger training datasets, more input properties or longer training times, then [TensorFlow]() is a better option. TensorFlow models are developed, trained and deployed outside Earth Engine. For easier interoperability, the Earth Engine API provides methods to import/export data in [TFRecord]() format. This facilitates generating training/evaluation data in Earth Engine and exporting them to a format where they can be readily consumed by a TensorFlow model. To perform prediction with a trained TensorFlow model, you can either export imagery in TFRecord format then import the predictions (also in TFRecord) to Earth Engine, or you can [deploy your trained model to Google AI Platform]() and perform inference directly in Earth Engine using __ee$Model$fromAiPlatformPredictor__.
+If you require more complex models, larger training datasets, more input properties or longer training times, then [TensorFlow]() is a better option. TensorFlow models are developed, trained and deployed outside Earth Engine. For easier interoperability, the Earth Engine API provides methods to import/export data in [TFRecord]() format. This facilitates generating training/evaluation data in Earth Engine and exporting them to a format where they can be readily consumed by a TensorFlow model. To perform prediction with a trained TensorFlow model, you can either export imagery in TFRecord format then import the predictions (also in TFRecord) to Earth Engine, or you can [deploy your trained model to Google AI Platform]() and perform inference directly in Earth Engine using `ee$Model$fromAiPlatformPredictor`.
 
 See [the TensorFlow page]() for details and example workflows.
 
@@ -51,9 +51,9 @@ embed_youtube("NPplRtH2N94")
 ```
 </center>
 
-The training data is a **FeatureCollection** with a property storing the class label and properties storing predictor variables. Class labels should be consecutive, integers starting from 0. If necessary, use **remap()** to convert class values to consecutive integers. The predictors should be numeric.
+The training data is a `FeatureCollection` with a property storing the class label and properties storing predictor variables. Class labels should be consecutive, integers starting from 0. If necessary, use `remap()` to convert class values to consecutive integers. The predictors should be numeric.
 
-Training and/or validation data can come from a variety of sources. To collect training data interactively in Earth Engine, you can use the geometry drawing tools (see the [geometry tools section of the Code Editor page]()). Alternatively, you can import predefined training data from an Earth Engine table asset (see the [Importing Table Data page]() for details). Get a classifier from one of the constructors in __ee$Classifier__. Train the classifier using __classifier$train()__. Classify an **Image** or __FeatureCollection__ using **classify()**. The following example uses a Classification and Regression Trees (CART) classifier ([Breiman et al. 1984]()) to predict three simple classes:
+Training and/or validation data can come from a variety of sources. To collect training data interactively in Earth Engine, you can use the geometry drawing tools (see the [geometry tools section of the Code Editor page]()). Alternatively, you can import predefined training data from an Earth Engine table asset (see the [Importing Table Data page]() for details). Get a classifier from one of the constructors in `ee$Classifier`. Train the classifier using `classifier$train()`. Classify an `Image` or `FeatureCollection` using `classify()`. The following example uses a Classification and Regression Trees (CART) classifier ([Breiman et al. 1984]()) to predict three simple classes:
 
 ```{r, eval=FALSE}
 library(rgee)
@@ -114,7 +114,7 @@ Map
 <img src="./images/chapter_06/figure_01.png" width=95%>
 </center>
 
-In this example, the training points in the table store only the class label. Note that the training property (**'landcover'**) stores consecutive integers starting at 0 (Use [remap()]() on your table to turn your class labels into consecutive integers starting at zero if necessary). Also note the use of __image$sampleRegions()__ to get the predictors into the table and create a training dataset. To train the classifier, specify the name of the class label property and a list of properties in the training table which the classifier should use for predictors. The number and order of the bands in the image to be classified must exactly match the order of the properties list provided to __classifier$train()__. Use __image$select()__ to ensure that the classifier schema matches the image.
+In this example, the training points in the table store only the class label. Note that the training property (`'landcover'`) stores consecutive integers starting at 0 (Use [`remap()`]() on your table to turn your class labels into consecutive integers starting at zero if necessary). Also note the use of `image$sampleRegions()` to get the predictors into the table and create a training dataset. To train the classifier, specify the name of the class label property and a list of properties in the training table which the classifier should use for predictors. The number and order of the bands in the image to be classified must exactly match the order of the properties list provided to `classifier$train()`. Use `image$select()` to ensure that the classifier schema matches the image.
 
 If the training data are polygons representing homogeneous regions, every pixel in each polygon is a training point. You can use polygons to train as illustrated in the following example:
 
@@ -183,7 +183,7 @@ This example uses a Support Vector Machine (SVM) classifier ([Burges 1998](http:
 
 ## Accuracy Assessment
 
-To assess the accuracy of a classifier, use a **ConfusionMatrix** ([Stehman 1997](http://www.sciencedirect.com/science/article/pii/S0034425797000837)). The following example uses **sample()** to generate training and validation data from a MODIS reference image and compares confusion matrices representing training and validation accuracy:
+To assess the accuracy of a classifier, use a `ConfusionMatrix` ([Stehman 1997](http://www.sciencedirect.com/science/article/pii/S0034425797000837)). The following example uses `sample()` to generate training and validation data from a MODIS reference image and compares confusion matrices representing training and validation accuracy:
 
 ```{r, eval=FALSE}
 library(rgee)
@@ -246,19 +246,408 @@ Map$addLayer(classified,
              'deforestation');
 ```
 
+This example uses a random forest ([Breiman 2001]()) classifier with 10 trees to downscale MODIS data to Landsat resolution. The `sample()` method generates two random samples from the MODIS data: one for training and one for validation. The training sample is used to train the classifier. You can get resubstitution accuracy on the training data from `classifier$confusionMatrix()`. To get validation accuracy, classify the validation data. This adds a `classification` property to the validation `FeatureCollection`. Call `errorMatrix()` on the classified `FeatureCollection` to get a confusion matrix representing validation (expected) accuracy.
 
-# Unsupervised Classification Algorithms 
+Inspect the output to see that the overall accuracy estimated from the training data is much higher than the validation data. The accuracy estimated from training data is an overestimate because the random forest is “fit” to the training data. The expected accuracy on unknown data is lower, as indicated by the estimate from the validation data.
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+You can also take a single sample and partition it with the `randomColumn()` method on feature collections. Continuing the previous example:
 
-# TensorFlow models 
+```{js}
+var sample = input.addBands(modis).sample({
+  numPixels: 5000,
+  seed: 0
+});
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+// The randomColumn() method will add a column of uniform random
+// numbers in a column named 'random' by default.
+sample = sample.randomColumn();
 
-# TensorFlow examples workflows
+var split = 0.7;  // Roughly 70% training, 30% testing.
+var training = sample.filter(ee.Filter.lt('random', split));
+var validation = sample.filter(ee.Filter.gte('random', split));
+```
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+You may also want to ensure that the training samples are uncorrelated with the evaluation samples. This might result from spatial autocorrelation of the phenomenon being predicted. One way to exclude samples that might be correlated in this manner is to remove samples that are within some distance to any other sample(s). This can be accomplished with a spatial join:
 
-# TFRecord data format
+```{js}
+// Sample the input imagery to get a FeatureCollection of training data.
+var sample = input.addBands(modis).sample({
+  region: roi,
+  numPixels: 5000,
+  seed: 0,
+  geometries: true,
+  tileScale: 16
+});
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+// The randomColumn() method will add a column of uniform random
+// numbers in a column named 'random' by default.
+sample = sample.randomColumn();
+
+var split = 0.7;  // Roughly 70% training, 30% testing.
+var training = sample.filter(ee.Filter.lt('random', split));
+print(training.size());
+var validation = sample.filter(ee.Filter.gte('random', split));
+
+// Spatial join.
+var distFilter = ee.Filter.withinDistance({
+  distance: 1000,
+  leftField: '.geo',
+  rightField: '.geo',
+  maxError: 10
+});
+
+var join = ee.Join.inverted();
+
+// Apply the join.
+training = join.apply(training, validation, distFilter);
+print(training.size());
+```
+
+In the previous snippet, note that `geometries` is set to `true` in `sample()`. This is to retain the spatial information of the sample points needed for a spatial join. Also note that `tileScale` is set to `16`. This is to avoid the "User memory limit exceeded" error.
+
+# Unsupervised Classification Algorithms {-}
+
+## Unsupervised Classification (clustering) {-}
+
+The `ee$Clusterer` package handles unsupervised classification (or clustering) in Earth Engine. These algorithms are currently based on the algorithms with the same name in [Weka](http://www.cs.waikato.ac.nz/ml/weka/). More details about each `Clusterer` are available in the reference docs in the Rstudio.
+
+Clusterers are used in the same manner as classifiers in Earth Engine. The general workflow for clustering is:
+
+  1. Assemble features with numeric properties in which to find clusters.
+  2. Instantiate a clusterer. Set its parameters if necessary.
+  3. Train the clusterer using the training data.
+  4. Apply the clusterer to an image or feature collection.
+  5. Label the clusters.
+
+The training data is a `FeatureCollection` with properties that will be input to the clusterer. Unlike classifiers, there is no input class value for an `Clusterer`. Like classifiers, the data for the train and apply steps are expected to have the same number of values. When a trained clusterer is applied to an image or table, it assigns an integer cluster ID to each pixel or feature.
+
+Here is a simple example of building and using an `ee$Clusterer`:
+
+```{js}
+// Load a pre-computed Landsat composite for input.
+var input = ee.Image('LANDSAT/LE7_TOA_1YEAR/2001');
+
+// Define a region in which to generate a sample of the input.
+var region = ee.Geometry.Rectangle(29.7, 30, 32.5, 31.7);
+
+// Display the sample region.
+Map.setCenter(31.5, 31.0, 8);
+Map.addLayer(ee.Image().paint(region, 0, 2), {}, 'region');
+
+// Make the training dataset.
+var training = input.sample({
+  region: region,
+  scale: 30,
+  numPixels: 5000
+});
+
+// Instantiate the clusterer and train it.
+var clusterer = ee.Clusterer.wekaKMeans(15).train(training);
+
+// Cluster the input using the trained clusterer.
+var result = input.cluster(clusterer);
+
+// Display the clusters with random colors.
+Map.addLayer(result.randomVisualizer(), {}, 'clusters');
+```
+
+Please note:
+
+  - The same inputs should always produce the same outputs, but reordering the inputs can change the results.
+  - Training with as few as 10 bands * 100k points can produce an Out Of Memory error.
+  - Cobweb can can take a long time to finish and can produce a large number of clusters.
+  - The output clusters and their IDs are dependent on the algorithm and inputs.
+
+# TensorFlow models {-}
+
+## TensorFlow and Earth Engine {-}
+
+[TensorFlow]() is an open source ML platform that supports advanced ML methods such as deep learning. This page describes TensorFlow specific features in Earth Engine. Although TensorFlow models are developed and trained outside Earth Engine, the Earth Engine API provides methods for exporting training and testing data in TFRecord format and importing/exporting imagery in TFRecord format. See [the TensorFlow examples page]() for more information about how to develop pipelines for using TensorFlow with data from Earth Engine. See [the TFRecord page]() to learn more about how Earth Engine writes data to TFRecord files.
+
+### ee$Model {-}
+
+The `ee$Model` package handles interaction with TensorFlow backed machine learning models.
+
+#### Interacting with models hosted on AI Platform {-}
+
+A new `ee$Model` instance can be created with `ee$Model$fromAiPlatformPredictor()`. This is an `ee$Model` object that packages Earth Engine data into tensors, forwards them as predict requests to [Google AI Platform]() then automatically reassembles the responses into Earth Engine data types. Note that depending on the size and complexity of your model and its inputs, you may wish to [adjust the minimum node size]() of your AI Platform model to accommodate a high volume of predictions.
+
+Earth Engine requires AI Platform models to use TensorFlow's [SavedModel]() format. Before a hosted model can interact with Earth Engine, its inputs/outputs need to be compatible with the TensorProto interchange format, specifically serialized TensorProtos in base64. To make this easier, the Earth Engine CLI has the `model prepare` command that wraps an existing SavedModel in the required operations to convert input/output formats.
+
+To use a model with `ee$Model$fromAiPlatformPredictor()`, you must have sufficient permissions to use the model. Specifically, you (or anyone who uses the model) needs at least the `ML Engine Model User role`. You can inspect and set model permissions from the `models page of the Cloud Console`.
+
+#### Regions {-}
+
+You should use regional endpoints for your models, specifying the region at model creation, version creation and in `ee$Model$fromAiPlatformPredictor()`. Any region will work (don't use global), but `us-central1` is preferred. Don't specify the `REGIONS` parameter. If you are are creating a model from the [Cloud Console](), ensure the regional box is checked.
+
+### Costs {-}
+
+#### Image Predictions {-}
+
+Use `model$predictImage()` to make predictions on an `ee$Image` using a hosted model. The return type of `predictImage()` is an `ee$Image` which can be added to the map, used in other computations, exported, etc. Earth Engine will automatically tile the input bands and adjust the output projection for scale changes and overtiling as needed. (See [the TFRecord doc]() for more information on how tiling works). Note that Earth Engine will always forward 3D tensors to your model even when bands are scalar (the last dimension will be 1).
+
+Nearly all convolutional models will have a fixed input projection (that of the data on which the model was trained). In this case, set the `fixInputProj` parameter to **true** in your call to `ee$Model$fromAiPlatformPredictor()`. When visualizing predictions, use caution when zooming out on a model that has a fixed input projection. This is for the same reason as `described here`. Specifically, zooming to a large spatial scope can result in requests for too much data and may manifest as slowdowns or rejections by AI Platform.
+
+# TensorFlow examples workflows {-}
+
+This page has example workflows to demonstrate uses of TensorFlow with Earth Engine. See [the TensorFlow page]() for more details. These examples are written using the [Earth Engine Python API]() and TensorFlow running in [Colab Notebooks]().
+
+### Costs {-}
+
+Warning! These guides use billable components of Google Cloud including:
+
+  -  Platform Training (pricing)
+  - AI Platform Prediction (pricing)
+  - Cloud Storage (pricing)
+  
+You can use the Pricing Calculator to generate a cost estimate based on your projected usage.
+
+### Multi-class prediction with a DNN {-}
+
+A "deep" neural network (DNN) is simply an artificial neural network (ANN) with one or more hidden layers. This example demonstrates a very simple DNN with a single hidden layer. The DNN takes spectral vectors as inputs (i.e. one pixel at a time) and outputs a single class label and class probabilities per pixel. The Colab notebook below demonstrates creating the DNN, training it with data from Earth Engine, making predictions on exported imagery and importing the predictions to Earth Engine.
+
+<div class="devsite-table-wrapper">
+  <table class="ee-notebook-buttons">
+    <td>
+      <a class="button" target="_blank" href="https://colab.research.google.com/github/google/earthengine-api/blob/master/python/examples/ipynb/TF_demo1_keras.ipynb">
+        <img src="/earth-engine/images/colab_logo_32px.png" alt="Colab logo" /> Run in Google Colab
+      </a>
+    </td>
+    <td>
+      <a class="button" target="_blank" href="https://github.com/google/earthengine-api/blob/master/python/examples/ipynb/TF_demo1_keras.ipynb">
+        <img src="/earth-engine/images/GitHub-Mark-32px.png" alt="GitHub logo" /> View source on GitHub
+      </a>
+    </td>
+  </table>
+</div>
+
+### Hostable DNN for prediction in Earth Engine {-}
+
+To get predictions from your trained model directly in Earth Engine (e.g. in the Rstudio), you need to host the model on `Google AI Platform`. This guide demonstrates how to save a trained model in [`SavedModel`]() format, prepare the model for hosting with the `earthengine model prepare` command, and get predictions in Earth Engine interactively with `ee$Model$fromAiPlatformPredictor`.
+
+<div class="devsite-table-wrapper">
+  <table class="ee-notebook-buttons">
+    <td>
+      <a class="button" target="_blank" href="https://colab.research.google.com/github/google/earthengine-api/blob/master/python/examples/ipynb/Earth_Engine_TensorFlow_AI_Platform.ipynb">
+        <img src="/earth-engine/images/colab_logo_32px.png" alt="Colab logo" /> Run in Google Colab
+      </a>
+    </td>
+    <td>
+      <a class="button" target="_blank" href="https://github.com/google/earthengine-api/blob/master/python/examples/ipynb/Earth_Engine_TensorFlow_AI_Platform.ipynb">
+        <img src="/earth-engine/images/GitHub-Mark-32px.png" alt="GitHub logo" /> View source on GitHub
+      </a>
+    </td>
+  </table>
+</div>
+
+### Logistic regression the TensorFlow way {-}
+
+Classical machine learning methods such as logistic regression are natural to implement in TensorFlow. This notebook demonstrates a logistic regression based deforestation detector from before and after annual composites. Note that this very simplistic model is just for demonstration purposes; add a few hidden layers for higher accuracy.
+
+<div class="devsite-table-wrapper">
+  <table class="ee-notebook-buttons">
+    <td>
+      <a class="button" target="_blank" href="https://colab.research.google.com/github/google/earthengine-api/blob/master/python/examples/ipynb/Earth_Engine_TensorFlow_logistic_regression.ipynb">
+        <img src="/earth-engine/images/colab_logo_32px.png" alt="Colab logo" /> Run in Google Colab
+      </a>
+    </td>
+    <td>
+      <a class="button" target="_blank" href="https://github.com/google/earthengine-api/blob/master/python/examples/ipynb/Earth_Engine_TensorFlow_logistic_regression.ipynb">
+        <img src="/earth-engine/images/GitHub-Mark-32px.png" alt="GitHub logo" /> View source on GitHub
+      </a>
+    </td>
+  </table>
+</div>
+
+### Regression with an FCNN {-}
+
+A "convolutional" neural network (CNN) contains one or more convolutional layers, in which inputs are neighborhoods of pixels, resulting in a network that is not fully-connected, but is suited to identifying spatial patterns. A fully convolutional neural network (FCNN) does not contain a fully-connected layer as output. This means that it does not learn a global output (i.e. a single output per image), but rather localized outputs (i.e. per-pixel).
+
+This Colab notebook demonstrates the use of the [UNET model](), an FCNN developed for medical image segmentation, for predicting a continuous [0,1] output in each pixel from 256x256 neighborhoods of pixels. Specifically, this example shows how to export patches of data to train the network and how to overtile image patches for inference, to eliminate tile boundary artifacts.
+
+<div class="devsite-table-wrapper">
+  <table class="ee-notebook-buttons">
+    <td>
+      <a class="button" target="_blank" href="https://colab.research.google.com/github/google/earthengine-api/blob/master/python/examples/ipynb/UNET_regression_demo.ipynb">
+        <img src="/earth-engine/images/colab_logo_32px.png" alt="Colab logo" /> Run in Google Colab
+      </a>
+    </td>
+    <td>
+      <a class="button" target="_blank" href="https://github.com/google/earthengine-api/blob/master/python/examples/ipynb/UNET_regression_demo.ipynb">
+        <img src="/earth-engine/images/GitHub-Mark-32px.png" alt="GitHub logo" /> View source on GitHub
+      </a>
+    </td>
+  </table>
+</div>
+
+### Training on AI Platform {-}
+
+For relatively large models (like the FCNN example), the longevity of the free virtual machine on which Colab notebooks run may not be sufficient for a long-running training job. Specifically, if the expected prediction error is not minimized on the evaluation dataset, then more training iterations may be prudent. For performing large training jobs in the Cloud, this Colab notebook demonstrates how to [package your training code, start a training job](), prepare a [`SavedModel`]() with the `earthengine model prepare` command, and get predictions in Earth Engine interactively with `ee$Model$fromAiPlatformPredictor`.
+
+<div class="devsite-table-wrapper">
+  <table class="ee-notebook-buttons">
+    <td>
+      <a class="button" target="_blank" href="https://colab.research.google.com/github/google/earthengine-api/blob/master/python/examples/ipynb/AI_platform_demo.ipynb">
+        <img src="/earth-engine/images/colab_logo_32px.png" alt="Colab logo" /> Run in Google Colab
+      </a>
+    </td>
+    <td>
+      <a class="button" target="_blank" href="https://github.com/google/earthengine-api/blob/master/python/examples/ipynb/AI_platform_demo.ipynb">
+        <img src="/earth-engine/images/GitHub-Mark-32px.png" alt="GitHub logo" /> View source on GitHub
+      </a>
+    </td>
+  </table>
+</div>
+
+# TFRecord data format {-}
+
+## TFRecord and Earth Engine {-}
+
+[TFRecord]() is a binary format for efficiently encoding long sequences of [tf.Example protos](). TFRecord files are easily loaded by TensorFlow through the `tf.data` package as described [here]() and [here](). This page describes how Earth Engine converts between `ee$FeatureCollection` or `ee$Image` and TFRecord format.
+
+
+### Exporting data to TFRecord {-}
+
+You can export tables (`ee$FeatureCollection`) or images (`ee$Image`) to TFRecord files in Google Drive or Cloud Storage. Configuration of the export depends on what you are exporting as described below. All numbers exported from Earth Engine to TFRecord are coerced to float type.
+
+#### Exporting tables {-}
+
+When exporting an `ee$FeatureCollection` to a TFRecord file, there is a 1:1 correspondence between each [`ee$Feature`]() in the table and each [`tf$train$Example`]() (i.e. each record) in the TFRecord file. Each property of the `ee$Feature` is encoded as a [`tf$train$Feature`]() with a list of floats corresponding to the number or `ee$Array` stored in the property. If you export a table with arrays in the properties, you need to tell TensorFlow the shape of the array when it is read. A table exported to a TFRecord file will always be compressed with the GZIP compression type. You always get exactly one TFRecord file for each export.
+
+The following example demonstrates parsing data from an exported table of scalar properties ('B2',...,'B7', 'landcover'). Note that the dimension of the float lists is `[1]` and the type is `tf$float32`:
+
+```{python}
+dataset = tf.data.TFRecordDataset(exportedFilePath)
+
+featuresDict = {
+  'B2': tf.io.FixedLenFeature(shape=[1], dtype=tf.float32),
+  'B3': tf.io.FixedLenFeature(shape=[1], dtype=tf.float32),
+  'B4': tf.io.FixedLenFeature(shape=[1], dtype=tf.float32),
+  'B5': tf.io.FixedLenFeature(shape=[1], dtype=tf.float32),
+  'B6': tf.io.FixedLenFeature(shape=[1], dtype=tf.float32),
+  'B7': tf.io.FixedLenFeature(shape=[1], dtype=tf.float32),
+  'landcover': tf.io.FixedLenFeature(shape=[1], dtype=tf.float32)
+}
+
+parsedDataset = dataset.map(lambda example: tf.io.parse_single_example(example, featuresDict))
+        
+```
+
+Note that this example illustrates reading scalar features (i.e. `shape=[1]`). If you are exporting 2D or 3D arrays (e.g. image patches), then you would specify the shape of your patches at parse time, for example `shape=[16, 16]` for a 16x16 pixel patch.
+
+#### Exporting images {-}
+
+When you export an image, the data are ordered as channels, height, width (CHW). The export may be split into multiple TFRecord files with each file containing one or more patches of size `patchSize`, which is user specified in the export. The size of the files in bytes is user specified in the `maxFileSize` parameter. There is a 1:1 correspondence between each patch and each [`tf$train$Example`]() in the resulting TFRecord file. Each band of the image is stored as a separate [`tf.train.Feature`]() in each `tf$train$Example`, where the length of the float list stored in each feature is the patch width * height. The flattened lists can be split into multiple individual pixels as shown in [this example](). Or the shape of the exported patch can be recoved as in [this example]().
+
+To help reduce edge effects, the exported patches can overlap. Specifically, you can specify a `kernelSize` which will result in tiles of size:
+
+```{python}
+[patchSize[0] + kernelSize[0], patchSize[1] + kernelSize[1]]
+    
+```
+
+Each tile overlaps adjacent tiles by [`kernelSize[0]/2, kernelSize[1]/2`]. As a result, a kernel of size `kernelSize` centered on an edge pixel of a patch of size `patchSize` contains entirely valid data. The spatial arrangement of the patches in space is illustrated by Figure 1, where Padding Dimension corresponds to the part of the kernel that overlaps the adjacent image:
+
+<center>
+<img src="./images/chapter_06/figure_TFR_01.png" width=50%>
+</center>
+
+Figure 1. How image patches are exported. The Padding Dimension is kernelSize/2.
+
+##### formatOptions {-}
+
+The `patchSize`, `maxFileSize`, and `kernelSize` parameters are passed to the `ee_Export`(R) call through a `formatOptions` dictionary, where keys are the names of additional parameters passed to `Export`. Possible `formatOptions` for an image exported to TFRecord format are:
+
+<table>
+      <tr><th>Property</th><th>Description</th><th>Type</th></tr>
+      <tr>
+        <td><code translate="no" dir="ltr">patchDimensions</code></td>
+        <td>Dimensions tiled over the export area, covering every pixel in the bounding box
+          exactly once (except when the patch dimensions do not evenly divide the bounding box
+          in which case border tiles along the greatest x/y edges will be dropped). Dimensions
+          must be > 0.</td>
+        <td>Array&lt;int&gt;[2].</td>
+      </tr>
+      <tr>
+        <td><code translate="no" dir="ltr">kernelSize</code></td>
+        <td>If specified, tiles will be buffered by the margin dimensions both positively
+          and negatively, resulting in overlap between neighboring patches.  If specified,
+          two dimensions must be provided (X and Y, respectively).
+        </td>
+        <td>Array&lt;int&gt;[2].  Default: [1, 1]</td>
+      </tr>
+      <tr>
+        <td><code translate="no" dir="ltr">compressed</code></td>
+        <td>If true, compresses the .tfrecord files with gzip and appends the ".gz" suffix</td>
+        <td>Boolean.  Default: true</td>
+      </tr>
+      <tr>
+        <td><code translate="no" dir="ltr">maxFileSize</code></td>
+        <td>Maximum size, in bytes, for an exported .tfrecord (before compression).  A smaller
+          file size will result in greater sharding (and, thus, more output files).</td>
+        <td>Int.  Default: 1 GiB</td>
+      </tr>
+      <tr>
+        <td><code translate="no" dir="ltr">defaultValue</code></td>
+        <td>The value set in each band of a pixel that is partially or completely masked, and
+          the value set at each value in an output 3D feature made from an array band where
+          the array length at the source pixel was less than the depth of the feature value (i.e.
+          the value at index 3 of an array pixel of length 2 in an array band with a
+          corresponding feature depth of 3). The fractional part is dropped for integer type
+          bands, and clamped to the range of the band type. Defaults to 0.</td>
+        <td>Int.  Default: 0</td>
+      </tr>
+      <tr>
+        <td><code translate="no" dir="ltr">tensorDepths</code></td>
+        <td>Mapping from the names of input array bands to the depth of the 3D tensors they
+          create. Arrays will be truncated, or padded with default values to fit the shape
+          specified. For each array band, this must have a corresponding entry.
+        </td>
+        <td>Array&lt;int&gt;[].  Default: []</td>
+      </tr>
+      <tr>
+        <td><code translate="no" dir="ltr">sequenceData</code></td>
+        <td>If true, each pixel is output as a SequenceExample mapping scalar bands to the
+          context and array bands to the example’s sequences. The SequenceExamples are output
+          in row-major order of pixels in each patch, and then by row-major order of area
+          patches in the file sequence.</td>
+        <td>Boolean.  Default: false</td>
+      </tr>
+      <tr>
+        <td><code translate="no" dir="ltr">collapseBands</code></td>
+        <td>
+          If true, all bands will be combined into a single 3D tensor, taking on the name of
+          the first band in the image. All bands are promoted to bytes, int64s, then floats in
+          that order depending on the type furthest in that equence within all bands.  Array
+          bands are allowed as long as tensor_depths is specified.</td>
+        <td>Boolean.  Default: false</td>
+      </tr>
+      <tr>
+        <td><code translate="no" dir="ltr">maskedThreshold</code></td>
+        <td>Maximum allowed proportion of masked pixels in a patch. Patches which exceed this
+          allowance will be dropped rather than written to files. If this field is set to
+          anything but 1, the JSON sidecar will not be produced.  Defaults to 1.</td>
+        <td>Float.  Default: 1</td>
+      </tr>
+    </table>
+
+##### The TFRecord “mixer” file {-}
+
+When you export to TFRecord, Earth Engine will generate a sidecar with your TFRecord files called the “mixer.” This is a simple JSON file used to define the spatial arrangement of the patches (i.e. georeferencing). This file is needed for uploading predicions made on the imagery as described in the `next section`.
+
+##### Exporting Time Series {-}
+
+Image exports to both Examples and SequenceExamples are supported. When you export to Examples, the export region is cut into patches and those patches are exported in row-major order to some number of .tfrecord files with each band its own feature (unless you specify `collapseBands`). When you export to SequenceExamples, a SequenceExample per-pixel will be exported, with those SequenceExamples in row-major order within a patch, and then in row-major order of patches in the original export region (if you’re ever unsure, always assume things will be in row-major order in some capacity). Note: any scalar bands of an image will be packed into the context of a SequenceExample, while the array bands will become the actual sequence data.
+
+##### Array Bands {-}
+
+Array bands are exportable when an image is exported to TFRecord format. Export of array bands provides a means to populate the “FeatureLists” of SequenceExamples, and a way to create 3D tensors when exporting to regular Examples. For information on how the lengths/depths of array bands are managed, see `collapseBands` and/or `tensorDepths` in the table above. Note: usage of `collapseBands` and export to SequenceExamples (so setting the parameter `sequenceData`) will result in all bands being collapsed to a single time series per-pixel.
+
+### Uploading TFRecords to Earth Engine {-}
+
+You can upload tables ([command line]() only) and images to Earth Engine as TFRecord files. For tables, the 1:1 relationship [described previously]() applies in the reverse direction (i.e. `tf$train$Example` -> `ee$Feature`).
+
+#### Uploading imagery {-}
+
+If you generate predictions on exported imagery, supply the mixer when you upload the predictions (as TFRecord files) to obtain georeferenced imagery. Note that the overlapping portion of the patches (Padding Dimension in Figure 1) will be discarded to result in conterminous coverage of the exported region. The predictions should be arranged as a `tf$train$Example` sequence of the same number and order as your originally exported image examples (even between an arbitrary number of files).
+
