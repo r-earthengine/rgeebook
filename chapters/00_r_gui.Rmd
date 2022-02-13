@@ -9,7 +9,7 @@ source("common.R")
 
 ## R Guides {-}
 
-The guides are written primarily for R in the [Rstudio](). The [R Quickstart]() guide and the [tutorials]() describe basic concepts and example workflows to help beginning users.
+The guides are written primarily for R with [Rstudio](). The [R Quickstart]() guide and the [tutorials]() describe basic concepts and example workflows to help beginning users.
 
 The [Best Practices]() and [Debugging]() guides have more complex examples and provide techniques useful for overcoming errors and scaling your Earth Engine analyses to larger areas, longer time series and more data. More advanced [Earth Engine concepts]() provide necessary background for understanding how the Earth Engine service works and writing effective code.
 
@@ -24,4 +24,4 @@ The remainder of the guides are intended to illustrate important concepts about 
   - [`Join`](), or how to combine datasets (`Image` or `Feature` collections) based on time, location, or an attribute property.
   - [`Array`](), for multi-dimensional analyses.
   
-There are also sections for machine learning, specialized or sensor specific algorithms (e.g. Landsat algorithms), and Code Editor specific features such as Chart, Earth Engine apps, and data (asset) management.
+There are also sections for machine learning, specialized or sensor specific algorithms (e.g. Landsat algorithms), and Rstudio addins, Earth Engine apps, and data (asset) management.
