@@ -1762,12 +1762,403 @@ The GSW data described in this tutorial were produced under the [Copernicus Prog
 
 If you are using the data as a layer in a published map, please include the following attribution text:
 
-### Get access to Earth Engine {}
+### Get access to Earth Engine {-}
 
 Access to Earth Engine is free, but requires signup. To get access, please fill out our [Earth Engine signup form](https:#earthengine.google.com/signup) to apply for an Evaluator account. Those granted access will receive an email within a few business days with further instructions.
 
 Once you're familiar with the Rstudio, [get started on the tutorial]()!
 
+## Water Occurrence (1984-2015) {-}
+
+The GSW dataset contains many data layers that present the surface water data in different ways. We will start by visualizing the water occurrence layer, which provides a summary of where and how often surface water occurred over the entire time-period between March 1984 and October 2015.
+
+This section of the tutorial will:
+
+  1. add a map layer for visualizing surface water occurrence,
+  2. show how to query values of the map layer,
+  3. add custom styling to improve the visualization,
+  4. create a binary water mask layer using a threshold value,
+  5. center the map on interesting parts of the world, and
+  6. show how to refactor the script to make it more readable and maintainable.
+  
+### Creating a Basic Visualization {-}
+
+Start by copying the following statements into the Code Editor:
+
+```{r}
+gsw <- ee$Image('JRC/GSW1_0/GlobalSurfaceWater')
+occurrence <- gsw$select('occurrence')
+Map$addLayer(occurrence)
+```
+
+The first statement references the Earth Engine [Image object]() for the GSW dataset, and stores it in a variable named `gsw`. The second statement selects a single layer of the GSW dataset, and stores it in a variable called `occurrence`. The third statement adds the occurrence image to the Rstudio's interactive map.
+
+Click on the Rstudio's "Run" button, and after a few seconds you should see a map with grey coloring along the coastlines, similar to Figure 1.
+
+<center>
+<img src="./images/chapter_03/figure_GSW_01.png" width=95%>
+</center>
+
+Figure 1. Default visualization of the global surface water occurrence data layer.
+
+In most areas, the GSW dataset appears transparent, because locations where either Landsat images were not collected (i.e. ocean areas) or where water was not detected by any observations in the 32 years are [masked out]().
+
+### Refactoring to Improve Your Code {-}
+
+Our script only contains two statements, but already we have an opportunity to refactor the code so that our final script will be easier to read and maintain over time. Currently, the `Map$addLayer()` statement passes a single argument `occurrence`, which is the Earth Engine image object that we want to display on the map. However, the `Map$addLayer()` method also allows for additional arguments to be passed to it. To quickly see what arguments are available, place your cursor after the opening parentheses and press the keyboard shortcut for "Show code suggestions" to bring up the help document for the `addLayer` method.
+
+The keyboard shortcuts show that there are five arguments that can be passed to `Map$addLayer`: `eeObject`, `visParams`, `name`, `shown`, and `opacity`. In our current script we are passing a single variable `occurrence` which is interpreted as the first argument, `eeObject`. To pass both the variable object and an additional argument that names the layer, we can refactor the code to use "named arguments" (`eeObject` and `name`) where are passed within to the method from within a [JSON data structure](http://www.w3schools.com/js/js_json_intro.asp) as shown below:
+
+```{r}
+Map$addLayer(eeObject = occurrence, name = 'Water Occurrence (1984-2015)')
+```
+
+Run the code again to make sure it still works after the refactoring changes. The resulting map should remain unchanged.
+
+### Adding Visualization Parameters {-}
+
+Next, we will work on improving upon the default visualization parameters, which are making our water appear gray. Add a new statement that creates a variable `VIS_OCCURRENCE` and pass it as an additional argument to the addLayer method.
+
+```{r}
+VIS_OCCURRENCE <- list(
+  min = 0,
+  max = 100,
+  palette = c('red', 'blue')
+)
+```
+
+```{r}
+Map$addLayer(
+  eeObject = occurrence$updateMask(occurrence$divide(100)),
+  name = 'Water Occurrence (1984-2015)',
+  visParams = VIS_OCCURRENCE
+)
+```
+
+The visualization parameters stored in JSON structure `VIS_OCCURRENCE` indicate that red should be used for a minimum value of 0% and blue for a maximum value of 100%. The addition of `$updateMask(occurrence$divide(100))` causes the opacity/transparency of the pixels to be set based on the occurrence value.
+
+Run the script again, and view the revised results from our styling changes.
+
+<center>
+<img src="./images/chapter_03/figure_GSW_02.png" width=95%>
+</center>
+
+Figure 2. Screenshot of water occurrence for the Paraná Delta near Buenos Aires, using a transparent red color for the 0% minimum value endpoint and a solid blue color for the maximum value endpoint.
+
+The water areas are now blue! Progress!
+
+### Creating a Threshold Layer {-}
+
+The water occurrence image contains information on how often water is expected using a range of values from 0 to 100%. However, it is often useful to define a binary water layer (i.e. "water" vs. "non-water") based on a certain percentage of occurrence (i.e. a threshold value). We will use this simple binary layer as a clean background layer over which other GSW layers can be placed. Creating this threshold layer can be done using the following statements, which uses a threshold value of 90% to separate water and non-water.
+
+First we define a new visualization variable `VIS_WATER_MASK` for holding styling information for the water mask:
+
+```{r}
+VIS_WATER_MASK <- list(
+  palette = c('white', 'black')
+)
+```
+
+Then we calculate a water mask layer using the greater than comparison operator `$gt(90)` and then set the previously masked areas to zero using the `$unmask()` method:
+
+```{r}
+# Create a water mask layer, and set the image mask so that non-water areas
+# are opaque.
+water_mask <- occurrence$gt(90)$unmask(0)
+```
+
+And finally, add the layer to the map. In order to have this layer rendered under all other layers, place the following statement before any other `Map$addLayer` statements.
+
+```{r}
+Map$addLayer(
+  eeObject = water_mask,
+  visParams = VIS_WATER_MASK,
+  name = '90% occurrence water mask'
+)
+```
+
+<center>
+<img src="./images/chapter_03/figure_GSW_03.png" width=95%>
+</center>
+
+Figure 3. Screenshot of a 90% water mask for the Paraná Delta near Buenos Aires.
+
+### Going to Interesting Parts of the World {-}
+
+It is fun to explore the world by panning and zooming around, but the world is large and sometimes it helps to jump directly to a particular location. Here is a series of statements that provide a small sample of interesting locations, in terms of surface water. Just uncomment one of the statements at a time, and your script will go to that location when it is run.
+
+```{js}
+// Uncomment one of the following statements to center the map.
+// Map.setCenter(-90.162, 29.8597, 10);   // New Orleans, USA
+// Map.setCenter(-114.9774, 31.9254, 10); // Mouth of the Colorado River, Mexico
+// Map.setCenter(-111.1871, 37.0963, 11); // Lake Powell, USA
+// Map.setCenter(149.412, -35.0789, 11);  // Lake George, Australia
+// Map.setCenter(105.26, 11.2134, 9);     // Mekong River Basin, SouthEast Asia
+// Map.setCenter(90.6743, 22.7382, 10);   // Meghna River, Bangladesh
+// Map.setCenter(81.2714, 16.5079, 11);   // Godavari River Basin Irrigation Project, India
+// Map.setCenter(14.7035, 52.0985, 12);   // River Oder, Germany & Poland
+// Map.setCenter(-59.1696, -33.8111, 9);  // Buenos Aires, Argentina
+Map.setCenter(-74.4557, -8.4289, 11);  // Ucayali River, Peru
+```
+
+This is just a small sample of interesting locations. Feel free to add your own!
+
+### Refactoring, again... {-}
+
+Before we move on to the next layer of the GSW dataset, we are going to do a little more code refactoring. Specifically, we will group our similar statements together, and add some comments that will break up our code into sections for assets, constants, calculations, centering the map and adding map layers.
+
+Here is the final refactored script:
+
+```{js}
+//////////////////////////////////////////////////////////////
+// Asset List
+//////////////////////////////////////////////////////////////
+
+var gsw = ee.Image('JRC/GSW1_0/GlobalSurfaceWater');
+var occurrence = gsw.select('occurrence');
+
+//////////////////////////////////////////////////////////////
+// Constants
+//////////////////////////////////////////////////////////////
+
+var VIS_OCCURRENCE = {
+  min: 0,
+  max: 100,
+  palette: ['red', 'blue']
+};
+var VIS_WATER_MASK = {
+  palette: ['white', 'black']
+};
+
+//////////////////////////////////////////////////////////////
+// Calculations
+//////////////////////////////////////////////////////////////
+
+// Create a water mask layer, and set the image mask so that non-water areas
+// are opaque.
+var water_mask = occurrence.gt(90).unmask(0);
+
+//////////////////////////////////////////////////////////////
+// Initialize Map Location
+//////////////////////////////////////////////////////////////
+
+// Uncomment one of the following statements to center the map.
+// Map.setCenter(-90.162, 29.8597, 10);   // New Orleans, USA
+// Map.setCenter(-114.9774, 31.9254, 10); // Mouth of the Colorado River, Mexico
+// Map.setCenter(-111.1871, 37.0963, 11); // Lake Powell, USA
+// Map.setCenter(149.412, -35.0789, 11);  // Lake George, Australia
+// Map.setCenter(105.26, 11.2134, 9);     // Mekong River Basin, SouthEast Asia
+// Map.setCenter(90.6743, 22.7382, 10);   // Meghna River, Bangladesh
+// Map.setCenter(81.2714, 16.5079, 11);   // Godavari River Basin Irrigation Project, India
+// Map.setCenter(14.7035, 52.0985, 12);   // River Oder, Germany & Poland
+// Map.setCenter(-59.1696, -33.8111, 9);  // Buenos Aires, Argentina
+Map.setCenter(-74.4557, -8.4289, 11);  // Ucayali River, Peru
+
+//////////////////////////////////////////////////////////////
+// Map Layers
+//////////////////////////////////////////////////////////////
+
+Map.addLayer({
+  eeObject: water_mask,
+  visParams: VIS_WATER_MASK,
+  name: '90% occurrence water mask',
+  shown: false
+});
+Map.addLayer({
+  eeObject: occurrence.updateMask(occurrence.divide(100)),
+  name: 'Water Occurrence (1984-2015)',
+  visParams: VIS_OCCURRENCE
+});
+```
+
+In the [next section](), you explore how water occurrence has changed over time.
+
+## Water Occurrence Change Intensity {-}
+
+The Water Occurrence Change Intensity data layer provides a measure of how surface water has changed between two epochs: 1984-1999 and 2000-2015. The layer averages the change across homologous pairs of months taken from the two epochs. See the [Data Users Guide (v2)](https://storage.googleapis.com/global-surface-water/downloads_ancillary/DataUsersGuidev2.pdf) for additional details on this layer.
+
+This section of the tutorial will:
+
+  1. add a styled map layer for visualizing water occurrence change intensity, and
+  2. summarize the change intensity in a specified region-of-interest using a histogram.
+
+### Visualization {-}
+
+Similar to the water occurrence layer, we will start by adding a basic visualization of occurrence change intensity to the map and then improve upon it. Occurrence change intensity is provided in two ways, both as absolute and normalized values. We will use the absolute values in this tutorial. Start by selecting the absolute occurrence change intensity layer from the GSW image:
+
+```{r}
+change <- gsw$select("change_abs")
+```
+
+In the Constants section of the code, add a statement that creates a new variable that defines how the layer will be styled. This styling shows areas where the surface water occurrence has decreased/increased in red/green. Areas where surface water occurrence is relatively unchanged are shown in black.
+
+```{r}
+VIS_CHANGE <- list(
+    min = -50,
+    max = 50,
+    palette = c('red', 'black', 'limegreen')
+)
+```
+
+At the end of the Map Layers section of code, add a statement that adds a new layer to the map.
+
+```{r}
+Map$setCenter(-74.4557, -8.4289, 11)  # Ucayali River, Peru
+Map$addLayer(
+  eeObject = change,
+  visParams = VIS_CHANGE,
+  name = 'occurrence change intensity'
+)
+```
+
+<center>
+<img src="./images/chapter_03/figure_GSW_04.png" width=95%>
+</center>
+
+Figure 4. Screenshot of a surface water change intensity for the Ucayali River near Pucallpa, a city in the Amazonian rainforest of eastern Peru. Red/green indicates a decrease/increase in surface water occurrence between the epochs.
+
+## Water Class Transition {-}
+
+The water transition layer captures changes between three classes of water occurrence (not water, seasonal water, and permanent water) along with two additional classes for ephemeral water (ephemeral permanent and ephemeral seasonal).
+
+This section of the tutorial will:
+
+  1. add a map layer for visualizing water transition,
+  2. create a grouped reducer for summing the area of each transition class within a specified region-of-interest, and
+  3. create a chart that summarizes the area by transition class.
+
+
+### Basic Visualization {-}
+
+In the Asset List section of the script, add the following statement which creates a single band image object called `transition`:
+
+```{r}
+transition <- gsw$select('transition')
+```
+
+The GSW images contain metadata on the transition class numbers and names, and a default palette for styling the transition classes. When the transition layer is added to the map, these visualzation parameters will be used automatically.
+
+At the bottom of the Map Layers section of your script, add the following statement which adds a new map layer that displays the transition classes:
+
+```{r}
+Map$setCenter(105.26, 11.2134, 9)     # Mekong River Basin, SouthEast Asia
+Map$addLayer(
+  eeObject = transition,
+  name = 'Transition classes (1984-2015)',
+)
+```
+
+When you run the script, the transition layer will be displayed.
+
+<center>
+<img src="./images/chapter_03/figure_GSW_05.png" width=95%>
+</center>
+
+Figure 10. Screenshot of the Mekong River delta, showing a wide variation in surface water class transitions.
+
+The map key for the transition classes is:
+
+<table border="1">
+        <tr>
+          <th>Value</th>
+          <th>Symbol</th>
+          <th>Label</th>
+        </tr>
+        <tr>
+          <td>0</td>
+          <td style="background-color: #FFFFFF;"></td>
+          <td>Not water</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td style="background-color: #0000FF;"></td>
+          <td>Permanent</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td style="background-color: #22B14C;"></td>
+          <td>New permanent</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td style="background-color: #D1102D;"></td>
+          <td>Lost permanent</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td style="background-color: #99D9EA;"></td>
+          <td>Seasonal</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td style="background-color: #B5E61D;"></td>
+          <td>New seasonal</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td style="background-color: #E6A1AA;"></td>
+          <td>Lost seasonal</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td style="background-color: #FF7F27;"></td>
+          <td>Seasonal to permanent</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td style="background-color: #FFC90E;"></td>
+          <td>Permanent to seasonal</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td style="background-color: #7F7F7F;"></td>
+          <td>Ephemeral permanent</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td style="background-color: #C3C3C3;"></td>
+          <td>Ephemeral seasonal</td>
+        </tr>
+      </table>
+      
+### Summarizing Area by Transition Class {-}
+
+In this section we will once again use the geometry polygon tool to define a region-of-interest. If you want to analyze a new location, you will want to first select and delete the original polygon that you drew so that you don't get results from the combined areas. See the [Geometry tools]() section of the Code Editor docs from information on how to modify geometries.
+
+For this example we will draw a new polygon within the Mekong River delta.
+
+<center>
+<img src="./images/chapter_03/figure_GSW_06.png" width=95%>
+</center>
+
+Figure 6. The Mekong River delta in Vietnam, with a region-of-interest created by using the Code Editor's polygon drawing tool.
+
+In order to calculate the area covered by parts of an image, we will add an additional band to the transition image object that identifies the size of each pixel in square meters using the `ee$Image$pixelArea` method.
+
+```{r}
+area_image_with_transition_class <- ee$Image$pixelArea()$addBands(transition)
+```
+
+The resulting image object (`area_image_with_transition_class`) is a two band image where the first band contains the area information in units of square meters (produced by the [`ee$Image$pixelArea` code>]() method), and the second band contains the transition class information.
+
+We then summarize the class transitions within a region of interest (`roi`) using the [`ee$Image$reduceRegion`]() method and a [grouped reducer]() which acts to sum up the area within each transition class:
+
+```{r}
+reduction_results <- area_image_with_transition_class$reduceRegion(
+  reducer = ee$Reducer$sum()$group(
+    groupField = 1,
+    groupName = 'transition_class_value',
+  ),
+  geometry = roi,
+  scale = 30,
+  bestEffort = TRUE,
+)
+print('reduction_results', paste0(ee$Dictionary$getInfo(reduction_results)))
+```
+
+
+
+# Video Tutorials {-}
 
 ## Tutorials {-}
 
