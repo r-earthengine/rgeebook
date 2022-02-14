@@ -121,7 +121,7 @@ Map$addLayer(masked, {bands = ['B4', 'B3', 'B2'], max: 0.4}, 'masked')
 
 ```
 
-If you run this example in the Code Editor, try toggling the visibility of the TOA layers to compare the difference between the masked and unmasked imagery. (See this section of the Code Editor docs for instructions on how to do that). Observe that the input to `simpleCloudScore()` is a single Landsat TOA scene. Also note that `simpleCloudScore()` adds a band called ‘cloud’ to the input image. The cloud band contains the `cloud` score from 0 (not cloudy) to 100 (most cloudy). The previous example uses an arbitrary threshold (20) on the cloud score to mask cloudy pixels. To apply this algorithm to an Earth Engine mosaic of Landsat scenes, set the `SENSOR_ID` property:
+If you run this example in the Rstudio, try toggling the visibility of the TOA layers to compare the difference between the masked and unmasked imagery. (See this section of the Rstudio docs for instructions on how to do that). Observe that the input to `simpleCloudScore()` is a single Landsat TOA scene. Also note that `simpleCloudScore()` adds a band called ‘cloud’ to the input image. The cloud band contains the `cloud` score from 0 (not cloudy) to 100 (most cloudy). The previous example uses an arbitrary threshold (20) on the cloud score to mask cloudy pixels. To apply this algorithm to an Earth Engine mosaic of Landsat scenes, set the `SENSOR_ID` property:
 
 ```{r, eval=FALSE}
 # Load a Landsat 8 composite and set the SENSOR_ID property.
@@ -270,7 +270,7 @@ Map.setCenter(-122.37383, 37.6193, 15);
 var visParams = {bands: ['B4', 'B3', 'B2'], max: 0.3};
 
 // Display the Landsat image using the default nearest neighbor resampling.
-// when reprojecting to Mercator for the Code Editor map.
+// when reprojecting to Mercator for the Rstudio map.
 Map.addLayer(landsat, visParams, 'original image');
 
 // Force the next reprojection on this image to use bicubic resampling.
@@ -293,7 +293,7 @@ The order of operations for this code sample is diagrammed in Figure 2. Specific
 <img src="./images/chapter_08/figure_RRR_02.png" width=50%>
 </center>
 
-Figure 2. Flow chart of operations when `resample()` is called on the input image prior to display in the Code Editor. Curved lines indicate the flow of information to the reprojection: specifically, the output projection, scale and resampling method to use.
+Figure 2. Flow chart of operations when `resample()` is called on the input image prior to display in the Rstudio. Curved lines indicate the flow of information to the reprojection: specifically, the output projection, scale and resampling method to use.
 
 ## Reduce Resolution {-}
 
@@ -341,7 +341,7 @@ In this example, note that the output projection is explicitly set with [`reproj
 
 Figure 3. Flow chart of operations when `reduceResolution()` is called on an input image prior to `reproject()`. Curved lines indicate the flow of information to the reprojection: specifically, the output projection, scale and pixel aggregation method to use.
 
-Note that a second reprojection occurs (implicitly) to display the data on the Code Editor map. Visually inspect the results and observe the correspondence between the pixels from the MODIS layer and the forest cover data reprojected to MODIS scale and projection. In general, you should rarely need to explicitly `reproject()` in Earth Engine.
+Note that a second reprojection occurs (implicitly) to display the data on the Rstudio map. Visually inspect the results and observe the correspondence between the pixels from the MODIS layer and the forest cover data reprojected to MODIS scale and projection. In general, you should rarely need to explicitly `reproject()` in Earth Engine.
 
 ### Pixel weights for ReduceResolution {-}
 

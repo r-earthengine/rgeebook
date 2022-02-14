@@ -53,7 +53,7 @@ embed_youtube("NPplRtH2N94")
 
 The training data is a `FeatureCollection` with a property storing the class label and properties storing predictor variables. Class labels should be consecutive, integers starting from 0. If necessary, use `remap()` to convert class values to consecutive integers. The predictors should be numeric.
 
-Training and/or validation data can come from a variety of sources. To collect training data interactively in Earth Engine, you can use the geometry drawing tools (see the [geometry tools section of the Code Editor page]()). Alternatively, you can import predefined training data from an Earth Engine table asset (see the [Importing Table Data page]() for details). Get a classifier from one of the constructors in `ee$Classifier`. Train the classifier using `classifier$train()`. Classify an `Image` or `FeatureCollection` using `classify()`. The following example uses a Classification and Regression Trees (CART) classifier ([Breiman et al. 1984]()) to predict three simple classes:
+Training and/or validation data can come from a variety of sources. To collect training data interactively in Earth Engine, you can use the geometry drawing tools (see the [geometry tools section of the Rstudio page]()). Alternatively, you can import predefined training data from an Earth Engine table asset (see the [Importing Table Data page]() for details). Get a classifier from one of the constructors in `ee$Classifier`. Train the classifier using `classifier$train()`. Classify an `Image` or `FeatureCollection` using `classify()`. The following example uses a Classification and Regression Trees (CART) classifier ([Breiman et al. 1984]()) to predict three simple classes:
 
 ```{r, eval=FALSE}
 library(rgee)

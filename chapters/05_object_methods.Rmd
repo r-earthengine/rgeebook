@@ -24,7 +24,7 @@ Images can be loaded by pasting an Earth Engine asset ID into the `ee$Image` con
 loadedImage <- ee$Image('JAXA/ALOS/AW3D30/V2_2')
 ```
 
-Note that finding an image through the Code Editor search tool is equivalent. When you import the asset, the image construction code is written for you in the imports section of the Code Editor. You can also use a personal asset ID as shown in this doc.
+Note that finding an image through the Rstudio search tool is equivalent. When you import the asset, the image construction code is written for you in the imports section of the Rstudio. You can also use a personal asset ID as shown in this doc.
 
 ### Get an `ee$Image` from an `ee$ImageCollection` {-}
 
@@ -57,7 +57,7 @@ cloudImage <- ee$Image$loadGeoTIFF(uri)
 print(cloudImage)
 ```
 
-Note that if you want to reload a Cloud Optimized GeoTIFF that you [export from Earth Engine to Cloud Storage](), when you do the export, set `cloudOptimized` to **true** as described [here]().
+Note that if you want to reload a Cloud Optimized GeoTIFF that you [export from Earth Engine to Cloud Storage](), when you do the export, set `cloudOptimized` to `true` as described [here]().
 
 ### Constant images {-}
 
@@ -92,7 +92,7 @@ print(image4)
 
 ## Image Visualization {-}
 
-The are a number of `ee$Image` methods that produce RGB visual representations of image data, for example: `visualize()`, `getThumbURL()`, `getMap()`, `getMapId()` (used in Colab Folium map display) and, `Map$addLayer()` (used in Code Editor map display, not available for Python). By default these methods assign the first three bands to red, green and blue, respectively. The default stretch is based on the type of data in the bands (e.g. floats are stretched in [0, 1], 16-bit data are stretched to the full range of possible values), which may or may not be suitable. To achieve desired visualization effects, you can provide visualization parameters:
+The are a number of `ee$Image` methods that produce RGB visual representations of image data, for example: `visualize()`, `getThumbURL()`, `getMap()`, `getMapId()` (used in Colab Folium map display) and, `Map$addLayer()` (used in Rstudio map display, not available for Python). By default these methods assign the first three bands to red, green and blue, respectively. The default stretch is based on the type of data in the bands (e.g. floats are stretched in [0, 1], 16-bit data are stretched to the full range of possible values), which may or may not be suitable. To achieve desired visualization effects, you can provide visualization parameters:
 
 | Parameter| Description | Type | 
 |--|:--|--|
@@ -376,7 +376,7 @@ Points of note in reference to using SLDs in Earth Engine:
 
 Use the `ee$Image.getThumbURL()` method to generate a PNG or JPEG thumbnail image for an `ee$Image` object. Printing the outcome of an expression ending with a call to `getThumbURL()` results in a URL being printed. Visiting the URL sets Earth Engine servers to work on generating the requested thumbnail on-the-fly. The image is displayed in a browser when processing completes. It can be downloaded by selecting appropriate options from the image's right-click context menu.
  
- -**Note**: *The authorization token to process the thumbnail lasts 2 hours. Until it expires, anyone  with the authorization token can generate the image.*
+ -`Note`: *The authorization token to process the thumbnail lasts 2 hours. Until it expires, anyone  with the authorization token can generate the image.*
 <center>
 ![Figure 5. SRTM digital elevation model displayed as a PNG thumbnail in a browser.](../images/chapter_05/figure_05.png){width=670px}
 </center>
@@ -392,7 +392,7 @@ The `getThumbURL()` method includes parameters, described in the visualization p
 
 
 
-*Caution*: **The *'WIDTHxHEIGHT'* dimensions argument can alter the original aspect ratio of the data or region extent.**
+*Caution*: `The *'WIDTHxHEIGHT'* dimensions argument can alter the original aspect ratio of the data or region extent.`
 
 
 A single-band image will default to grayscale unless a `palette` argument is supplied. A multi-band image will default to RGB visualization of the first three bands, unless a `bands` argument is supplied. If only two bands are provided, the first band will map to red, the second to blue, and the green channel will be zero filled.
@@ -435,9 +435,9 @@ print('Linear ring region and specified crs', thumbnail3);
 ```
 
  
-- **Note**: Thumbnail images are also available as UI elements (Code Editor only), see: [_ui.Thumbnail_]().*
+- `Note`: Thumbnail images are also available as UI elements (Rstudio only), see: [_ui.Thumbnail_]().*
 
-- **Note**: `getThumbURL` is intended as a method for producing preview images you might include in presentations, websites, and social media posts. Its size limitation is 100,000,000 pixels and the browser can timeout for complicated requests. If you want a large image or have a complex process, see the [Exporting Data page]().
+- `Note`: `getThumbURL` is intended as a method for producing preview images you might include in presentations, websites, and social media posts. Its size limitation is 100,000,000 pixels and the browser can timeout for complicated requests. If you want a large image or have a complex process, see the [Exporting Data page]().
 
 ## Image Information and Metadata {-}
 
@@ -507,7 +507,7 @@ ndvi1999 <- landsat1999$select('B4')$subtract(landsat1999$select('B3'))$
   divide(landsat1999$select('B4')$add(landsat1999$select('B3')))
 ```
 
-**Note**: the normalized difference operation is available as a shortcut method: [`normalizedDifference()`]().
+`Note`: the normalized difference operation is available as a shortcut method: [`normalizedDifference()`]().
 
 Only the intersection of unmasked pixels between the two inputs are considered and returned as unmasked, all else are masked. In general, if either input has only one band, then it is used against all the bands in the other input. If the inputs have the same number of bands, but not the same names, they're used pairwise in the natural order. The output bands are named for the longer of the two inputs, or if they're equal in length, in the first input's order. The type of the output pixels is the union of the input types.
 
@@ -713,7 +713,7 @@ Map$addLayer(edgy,
 ```
 
 
-Note the format specifier in the visualization parameters. Earth Engine sends display tiles to the Code Editor in JPEG format for efficiency, however edge tiles are sent in PNG format to handle transparency of pixels outside the image boundary. When a visual discontinuity results, setting the format to PNG results in a consistent display. The result of convolving with the Laplacian edge detection kernel should look something like Figure 9.
+Note the format specifier in the visualization parameters. Earth Engine sends display tiles to the Rstudio in JPEG format for efficiency, however edge tiles are sent in PNG format to handle transparency of pixels outside the image boundary. When a visual discontinuity results, setting the format to PNG results in a consistent display. The result of convolving with the Laplacian edge detection kernel should look something like Figure 9.
 
 <center>
 ![Figure 9. Landsat 8 image convolved with a Laplacian edge detection kernel. San Francisco Bay area, California,USA.](../images/chapter_05/figure_09.png){width=670px}
@@ -1000,7 +1000,7 @@ Earth Engine offers methods for labeling each object with a unique ID, counting 
 - functions that require a scale of analysis (e.g., `reduceRegions()` or `reduceToVectors()`).
 - Map zoom level.
 
-Take special note of scale determined by Map zoom level. Results of object-based methods will vary when viewing or inspecting image layers in the Map, as each pyramid layer has a different scale. To force a desired scale of analysis in Map exploration, use `reproject()`. However, it is strongly recommended that you **NOT** use `reproject()` because the entire area visible in the Map will be requested at the set scale and projection. At large extents this can cause too much data to be requested, often triggering errors. Within the image pyramid-based architecture of Earth Engine, scale and projection need only be set for operations that provide scale and crs as parameters. See [Scale of Analysis]() and [Reprojecting]() for more information.
+Take special note of scale determined by Map zoom level. Results of object-based methods will vary when viewing or inspecting image layers in the Map, as each pyramid layer has a different scale. To force a desired scale of analysis in Map exploration, use `reproject()`. However, it is strongly recommended that you `NOT` use `reproject()` because the entire area visible in the Map will be requested at the set scale and projection. At large extents this can cause too much data to be requested, often triggering errors. Within the image pyramid-based architecture of Earth Engine, scale and projection need only be set for operations that provide scale and crs as parameters. See [Scale of Analysis]() and [Reprojecting]() for more information.
 
 
 ### Thermal hotspots {-}
@@ -1854,9 +1854,9 @@ The `getVideoThumbURL()` function generates an animation from all images in an `
 
 4. Define animation arguments and call the `getVideoThumbURL` method.
 
-The result of `getVideoThumbURL` is a URL. Print the URL to the console and click it to start Earth Engine servers generating the animation on-the-fly in a new browser tab. Alternatively, view the animation in the Code Editor console by calling the `ui$Thumbnail` function on the collection and its corresponding animation arguments. Upon rendering, the animation is available for downloading by right clicking on it and selecting appropriate options from its context menu.
+The result of `getVideoThumbURL` is a URL. Print the URL to the console and click it to start Earth Engine servers generating the animation on-the-fly in a new browser tab. Alternatively, view the animation in the Rstudio console by calling the `ui$Thumbnail` function on the collection and its corresponding animation arguments. Upon rendering, the animation is available for downloading by right clicking on it and selecting appropriate options from its context menu.
 
-The following example illustrates generating an animation depicting global temperatures over the course of 24 hours. Note that this example includes visualization arguments along with animation arguments, as opposed to first mapping a visualization function over the `ImageCollection`. Upon running this script, an animation similar to Figure 3 should appear in the Code Editor console.
+The following example illustrates generating an animation depicting global temperatures over the course of 24 hours. Note that this example includes visualization arguments along with animation arguments, as opposed to first mapping a visualization function over the `ImageCollection`. Upon running this script, an animation similar to Figure 3 should appear in the Rstudio console.
 
 ```{r}
 # Define an area of interest geometry with a global non-polar extent.
@@ -1906,7 +1906,7 @@ The `getFilmstripThumbUrl` function generates a single static image representing
 
 The result of `getFilmstripThumbUrl` is a URL. Print the URL to the console and click it to start Earth Engine servers generating the image on-the-fly in a new browser tab. Upon rendering, the image is available for downloading by right clicking on it and selecting appropriate options from its context menu.
 
-The following code snippet uses the same collection as the video thumb example above. Upon running this script, a filmstrip similar to Figure 4 should appear in the Code Editor console.
+The following code snippet uses the same collection as the video thumb example above. Upon running this script, a filmstrip similar to Figure 4 should appear in the Rstudio console.
 
 ```{r,eval=FALSE}
 # Define an area of interest geometry with a global non-polar extent.
@@ -2183,7 +2183,7 @@ videoArgs <- {
   crs <- 'EPSG:3857'
 }
 
-# Display animation to the Code Editor console.
+# Display animation to the Rstudio console.
 print(ui$Thumbnail(tempColVis, videoArgs))
 ```
 
@@ -2379,7 +2379,7 @@ print(collection$map(addTime))
 
 Note that in the predefined function, the `metadata()` method is used to create a new `Image` from the value of a property. As discussed in the [Reducing]() and [Compositing]() sections, having that time band is useful for the linear modeling of change and for making composites.
 
-The mapped function is limited in the operations it can perform. Specifically, it can’t modify variables outside the function; it can’t print anything; it can’t use JavaScript ‘if’ or ‘for’ statements. However, you can use `ee$Algorithms$If()` to perform conditional operations in a mapped function. For example:
+The mapped function is limited in the operations it can perform. Specifically, it can’t modify variables outside the function; it can’t print anything; it can’t use R ‘if’ or ‘for’ statements. However, you can use `ee$Algorithms$If()` to perform conditional operations in a mapped function. For example:
 
 ```{r,eval=FALSE}
 # Load a Landsat 8 collection for a single path-row.
@@ -2466,7 +2466,7 @@ Note that the output of the reduction in this example is a two banded image with
 
 ### Composites have no projection {-}
 
-Composite images created by reducing an image collection are able to produce pixels in any requested projection and therefore have no fixed output projection. Instead, composites have [the default projection]() of WGS-84 with 1-degree resolution pixels. Composites with the default projection will be computed in whatever output projection is requested. A request occurs by displaying the composite in the Code Editor (learn about how the Code editor sets [scale]() and [projection]()), or by explicitly specifying a projection/scale as in an aggregation such as `ReduceRegion` or `Export`.
+Composite images created by reducing an image collection are able to produce pixels in any requested projection and therefore have no fixed output projection. Instead, composites have [the default projection]() of WGS-84 with 1-degree resolution pixels. Composites with the default projection will be computed in whatever output projection is requested. A request occurs by displaying the composite in the Rstudio (learn about how the Rstudio sets [scale]() and [projection]()), or by explicitly specifying a projection/scale as in an aggregation such as `ReduceRegion` or `Export`.
 
 ## Compositing and Mosaicking {-}
 
@@ -2576,7 +2576,7 @@ cloudy <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140825')
 Map$addLayer(cloudy, vizParams, 'cloudy')
 ```
 
-Use the Code Editor [Inspector tab]() to check pixel values at different locations in the composites. Observe that the `system:time_start` band varies by location, indicating that different pixels come from different times.
+Use the Rstudio [Inspector tab]() to check pixel values at different locations in the composites. Observe that the `system:time_start` band varies by location, indicating that different pixels come from different times.
 
 ## Iterating over an ImageCollection {-}
 
@@ -2675,17 +2675,17 @@ print('Arizona forest disturbance and recovery:',
 
 Charting these sequences indicates whether NDVI is stabilizing relative to previous disturbances or whether NDVI is trending to a new state. Learn more about charts in Earth Engine from the [Charts section]().
 
-The iterated function is limited in the operations it can perform. Specifically, it can’t modify variables outside the function; it can’t print anything; it can’t use JavaScript ‘if’ or ‘for’ statements. Any results you wish to collect or intermediate information you wish to carry over to the next iteration must be in the function’s return value. You can use `ee$Algorithms$If()` to perform conditional operations.
+The iterated function is limited in the operations it can perform. Specifically, it can’t modify variables outside the function; it can’t print anything; it can’t use R ‘if’ or ‘for’ statements. Any results you wish to collect or intermediate information you wish to carry over to the next iteration must be in the function’s return value. You can use `ee$Algorithms$If()` to perform conditional operations.
 
 # Geometry {-}
 
 ## Geometry Overview {-}
 
-Earth Engine handles vector data with the **Geometry** type. The [GeoJSON spec](http://geojson.org/geojson-spec.html) describes in detail the type of geometries supported by Earth Engine, including **Point** (a list of coordinates in some projection), **LineString** (a list of points), **LinearRing** (a closed **LineString**), and **Polygon** (a list of **LinearRings** where the first is a shell and subsequent rings are holes). Earth Engine also supports **MultiPoint**, **MultiLineString**, and **MultiPolygon**. The GeoJSON GeometryCollection is also supported, although it has the name **MultiGeometry** within Earth Engine.
+Earth Engine handles vector data with the `Geometry` type. The [GeoJSON spec](http://geojson.org/geojson-spec.html) describes in detail the type of geometries supported by Earth Engine, including `Point` (a list of coordinates in some projection), `LineString` (a list of points), `LinearRing` (a closed `LineString`), and `Polygon` (a list of `LinearRings` where the first is a shell and subsequent rings are holes). Earth Engine also supports `MultiPoint`, `MultiLineString`, and `MultiPolygon`. The GeoJSON GeometryCollection is also supported, although it has the name `MultiGeometry` within Earth Engine.
 
 ### Creating Geometry objects {-}
 
-To create a **Geometry** programmatically, provide the constructor with the proper list(s) of coordinates. For example:
+To create a `Geometry` programmatically, provide the constructor with the proper list(s) of coordinates. For example:
 
 ```{r}
 point <- ee$Geometry$Point(c(1.5, 1.5))
@@ -2703,9 +2703,9 @@ polygon <- ee$Geometry$Polygon(c(
 ))
 ```
 
-In the previous examples, note that the distinction between a **LineString** and a **LinearRing** is that the **LinearRing** is “closed” by having the same coordinate at both the start and end of the list.
+In the previous examples, note that the distinction between a `LineString` and a `LinearRing` is that the `LinearRing` is “closed” by having the same coordinate at both the start and end of the list.
 
-An individual **Geometry** may consist of multiple geometries. To break a multi-part **Geometry** into its constituent geometries, use __geometry$geometries()__. For example:
+An individual `Geometry` may consist of multiple geometries. To break a multi-part `Geometry` into its constituent geometries, use `geometry$geometries()`. For example:
 
 ```{r}
 # Create a multi-part feature.
@@ -2723,7 +2723,7 @@ print(paste0('Point 2', ee$Geometry$getInfo(pt2)))
 
 ## Geodesic vs. Planar Geometries {-}
 
-A geometry created in Earth Engine is either geodesic (i.e. edges are the shortest path on the surface of a sphere) or planar (i.e. edges are the shortest path in a 2-D Cartesian plane). No one planar coordinate system is suitable for global collections of features, so Earth Engine's geometry constructors build geodesic geometries by default. To make a planar geometry, constructors have a **geodesic** parameter that can be set to **FALSE**:
+A geometry created in Earth Engine is either geodesic (i.e. edges are the shortest path on the surface of a sphere) or planar (i.e. edges are the shortest path in a 2-D Cartesian plane). No one planar coordinate system is suitable for global collections of features, so Earth Engine's geometry constructors build geodesic geometries by default. To make a planar geometry, constructors have a `geodesic` parameter that can be set to `FALSE`:
 
 ```{r}
 planarPolygon <- ee$Geometry(polygon, NULL, FALSE)
@@ -2838,10 +2838,9 @@ visParams <- list(bands = c('R', 'G', 'B'), max = 4000)
 Map$addLayer(image1Orig, visParams, 'Reference')
 Map$addLayer(image2Orig, visParams, 'Before Registration')
 Map$addLayer(registered, visParams, 'After Registration')
-=======
-Earth Engine supports a wide variety of operations on **Geometry** objects. These include operations on individual geometries such as computing a buffer, centroid, bounding box, perimeter, convex hull, etc. For example:
 
-```{r}
+
+
 # Create a geodesic polygon.
 polygon <- ee$Geometry$Polygon(c(
   c(c(-5, 40), c(65, 40), c(65, 60), c(-5, 60), c(-5, 60))
@@ -2861,7 +2860,7 @@ Observe from the previous example that the buffer distance is specified in meter
 
 Supported geometric operations also include relational computations between geometries such as intersection, union, difference, distance, contains, etc. To test some of these relations, geometries use the “even-odd” rule by default. By the even-odd rule, a point is inside the polygon if a line from that point to some point known to be outside the polygon crosses an odd number of other edges. The inside of a polygon is everything inside the shell and not inside a hole. As a simple example, a point within a circular polygon must cross exactly one edge to escape the polygon. Geometries can optionally use the "left-inside" rule, if necessary. Imagine walking the points of a ring in the order given; the inside will be on the left.
 
-To demonstrate the difference between geometries created with the "left-inside" rule (**evenOdd: FALSE**) and those created with the "even-odd" rule, the following example compares a point to two different polygons:
+To demonstrate the difference between geometries created with the "left-inside" rule (`evenOdd: FALSE`) and those created with the "even-odd" rule, the following example compares a point to two different polygons:
 
 ```{r}
 # Create a left-inside polygon.
@@ -2886,7 +2885,7 @@ print(ee$Geometry$getInfo(holePoly$contains(pt)))       # false
 print(ee$Geometry$getInfo(evenOddPoly$contains(pt)))    # true
 ```
 
-The previous example demonstrates how the order of coordinates provided to the **Polygon** constructor affects the result when a left-inside polygon is constructed. Specifically, the point is outside the left-inside polygon but inside the even-odd polygon.
+The previous example demonstrates how the order of coordinates provided to the `Polygon` constructor affects the result when a left-inside polygon is constructed. Specifically, the point is outside the left-inside polygon but inside the even-odd polygon.
 
 The following example computes and visualizes derived geometries based on the relationship between two polygons:
 
@@ -2917,17 +2916,17 @@ symDiff <- poly1$symmetricDifference(poly2, ee$ErrorMargin(1))
 Map$addLayer(symDiff, list(color = '000000'), 'symmetric difference')
 ```
 
-In these examples, note that that **maxError** parameter is set to one meter for the geometry operations. The **maxError** is the maximum allowable error, in meters, from transformations (such as projection or reprojection) that may alter the geometry. If one of the geometries is in a different projection from the other, Earth Engine will do the computation in a spherical coordinate system, with a projection precision given by **maxError**. You can also specify a specific projection in which to do the computation, if necessary.
+In these examples, note that that `maxError` parameter is set to one meter for the geometry operations. The `maxError` is the maximum allowable error, in meters, from transformations (such as projection or reprojection) that may alter the geometry. If one of the geometries is in a different projection from the other, Earth Engine will do the computation in a spherical coordinate system, with a projection precision given by `maxError`. You can also specify a specific projection in which to do the computation, if necessary.
 
 # Feature & FeatureCollection {-}
 
 ## Feature Overview {-}
 
-A **Feature** in Earth Engine is defined as a GeoJSON Feature. Specifically, a **Feature** is an object with a **geometry** property storing a **Geometry** object (or null) and a **properties** property storing a dictionary of other properties.
+A `Feature` in Earth Engine is defined as a GeoJSON Feature. Specifically, a `Feature` is an object with a `geometry` property storing a `Geometry` object (or null) and a `properties` property storing a dictionary of other properties.
 
 ### Creating Feature objects {-}
 
-To create a **Feature**, provide the constructor with a **Geometry** and (optionally) a dictionary of other properties. For example:
+To create a `Feature`, provide the constructor with a `Geometry` and (optionally) a dictionary of other properties. For example:
 
 ```{r}
 # Create an ee.Geometry.
@@ -2939,7 +2938,7 @@ polygon <- ee$Geometry$Polygon(c(
 polyFeature <- ee$Feature(polygon, list(foo = 42, bar = 'tart'))
 ```
 
-As with a **Geometry**, a **Feature** may be printed or added to the map for inspection and visualization:
+As with a `Geometry`, a `Feature` may be printed or added to the map for inspection and visualization:
 
 ```{r}
 print(ee$Feature$getInfo(polyFeature))
@@ -2956,9 +2955,9 @@ dict <- list(foo = ee$Number(8)$add(88), bar = 'nihao')
 nowhereFeature <- ee$Feature(NULL, dict)
 ```
 
-In this example, note that the dictionary supplied to the **Feature** contains a computed value. Creating features in this manner is useful for exporting long-running computations with a **Dictionary** result (e.g. __image$reduceRegion()__). See the [FeatureCollections]() and [Importing Table Data]() or [Exporting]() guides for details.
+In this example, note that the dictionary supplied to the `Feature` contains a computed value. Creating features in this manner is useful for exporting long-running computations with a `Dictionary` result (e.g. `image$reduceRegion()`). See the [FeatureCollections]() and [Importing Table Data]() or [Exporting]() guides for details.
 
-Each **Feature** has one primary **Geometry** stored in the **geometry** property. Additional geometries may be stored in other properties. **Geometry** methods such as intersection and buffer also exist on Feature as a convenience for getting the primary **Geometry**, applying the operation, and setting the result as the new primary **Geometry**. The result will retain all the other properties of the **Feature** on which the method is called. There are also methods for getting and setting the non-geometry properties of the **Feature**. For example:
+Each `Feature` has one primary `Geometry` stored in the `geometry` property. Additional geometries may be stored in other properties. `Geometry` methods such as intersection and buffer also exist on Feature as a convenience for getting the primary `Geometry`, applying the operation, and setting the result as the new primary `Geometry`. The result will retain all the other properties of the `Feature` on which the method is called. There are also methods for getting and setting the non-geometry properties of the `Feature`. For example:
 
 ```{r}
 # Make a feature and set some properties.
@@ -2980,15 +2979,15 @@ feature <- feature$set(newDict)
 print(ee$Feature$getInfo(feature))
 ```
 
-In the previous example, note that properties can be set with either a key: value pair, or with a lista as a r literal. Also note that __feature$set()__ overwrites existing properties.
+In the previous example, note that properties can be set with either a key: value pair, or with a lista as a r literal. Also note that `feature$set()` overwrites existing properties.
 
 ## FeatureCollection Overview {-}
 
-Groups of related features can be combined into a **FeatureCollection**, to enable additional operations on the entire set such as filtering, sorting and rendering. Besides just simple features (geometry + properties), feature collections can also contain other collections.
+Groups of related features can be combined into a `FeatureCollection`, to enable additional operations on the entire set such as filtering, sorting and rendering. Besides just simple features (geometry + properties), feature collections can also contain other collections.
 
-### The **FeatureCollection** constructor {-}
+### The `FeatureCollection` constructor {-}
 
-One way to create a **FeatureCollection** is to provide the constructor with a list of features. The features do not need to have the same geometry type or the same properties. For example:
+One way to create a `FeatureCollection` is to provide the constructor with a list of features. The features do not need to have the same geometry type or the same properties. For example:
 
 ```{r}
 # Make a list of Features.
@@ -3003,7 +3002,7 @@ fromList <- ee$FeatureCollection(features)
 print(ee$FeatureCollection$getInfo(fromList))
 ```
 
-Individual geometries can also be turned into a **FeatureCollection** of just one **Feature**:
+Individual geometries can also be turned into a `FeatureCollection` of just one `Feature`:
 
 ```{r}
 # Create a FeatureCollection from a single geometry and print it.
@@ -3013,7 +3012,7 @@ print(ee$FeatureCollection$getInfo(fromGeom))
 
 ### Table Datasets {-}
 
-Earth Engine hosts a variety of table datasets. To load a table dataset, provide the table ID to the **FeatureCollection** constructor. For example, to load TIGER roads data:
+Earth Engine hosts a variety of table datasets. To load a table dataset, provide the table ID to the `FeatureCollection` constructor. For example, to load TIGER roads data:
 
 ```{r}
 fc <- ee$FeatureCollection('TIGER/2016/Roads')
@@ -3041,7 +3040,7 @@ Map$addLayer(randomPoints, {}, 'random points')
 
 ## Feature and FeatureCollection Visualization {-}
 
-As with images, geometries and features, feature collections can be added to the map directly with __Map$addLayer()__. The default visualization will display the vectors with solid black lines and semi-opaque black fill. To render the vectors in color, specify the **color** parameter. The following displays the ‘RESOLVE’ ecoregions ([Dinerstein et al. 2017](https://academic.oup.com/bioscience/article/67/6/534/3102935)) as the default visualization and in red:
+As with images, geometries and features, feature collections can be added to the map directly with `Map$addLayer()`. The default visualization will display the vectors with solid black lines and semi-opaque black fill. To render the vectors in color, specify the `color` parameter. The following displays the ‘RESOLVE’ ecoregions ([Dinerstein et al. 2017](https://academic.oup.com/bioscience/article/67/6/534/3102935)) as the default visualization and in red:
 
 ```{r}
 # Load a FeatureCollection from a table dataset: 'RESOLVE' ecoregions.
@@ -3052,15 +3051,15 @@ Map$addLayer(ecoregions, {}, 'default display')
 Map$addLayer(ecoregions, list(color = 'FF0000'), 'colored')
 ```
 
-For additional display options, use __featureCollection$draw()__. Specifically, parameters **pointRadius** and **strokeWidth** control the size of points and lines, respectively, in the rendered **FeatureCollection**:
+For additional display options, use `featureCollection$draw()`. Specifically, parameters `pointRadius` and `strokeWidth` control the size of points and lines, respectively, in the rendered `FeatureCollection`:
 
 ```{r}
 Map$addLayer(ecoregions$draw(list(color = '006600', strokeWidth = 5)), {}, 'drawn')
 ```
 
-The output of **draw()** is an image with red, green and blue bands set according to the specified **color** parameter.
+The output of `draw()` is an image with red, green and blue bands set according to the specified `color` parameter.
 
-For more control over how a **FeatureCollection** is displayed, use __image$paint()__ with the **FeatureCollection** as an argument. Unlike **draw()**, which outputs a three-band, 8-bit display image, __image$paint()__ outputs an image with the specified numeric value ‘painted’ into it. Alternatively, you can supply the name of a property in the **FeatureCollection** which contains the numbers to paint. The **width** parameter behaves the same way: it can be a constant or the name of a property with a number for the line width. For example:
+For more control over how a `FeatureCollection` is displayed, use `image$paint()` with the `FeatureCollection` as an argument. Unlike `draw()`, which outputs a three-band, 8-bit display image, `image$paint()` outputs an image with the specified numeric value ‘painted’ into it. Alternatively, you can supply the name of a property in the `FeatureCollection` which contains the numbers to paint. The `width` parameter behaves the same way: it can be a constant or the name of a property with a number for the line width. For example:
 
 ```{r}
 # Create an empty image into which to paint the features, cast to byte.
@@ -3101,7 +3100,7 @@ outlines <- empty$paint(
 Map$addLayer(outlines, list(palette = palette, max = 14), 'different color, width edges')
 ```
 
-If the **width** parameter is not provided, the interior of the features is painted:
+If the `width` parameter is not provided, the interior of the features is painted:
 
 ```{r}
 # Paint the interior of the polygons with different colors.
@@ -3152,7 +3151,7 @@ print(paste0('Area stats: ', ee$Number$getInfo(sheds$aggregate_stats('areasqkm')
 
 ### Column information {-}
 
-Knowing the names and dataypes of **FeatureCollection** columns can be helpful (e.g., [filtering a collection by metadata]()). The following example prints column names and datatypes for a collection of point features representing protected areas.
+Knowing the names and dataypes of `FeatureCollection` columns can be helpful (e.g., [filtering a collection by metadata]()). The following example prints column names and datatypes for a collection of point features representing protected areas.
 
 ```{r}
 # Import a protected areas point feature collection.
@@ -3173,11 +3172,11 @@ getCols <- function (tableMetadata) {
 wdpa$limit(0)$evaluate(getCols)
 ```
 
-For more general purpose **FeatureCollection** aggregation tools, see the [Reducing a FeatureCollection]() page.
+For more general purpose `FeatureCollection` aggregation tools, see the [Reducing a FeatureCollection]() page.
 
 ## Filtering a FeatureCollection {-}
 
-Filtering a **FeatureCollection** is analogous to filtering an **ImageCollection**. (See the [Filtering an ImageCollection section]()). There are the __featureCollection$filterDate()__, and __featureCollection$filterBounds()__ convenience methods and the __featureCollection$filter()__ method for use with any applicable __ee$Filter__. For example:
+Filtering a `FeatureCollection` is analogous to filtering an `ImageCollection`. (See the [Filtering an ImageCollection section]()). There are the `featureCollection$filterDate()`, and `featureCollection$filterBounds()` convenience methods and the `featureCollection$filter()` method for use with any applicable `ee$Filter`. For example:
 
 ```{r}
 # Load watersheds from a data table.
@@ -3206,7 +3205,7 @@ print(paste0('Count after filtering by size:', ee$Number$getInfo(largeSheds$size
 
 ## Mapping over a FeatureCollection {-}
 
-To apply the same operation to every **Feature** in a **FeatureCollection**, use __featureCollection$map()__. For example, to add another area attribute to every feature in a watersheds **FeatureCollection**, use:
+To apply the same operation to every `Feature` in a `FeatureCollection`, use `featureCollection$map()`. For example, to add another area attribute to every feature in a watersheds `FeatureCollection`, use:
 
 ```{r}
 # Load watersheds from a data table.
@@ -3226,7 +3225,7 @@ print(paste0('First feature:', ee$Element$getInfo(areaAdded$first())))
 
 In the previous example, note that a new property is set based on a computation with the feature’s geometry. Properties can also be set using a computation involving existing properties.
 
-An entirely new **FeatureCollection** can be generated with **map()**. The following example converts the watersheds to centroids:
+An entirely new `FeatureCollection` can be generated with `map()`. The following example converts the watersheds to centroids:
 
 ```{r}
 # This function creates a new feature from the centroid of the geometry.
@@ -3250,7 +3249,7 @@ Note that only a subset of properties is propagated to the features in the new c
 
 ## Reducing a FeatureCollection {-}
 
-To aggregate data in the properties of a **FeatureCollection**, use __featureCollection$reduceColumns()__. For example, to check the area properties in the watersheds **FeatureCollection**, this code computes the Root Mean Square Error (RMSE) relative to the Earth Engine computed area:
+To aggregate data in the properties of a `FeatureCollection`, use `featureCollection$reduceColumns()`. For example, to check the area properties in the watersheds `FeatureCollection`, this code computes the Root Mean Square Error (RMSE) relative to the Earth Engine computed area:
 
 ```{r}
 # Load watersheds from a data table and filter to the continental US.
@@ -3283,9 +3282,9 @@ sqrt()
 print(paste0('RMSE=', ee$Number$getInfo(rmse)))
 ```
 
-In this example, note that the return value of **reduceColumns()** is a dictionary with key **‘mean’**. To get the mean, cast the result of __dictionary$get()__ to a number with __ee$Number()__ before trying to call **sqrt()** on it. For more information about ancillary data structures in Earth Engine, see [this tutorial]().
+In this example, note that the return value of `reduceColumns()` is a dictionary with key `‘mean’`. To get the mean, cast the result of `dictionary$get()` to a number with `ee$Number()` before trying to call `sqrt()` on it. For more information about ancillary data structures in Earth Engine, see [this tutorial]().
 
-To overlay features on imagery, use __featureCollection$reduceRegions()__. For example, to compute the volume of precipitation in continental US watersheds, use **reduceRegions()** followed by a **map()**:
+To overlay features on imagery, use `featureCollection$reduceRegions()`. For example, to compute the volume of precipitation in continental US watersheds, use `reduceRegions()` followed by a `map()`:
 
 ```{r}
 # Load an image of daily precipitation in mm/day.
@@ -3325,11 +3324,11 @@ For more information about reducing feature collections, see [Statistics of Feat
 
 ## Vector to Raster Interpolation {-}
 
-Interpolation from vector to raster in Earth Engine creates an **Image** from a **FeatureCollection**. Specifically, Earth Engine uses numeric data stored in a property of the features to interpolate values at new locations outside of the features. The interpolation results in a continuous **Image** of interpolated values up to the distance specified.
+Interpolation from vector to raster in Earth Engine creates an `Image` from a `FeatureCollection`. Specifically, Earth Engine uses numeric data stored in a property of the features to interpolate values at new locations outside of the features. The interpolation results in a continuous `Image` of interpolated values up to the distance specified.
 
 ### Inverse Distance Weighted Interpolation {-}
 
-The inverse distance weighting (IDW) function in Earth Engine is based on the method described by [Basso et al. (1999)](https://ieeexplore.ieee.org/abstract/document/805606). An additional control parameter is added in the form of a decay factor (**gamma**) on the inverse distance. Other parameters include the mean and standard deviation of the property to interpolate and the maximum range distance over which to interpolate. The following example creates an interpolated surface of [methane concentration](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S5P_OFFL_L3_CH4) to fill spatial gaps in the original raster dataset. The **FeatureCollection** is generated by sampling a two-week methane composite.
+The inverse distance weighting (IDW) function in Earth Engine is based on the method described by [Basso et al. (1999)](https://ieeexplore.ieee.org/abstract/document/805606). An additional control parameter is added in the form of a decay factor (`gamma`) on the inverse distance. Other parameters include the mean and standard deviation of the property to interpolate and the maximum range distance over which to interpolate. The following example creates an interpolated surface of [methane concentration](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S5P_OFFL_L3_CH4) to fill spatial gaps in the original raster dataset. The `FeatureCollection` is generated by sampling a two-week methane composite.
 
 ```{r}
 # Import two weeks of S5P methane and composite by mean.
@@ -3390,7 +3389,7 @@ Map$addLayer(interpolated, band_viz, 'CH4 Interpolated')
 
 ```
 
-Note that, as specified by the **range** parameter, the interpolation only exists up to 70 kilometers from the nearest measurement station.
+Note that, as specified by the `range` parameter, the interpolation only exists up to 70 kilometers from the nearest measurement station.
 
 ### Kriging {-}
 
@@ -3400,7 +3399,7 @@ Note that, as specified by the **range** parameter, the interpolation only exist
 <img src="./images/chapter_05/figure_fea_01figure_01.png" width=95%>
 </center>
 
-Figure 1. The **nugget**, **sill** and **range** parameters illustrated on a idealized variogram function.
+Figure 1. The `nugget`, `sill` and `range` parameters illustrated on a idealized variogram function.
 
 The following example samples a sea surface temperature (SST) image at random locations, then interpolates SST from the sample using Kriging:
 
@@ -3452,13 +3451,13 @@ The size of the neighborhood in which to perform the interpolation is specified 
 
 ## Reducer Overview {-}
 
-Reducers are the way to aggregate data over time, space, bands, arrays and other data structures in Earth Engine. The __ee$Reducer__ class specifies how data is aggregated. The reducers in this class can specify a simple statistic to use for the aggregation (e.g. minimum, maximum, mean, median, standard deviation, etc.), or a more complex summary of the input data (e.g. histogram, linear regression, list). Reductions may occur over time ( __imageCollection$reduce()__ )ç, space ( __image$reduceRegion()__ , __image$reduceNeighborhood()__ ), bands ( __image$reduce()__ ), or the attribute space of a **FeatureCollection** ( __featureCollection$reduceColumns()__ or **FeatureCollection** methods that start with **aggregate_**).
+Reducers are the way to aggregate data over time, space, bands, arrays and other data structures in Earth Engine. The `ee$Reducer` class specifies how data is aggregated. The reducers in this class can specify a simple statistic to use for the aggregation (e.g. minimum, maximum, mean, median, standard deviation, etc.), or a more complex summary of the input data (e.g. histogram, linear regression, list). Reductions may occur over time ( `imageCollection$reduce()` )ç, space ( `image$reduceRegion()` , `image$reduceNeighborhood()` ), bands ( `image$reduce()` ), or the attribute space of a `FeatureCollection` ( `featureCollection$reduceColumns()` or `FeatureCollection` methods that start with `aggregate_`).
 
 ### Reducers have inputs and outputs {-}
 
-Reducers take an input dataset and produce a single output. When a single input reducer is applied to a multi-band image, Earth Engine automatically replicates the reducer and applies it separately to each band. As a result, the output image has the same number of bands as the input image; each band in the output is the reduction of pixels from the corresponding band in the input data. Some reducers take tuples of input datasets. These reducers will not be automatically replicated for each band. For example, __ee$Reducer$LinearRegression()__ takes multiple predictor datasets (representing independent variables in the regression) in a particular order (see [Regression reducers]()).
+Reducers take an input dataset and produce a single output. When a single input reducer is applied to a multi-band image, Earth Engine automatically replicates the reducer and applies it separately to each band. As a result, the output image has the same number of bands as the input image; each band in the output is the reduction of pixels from the corresponding band in the input data. Some reducers take tuples of input datasets. These reducers will not be automatically replicated for each band. For example, `ee$Reducer$LinearRegression()` takes multiple predictor datasets (representing independent variables in the regression) in a particular order (see [Regression reducers]()).
 
-Some reducers produce multiple outputs, for example __ee$Reducer$minMax()__, __ee$Reducer$histogram()__ or __ee$Reducer$toList()__. For example:
+Some reducers produce multiple outputs, for example `ee$Reducer$minMax()`, `ee$Reducer$histogram()` or `ee$Reducer$toList()`. For example:
 
 ```{js}
 // Load and filter the Sentinel-2 image collection.
@@ -3480,7 +3479,7 @@ By default, reductions over pixel values are weighted by their mask, though this
 
 ### Combining reducers {-}
 
-If your intent is to apply multiple reducers to the same inputs, it's good practice to **combine()** the reducers for efficiency. Specifically, calling **combine()** on a reducer with **sharedInputs** set to **true** will result in only a single pass over the data. For example, to compute the mean and standard deviation of pixels in an image, you could use something like this:
+If your intent is to apply multiple reducers to the same inputs, it's good practice to `combine()` the reducers for efficiency. Specifically, calling `combine()` on a reducer with `sharedInputs` set to `true` will result in only a single pass over the data. For example, to compute the mean and standard deviation of pixels in an image, you could use something like this:
 
 ```{js}
 // Load a Landsat 8 image.
@@ -3506,7 +3505,7 @@ In the output, note that the names of the reducers have been appended to the nam
 
 ## ImageCollection Reductions {-}
 
-Consider the example of needing to take the median over a time series of images represented by an **ImageCollection**. To reduce an **ImageCollection**, use **imageCollection$reduce()**. This reduces the collection of images to an individual image as illustrated in Figure 1. Specifically, the output is computed pixel-wise, such that each pixel in the output is composed of the median value of all the images in the collection at that location. To get other statistics, such as mean, sum, variance, an arbitrary percentile, etc., the appropriate reducer should be selected and applied. (See the **Docs** tab in the [Rstudio]() for a list of all the reducers currently available). For basic statistics like min, max, mean, etc., **ImageCollection** has shortcut methods like **min()**, **max()**, **mean()**, etc. They function in exactly the same way as calling **reduce()**, except the resultant band names will not have the name of the reducer appended.
+Consider the example of needing to take the median over a time series of images represented by an `ImageCollection`. To reduce an `ImageCollection`, use `imageCollection$reduce()`. This reduces the collection of images to an individual image as illustrated in Figure 1. Specifically, the output is computed pixel-wise, such that each pixel in the output is composed of the median value of all the images in the collection at that location. To get other statistics, such as mean, sum, variance, an arbitrary percentile, etc., the appropriate reducer should be selected and applied. (See the `Docs` tab in the [Rstudio]() for a list of all the reducers currently available). For basic statistics like min, max, mean, etc., `ImageCollection` has shortcut methods like `min()`, `max()`, `mean()`, etc. They function in exactly the same way as calling `reduce()`, except the resultant band names will not have the name of the reducer appended.
 
 <center>
 <img src="./images/chapter_05/figure_red_01.png" width=40%>
@@ -3514,7 +3513,7 @@ Consider the example of needing to take the median over a time series of images 
 
 Figure 1. Illustration of an ee.Reducer applied to an ImageCollection.
 
-For an example of reducing an **ImageCollection**, consider a collection of Landsat 5 images, filtered by path and row. The following code uses **reduce()** to reduce the collection to one **Image** (here a median reducer is used simply for illustrative purposes):
+For an example of reducing an `ImageCollection`, consider a collection of Landsat 5 images, filtered by path and row. The following code uses `reduce()` to reduce the collection to one `Image` (here a median reducer is used simply for illustrative purposes):
 
 ```{js}
 // Load an image collection, filtered so it's not too much data.
@@ -3533,9 +3532,9 @@ Map.setCenter(-122.3355, 37.7924, 9);
 Map.addLayer(median, vis_param);
 ```
 
-This returns a multi-band **Image**, each pixel of which is the median of all unmasked pixels in the **ImageCollection** at that pixel location. Specifically, the reducer has been repeated for each band of the input imagery, meaning that the median is computed independently in each band. Note that the band names have the name of the reducer appended: **‘B1_median’**, **‘B2_median’**, etc. The output should look something like Figure 2.
+This returns a multi-band `Image`, each pixel of which is the median of all unmasked pixels in the `ImageCollection` at that pixel location. Specifically, the reducer has been repeated for each band of the input imagery, meaning that the median is computed independently in each band. Note that the band names have the name of the reducer appended: `‘B1_median’`, `‘B2_median’`, etc. The output should look something like Figure 2.
 
-For more information about reducing image collections, see the [reducing section of the **ImageCollection** docs](). In particular, note that images produced by reducing an **ImageCollection** [have no projection](). This means that you should explicitly set the scale on any computations involving computed images output by an **ImageCollection** reduction.
+For more information about reducing image collections, see the [reducing section of the `ImageCollection` docs](). In particular, note that images produced by reducing an `ImageCollection` [have no projection](). This means that you should explicitly set the scale on any computations involving computed images output by an `ImageCollection` reduction.
 
 |<img src="./images/chapter_05/figure_red_02.png" width=95%>|
 |:-------------------------------------------------|
@@ -3543,7 +3542,7 @@ For more information about reducing image collections, see the [reducing section
 
 ## Image Reductions {-}
 
-To reduce an **Image**, use __image$reduce()__. Reducing an image functions in an analogous way to __imageCollection$reduce()__, except the bands of the image are input to the reducer rather than the images in the collection. The output is also an image with number of bands equal to number of reducer outputs. For example:
+To reduce an `Image`, use `image$reduce()`. Reducing an image functions in an analogous way to `imageCollection$reduce()`, except the bands of the image are input to the reducer rather than the images in the collection. The output is also an image with number of bands equal to number of reducer outputs. For example:
 
 ```{js}
 // Load an image and select some bands of interest.
@@ -3562,7 +3561,7 @@ Map.addLayer(maxValue, {max: 13000}, 'Maximum value image');
 
 ### reduceRegion {-}
 
-To get statistics of pixel values in a region of an __ee$Image__, use __image$reduceRegion()__. This reduces all the pixels in the region(s) to a statistic or other compact representation of the pixel data in the region (e.g. histogram). The region is represented as a **Geometry**, which might be a polygon, containing many pixels, or it might be a single point, in which case there will only be one pixel in the region. In either case, as illustrated in Figure 3, the output is a statistic derived from the pixels in the region.
+To get statistics of pixel values in a region of an `ee$Image`, use `image$reduceRegion()`. This reduces all the pixels in the region(s) to a statistic or other compact representation of the pixel data in the region (e.g. histogram). The region is represented as a `Geometry`, which might be a polygon, containing many pixels, or it might be a single point, in which case there will only be one pixel in the region. In either case, as illustrated in Figure 3, the output is a statistic derived from the pixels in the region.
 
 <center>
 <img src="./images/chapter_05/figure_red_03.png" width=70%>
@@ -3593,7 +3592,7 @@ var meanDictionary = image.reduceRegion({
 print(meanDictionary);
 ```
 
-To force the computation, it suffices to print the result, which the Code Editor will display as a Dictionary in the console. The output should look something like:
+To force the computation, it suffices to print the result, which the Rstudio will display as a Dictionary in the console. The output should look something like:
 
 <pre translate="no" dir="ltr">
 B1: 25.406029716816853
@@ -3610,9 +3609,9 @@ B7: 24.063261634961563</pre>
 
 Figure 4. False color composite of the Landsat image data for California and Nevada. The region over which to reduce is shown in white.
 
-Note that in this example the reduction is specified by providing the **reducer** (**ee$Reducer$mean()**), the **geometry** (**region$geometry()**), the **scale** (30 meters) and **maxPixels** for the maximum number of pixels to input to the reducer. A scale should always be specified in **reduceRegion()** calls. This is because in complex processing flows, which may involve data from different sources with different scales, the scale of the output will not be unambiguously determined from the inputs. In that case, the scale defaults to 1 degree, which generally produces unsatisfactory results. See [this page]() for more information about how Earth Engine handles scale.
+Note that in this example the reduction is specified by providing the `reducer` (`ee$Reducer$mean()`), the `geometry` (`region$geometry()`), the `scale` (30 meters) and `maxPixels` for the maximum number of pixels to input to the reducer. A scale should always be specified in `reduceRegion()` calls. This is because in complex processing flows, which may involve data from different sources with different scales, the scale of the output will not be unambiguously determined from the inputs. In that case, the scale defaults to 1 degree, which generally produces unsatisfactory results. See [this page]() for more information about how Earth Engine handles scale.
 
-There are two ways to set the scale: by specifying the **scale** parameter, or by specifying a CRS and CRS transform. (See [the glossary]() for more information about CRS's and CRS transforms). For example, the **meanDictionary** reduction (above) is equivalent to the following:
+There are two ways to set the scale: by specifying the `scale` parameter, or by specifying a CRS and CRS transform. (See [the glossary]() for more information about CRS's and CRS transforms). For example, the `meanDictionary` reduction (above) is equivalent to the following:
 
 ```{js}
 // As an alternative to specifying scale, specify a CRS and a CRS transform.
@@ -3636,8 +3635,8 @@ In general, specifying the scale is sufficient and results in more readable code
 
 Pixels are determined to be in the region (and weighted) according to the following rules, applied in the specified scale and projection:
 
- - Unweighted reducers (e.g. **ee$Reducer$count()** or `ee$Reducer$mean()$unweighted()`): pixels are included if their centroid is in the region and the image's mask is non-zero.
- - Weighted reducers (e.g. **ee$Reducer$mean()**): pixels are included if at least (approximately) 0.5% of the pixel is in the region and the image's mask is non-zero; their weight is the minimum of the image's mask and the (approximate) fraction of the pixel covered by the region.
+ - Unweighted reducers (e.g. `ee$Reducer$count()` or `ee$Reducer$mean()$unweighted()`): pixels are included if their centroid is in the region and the image's mask is non-zero.
+ - Weighted reducers (e.g. `ee$Reducer$mean()`): pixels are included if at least (approximately) 0.5% of the pixel is in the region and the image's mask is non-zero; their weight is the minimum of the image's mask and the (approximate) fraction of the pixel covered by the region.
 
 The `maxPixels` parameter is needed to get the computation to succeed. If this parameter is left out of the example, an error is returned. 
 
@@ -4309,7 +4308,7 @@ Figure 10. Scatter plot and least squares linear regression line for a sample of
 
 #### ee$List {-}
 
-**Columns** of 2-D `ee$List` objects can be inputs to regression reducers. The following examples provide simple proofs; the independent variable is a copy of the dependent variable producing a y-intercept equal to 0 and a slope equal to 1.
+`Columns` of 2-D `ee$List` objects can be inputs to regression reducers. The following examples provide simple proofs; the independent variable is a copy of the dependent variable producing a y-intercept equal to 0 and a slope equal to 1.
 
 #### linearFit() {-}
 
@@ -4335,7 +4334,7 @@ print('y-intercept:', linearFit.get('offset'));
 print('Slope:', linearFit.get('scale'));
 ```
 
-**Transpose the list if variables are represented by rows** by converting to an `ee$Array`, transposing it, then converting back to an `ee$List`.
+`Transpose the list if variables are represented by rows` by converting to an `ee$Array`, transposing it, then converting back to an `ee$List`.
 
 ```{js}
 // If variables in the list are arranged as rows, you'll need to transpose it.
