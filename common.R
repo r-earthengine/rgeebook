@@ -6,6 +6,7 @@ set.seed(1014)
 knitr::opts_chunk$set(
   comment = "#>",
   collapse = TRUE,
+  python.reticulate = FALSE,
   eval = FALSE,
   cache = TRUE,
   fig.retina = 0.8, # figures are either vectors or 300 dpi diagrams
