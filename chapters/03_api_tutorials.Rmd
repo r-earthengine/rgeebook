@@ -29,11 +29,7 @@ print('Hello World!')
 Click Run and observe that 'Hello world!' is printed to the Console tab. The line above is R statement. Earth Engine programs are made up of a set of statements like this one. You can prevent code from running without deleting it by commenting it. One of the ways to comment out code is by putting two forward numerals `##` before the code that you don't want to run. For example:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## print('Hello World!')
-=======
-#print('Hello World!')
->>>>>>> Stashed changes
+# print('Hello World!')
 ```
 
 It's good practice to put lots of comments in your code, to describe what you're trying to do. It's also good to delete commented code that doesn't do anything anymore. Both these practices will improve code readability.
@@ -46,15 +42,9 @@ It's good practice to put lots of comments in your code, to describe what you're
 Using variables to store objects and primitives helps code readability. For example, a variable that stores a string object is defined by single ' or double " quotes (but don't mix them), with single quotes preferred. Make a new string and store it in a variable called greetString:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Use single (or double) quotes to make a string.
-var greetString = 'Ahoy there!'
-## Use parentheses to pass arguments to functions.
-=======
 # Use single (or double) quotes to make a string.
-greetString = 'Ahoy there!'
+greetString <- 'Ahoy there!'
 # Use parentheses to pass arguments to functions.
->>>>>>> Stashed changes
 print(greetString)
 ```
 
@@ -63,13 +53,8 @@ print(greetString)
 Note that variables are defined with the keyword `var`. Variables can also store numbers:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Store a number in a variable.
-var number = 42
-=======
 # Store a number in a variable.
-number = 42
->>>>>>> Stashed changes
+number <- 42
 print('The answer is:', number)
 ```
 
@@ -80,53 +65,35 @@ In this example, observe that when `print()` is given two arguments separated by
 Define lists with square brackets `[]`. A list of numbers, for example:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Use square brackets [] to make a list.
-var listOfNumbers = [0, 1, 1, 2, 3, 5]
-=======
 # Use square brackets [] to make a list.
-listOfNumbers = [0, 1, 1, 2, 3, 5]
->>>>>>> Stashed changes
+listOfNumbers <- [0, 1, 1, 2, 3, 5]
 print('List of numbers:', listOfNumbers)
 ```
 
 Lists can also store strings or other objects. For example:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Make a list of strings.
-var listOfStrings = ['a', 'b', 'c', 'd']
-=======
 # Make a list of strings.
-listOfStrings = ['a', 'b', 'c', 'd']
->>>>>>> Stashed changes
+listOfStrings <- ['a', 'b', 'c', 'd']
 print('List of strings:', listOfStrings)
 ```
 
-### Objects {-}
+### Dictionary {-}
 
 Objects in R are dictionaries of `key: value` pairs. Make an object (or dictionary) using curly brackets {}, for example:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Use curly brackets {} to make a dictionary of key:value pairs.
-var object = {
-  foo: 'bar',
-  baz: 13,
-  stuff: ['this', 'that', 'the other thing']
-=======
 # Use curly brackets {} to make a dictionary of key:value pairs.
-object = {
-  foo = 'bar',
-  baz = 13,
-  stuff = ['this', 'that', 'the other thing']
->>>>>>> Stashed changes
+object <- {
+  foo <- 'bar',
+  baz <- 13,
+  stuff <- ['this', 'that', 'the other thing']
 }
 print('Dictionary:', object)
 # Access dictionary items using square brackets.
 print('Print foo:', object['foo'])
 # Access dictionary items using dot notation.
-print('Print stuff:', object$stuff)
+print('Print stuff:', object.stuff)
 ```
 
 Note that you can get a value from a dictionary by supplying the key. This example shows you how to do that for R objects. Later you'll learn how to do it for dictionaries that are on the Earth Engine server.
@@ -136,30 +103,20 @@ Note that you can get a value from a dictionary by supplying the key. This examp
 Functions are another way to improve code readability and reusability by grouping sets of operations. Define a function with the `function` keyword. Function names start with a letter and have a pair of parentheses at the end. Functions often take parameters which tell the function what to do. These parameters go inside the parentheses `()`. The set of statements making up the function go inside curly brackets. The `return` keyword indicates what the function output is. There are several ways to declare a function, but here we'll use something like this:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-var myFunction = function(parameter1, parameter2, parameter3) {
-=======
-myFunction = function(parameter1, parameter2, parameter3) {
->>>>>>> Stashed changes
-  statement;
-  statement;
-  statement;
-  return statement;
+myFunction <- function(parameter1, parameter2, parameter3) {
+  statement
+  statement
+  statement
+  return statement
 }
 ```
 
 Let's consider the lines one by one. The first line creates a new function and assigns it to the variable myFunction. This variable could have been named anything. It defines how to call the function later. The terms in the parentheses after the function name (i.e. parameter1, parameter2, parameter3) are the parameter names and could have been named anything as well, though it's good practice to give them unique names that are different from the code outside the function. Whatever you name them, these are the names that function will use to refer to the values that are passed into the function when it is called. The value of a parameter once it's been passed into a function is called an argument. Although functions can use variables declared outside the function (global variables), function arguments are not visible outside the function. Functions can take as many parameters as you need, even zero. Here's a simple example of a function that just returns its argument:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## The reflect function takes a single parameter: element.
-var reflect = function(element) {
-## Return the argument.
-=======
 # The reflect function takes a single parameter: element.
-reflect = function(element) {
-# Return the argument.
->>>>>>> Stashed changes
+reflect <- function(element) {
+#Return the argument.
   return element
 }
 print('A good day to you!', reflect('Back at you!'))
@@ -168,7 +125,7 @@ print('A good day to you!', reflect('Back at you!'))
 This is an example of a user-defined function. There are also lots of built-in Earth Engine functions. Explore the Code Editor Docs tab to learn about these built-in functions. Here's a very simple example of an Earth Engine function:
 
 ```{r, eval=FALSE}
-var aString = ee.Algorithms.String(42)
+aString <- ee$Algorithms$String(42)
 ```
 
 ## Earth Engine Objects {-}
@@ -177,31 +134,20 @@ Now that you're comfortable with R, learn how to put  objects in R and primitive
 
 ### Strings {-}
 
-For example, define a string, then put it into the `ee.String()` container to be sent to Earth Engine:
+For example, define a string, then put it into the `ee$String()` container to be sent to Earth Engine:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Define a string, then put it into an EE container.
-var aString = 'To the cloud!'
-var eeString = ee.String(aString)
-=======
-# Define a string, then put it into an EE container.
-aString = 'To the cloud!'
-eeString = ee$String(aString)
->>>>>>> Stashed changes
+#Define a string, then put it into an EE container.
+aString <- 'To the cloud!'
+eeString <- ee$String(aString)
 print('Where to?', eeString)
 ```
 
-Think of `ee.Thing` as a container for a thing that exists on the server. In this example, the string is defined first, then put into the container. You can also define the container and its contents all at once. For example:
+Think of `ee$Thing` as a container for a thing that exists on the server. In this example, the string is defined first, then put into the container. You can also define the container and its contents all at once. For example:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Define a string that exists on the server.
-var serverString = ee.String('This is on the server.')
-=======
 # Define a string that exists on the server.
-serverString = ee$String('This is on the server.')
->>>>>>> Stashed changes
+serverString <- ee$String('This is on the server.')
 print('String on the server:', serverString)
 ```
 
@@ -209,67 +155,45 @@ Although the first argument to `print()` is just a string on the client, the sec
 
 ### Numbers {-}
 
-Use `ee.Number()` to create number objects on the server. For example, use the `Math.E` R method to create a constant value on the server:
+Use `ee$Number()` to create number objects on the server. For example, use the `Math$E` R method to create a constant value on the server:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Define a number that exists on the server.
-var serverNumber = ee.Number(Math.E)
-=======
 # Define a number that exists on the server.
-serverNumber = ee$Number(Math$E)
->>>>>>> Stashed changes
+serverNumber <- ee$Number(Math$E)
 print('e=', serverNumber)
 ```
 
-The `ee.String()` and `ee.Number()` methods are constructors. A constructor takes its argument (and possibly other parameters), puts it in a container, and returns the container and its contents as an Earth Engine object that you can manipulate in your code. Any constructor starting with `ee` returns an Earth Engine object.
+The `ee$String()` and `ee$Number()` methods are constructors. A constructor takes its argument (and possibly other parameters), puts it in a container, and returns the container and its contents as an Earth Engine object that you can manipulate in your code. Any constructor starting with `ee` returns an Earth Engine object.
 
 ### Methods on Earth Engine objects {-}
 
-Note that once you've created an Earth Engine object, you have to use Earth Engine methods to process it. In this example, you can't use R's `Math.log()` to process that Earth Engine object. You have to use the equivalent method defined for an `ee.Number`:
+Note that once you've created an Earth Engine object, you have to use Earth Engine methods to process it. In this example, you can't use R's `Math$log()` to process that Earth Engine object. You have to use the equivalent method defined for an `ee$Number`:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Use a built-in function to perform an operation on the number.
-var logE = serverNumber.log()
-=======
 # Use a built-in function to perform an operation on the number.
-logE = serverNumber$log()
->>>>>>> Stashed changes
+logE <- serverNumber$log()
 print('log(e)=', logE)
 ```
 
-In this example, `log()` is a method for a `ee.Number` object. (Use the Docs tab at the left side of the code editor to see a list of all the methods for every Earth Engine object type, for example ee.Number > log()). Note that the methods of Earth Engine objects return other Earth Engine objects.
+In this example, `log()` is a method for a `ee$Number` object. (Use the Docs tab at the left side of the code editor to see a list of all the methods for every Earth Engine object type, for example ee.Number > log()). Note that the methods of Earth Engine objects return other Earth Engine objects.
 
 ### List {-}
 
-To make a JavaScript list into an `ee.List` object on the server, you can put a JavaScript literal into a container as with numbers and strings. Earth Engine also provides server-side convenience methods for making sequences of numbers. For example:
+To make a JavaScript list into an `ee$List` object on the server, you can put a JavaScript literal into a container as with numbers and strings. Earth Engine also provides server-side convenience methods for making sequences of numbers. For example:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Make a sequence the hard way.
-var eeList = ee.List([1, 2, 3, 4, 5])
-## Make a sequence the easy way!
-var sequence = ee.List.sequence(1, 5)
-=======
 # Make a sequence the hard way.
-eeList = ee$List([1, 2, 3, 4, 5])
+eeList <- ee$List([1, 2, 3, 4, 5])
 # Make a sequence the easy way!
-sequence = ee$List.sequence(1, 5)
->>>>>>> Stashed changes
+sequence <- ee$List$sequence(1, 5)
 print('Sequence:', sequence)
 ```
 
-Since the `ee.List` objects only exist on the server, use Earth Engine provided functions to interact with them. For example, to get something out of the list, use the `get()` method of the `ee.List` object:
+Since the `ee$List` objects only exist on the server, use Earth Engine provided functions to interact with them. For example, to get something out of the list, use the `get()` method of the `ee$List` object:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Use a method on an ee.List to extract a value.
-var value = sequence.get(2)
-=======
 # Use a method on an ee.List to extract a value.
-value = sequence$get(2)
->>>>>>> Stashed changes
+value <- sequence$get(2)
 print('Value at index 2:', value)
 ```
 
@@ -281,13 +205,8 @@ Sometimes, Earth Engine doesn't know the type of an object that gets returned fr
 This is common with the `get()` function, which could return all sorts of Earth Engine objects. To correct it, use the `ee.Number` constructor to cast the result:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Cast the return value of get() to a number.
-print('No error:', ee.Number(value).add(3));
-=======
 # Cast the return value of get() to a number.
 print('No error:', ee$Number(value)$add(3))
->>>>>>> Stashed changes
 ```
 
 ### Dictionaries {-}
@@ -295,28 +214,20 @@ print('No error:', ee$Number(value)$add(3))
 You can construct an Earth Engine `Dictionary` from a R object, as with strings, numbers and lists. At construction time, you can use R functionality to initialize the Earth Engine object. In this case an `ee.Dictionary` is constructed directly from a R literal object:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Make a Dictionary on the server.
-var dictionary = ee.Dictionary({
-  e: Math.E,
-  pi: Math.PI,
-  phi: (1 + Math.sqrt(5)) / 2
-=======
 # Make a Dictionary on the server.
-dictionary = ee$Dictionary({
-  e = Math.E,
-  pi = Math.PI,
-  phi = (1 + Math.sqrt(5)) / 2
->>>>>>> Stashed changes
+dictionary <- ee$Dictionary({
+  e <- Math.E,
+  pi <- Math.PI,
+  phi <- (1 + Math.sqrt(5)) / 2
 })
 
 # Get some values from the dictionary.
-print('Euler:', dictionary$get('e'))
-print('Pi:', dictionary$get('pi'))
-print('Golden ratio:', dictionary$get('phi'))
+print('Euler:', dictionary.get('e'))
+print('Pi:', dictionary.get('pi'))
+print('Golden ratio:', dictionary.get('phi'))
 
 # Get all the keys:
-print('Keys: ', dictionary.keys())
+print('Keys: ', dictionary$keys())
 ```
 
 In this example, observe that once you have an `ee.Dictionary`, you must use methods on the `ee.Dictionary` to get values (unlike the JavaScript dictionary in the previous lesson). Specifically, `get(key)` returns the value associated with `key`. Since the type of object returned by `get()` could be be anything, if you're going to do anything to the object other then print it, you need to cast it to the right type. Also note that the `keys()` method returns an `ee.List`.
@@ -326,21 +237,16 @@ In this example, observe that once you have an `ee.Dictionary`, you must use met
 Date objects are the way Earth Engine represents time. As in the previous examples, it is important to distinguish between a R Date object and an Earth Engine `ee.Date` object. Construct an `ee.Date` from a string, from a R `Date`, or using static methods provided by the `ee.Date` class. (See the Date section in the Docs tab for details). This example illustrates the construction of dates from strings or a JavaScript date representing milliseconds since midnight on January 1, 1970:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## Define a date in Earth Engine.
-var date = ee.Date('2015-12-31')
-=======
 # Define a date in Earth Engine.
-date = ee$Date('2015-12-31')
->>>>>>> Stashed changes
+date <- ee$Date('2015-12-31')
 print('Date:', date)
 
-# Get the current time using the R Date.now() method.
-now = Date$now()
+# Get the current time using the JavaScript Date.now() method.
+now <- Date$now()
 print('Milliseconds since January 1, 1970', now)
 
 # Initialize an ee.Date object.
-eeNow = ee$Date(now)
+eeNow <- ee$Date(now)
 print('Now:', eeNow)
 ```
 
@@ -351,28 +257,17 @@ Dates are useful for filtering collections, specifically as arguments to the `fi
 Arguments to Earth Engine methods can be passed in order, for example to create an `ee.Date` from year, month and day, you can pass parameters of the `fromYMD()` static method in the order year, month, day:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-var aDate = ee.Date.fromYMD(2017, 1, 13)
-=======
-aDate = ee$Date$fromYMD(2017, 1, 13)
->>>>>>> Stashed changes
+aDate <- ee$Date$fromYMD(2017, 1, 13)
 print('aDate:', aDate)
 ```
 
 Alternatively, you can pass the parameters by name, in any order. While it might be more code, it can improve readability and reusability. To pass parameters by name, pass in a R object in which the keys of the object are the names of the method parameters and the values are the arguments to the method. For example:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-var theDate = ee.Date.fromYMD({
-  day: 13,
-  month: 1,
-  year: 2017
-=======
-theDate = ee$Date$fromYMD({
-  day = 13,
-  month = 1,
-  year = 2017
->>>>>>> Stashed changes
+theDate <- ee$Date$fromYMD({
+  day <- 13,
+  month <- 1,
+  year <- 2017
 })
 print('theDate:', theDate)
 ```
@@ -398,29 +293,18 @@ The use of for-loops is discouraged in Earth Engine. The same results can be ach
 The example below illustrates how you would take a list of numbers and create another list with the squares of each number using `map()`:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## This generates a list of numbers from 1 to 10.
-var myList = ee.List.sequence(1, 10)
-
-## The map() operation takes a function that works on each element independently
-## and returns a value. You define a function that can be applied to the input.
-var computeSquares = function(number) {
-  ## We define the operation using the EE API.
-  return ee.Number(number).pow(2)
-=======
 # This generates a list of numbers from 1 to 10.
-myList = ee$List$sequence(1, 10)
+myList <- ee$List$sequence(1, 10)
 
 # The map() operation takes a function that works on each element independently
 # and returns a value. You define a function that can be applied to the input.
-computeSquares = function(number) {
-  # We define the operation using the EE API.
+computeSquares <- function(number) {
+#We define the operation using the EE API.
   return ee$Number(number)$pow(2)
->>>>>>> Stashed changes
 }
 
 # Apply your function to each item in the list by using the map() function.
-squares = myList$map(computeSquares)
+squares <- myList$map(computeSquares)
 print(squares)  # [1, 4, 9, 16, 25, 36, 49, 64, 81]
 ```
 
@@ -431,56 +315,41 @@ Another common problem faced by new users who are used to procedural programming
 Say you want to solve a variant of the above example, where the task is to compute squares of only odd numbers. A functional approach to solving this without if/else conditions, is demonstrated below:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-## The following function determines if a number is even or odd.  The mod(2)
-## function returns 0 if the number is even and 1 if it is odd (the remainder
-## after dividing by 2).  The input is multipled by this remainder so even
-## numbers get set to 0 and odd numbers are left unchanged.
-var getOddNumbers = function(number) {
-  number = ee.Number(number)   ## Cast the input to a Number so we can use mod.
-  var remainder = number.mod(2)
-  return number.multiply(remainder)
-=======
 # The following function determines if a number is even or odd.  The mod(2)
 # function returns 0 if the number is even and 1 if it is odd (the remainder
 # after dividing by 2).  The input is multipled by this remainder so even
 # numbers get set to 0 and odd numbers are left unchanged.
-getOddNumbers = function(number) {
-  number = ee$Number(number)   # Cast the input to a Number so we can use mod.
-  remainder = number$mod(2)
+getOddNumbers <- function(number) {
+  number <- ee$Number(number)   # Cast the input to a Number so we can use mod.
+  remainder <- number$mod(2)
   return number$multiply(remainder)
->>>>>>> Stashed changes
 }
 
-newList = myList$map(getOddNumbers)
+newList <- myList$map(getOddNumbers)
 
 # Remove the 0 values.
-oddNumbers = newList$removeAll([0])
+oddNumbers <- newList$removeAll([0])
 
-squares = oddNumbers$map(computeSquares)
+squares <- oddNumbers$map(computeSquares)
 print(squares)  # [1, 9, 25, 49, 81]
 ```
 
 This paradigm is especially applicable when working with collections. If you wanted to apply a different algorithm to the collection based on some conditions, the preferred way is to first filter the collection based on the condition, and then `map()` a different function to each of the subsets. This allows the system to parallelize the operation. For example:
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-var collection = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
-=======
-collection = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
->>>>>>> Stashed changes
+collection <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 
 # Divide the collection into 2 subsets and apply a different algorithm on them.
-subset1 = collection$filter(ee$Filter$lt('SUN_ELEVATION', 40))
-subset2 = collection$filter(ee$Filter$gte('SUN_ELEVATION', 40))
+subset1 <- collection$filter(ee$Filter$lt('SUN_ELEVATION', 40))
+subset2 <- collection$filter(ee$Filter$gte('SUN_ELEVATION', 40))
 
-processed1 = subset1$map(function(image) {
+processed1 <- subset1$map(function(image) {
   return image$multiply(2)
 })
-processed2 = subset2
+processed2 <- subset2
 
 # Merge the collections to get a single collection.
-final = processed1$merge(processed2)
+final <- processed1$merge(processed2)
 print('Original collection size', collection$size())
 print('Processed collection size', final$size())
 ```
@@ -492,22 +361,18 @@ You may need to do sequential operation, where the result of each iteration is u
 A good demonstration of `iterate()` is for creation of Fibonacci number sequence. Here, each number in the series is the sum of previous 2 numbers. The `iterate()` function takes 2 arguments, a function (algorithm) and a starting value. The function itself gets passed on 2 values, the current value in the iteration, and the result of the previous iteration. The following example demonstrates how to implement a fibonacci sequence in Earth Engine.
 
 ```{r, eval=FALSE}
-<<<<<<< Updated upstream
-var algorithm = function(current, previous) {
-=======
-algorithm = function(current, previous) {
->>>>>>> Stashed changes
-  previous = ee$List(previous)
-  n1 = ee$Number(previous$get(-1))
-  n2 = ee$Number(previous$get(-2))
+algorithm <- function(current, previous) {
+  previous <- ee$List(previous)
+  var n1 <- ee$Number(previous$get(-1))
+  var n2 <- ee$Number(previous$get(-2))
   return previous$add(n1$add(n2))
 }
 
-## Compute 10 iterations.
-numIteration = ee$List$repeat(1, 10)
-start = [0, 1]
-sequence = numIteration.iterate(algorithm, start)
-print(sequence)  ## [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+# Compute 10 iterations.
+numIteration <- ee$List$repeat(1, 10)
+start <- [0, 1]
+sequence <- numIteration$iterate(algorithm, start)
+print(sequence)  # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
 ```
 
 Now that you have a good understanding of javascript concepts, you can see the API Tutorial for an introduction to the geospatial functionality of the Earth Engine API.
@@ -523,7 +388,7 @@ Now that you're ready to begin writing in R of the Earth Engine , start by copyi
 
 ```{r, eval=FALSE}
 ## Instantiate an image with the Image constructor.
-image = ee$Image('CGIAR/SRTM90_V4')
+image <- ee$Image('CGIAR/SRTM90_V4')
 
 ## Zoom to a location.
 Map$setCenter(-112.8598, 36.2841, 9) ## Center on the Grand Canyon.
@@ -536,7 +401,7 @@ Click the Run button at the top of the Code Editor and observe that a very gray 
 
 ## Image Constructor {-}
 
-The first new thing in this example is the image constructor `ee.Image()`. The argument provided to the constructor is the string ID of an image in the Earth Engine data catalog. (See the Docs tab, at the left of the Code Editor, to see a full list of possible arguments to the image constructor. The Docs tab represents the most up to date information about what Earth Engine can do.)
+The first new thing in this example is the image constructor `ee$Image()`. The argument provided to the constructor is the string ID of an image in the Earth Engine data catalog. (See the Docs tab, at the left of the Code Editor, to see a full list of possible arguments to the image constructor. The Docs tab represents the most up to date information about what Earth Engine can do.)
 
 To discover an image ID, search in the Earth Engine data catalog using the search tool at the top of the Code Editor. For example, type 'elevation' into the search field and note that a list of rasters is returned. Click the 'SRTM Digital Elevation Data Version 4' entry to see more information about that dataset. On the right side of the dataset description is an Image ID field. Observe that the image ID in the example is copied from the image ID shown in the dataset description.
 
@@ -544,7 +409,7 @@ An alternative to copying and pasting image IDs is to use the Import button on t
 
 ## Configuring the Map {-}
 
-The second new part of this example is the `Map.setCenter()` call. This method on the `Map` object, which represents the Map display in the Code Editor, centers the map at the given longitude, latitude (in decimal degrees) and zoom level where 1 is zoomed out so that the map shows the entire Earth's surface. Larger numbers zoom in from there. Discover all the methods on the `Map` object by checking the Map section in the Docs tab on the left side of the Code Editor.
+The second new part of this example is the `Map$setCenter()` call. This method on the `Map` object, which represents the Map display in the Code Editor, centers the map at the given longitude, latitude (in decimal degrees) and zoom level where 1 is zoomed out so that the map shows the entire Earth's surface. Larger numbers zoom in from there. Discover all the methods on the `Map` object by checking the Map section in the Docs tab on the left side of the Code Editor.
 
 ## Adding a layer to the Map {-}
 
@@ -556,7 +421,7 @@ Congratulations! You've created your first Earth Engine script. In the next sect
 
 Images in Earth Engine (see this page for more details) are made up of one or more bands. Each band in an image has its own name, pixel values, pixel resolution, and projection. As you'll soon discover, the SRTM image has one band: 'elevation'.
 
-When you add an image to a map using `Map.addLayer()`, Earth Engine needs to determine how to map the values in the image band(s) to colors on the display. If a single-band image is added to a map, by default Earth Engine displays the band in grayscale, where the minimum value is assigned to black, and the maximum value is assigned to white. If you don't specify what the minimum and maximum should be, Earth Engine will use default values. For example, the image you just added to the map is displayed as a grayscale image stretched to the full range of the data, or signed 16-bit integer [-32768, 32767]. (`float` bands are stretched to [0, 1] and `byte` bands are stretched to [0, 255] by default).
+When you add an image to a map using `Map$addLayer()`, Earth Engine needs to determine how to map the values in the image band(s) to colors on the display. If a single-band image is added to a map, by default Earth Engine displays the band in grayscale, where the minimum value is assigned to black, and the maximum value is assigned to white. If you don't specify what the minimum and maximum should be, Earth Engine will use default values. For example, the image you just added to the map is displayed as a grayscale image stretched to the full range of the data, or signed 16-bit integer [-32768, 32767]. (`float` bands are stretched to [0, 1] and `byte` bands are stretched to [0, 255] by default).
 
 You can discover the data type of the image by printing it and inspecting the image object in the **Console** tab. For example, paste the following after the previous code:
 
@@ -568,13 +433,13 @@ When you click run, note that an object appears in the console. To investigate t
 
 ## Customizing layer visualization {-}
 
-To change the way the data are stretched, you can provide another parameter to the `Map.addLayer()` call. Specifically, the second parameter, `visParams`, lets you specify the minimum and maximum values to display. To discover what values to use, activate the Inspector tab and click around on the map to get an idea of the range of pixel values. Alternatively, use the Layer manager to interactively stretch the data, then observe the minimum and maximum corresponding to percentiles or standard deviation stretches. Suppose that through such experimentation, you determine that the data should be stretched to [0, 3000]. To display the image using this range, use:
+To change the way the data are stretched, you can provide another parameter to the `Map$addLayer()` call. Specifically, the second parameter, `visParams`, lets you specify the minimum and maximum values to display. To discover what values to use, activate the Inspector tab and click around on the map to get an idea of the range of pixel values. Alternatively, use the Layer manager to interactively stretch the data, then observe the minimum and maximum corresponding to percentiles or standard deviation stretches. Suppose that through such experimentation, you determine that the data should be stretched to [0, 3000]. To display the image using this range, use:
 
 ```{r, eval=FALSE}
 Map$addLayer(image, list(min = 0, max = 3000), 'custom visualization')
 ```
 
-Note that the visParams parameter is an object, with properties specifying the min and the max. Note that the third parameter for `Map.addLayer()` is the name of the layer that is displayed in the Layer manager. The result should look something like Figure 1. Hover the mouse over the **Layers** box on the right to see the effect of renaming that layer.
+Note that the visParams parameter is an object, with properties specifying the min and the max. Note that the third parameter for `Map$addLayer()` is the name of the layer that is displayed in the Layer manager. The result should look something like Figure 1. Hover the mouse over the **Layers** box on the right to see the effect of renaming that layer.
 
 <center>
 ![Figure 8. Elevation image as grayscale, stretched to (0, 3000)](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_01.png){width=670px}
@@ -593,7 +458,7 @@ The result should look something like Figure .
 <center>
 ![Figure 8. Elevation image as a color ramp from blue to red, stretched to (0, 3000).](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_02.png){width=670px}
 
-<left>
+</center>
 
 ## Digression: Palettes {-}
 
@@ -610,10 +475,10 @@ Now that you know how to load and display an image, it's time to apply a computa
 
 ```{r, eval=FALSE}
 ## Load the SRTM image.
-srtm = ee$Image('CGIAR/SRTM90_V4')
+srtm <- ee$Image('CGIAR/SRTM90_V4')
 
 ## Apply an algorithm to an image.
-slope = ee$Terrain$slope(srtm)
+slope <- ee$Terrain$slope(srtm)
 
 ## Display the result.
 Map$setCenter(-112.8598, 36.2841, 9) ## Center on the Grand Canyon.
@@ -625,18 +490,18 @@ Note that in the code `ee.Terrain.slope(srtm)`, the srtm image is provided as an
 <center>
 ![Figure 8. Slope image.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_03.png){width=670px}
 
-<left>
+</center>
 
 ## Image math {-}
 
-There are also methods in the `ee.Image` class that can be invoked on an image object. For example, suppose you'd like to do some math using image bands (sometimes called *band math* or *map algebra*). For example, you may be interested in trigonometric operations on an aspect image. To accomplish that, first convert an aspect image to radians, then call `sin()` on it. Reusing our `srtm` image.
+There are also methods in the `ee$Image` class that can be invoked on an image object. For example, suppose you'd like to do some math using image bands (sometimes called *band math* or *map algebra*). For example, you may be interested in trigonometric operations on an aspect image. To accomplish that, first convert an aspect image to radians, then call `sin()` on it. Reusing our `srtm` image.
 
 ```{r, eval=FALSE}
 ## Get the aspect (in degrees).
-aspect = ee$Terrain$aspect(srtm)
+aspect <- ee$Terrain$aspect(srtm)
 
 ## Convert to radians, compute the sin of the aspect.
-sinImage = aspect$divide(180)$multiply(Math$PI)$sin()
+sinImage <- aspect$divide(180)$multiply(Math$PI)$sin()
 
 ## Display the result.
 Map$addLayer(sinImage, list(min = -1, max = 1), 'sin')
@@ -649,20 +514,20 @@ The result should look something like Figure . It's worth taking a closer look a
 
 ## Image statistics {-}
 
-Another useful class of operations on images involves computing pixel statistics in image regions, or raster-vector overlays. To compute statistics in Earth Engine, use a reducer as represented by classes in the `ee.Reducer` [package](https:#developers.google.com/earth-engine/guides/reducers_intro).For example, suppose you're interested in the mean of elevation in some region. You can define a region by drawing a polygon using the [geometry drawing tools](https:#developers.google.com/earth-engine/guides/playground#geometry-tools) . To interactively draw a region, get the polygon drawing tool, then digitize a polygon over your area of interest and click **Exit** when you're done. Note that the resultant `ee.Geometry` object is automatically named geometry and added as an import at the top of your script. Rename that variable to 'polygon' by clicking on the variable name in the imports and typing the new name.
+Another useful class of operations on images involves computing pixel statistics in image regions, or raster-vector overlays. To compute statistics in Earth Engine, use a reducer as represented by classes in the `ee$Reducer` [package](https:#developers.google.com/earth-engine/guides/reducers_intro).For example, suppose you're interested in the mean of elevation in some region. You can define a region by drawing a polygon using the [geometry drawing tools](https:#developers.google.com/earth-engine/guides/playground#geometry-tools) . To interactively draw a region, get the polygon drawing tool, then digitize a polygon over your area of interest and click **Exit** when you're done. Note that the resultant `ee$Geometry` object is automatically named geometry and added as an import at the top of your script. Rename that variable to 'polygon' by clicking on the variable name in the imports and typing the new name.
 
 Next, get the mean pixel value in the polygon using the following code:
 
 ```{r, eval=FALSE}
 ## Compute the mean elevation in the polygon.
-meanDict = srtm$reduceRegion(
-  reducer = ee$Reducer$mean(),
-  geometry = polygon,
-  scale = 90
+meanDict <- srtm$reduceRegion(
+  reducer <- ee$Reducer$mean(),
+  geometry <- polygon,
+  scale <- 90
 )
 
 ## Get the mean from the dictionary and print it.
-mean = meanDict$get('elevation')
+mean <- meanDict$get('elevation')
 print('Mean elevation', mean)
 ```
 
@@ -681,7 +546,7 @@ Fear not! There are several things you can do to resolve the error. The `reduceR
 In the previous example, scale is set to approximately the native resolution of the SRTM image. You can discover the native resolution of an image with:
 
 ```{r, eval=FALSE}
-scale = srtm$projection()$nominalScale()
+scale <- srtm$projection()$nominalScale()
 print('SRTM scale in meters', scale)
 ```
 
@@ -691,10 +556,10 @@ So far, you've been working with a single image with a single band. In the next 
 
 ## Image Collections {-}
 
-An image collection refers to a set of Earth Engine images. For example, the collection of all Landsat 8 images is an `ee.ImageCollection`. Like the SRTM image you have been working with, image collections also have an ID. As with single images, you can discover the ID of an image collection by searching the [Earth Engine data catalog](https://developers.google.com/earth-engine/datasets) from the Code Editor and looking at the details page of the dataset. For example, search for 'landsat 8 toa' and click on the first result, which should correspond to the [USGS Landsat 8 Collection 1 Tier 1 TOA Reflectance](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C01_T1_TOA) dataset. Either import that dataset using the **Import** button and rename it to `l8`, or copy the ID into the image collection constructor:
+An image collection refers to a set of Earth Engine images. For example, the collection of all Landsat 8 images is an `ee$ImageCollection`. Like the SRTM image you have been working with, image collections also have an ID. As with single images, you can discover the ID of an image collection by searching the [Earth Engine data catalog](https://developers.google.com/earth-engine/datasets) from the Code Editor and looking at the details page of the dataset. For example, search for 'landsat 8 toa' and click on the first result, which should correspond to the [USGS Landsat 8 Collection 1 Tier 1 TOA Reflectance](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C01_T1_TOA) dataset. Either import that dataset using the **Import** button and rename it to `l8`, or copy the ID into the image collection constructor:
 
 ```{r, eval=FALSE}
-l8 = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+l8 <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 ```
 
 ### Filtering image collections {-}
@@ -702,10 +567,10 @@ l8 = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 It's worth noting that this collection represents every Landsat 8 scene collected, all over the Earth. Often it is useful to extract a single image, or subset of images, on which to test algorithms. The way to limit the collection by time or space is by filtering it. For example, to filter the collection to images that cover a particular location, first define your area of interest with a point (or line or polygon) using the geometry drawing tools. Pan to your area of interest, hover on the **Geometry Imports** (if you already have one or more geometries defined) and click **+new layer** (if you don't have any imports, go to the next step). Get the point drawing tool (**FIGURE**) and make a point in your area of interest. Name the import `point`. Now, filter the `l8` collection to get only the images that intersect the point, then add a second filter to limit the collection to only the images that were acquired in 2015:
 
 ```{r, eval=FALSE}
-spatialFiltered = l8$filterBounds(point)
+spatialFiltered <- l8$filterBounds(point)
 print('spatialFiltered', spatialFiltered)
 
-temporalFiltered = spatialFiltered$filterDate('2015-01-01', '2015-12-31')
+temporalFiltered <- spatialFiltered$filterDate('2015-01-01', '2015-12-31')
 print('temporalFiltered', temporalFiltered)
 ```
 
@@ -715,10 +580,10 @@ Note that you can `print()` the filtered collections. You can't print more than 
 
 ```{r, eval=FALSE}
 # This will sort from least to most cloudy.
-sorted = temporalFiltered$sort('CLOUD_COVER')
+sorted <- temporalFiltered$sort('CLOUD_COVER')
 
 # Get the first (least cloudy) image.
-scene = sorted$first()
+scene <- sorted$first()
 ```
 
 You're now ready to display the image!
@@ -739,7 +604,7 @@ You also need to provide `min` and `max` values suitable for displaying reflecta
 You also need to provide min and max values suitable for displaying reflectance from typical Earth surface targets. Although lists can be used to specify different values for each band, here it's sufficient to specify `0.3` as `max` and use the default value of zero for the `min` parameter. Combining the visualization parameters into one object and displaying:
 
 ```{r, eval=FALSE}
-visParams = {bands = ['B4', 'B3', 'B2'], max: 0.3}
+visParams <- {bands = ['B4', 'B3', 'B2'], max = 0.3}
 Map$addLayer(scene, visParams, 'true-color composite')
 ```
 
@@ -775,8 +640,8 @@ If you zoomed out enough, you probably noticed some clouds in the mosaic. When y
 With the [Landsat 8 TOA reflectance collection](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC8_L1T_TOA) loaded into a variable called l8, you saw that the following code results in a recent-value composite:
 
 ```{r}
-l8 = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
-landsat2016 = l8$filterDate('2016-01-01', '2016-12-31')
+l8 <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+landsat2016 <- l8$filterDate('2016-01-01', '2016-12-31')
 Map$addLayer(landsat2016, visParams, 'l8 collection')
 ```
 
@@ -790,10 +655,10 @@ Merely adding the collection to the map results in selecting the most recent pix
 
 ```{r}
 # Get the median over time, in each band, in each pixel.
-median = l8$filterDate('2016-01-01', '2016-12-31')$median()
+median <- l8$filterDate('2016-01-01', '2016-12-31')$median()
 
 # Make a handy variable of visualization parameters.
-visParams = list(bands = ('B4', 'B3', 'B2'), max = 0.3)
+visParams <- list(bands = ('B4', 'B3', 'B2'), max = 0.3)
 
 # Display the median composite.
 Map$addLayer(median, visParams, 'median')
@@ -819,16 +684,16 @@ For example, suppose you would like to mask all the water pixels in the median c
 
 ```{r}
 # Load or import the Hansen et al. forest change dataset.
-hansenImage = ee$Image('UMD/hansen/global_forest_change_2015')
+hansenImage <- ee$Image('UMD/hansen/global_forest_change_2015')
 
 # Select the land/water mask.
-datamask = hansenImage$select('datamask')
+datamask <- hansenImage$select('datamask')
 
 # Create a binary mask.
-mask = datamask$eq(1)
+mask <- datamask$eq(1)
 
 # Update the composite mask with the water mask.
-maskedComposite = median$updateMask(mask)
+maskedComposite <- median$updateMask(mask)
 Map$addLayer(maskedComposite, visParams, 'masked')
 ```
 
@@ -841,13 +706,13 @@ As a result of this masking, all the pixels in the median composite that are ove
 By combining the concepts of image collections, logical operators, masking and compositing, you can achieve interesting cartographic results. For example, suppose you want an image in which land pixels are displayed in true-color and all the other pixels are displayed in blue, you can do something like:
 
 ```{r}
-water = mask$not()
+water <- mask$not()
 
 # Mask water with itself to mask all the zeros (non-water).
-water = water$mask(water)
+water <- water$mask(water)
 
 # Make an image collection of visualization images.
-mosaic = ee$ImageCollection([
+mosaic <- ee$ImageCollection([
   median$visualize(visParams),
   water$visualize({palette = '000044'}),
 ])$mosaic()
@@ -875,13 +740,13 @@ Previously, you learned how to get individual Landsat scenes by doing something 
 # Define a point of interest. Use the UI Drawing Tools to import a point
 # geometry and name it "point" or set the point coordinates with the
 # ee.Geometry.Point() function as demonstrated here.
-point = ee$Geometry$Point([-122.292, 37.9018])
+point <- ee$Geometry$Point([-122.292, 37.9018])
 
 # Import the Landsat 8 TOA image collection.
-l8 = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+l8 <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 
 # Get the least cloudy image in 2015.
-image = ee$Image(
+image <- ee$Image(
   l8$filterBounds(point)
     .filterDate('2015-01-01', '2015-12-31')
     .sort('CLOUD_COVER')
@@ -893,9 +758,9 @@ Suppose now that you want to compute a Normalized Difference Vegetation Index (N
 
 ```{r}
 # Compute the Normalized Difference Vegetation Index (NDVI).
-nir = image$select('B5')
-red = image$select('B4')
-ndvi = nir$subtract(red)$divide(nir$add(red))$rename('NDVI')
+nir <- image$select('B5')
+red <- image$select('B4')
+ndvi <- nir$subtract(red)$divide(nir$add(red))$rename('NDVI')
 
 # Display the result.
 Map$centerObject(image, 9)
@@ -913,7 +778,7 @@ The result should look something like Figure 8. Note that we use the `select()` 
 The normalized difference operation is so ubiquitous in remote sensing, there is a [shortcut function](https://developers.google.com/earth-engine/apidocs/ee-image-normalizeddifference) on an ee.Image that is useful for simplifying the code in the previous example:
 
 ```{r}
-ndvi = image$normalizedDifference(['B5', 'B4'])$rename('NDVI')
+ndvi <- image$normalizedDifference(['B5', 'B4'])$rename('NDVI')
 ```
 
 ### Mapping a Function over a Collection {-}
@@ -921,19 +786,19 @@ ndvi = image$normalizedDifference(['B5', 'B4'])$rename('NDVI')
 Suppose now that you want to add NDVI to every image in an image collection. The way to do that in Earth Engine is to `map()` a function over the collection. Don't confuse `map()` with the `Map` object. The former is a method on a collection, and uses *map* in the [parallel computing sense](https://en.wikipedia.org/wiki/Map_(parallel_pattern)) of applying a function to every element in a collection. The function defines the operations that will be applied to every element in the collection. You have seen a simple function in the R tutorial, but now we're going to make a function that includes Earth Engine functionality. For example, copy the previous NDVI code into a function which returns the input image with an NDVI band:
 
 ```{r}
-addNDVI = function(image) {
-  ndvi = image$normalizedDifference(['B5', 'B4']).rename('NDVI')
+addNDVI <- function(image) {
+  ndvi <- image$normalizedDifference(['B5', 'B4']).rename('NDVI')
   return image$addBands(ndvi)
 }
 
 # Test the addNDVI function on a single image.
-ndvi = addNDVI(image)$select('NDVI')
+ndvi <- addNDVI(image)$select('NDVI')
 ```
 
 This code might not be as efficient for computing NDVI for a single image, but this function can be used as an argument to `map()` in order to add an NDVI band to every image in the collection. It's often useful to first test a function on a single image, to make sure the function is behaving as you expect. Once you've tested the function on an individual image and have determined that it does what you want, you can map it over the collection:
 
 ```{r}
-withNDVI = l8$map(addNDVI)
+withNDVI <- l8$map(addNDVI)
 ```
 
 To verify that this is indeed putting an NDVI band in every image in this collection, you can add the `withNDVI` collection to the map and query a random location with the **Inspector** tab. You should notice that each image in the collection now has a band called `NDVI`.
@@ -944,10 +809,10 @@ Now that you've made an image collection in which each image has an NDVI band, w
 
 ```{r}
 # Make a "greenest" pixel composite.
-greenest = withNDVI$qualityMosaic('NDVI')
+greenest <- withNDVI$qualityMosaic('NDVI')
 
 # Display the result.
-visParams = {bands = ['B4', 'B3', 'B2'], max: 0.3}
+visParams <- {bands = ['B4', 'B3', 'B2'], max = 0.3}
 Map$addLayer(greenest, visParams, 'Greenest pixel composite')
 ```
 
@@ -966,11 +831,11 @@ Earth Engine is a powerful analytical tool, but you may have need to export the 
 
 ```{r}
 # Import the Landsat 8 TOA image collection.
-l8 = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+l8 <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 
 # Map a function over the Landsat 8 TOA collection to add an NDVI band.
-withNDVI = l8$map(function(image) {
-  ndvi = image$normalizedDifference(['B5', 'B4']).rename('NDVI')
+withNDVI <- l8$map(function(image) {
+  ndvi <- image$normalizedDifference(['B5', 'B4']).rename('NDVI')
   return image$addBands(ndvi)
 })
 ```
@@ -983,11 +848,11 @@ Now let's use the `roi` point to make a chart of NDVI over time in the pixel und
 
 ```{r}
 # Create a chart.
-chart = ui$Chart.image.series({
-  imageCollection = withNDVI$select('NDVI')
-  region = roi,
-  reducer = ee$Reducer$first(),
-  scale = 30
+chart <- ui$Chart.image.series({
+  imageCollection <- withNDVI$select('NDVI')
+  region <- roi,
+  reducer <- ee$Reducer$first(),
+  scale <- 30
 })$setOptions({title = 'NDVI over time'})
 
 # Display the chart in the console.
@@ -1006,26 +871,26 @@ For the `roi` geometry, we chose a point in an agricultural area, resulting in a
 Something you may have noticed about this chart is that the time series of NDVI values at the point looks a little noisy. This is likely due to clouds. To ameliorate this effect, Earth Engine includes a cloud-masking algorithm for Landsat sensors with a thermal band: `ee$Algorithms$Landsat$simpleCloudScore()`. It takes a Landsat TOA reflectance image as input and adds a band named cloud which is an index of cloudiness in the pixel from zero to 100, from least to most cloudy, respectively. By modifying the function you mapped over the collection, you can use an arbitrary threshold (20) on the cloud index to clean up the chart a bit:
 
 ```{r}
-cloudlessNDVI = l8$map(function(image) {
+cloudlessNDVI <- l8$map(function(image) {
   # Get a cloud score in [0, 100].
-  cloud = ee$Algorithms4Landsat$simpleCloudScore(image)$select('cloud')
+  cloud <- ee$Algorithms4Landsat$simpleCloudScore(image)$select('cloud')
 
   # Create a mask of cloudy pixels from an arbitrary threshold.
-  mask = cloud$lte(20)
+  mask <- cloud$lte(20)
 
   # Compute NDVI.
-  ndvi = image$normalizedDifference(['B5', 'B4'])$rename('NDVI')
+  ndvi <- image$normalizedDifference(['B5', 'B4'])$rename('NDVI')
 
   # Return the masked image with an NDVI band.
   return image$addBands(ndvi)$updateMask(mask)
 })
 
 print(ui$Chart$image$series({
-  imageCollection = cloudlessNDVI.select('NDVI')
-  region = roi,
-  reducer = ee$Reducer$first(),
-  scale = 30
-})$setOptions({title = 'Cloud-masked NDVI over time'}))
+  imageCollection <- cloudlessNDVI.select('NDVI')
+  region <- roi,
+  reducer <- ee$Reducer$first(),
+  scale <- 30
+})$setOptions({title <- 'Cloud-masked NDVI over time'}))
 ```
 
 The cloud-masked result is illustrated in Figure 11. Note that the time series looks a little smoother, but may still contain pixels affected by clouds. Adjust the threshold on the cloud index and observe the charted time series to learn how this threshold can affect your results.
@@ -1040,23 +905,23 @@ The cloud-masked result is illustrated in Figure 11. Note that the time series l
 You have seen a way to export a chart of data computed by Earth Engine, but what about a whole image? Suppose, for example that you have built a greenest-pixel composite as discussed in the previous section:
 
 ```{r}
-greenest = cloudlessNDVI$qualityMosaic('NDVI')
+greenest <- cloudlessNDVI$qualityMosaic('NDVI')
 ```
 
 The only difference in this code from what you did previously is that now we're using the cloud masked collection. You can export a subset (defined by a region) of this using the `Export` package. (Learn more about exporting raster and vector data from Earth Engine.) For example, to export an image that can be easily embedded in other docs, let's create a visualization image, as you've done previously, an Export it to your Google Drive folder:
 
 ```{r}
 # Create a 3-band, 8-bit, color-IR composite to export.
-visualization = greenest$visualize({
-  bands = ['B5', 'B4', 'B3'],
-  max = 0.4
-});
+visualization <- greenest$visualize({
+  bands <- ['B5', 'B4', 'B3'],
+  max <- 0.4
+})
 
 # Create a task that you can launch from the Tasks tab.
 Export$image$toDrive({
-  image = visualization,
-  description = 'Greenest_pixel_composite',
-  scale = 30
+  image <- visualization,
+  description <- 'Greenest_pixel_composite',
+  scale <- 30
 })
 ```
 
