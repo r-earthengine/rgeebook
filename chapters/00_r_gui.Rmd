@@ -5,6 +5,23 @@ source("common.R")
 ```
 
 
-# Overview
+# Overview {-}
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+## R Guides {-}
+
+The guides are written primarily for R with [Rstudio](). The [R Quickstart]() guide and the [tutorials]() describe basic concepts and example workflows to help beginning users.
+
+The [Best Practices]() and [Debugging]() guides have more complex examples and provide techniques useful for overcoming errors and scaling your Earth Engine analyses to larger areas, longer time series and more data. More advanced [Earth Engine concepts]() provide necessary background for understanding how the Earth Engine service works and writing effective code.
+
+The remainder of the guides are intended to illustrate important concepts about data types such as:
+
+  - [`Image`](), The fundamental raster data type in Earth Engine.
+  - [`ImageCollection`](), a stack or time-series of images.
+  - [`Geometry`](), the fundamental vector data type in Earth Engine.
+  - [`Feature`](), or a `Geometry` with attributes.
+  - [`FeatureCollection`](), or a set of features.
+  - [`Reducer`](), an object used to compute statistics or perform aggregations.
+  - [`Join`](), or how to combine datasets (`Image` or `Feature` collections) based on time, location, or an attribute property.
+  - [`Array`](), for multi-dimensional analyses.
+  
+There are also sections for machine learning, specialized or sensor specific algorithms (e.g. Landsat algorithms), and Rstudio addins, Earth Engine apps, and data (asset) management.

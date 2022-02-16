@@ -5,24 +5,24 @@ source("common.R")
 ```
 
 
-# Managing Assets  
+# Managing Assets {-} 
 
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
 
 
-# Importing Raster Data
+# Importing Raster Data {-}
 
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
 
-# Manifest Upload  
+# Manifest Upload {-}
 
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
 
-# Importing Table Data  
+# Importing Table Data {-}
 
 To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
 
-# Exporting Data 
+# Exporting Data {-}
 
 You can export images, map tiles, tables and video from Earth Engine. The exports can be sent to your Google Drive account, to [Google Cloud Storage](https://cloud.google.com/storage/) or to a new Earth Engine asset.
 
@@ -71,7 +71,7 @@ Export$image$toDrive({
 })
 ```
 
-When this code is run, an export task will be created in the Code Editor **Tasks** tab. Click the **Run** button next to the task to start it. (Learn more about the Task Manager from the Code Editor section). The image will be created in your Drive account with the specified `fileFormat`.
+When this code is run, an export task will be created in the Rstudio **Tasks** tab. Click the **Run** button next to the task to start it. (Learn more about the Task Manager from the Rstudio section). The image will be created in your Drive account with the specified `fileFormat`.
 
 ### to Cloud Storage {-}
 
@@ -134,7 +134,7 @@ Other configuration options are set with the `formatOptions` parameter, which sh
 
 #### GeoTiff {-}
 
-to export a [cloud optimized GeoTIFF](https://www.cogeo.org/), pass a JavaScript literal for `formatOptions` in which the `cloudOptimized` key is set to **true**. Continuing the previous example:
+to export a [cloud optimized GeoTIFF](https://www.cogeo.org/), pass a R literal for `formatOptions` in which the `cloudOptimized` key is set to **true**. Continuing the previous example:
 
 ```{r, eval=FALSE}
 # Export a cloud-optimized GeoTIFF.
@@ -178,9 +178,9 @@ If the output image is large, it will be exported as multiple files. If you are 
 
 If you are exporting to TFRecord, the files will be appended by `-00000`, `-00001`,... `-0000N` for N+1 files. Maintaining this order is important if you intend to perform inference on the files and upload the predictions back to Earth Engine as an image. See uploading images as TFRecord files for details.
 
-### Exporting images as they appear in the Code Editor {-}
+### Exporting images as they appear in the Rstudio {-}
 
-To export imagery as rendered on screen in Earth Engine, create visualization images as demonstrated in the [Visualization images]() and the [Compositing and Mosaicking]() sections. Since the Code Editor uses the 'EPSG:3857' CRS, specify a CRS of `'EPSG:3857'` in the export to get an image in the same projection as that displayed in the Code Editor map. [See the section on configuring image exports]() for details on specifying the resolution and coordinate system of the output.
+To export imagery as rendered on screen in Earth Engine, create visualization images as demonstrated in the [Visualization images]() and the [Compositing and Mosaicking]() sections. Since the Rstudio uses the 'EPSG:3857' CRS, specify a CRS of `'EPSG:3857'` in the export to get an image in the same projection as that displayed in the Rstudio map. [See the section on configuring image exports]() for details on specifying the resolution and coordinate system of the output.
 
 ## Exporting tables and vector data {-}
 
@@ -342,3 +342,170 @@ Export.video.toCloudStorage({
   region: polygon
 })
 ```
+
+## Exporting maps {-}
+
+To export a publicly viewable map to Cloud Storage, use **`Export.map.toCloudStorage()`**. This function exports map tiles suitable for display using the [Google Maps Platform API]() or [Google Earth]() for web.
+
+### Generate a Google Maps Platform API Key {-}
+    
+When you export map tiles from Earth Engine, we generate a sample HTML page stored in the output directory for you to preview the tiles using the Google Maps Platform R API. You can optionally provide a Google Maps Platform API Key at the time of export, which will be used for the sample viewer's API calls.
+
+There are four steps to follow:
+
+- Click the "Create Maps Platform API Key" button below.
+
+- Select the Cloud project for your API key, and click [NEXT]().
+
+- <html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<p>Click
+<i class="material-icons">&#xe14d;</i> to copy the new key, and paste it into the Export map dialog in the Code Editor.</p>
+</body>
+</html>
+
+- (Recommended) Click the API Console link under the new key to set referrer restrictions. See [referrer and application restrictions]() for more details.
+
+
+[Create Maps Platform API Key]()
+
+
+<figure style="text-align: center">
+      <img alt="" src="./images/chapter_09/image_12.png" width="45%" style="vertical-align: top">
+      <span class="material-icons" style="vertical-align: top" aria-hidden="true" translate="no"> ► </span>
+      <img alt="" src="./images/chapter_09/image_13.png" width="45%" style="vertical-align: top">
+</figure>
+
+### Adding Referrer Restrictions {-}
+
+Referrer restrictions ensure that only the designated app(s) can use your key. You can set or edit referrer restrictions at any time by visiting the [Credentials]() page on the Cloud Console:
+
+- Make sure the correct project name is selected in the dropdown at the top of the screen.
+
+- Click the Maps Platform API key generated above to view the details for the key.
+
+- Select **HTTP referrers (websites)**, and specify the Cloud Storage bucket specified in **`Export.map.toCloudStorage`** using the following template: **`https://storage.googleapis.com/{bucket}/*`**
+
+- Hit Save. The "Saving..." indicator should appear.
+
+<center>
+![](../images/chapter_09/image_14.png){width=400, height=340}
+</center>
+
+### To Cloud Storage {-}
+
+The following example exports a global accessibility map that displays a custom image over Kenya.
+
+```{r,eval=FALSE}
+# Load the global Accessibility to Cities image.
+accessibility <- ee$Image('Oxford/MAP/accessibility_to_cities_2015_v1_0')
+
+# Color palette for visualizing accessibility data.
+accessibilityPalette <- c('f2fef8', 'defce1', 'c9f3bc', 'cbeca7', 'd6e793',
+  'e2d87b', 'd4a561', 'c46c49', 'ab3a38', '922f4b', '7d285d', '672069',
+  '3a1453', '1b0c3c', '050526', '00030f', '000000')
+
+# Apply the color palette to the log of travel time.
+accessibilityVis <- {min: 0, max: 10, palette: accessibilityPalette}
+logAccessibility <- accessibility$where(accessibility$gt(0), accessibility$log())
+accessibilityRgb <- logAccessibility$visualize(accessibilityVis)
+
+# Composite onto a solid-color background to fill in the oceans.
+background <- ee$Image(0)$visualize({palette: c('11101e')})
+accessibilityBlended <- background$blend(accessibilityRgb)$updateMask(1)
+
+# Check the visualization.
+Map$addLayer(accessibilityBlended, {}, 'accessibilityBlended')
+
+# Define an export region.
+exportRegion <- ee$Geometry$Rectangle(c(34, -3, 40, 1))
+Map$centerObject(exportRegion)
+Map$addLayer(exportRegion, {}, 'exportRegion')
+
+# Export the visualization image as map tiles.
+Export$map$toCloudStorage({
+  # All tiles that intersect the region get exported in their entirety.
+  # Clip the image to prevent low resolution tiles from appearing outside
+  # of the region.
+  image: accessibilityBlended$clip(exportRegion),
+  description: 'mapToCloudExample',
+  bucket: 'your-bucket-name',
+  maxZoom: 13,
+  region: exportRegion
+})
+
+```
+
+Note that this creates a new directory in the specified Cloud Storage bucket, named according to the **`description`** parameter by default. You can change the name of the directory or specify subdirectories with the **`path`** parameter.
+
+To allow public access (and Earth Engine app access) to your tiles, the exported files will be public by default (you are assumed to be the owner of the output bucket). If you are a writer on the specified output bucket (but not the owner), set **`writePublicTiles`** to **false** to use the output bucket's default object ACL. ACLs and CORS can be set from the **`writePublicTiles`** and **`bucketCorsUris`** parameters, respectively, or from the export dialog:
+
+<center>
+![](../images/chapter_09/image_15.png){width=372, height=396}
+</center>
+
+The **`Export.map.toCloudStorage()`** dialog.
+
+### ACLs and CORS options details {-}
+
+- **View/download access**. If you want access at all (e.g. from the Rstudio or EE Apps), then you will need to make the tiles 'Publicly accessible.'
+
+- **JS access**. The bucket into which the map is exported must allow for readability by other web apps if you want the Rstudio or EE Apps to have access to the tiles. These cross-origin request settings (CORS) must be configured at the bucket level ( [learn more](https://cloud.google.com/storage/docs/configuring-cors) ). For convenience, the Earth Engine export dialog allows you to configure CORS for your bucket at the time of export.
+
+After the export in the previous example has successfully completed, the output directory will contain a file like this [index.html]() file that displays the exported map using the Google Maps Platform R API. If you provided a [Maps Platform API Key]() at the time of export, this page is publicly viewable, can be embedded on other pages, and does not require the viewer to be a registered Earth Engine user. If you did not provide an API Key, your exported map tiles will display over watermarked Google Basemap tiles.
+
+<p>
+      The output directory will also contain a file like this
+      <a href="https://storage.googleapis.com/ee-docs-demos/mapToCloudExample/earth.html">earth.html</a>
+      file. The earth.html file is a page containing a link to the display of
+      your map in Google Earth. To view your data in Google Earth, click the
+      <a href="https://earth.google.com/web/?kml=https://earth-kml.appspot.com/?link%3Dhttps://storage.googleapis.com/ee-docs-demos/mapToCloudExample/$%255Blevel%255D/$%255Bx%255D/$%255By%255D%26icon%3Dhttps://storage.googleapis.com/earth-kml.appspot.com/no_icon.png%26name%3DmapToCloudExample%26north%3D1.001372066747515%26south%3D-3.004109501935332%26east%3D40.0%26west%3D34.0%26minLevel%3D0%26maxLevel%3D13"><span style="color: #fff; background-color: #3367d6">Open in Google Earth</span></a>
+      link on the earth.html page. To download a KML file that contains a link
+      to your data, click the <span class="material-icons" aria-hidden="true" translate="no">more_vert</span> in
+      Google Earth and select 'Export as KML file'.
+    </p>
+    
+**Note:** The KML file generated in this manner is not compatible with desktop versions of Google Earth. The link is not compatible with mobile versions of Earth.
+
+<p>
+      You can share your dataset by sharing the link to the earth.html file, by
+      sharing the
+      <span style="color: #fff; background-color: #3367d6">Open in Google Earth</span>
+      link, or by sharing the downloaded KML file. The actual data tiles are
+      served from Google Cloud Storage, and Google Earth will read them from
+      there.
+    </p>
+
+### Scale and Zoom {-}
+
+Note that in the previous example, **`maxZoom`** is set to **`13`**. Zoom levels correspond to different sized grids of pixels with which to display a global map. (See [this reference]() for details.) Due to Earth's curvature, the resolution of pixels at a given zoom level varies by latitude. Specifically, meters per pixel goes down by a factor of cos(*latitude*). The following table shows meters per pixel, at each zoom level, **at the equator** for the Google Mercator projection:
+
+| **Zoom Level** |  **Pixel Size (at equator)** | 
+|----------------------| ----------------------|
+| 0 | 156 km |
+| 1 | 78 km |
+| 2 | 39 km |
+| 3 | 20 km |
+| 4 | 10 km |
+| 5 | 4.9 km |
+| 6 | 2.4 km |
+| 7 | 1.2 km |
+| 8 | 611 m |
+| 9 | 305 m |
+| 10 | 152 m |
+| 11 | 76 m |
+| 12 | 38 m |
+| 13 | 19 m |
+| 14 | 9.6 m |
+| 15 | 4.8 m |
+| 16 | 2.4 m |
+| 17 | 1.2 m |
+| 18 | 0.6 m |
+| 19 | 0.3 m |
+| 20 | 0.15 m |
+
+Observe from the previous table that the **`maxZoom`** set in the example corresponds to 19 meters at the equator, smaller at higher latitudes. This is less than the nominal 30 arc-seconds per pixel resolution of the input image. As a result, the map displayed in the output [index.html]() can be zoomed in until pixels in native resolution are visible in the map. To limit the map display to native pixel resolution, set **`maxZoom`** to a value that corresponds to the native resolution or less.
