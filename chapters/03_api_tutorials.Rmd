@@ -1291,7 +1291,6 @@ That concludes this introduction to the Earth Engine API! You have now seen much
 
 ## Introduction to Forest Change Analysis in Earth Engine {-}
 
-
   <figure>
       <table class="columns">
         <tr>
@@ -1301,18 +1300,16 @@ That concludes this introduction to the Earth Engine API! You have now seen much
           <td>
             <img alt="Indonesia" class="screenshot" src="./images/chapter_03/figure_GFC_02.png"  width=100%>
           </td>
-          <td>
-            <img alt="Paraguay" class="screenshot" src="./images/chapter_03/figure_GFC_03.png"  width=100%>
-          </td>
-          <td>
-            <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_GFC_04.png"  width=100%>
-          </td>
         </tr>
       </table>
-      <figcaption>Figure 1. Forest change estimated by Hansen et al. (2013).  Global Change,
-          2000 - 2012 (left); Change in Riau, Indonesia, 2000 - 2012 (center); Change in Paraguay,
-          2000 - 2012 (right)</figcaption>
   </figure>
+  
+  <center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_GFC_04.png"  width=40%>
+  </center>
+
+Figure 1. Forest change estimated by Hansen et al. (2013). Global Change, 2000 - 2012 (left); Change in Riau, Indonesia, 2000 - 2012 (right)
+
 Welcome to the Google Earth Engine tutorial for using [Hansen et al. (2013)](http:#www.sciencemag.org/content/342/6160/850) global forest cover and change data and Forest Monitoring for Action (FORMA, [Hammer et al. 2009](https:#www.cgdev.org/sites/default/files/1423248_file_Hammer_Kraft_Wheeler_FORMA_FINAL.pdf)) data from [Global Forest Watch](http:#www.globalforestwatch.org/). This tutorial provides examples of how to use Earth Engine to visualize these data, how to compute forest change over time and other statistics within a region of interest and how to download both the data and results of analyses.
 
 ### License and Attribution {-}
@@ -1338,16 +1335,23 @@ Once you're familiar with R, the Earth Engine API and Rstudio, [get started on t
 The [Hansen et al. (2013) Global Forest Change dataset](https:#developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2015_v1_3) in Earth Engine represents forest change, at 30 meters resolution, globally, between 2000 and 2014. Let's start by adding the Hansen et al. data to the map. Either import the global forest change data ([learn more about searching and importing datasets]()) by searching for "Hansen forest" and naming the import `gfc2014`, or copy the following code into the Rstudio:
 
 ```{r}
-var gfc2014 = ee.Image('UMD/hansen/global_forest_change_2015');
-Map.addLayer(gfc2014);
+gfc2014 <- ee$Image('UMD/hansen/global_forest_change_2015')
+Map$addLayer(gfc2014)
 ```
 
-Click on the Run button at the top of the Rstudio and you should see something like Figure 1.
+Click on the **Run** button at the top of the Rstudio and you should see something like Figure 1.
 
+<center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_01.png"  width=100%>
+</center>
 
 Figure 1. Default visualization of Hansen et al. (2013) forest change data.
 
 Don't worry, you'll make it look better soon. ([Learn more about default image visualizations in Earth Engine]()). By the end of this section, you'll have an image that looks something like Figure 2, where green represents where the study detected forest in the year 2000, red is estimated forest loss over the study period, blue is forest gain during that period, magenta is areas where forest has been both lost and gained, and non-forest areas are masked.
+
+<center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_12.png"  width=100%>
+</center>
 
 Figure 2. Custom visualization of Hansen et al. (2013) forest change data.
 
@@ -1414,48 +1418,68 @@ The bands in the Global Forest Change data are:
 To display forest cover in the year 2000 as a grayscale image, you can use the treecover2000 band, specified in the second argument to Map.addLayer():
 
 ```{r}
-Map.addLayer(gfc2014, {bands: ['treecover2000']}, 'treecover2000');
+Map$addLayer(gfc2014, list(bands = 'treecover2000'), 'treecover2000')
 ```
 
 This results in an image that should look something like Figure 3.
 
-Figure 3. Grayscale image of year 2000 tree cover in the US.
+<center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_02.png"  width=100%>
+</center>
+
+Figure 3. Grayscale image of year 2000 tree cover in the South America.
 
 Here's an image that uses 3 bands, Landsat bands 5, 4, and 3 for 2015. This band combination shows healthy vegetation as green and soil as mauve::
 
 ```{r}
-Map.addLayer(
-    gfc2014, {bands: ['last_b50', 'last_b40', 'last_b30']}, 'false color');
+Map$addLayer(
+  gfc2014, list(bands = c('last_b50', 'last_b40', 'last_b30')), 'false color')
 ```
 
 The result should look something like Figure 4.
 
-Figure 4. Landsat 7, year 2015 false color composite of the US.
+<center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_03.png"  width=100%>
+</center>
+
+Figure 4. Landsat 7, year 2015 false color composite of the South America.
 
 One nice visualization of the Global Forest Change dataset shows forest extent in 2000 as green, forest loss as red, and forest gain as blue. Specifically, make loss the first band (red), treecover2000 the second band (green), and gain the third band (blue):
 
 ```{r}
-Map.addLayer(gfc2014, {bands: ['loss', 'treecover2000', 'gain']}, 'green');
+Map$addLayer(gfc2014, list(bands = c('loss', 'treecover2000', 'gain')), 'green')
 ```
 
 The loss and gain band values are binary, so they will be barely visible on the image, which should look something like Figure 5.
 
-Figure 5. Year 2000 tree cover in the US (green).
+<center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_04.png"  width=100%>
+</center>
+
+Figure 5. Year 2000 tree cover in the South America (green).
 
 We'd like forest loss to show up as bright red and forest gain to show up as bright blue. To fix this, we can use the visualization parameter max to set the range to which the image data are stretched. Note that the max visualization parameter takes a list of values, corresponding to maxima for each band:
 
 ```{r}
-Map.addLayer(gfc2014, {
-  bands: ['loss', 'treecover2000', 'gain'],
-  max: [1, 255, 1]
-}, 'forest cover, loss, gain');
+Map$addLayer(gfc2014, list(
+  bands = c('loss', 'treecover2000', 'gain'),
+  max = c(1, 255, 1)
+), 'forest cover, loss, gain')
 ```
 
 The result should look something like Figure 6.
 
-Figure 6. US forest loss (red), year 2000 forest cover (green) and gain (blue).
+<center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_05.png"  width=100%>
+</center>
+
+Figure 6. South America forest loss (red), year 2000 forest cover (green) and gain (blue).
 
 This results in an image that is green where there's forest, red where there's forest loss, blue where there's forest gain, and magenta where there's both gain and loss. A closer inspection, however, reveals that it's not quite right. Instead of loss being marked as red, it's orange. This is because the bright red pixels mix with the underlying green pixels, producing orange pixels. Similarly the pixels where there's forest, loss, and gain are pink - a combination of green, bright red and bright blue. See Figure 7 for an illustration.
+
+<center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_06.png"  width=100%>
+</center>
 
 Figure 7. US Pacific North West forest loss (red), year 2000 cover (green) and gain (blue).
 
@@ -1468,16 +1492,24 @@ To display each image as a different color, you can use the `palette` parameter 
 For example, to use a green palette to display the forest extent image, you could use:
 
 ```{r}
-Map.addLayer(gfc2014, {
-  bands: ['treecover2000'],
-  palette: ['000000', '00FF00']
-}, 'forest cover palette');
+Map$addLayer(gfc2014, list(
+  bands = c('treecover2000'),
+  palette = c('000000', '00FF00')
+), 'forest cover palette')
 ```
 The result should look something like Figure 8.
 
-Figure 8. Year 2000 forest cover in North America.
+<center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_07.png"  width=100%>
+</center>
+
+Figure 8. Year 2000 forest cover in South America.
 
 Zooming in gives a better sense for the resolution of the imagery. Figure 9 shows an area around Mariscal Estigarribia in Paraguay.
+
+<center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_08.png"  width=100%>
+</center>
 
 Figure 9. Year 2000 treecover around Mariscal Estigarribia in Paraguay.
 
@@ -1485,14 +1517,18 @@ The image shown in Figure 3 is a bit dark. The problem is that the `treecover200
 
 
 ```{r}
-Map.addLayer(gfc2014, {
-  bands: ['treecover2000'],
-  palette: ['000000', '00FF00'],
-  max: 100
-}, 'forest cover percent');
+Map$addLayer(gfc2014, list(
+  bands = c('treecover2000'),
+  palette = c('000000', '00FF00'),
+  max = 100
+), 'forest cover percent')
 ```
 
 The result should look something like Figure 9. Note that in this example, only the `max` is set. The `min` is zero by default.
+
+<center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_09.png"  width=100%>
+</center>
 
 Figure 9. Year 2000 forest cover around Mariscal Estigarribia in Paraguay, stretched to [0, 100].
 
@@ -1503,14 +1539,18 @@ All of the images shown so far have had big black areas were there the data is z
 You can mask an image with itself. For example, if you mask the `treecover2000` band with itself, all the areas in which forest cover is zero will be transparent:
 
 ```{r}
-Map.addLayer(gfc2014.mask(gfc2014), {
-  bands: ['treecover2000'],
-  palette: ['000000', '00FF00'],
-  max: 100
-}, 'forest cover masked');
+Map$addLayer(gfc2014$mask(gfc2014), list(
+  bands = c('treecover2000'),
+  palette = c('000000', '00FF00'),
+  max = 100
+), 'forest cover masked')
 ```
 
 The result should look something like Figure 10.
+
+<center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_10.png"  width=100%>
+</center>
 
 Figure 10. Year 2000 tree cover, stretched and masked.
 
@@ -1519,24 +1559,28 @@ Figure 10. Year 2000 tree cover, stretched and masked.
 It's almost possible to make a visualization of the Hansen data like the one at the beginning of the tutorial. In this example, we're putting everything together with one small difference. Instead of specifying the bands parameter in the `Map$addLayer` call, we're creating new images using `select()`:
 
 ```{r}
-var treeCover = gfc2014.select(['treecover2000']);
-var lossImage = gfc2014.select(['loss']);
-var gainImage = gfc2014.select(['gain']);
+treeCover <- gfc2014$select(c('treecover2000'))
+lossImage <- gfc2014$select(c('loss'))
+gainImage <- gfc2014$select(c('gain'))
 
 # Add the tree cover layer in green.
-Map.addLayer(treeCover.updateMask(treeCover),
-    {palette: ['000000', '00FF00'], max: 100}, 'Forest Cover');
+Map$addLayer(treeCover$updateMask(treeCover),
+             list(palette = c('000000', '00FF00'), max = 100), 'Forest Cover')+
 
 # Add the loss layer in red.
-Map.addLayer(lossImage.updateMask(lossImage),
-            {palette: ['FF0000']}, 'Loss');
+Map$addLayer(lossImage$updateMask(lossImage),
+             list(palette = c('FF0000')), 'Loss')+
 
 # Add the gain layer in blue.
-Map.addLayer(gainImage.updateMask(gainImage),
-            {palette: ['0000FF']}, 'Gain');
+Map$addLayer(gainImage$updateMask(gainImage),
+             list(palette = c('0000FF')), 'Gain')
 ```
 
 The result should look something like Figure 11.
+
+<center>
+    <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_11.png"  width=100%>
+</center>
 
 Figure 11. Forest loss (red), year 2000 cover (green) and gain (blue).
 
@@ -1567,7 +1611,7 @@ Map$addLayer(gainAndLoss$updateMask(gainAndLoss),
 The result, zoomed into Arkansas with satellite view, should look something like Figure 1.
 
 <center>
-<img src="./images/chapter_03/figure_QFC_01.png" width=95%>
+<img src="./images/chapter_03/figure_QFC_01.png" width=100%>
 </center>
 
 Figure 1. Pixels with forest loss and gain in Arkansas.
@@ -1781,44 +1825,40 @@ lossByYear <- lossAreaImage$addBands(lossYear)$reduceRegion(
   maxPixels = 1e9
 )
 
-print(paste0(ee$Dictionary$getInfo(lossByYear)) 
+print(ee$Dictionary$getInfo(lossByYear)) 
 ```
 
 Once you run the above code, you will see the yearly forest loss area printed out in a nested list called `groups`. We can format the output a little to make the result a dictionary, with year as the key and loss area as the value. Notice that we are using the `format()` method to convert the year values from 0-14 to 2000-2014.
 
-```{r}
-# Load country boundaries from LSIB.
-countries <- ee$FeatureCollection('USDOS/LSIB_SIMPLE/2017')
-# Get a feature collection with just the Congo feature.
-congo <- countries$filter(ee$Filter$eq('country_co', 'CF'))
-
-# Get the loss image.
-# This dataset is updated yearly, so we get the latest version.
-gfc2017 <- ee$Image('UMD/hansen/global_forest_change_2017_v1_5')
-lossImage <- gfc2017$select('loss')
-lossAreaImage <- lossImage$multiply(ee$Image$pixelArea())
-
-lossYear <- gfc2017$select('lossyear')
-lossByYear <- lossAreaImage$addBands(lossYear)$reduceRegion(
-  reducer = ee$Reducer$sum()$group(
-    groupField = 1
-  ),
-  geometry = congo,
-  scale = 30,
-  maxPixels = 1e9
-)
-
-statsFormatted <- ee$List(lossByYear$get('groups'))$map(function(el){
-  d <- ee$Dictionary(el)
-  return (c(ee$Number(d$get('group'))$format("20%02d"), d$get('sum')))
-})
-
-statsDictionary <- ee$Dictionary(statsFormatted$flatten())
-
-print(paste0(ee$Dictionary$getInfo(statsDictionary))
+```{js}
+var statsFormatted = ee.List(lossByYear.get('groups'))
+  .map(function(el) {
+    var d = ee.Dictionary(el);
+    return [ee.Number(d.get('group')).format("20%02d"), d.get('sum')];
+  });
+var statsDictionary = ee.Dictionary(statsFormatted.flatten());
+print(statsDictionary);
 ```
 
 ### Making a chart {-}
+
+```{js}
+var chart = ui.Chart.array.values({
+  array: statsDictionary.values(),
+  axis: 0,
+  xLabels: statsDictionary.keys()
+}).setChartType('ColumnChart')
+  .setOptions({
+    title: 'Yearly Forest Loss',
+    hAxis: {title: 'Year', format: '####'},
+    vAxis: {title: 'Area (square meters)'},
+    legend: { position: "none" },
+    lineWidth: 1,
+    pointSize: 3
+  });
+print(chart);
+```
+
 
 ## Introduction to Forest Monitoring for Action (FORMA) data {-}
 
@@ -1868,13 +1908,13 @@ congo <- ee$Feature(
 # and other criteria. Clip to the intersection with congo.
 protectedAreas <- ee$FeatureCollection('WCMC/WDPA/current/polygons')$
   filter(ee$Filter$And(
-  ee$Filter$bounds(congo$geometry()),
-  ee$Filter$neq('IUCN_CAT', 'VI'),
-  ee$Filter$neq('STATUS', 'proposed'),
-  ee$Filter$lt('STATUS_YR', 2010)
-))$map(function(feat){
-  return(congo$intersection(feat))
-})
+    ee$Filter$bounds(congo$geometry()),
+    ee$Filter$neq('IUCN_CAT', 'VI'),
+    ee$Filter$neq('STATUS', 'proposed'),
+    ee$Filter$lt('STATUS_YR', 2010)
+  ))$map(function(feat){
+    return(congo$intersection(feat))
+  })
 
 # Display protected areas on the map.
 Map$addLayer(
@@ -1891,10 +1931,11 @@ stats <- forma2012$reduceRegion(
   scale = 500
 )
 
-print(paste0('Number of FORMA pixels, 2012: ', ee$Dictionary$getInfo(stats.get('constant')))
+print(paste0('Number of FORMA pixels, 2012: ', ee$Dictionary$getInfo(stats$get('constant'))))
 ```
 
 ### Counting FORMA Alerts in Several Regions of Interest {-}
+
 So far, we've been computing statistics in a single region at a time. For computing statistics in multiple regions at once, you can use `reduceRegions()`. Again building on the previous example:
 
 ```{r}
@@ -1925,7 +1966,7 @@ region <- ee$Geometry$Rectangle(c(-59.81163, -9.43348, -59.27561, -9.22818))
 forma <- ee$Image('FORMA/FORMA_500m')
 
 # Create a binary layer from the dates of interest.
-forma2012 <- forma$gte(start)$and(forma$lte(end))
+forma2012 <- forma$gte(start)$And(forma$lte(end))
 
 # Load Hansen et al. data and get change in 2012.
 gfc <- ee$Image('UMD/hansen/global_forest_change_2015')
@@ -1933,7 +1974,7 @@ gfc12 <- gfc$select('lossyear')$eq(12)
 
 # Create an image which is one where the datasets
 # both show deforestation and zero elsewhere.
-gfc_forma <- gfc12$eq(1)$and(forma2012$eq(1))
+gfc_forma <- gfc12$eq(1)$And(forma2012$eq(1))
 
 # Display data on the map.
 Map$setCenter(-59.58813, -9.36439, 11)
