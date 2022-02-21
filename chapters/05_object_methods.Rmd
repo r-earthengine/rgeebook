@@ -31,17 +31,23 @@ Note that finding an image through the Rstudio search tool is equivalent. When y
 The standard way to get an image out of a collection is to filter the collection, with filters in order of decreasing specificity. For example, to get an image out of the [Sentinel-2 surface reflectance collection](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR):
 
 ```{r}
-first <- ee$ImageCollection('COPERNICUS/S2_SR')$
-  filterBounds(ee$Geometry$Point(-70.48, 43.3631))$
-  filterDate('2019-01-01', '2019-12-31')$
-  sort('CLOUDY_PIXEL_PERCENTAGE')$
+ee_geom <- ee$Geometry$Point(-70.48, 43.3631)
+first <- ee$ImageCollection("COPERNICUS/S2_SR") %>%
+  ee$ImageCollection$filterBounds(ee_geom) %>%
+  ee$ImageCollection$filterDate("2019-01-01", "2019-12-31") %>%
+  ee$ImageCollection$sort("CLOUDY_PIXEL_PERCENTAGE") %>%
   first()
-vizParams <- list(bands = c('B4', 'B3', 'B2'),
-                  min = 0, 
-                  max = 2000)
-Map$centerObject(first, 11);
-Map$addLayer(first, vizParams, 'first')
+vizParams <- list(
+  bands = c("B4", "B3", "B2"),
+  min = 0,
+  max = 2000
+)
+Map$centerObject(first, 11)
+Map$addLayer(first, vizParams, "first")
 ```
+
+<center>
+![](../images/chapter_05/figure_csaybar_01.png){width=670px}
 
 Note that the `sort` is *after* the filters. Avoid sorting the entire collection.
 
@@ -129,6 +135,7 @@ Map$addLayer(image, vizParams, 'false color composite')
 In this example, band `'B5'` is assigned to red, `'B4'` is assigned to green, and `'B3'` is assigned to blue.
 <center>
 ![Figure 1. Landsat 8 false color composite of San Francisco bay area, California, USA.](../images/chapter_05/figure_01.png){width=670px}
+
 </center>
 
 
