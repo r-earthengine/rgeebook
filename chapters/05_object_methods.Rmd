@@ -1,9 +1,17 @@
-# (PART) Objects and Methods {-}
-
 ```{r, include = FALSE}
 source("common.R")
 ```
 
+# (PART) Objects and Methods {-}
+
+This section requires the next libraries:
+
+```{r}
+library(rgee)
+library(rgeeExtra)
+
+ee_Initialize()
+```
 
 # Objects and Methods Overview {-}
 
@@ -1308,7 +1316,7 @@ In this example, the results of `register()` differ from the results of `displac
 An `ImageCollection` is a stack or sequence of images. An `ImageCollection` can be loaded by pasting an Earth Engine asset ID into the `ImageCollection` constructor. You can find `ImageCollection` IDs in the [data catalog](https://developers.google.com/earth-engine/datasets). For example, to load the [Sentinel-2 surface reflectance collection](https://developers.google.com/earth-engine/guides/datasets/catalog/COPERNICUS_S2_SR):
 
 ```{r}
-sentinelCollection <- ee$ImageCollection('COPERNICUS/S2_SR')
+sentinelCollection <- ee$ImageCollection("COPERNICUS/S2_SR")
 ```
 
 
@@ -1322,19 +1330,22 @@ constant1 <- ee$Image(1)
 constant2 <- ee$Image(2)
 
 # Create a collection by giving a list to the constructor.
-collectionFromConstructor <- ee$ImageCollection([constant1, constant2])
-print('collectionFromConstructor: ', collectionFromConstructor)
+collectionFromConstructor <- ee$ImageCollection(c(constant1, constant2))
+ee_print(collectionFromConstructor)
 
 # Create a collection with fromImages().
-collectionFromImages <- ee$ImageCollection$fromImages([ee$Image(3), ee$Image(4)])
-print('collectionFromImages: ', collectionFromImages)
+collectionFromImages <- ee$ImageCollection$fromImages(c(ee$Image(3), ee$Image(4)))
+ee_print(collectionFromConstructor)
 
 # Merge two collections.
 mergedCollection <- collectionFromConstructor$merge(collectionFromImages)
-print('mergedCollection: ', mergedCollection)
+ee_print(mergedCollection)
 
 # Create a toy FeatureCollection.
-features <- ee$FeatureCollection([ee$Feature(NULL, {foo = 1}), ee$Feature(NULL, {foo = 2})])
+features <- ee$FeatureCollection(
+  ee$Feature(NULL, list(foo = 1)), 
+  ee$Feature(NULL, list(foo = 2))
+)
 
 # Create an ImageCollection from the FeatureCollection
 # by mapping a function over the FeatureCollection.
@@ -1343,7 +1354,7 @@ images <- features$map(function(feature) {
 })
 
 # Print the resultant collection.
-print('Image collection: ', images)
+ee_print(images)
 ```
 
 Note that in this example an `ImageCollection` is created by mapping a function that returns an `Image` over a `FeatureCollection`. Learn more about mapping in the [Mapping over an ImageCollection section](). Learn more about feature collections from the [FeatureCollection section]().
@@ -1352,24 +1363,29 @@ You can also create an `ImageCollection` from GeoTiffs in Cloud Storage. For exa
 
 ```{r,eval=FALSE}
 # All the GeoTiffs are in this folder.
-uriBase <- 'gs://gcp-public-data-landsat/LC08/01/001/002/' + 'LC08_L1GT_001002_20160817_20170322_01_T2/'
+uriBase <- paste0(
+  "gs://gcp-public-data-landsat/LC08/01/001/002/", "LC08_L1GT_001002_20160817_20170322_01_T2/"
+)
 
 # List of URIs, one for each band.
-uris <- ee$List([
-  uriBase + 'LC08_L1GT_001002_20160817_20170322_01_T2_B2.TIF',
-  uriBase + 'LC08_L1GT_001002_20160817_20170322_01_T2_B3.TIF',
-  uriBase + 'LC08_L1GT_001002_20160817_20170322_01_T2_B4.TIF',
-  uriBase + 'LC08_L1GT_001002_20160817_20170322_01_T2_B5.TIF',  
-])
+uris <- ee$List(
+  list(
+    paste0(uriBase, "LC08_L1GT_001002_20160817_20170322_01_T2_B2.TIF"),
+    paste0(uriBase, "LC08_L1GT_001002_20160817_20170322_01_T2_B3.TIF"),
+    paste0(uriBase, "LC08_L1GT_001002_20160817_20170322_01_T2_B4.TIF"),
+    paste0(uriBase, "LC08_L1GT_001002_20160817_20170322_01_T2_B5.TIF")
+  )
+)
 
 # Make a collection from the list of images.
-images <- uris$map(ee$Image$loadGeoTIFF)
+images <- uris$map(ee_utils_pyfunc(function(x) ee$Image$loadGeoTIFF(x)))
 collection <- ee$ImageCollection(images)
 
 # Get an RGB image from the collection of bands.
-rgb <- collection$toBands()$rename(['B2', 'B3', 'B4', 'B5'])
+rgb <- collection$toBands()$rename(c("B2", "B3", "B4", "B5"))
+
 Map$centerObject(rgb)
-Map$addLayer(rgb, {bands = ['B4', 'B3', 'B2'], min = 0, max = 20000, 'rgb'})
+Map$addLayer(rgb, list(bands = c("B4", "B3", "B2"), min = 0, max = 20000), "rgb")
 ```
 
 [Learn more about loading images from Cloud GeoTiffs]()
@@ -1400,38 +1416,39 @@ For instance, filter a Sentinel-2 surface reflectance collection by:
 a single date range,
 
 ```{r,eval=FALSE}
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
-  filterDate('2018-01-01', '2019-01-01')
+s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
+  ee$ImageCollection$filterDate('2018-01-01', '2019-01-01')
 ```
 
 a serial day-of-year range,
 
 ```{r,eval=FALSE}
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
-  filter(ee$Filter$calendarRange(171, 242, 'day_of_year'))
+s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
+  ee$ImageCollection$filter(ee$Filter$calendarRange(171, 242, 'day_of_year'))
 ```
 
 a region of interest,
 
 ```{r,eval=FALSE}
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
-  filterBounds(ee$Geometry$Point(-122.1, 37.2))
+ee_geom <- ee$Geometry$Point(-122.1, 37.2)
+s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
+  ee$ImageCollection$filterBounds(ee_geom)
 ```
 
 or an image property.
 
 ```{r,eval=FALSE}
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
-  filter(ee$Filter$lt('CLOUDY_PIXEL_PERCENTAGE', 50))
+s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
+  ee$ImageCollection$filter(ee$Filter$lt('CLOUDY_PIXEL_PERCENTAGE', 50))
 ```
 
 Chain multiple filters.
 
 ```{r,eval=FALSE}
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
-  filterDate('2018-01-01', '2019-01-01')$
-  filterBounds(ee$Geometry$Point(-122.1, 37.2))$
-  filter('CLOUDY_PIXEL_PERCENTAGE < 50')
+s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
+  ee$ImageCollection$filterDate('2018-01-01', '2019-01-01') %>% 
+  ee$ImageCollection$filterBounds(ee$Geometry$Point(-122.1, 37.2)) %>% 
+  ee$ImageCollection$filter('CLOUDY_PIXEL_PERCENTAGE < 50')
 ```
 
 #### Compositing {-}
@@ -1439,9 +1456,9 @@ s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
 Composite intra- and inter-annual date ranges to reduce the number of images in a collection and improve quality. For example, suppose you were to create a visualization of annual NDVI for Africa. One option is to simply filter a MODIS 16-day NDVI collection to include all 2018 observations.
 
 ```{r,eval=FALSE}
-ndviCol <- ee$ImageCollection('MODIS/006/MOD13A2')$
-  filterDate('2018-01-01', '2019-01-01')$
-  select('NDVI')
+ndviCol <- ee$ImageCollection('MODIS/006/MOD13A2') %>% 
+  ee$ImageCollection$filterDate('2018-01-01', '2019-01-01') %>% 
+  ee$ImageCollection$select('NDVI')
 ```
 
 ##### **Inter-annual composite by filter and reduce** {-}
@@ -1456,16 +1473,19 @@ doyList <- ee$List$sequence(1, 365, 16)
 ndviCol <- ee$ImageCollection('MODIS/006/MOD13A2')$select('NDVI')
 
 # Map over the list of days to build a list of image composites.
-ndviCompList <- doyList$map(function(startDoy) {
+map_over_days <- function(startDoy) {
   #Ensure that startDoy is a number.
   startDoy <- ee$Number(startDoy)
   
   # Filter images by date range; starting with the current startDate and
   # ending 15 days later. Reduce the resulting image collection by median.
-  return(ndviCol$
-           filter(ee$Filter$calendarRange(startDoy, startDoy.add(15), 'day_of_year'))$
-           reduce(ee$Reducer$median()))
-})
+  ndviCol %>% 
+    ee$ImageCollection$filter(
+      ee$Filter$calendarRange(startDoy, startDoy$add(15), 'day_of_year')
+    ) %>% 
+    ee$ImageCollection$reduce(ee$Reducer$median())
+}
+ndviCompList <- doyList$map(ee_utils_pyfunc(map_over_days))
 
 # Convert the image List to an ImageCollection.
 ndviCol <- ee$ImageCollection$fromImages(ndviCompList)
@@ -1482,24 +1502,49 @@ The animation resulting from this collection is less noisy, as each image repres
 The previous example applies inter-annual compositing. It can also be helpful to composite a series of intra-annual observations. For example, Landsat data are collected every sixteen days for a given scene per sensor, but often some portion of the images are obscured by clouds. Masking out the clouds and compositing several images from the same season can produce a more cloud-free representation. Consider the following example where Landsat 5 images from July and August are composited using median for each year from 1985 to 2011.
 
 ```{r,eval=FALSE}
+# Make a day-of-year sequence from 1 to 365 with a 16-day step.
+doyList <- ee$List$sequence(1, 365, 16)
+
+# Import a MODIS NDVI collection.
+ndviCol <- ee$ImageCollection('MODIS/006/MOD13A2')$select('NDVI')
+
+# Map over the list of days to build a list of image composites.
+map_over_days <- function(startDoy) {
+  #Ensure that startDoy is a number.
+  startDoy <- ee$Number(startDoy)
+  
+  # Filter images by date range; starting with the current startDate and
+  # ending 15 days later. Reduce the resulting image collection by median.
+  ndviCol %>% 
+    ee$ImageCollection$filter(
+      ee$Filter$calendarRange(startDoy, startDoy$add(15), 'day_of_year')
+    ) %>% 
+    ee$ImageCollection$reduce(ee$Reducer$median())
+}
+ndviCompList <- doyList$map(ee_utils_pyfunc(map_over_days))
+
+# Convert the image List to an ImageCollection.
+ndviCol <- ee$ImageCollection$fromImages(ndviCompList)
+
 # Assemble a collection of Landsat surface reflectance images for a given
 # region and day-of-year range.
-lsCol <- ee$ImageCollection('LANDSAT/LT05/C02/T1_L2')$
-  filterBounds(ee$Geometry$Point(-122.9, 43.6))$
-  filter(ee$Filter$dayOfYear(182, 243))$
+ee_geom <- ee$Geometry$Point(-122.9, 43.6)
+lsCol <- ee$ImageCollection('LANDSAT/LT05/C02/T1_L2') %>% 
+  ee$ImageCollection$filterBounds(ee_geom) %>% 
+  ee$ImageCollection$filter(ee$Filter$dayOfYear(182, 243)) %>% 
   # Add the observation year as a property to each image.
-  map(function(img) {
-    return(img$set('year', ee$Image(img)$date()$get('year')))
+  ee$ImageCollection$map(function(img) {
+    img$set('year', ee$Image(img)$date()$get('year'))
   })
 
 # Define a function to scale the data and mask unwanted pixels.
-function maskL457sr(image) {
+maskL457sr <- function(image) {
   # Bit 0 - Fill
   # Bit 1 - Dilated Cloud
   # Bit 2 - Unused
   # Bit 3 - Cloud
   # Bit 4 - Cloud Shadow
-  qaMask <- image$select('QA_PIXEL')$bitwiseAnd(parseInt('11111', 2))$eq(0)
+  qaMask <- image$select('QA_PIXEL')$bitwiseAnd(31)$eq(0)
   saturationMask <- image$select('QA_RADSAT')$eq(0)
   
   # Apply the scaling factors to the appropriate bands.
@@ -1507,27 +1552,29 @@ function maskL457sr(image) {
   thermalBand <- image$select('ST_B6')$multiply(0.00341802)$add(149.0)
   
   # Replace the original bands with the scaled ones and apply the masks.
-  return(image$addBands(opticalBands, NULL, TRUE)$
-           addBands(thermalBand, NULL, TRUE)$
-           updateMask(qaMask)$
-           updateMask(saturationMask))
+  image %>% 
+    ee$Image$addBands(opticalBands, NULL, TRUE) %>% 
+    ee$Image$addBands(thermalBand, NULL, TRUE) %>% 
+    ee$Image$updateMask(qaMask) %>% 
+    ee$Image$updateMask(saturationMask)
 }
 
 # Define a list of unique observation years from the image collection.
 years <- ee$List(lsCol$aggregate_array('year'))$distinct()$sort()
 
 # Map over the list of years to build a list of annual image composites.
-lsCompList <- years$map(function(year) {
-  return(lsCol$
-           # Filter image collection by year.
-           filterMetadata('year', 'equals', year)$
-           # Apply cloud mask.
-           map(maskL457sr)$
-           # Reduce image collection by median.
-           reduce(ee$Reducer$median())$
-           # Set composite year as an image property.
-           set('year', year))
-})
+map_over_year <- function(year) {
+  lsCol %>% 
+    # Filter image collection by year.
+    ee$ImageCollection$filterMetadata('year', 'equals', year) %>% 
+    # Apply cloud mask.
+    ee$ImageCollection$map(maskL457sr) %>% 
+    # Reduce image collection by median.
+    ee$ImageCollection$reduce(ee$Reducer$median()) %>% 
+    # Set composite year as an image property.
+    ee$Image$set('year', year)
+}
+lsCompList <- years$map(ee_utils_pyfunc(map_over_year))
 
 # Convert the image List to an ImageCollection.
 lsCompCol <- ee$ImageCollection$fromImages(lsCompList)
@@ -1540,19 +1587,20 @@ Note that the previous two compositing methods map over a `List` of days and yea
 ```{r,eval=FALSE}
 # Assemble a collection of Landsat surface reflectance images for a given
 # region and day-of-year range.
-lsCol <- ee$ImageCollection('LANDSAT/LT05/C02/T1_L2')$
-  filterBounds(ee$Geometry$Point(-122.9, 43.6))$
-  filter(ee$Filter$dayOfYear(182, 243))$
+ee_geom <- ee$Geometry$Point(-122.9, 43.6)
+lsCol <- ee$ImageCollection('LANDSAT/LT05/C02/T1_L2') %>% 
+  ee$ImageCollection$filterBounds(ee_geom) %>% 
+  ee$ImageCollection$filter(ee$Filter$dayOfYear(182, 243)) %>% 
   # Add the observation year as a property to each image.
-  map(function(img) {
+  ee$ImageCollection$map(function(img) {
     return(img$set('year', ee$Image(img)$date()$get('year')))
   })
-  
+
 # Make a distinct year collection; one image representative per year.
 distinctYears <- lsCol$distinct('year')$sort('year')
 
 # Define a join filter; one-to-many join on ‘year’ property.
-filter <- ee$Filter$equals({leftField = 'year', rightField = 'year'})
+filter <- ee$Filter$equals(list(leftField = 'year', rightField = 'year'))
 
 # Define a join.
 join <- ee$Join$saveAll('year_match')
@@ -1563,19 +1611,19 @@ join <- ee$Join$saveAll('year_match')
 joinCol <- join$apply(distinctYears, lsCol, filter)
 
 # Define a function to scale the data and mask unwanted pixels.
-function maskL457sr(image) {
+maskL457sr <- function(image) {
   # Bit 0 - Fill
   # Bit 1 - Dilated Cloud
   # Bit 2 - Unused
   # Bit 3 - Cloud
   # Bit 4 - Cloud Shadow
-  qaMask <- image$select('QA_PIXEL')$bitwiseAnd(parseInt('11111', 2))$eq(0)
+  qaMask <- image$select('QA_PIXEL')$bitwiseAnd(31)$eq(0)
   saturationMask <- image$select('QA_RADSAT')$eq(0)
   
   # Apply the scaling factors to the appropriate bands.
   opticalBands <- image$select('SR_B.')$multiply(0.0000275)$add(-0.2)
   thermalBand <- image$select('ST_B6')$multiply(0.00341802)$add(149.0)
-
+  
   # Replace the original bands with the scaled ones and apply the masks.
   return(image$addBands(opticalBands, NULL, TRUE)$
            addBands(thermalBand, NULL, TRUE)$
@@ -1587,13 +1635,13 @@ function maskL457sr(image) {
 # composites.
 lsCompList <- joinCol$map(function(img) {
   # Get the list of images belonging to the given year.
-  return(ee$ImageCollection$fromImages(img$get('year_match'))$
-           # Apply cloud mask.
-           map(maskL457sr)$
-           # Reduce image collection by median.
-           reduce(ee$Reducer$median())$
-           # Set composite year as an image property.
-           copyProperties(img, ['year']))
+  ee$ImageCollection$fromImages(img$get('year_match')) %>% 
+  # Apply cloud mask.
+  ee$ImageCollection$map(maskL457sr) %>% 
+  # Reduce image collection by median.
+  ee$ImageCollection$reduce(ee$Reducer$median()) %>% 
+  # Set composite year as an image property.
+  ee$ImageCollection$copyProperties(img, list('year'))
 })
 
 # Convert the image List to an ImageCollection.
@@ -1628,9 +1676,10 @@ return (ee$ImageCollection$fromImages(col$get('date_match'))$mosaic())
 Sort a collection by time to ensure proper chronological sequence, or order by a property of your choice. By default, the visualization frame series is sorted in natural order of the collection. The arrangement of the series can be altered using the `sort` collection method, whereby an `Image` property is selected for sorting in either ascending or descending order. For example, to sort by time of observation, use the ubiquitous `system:time_start` property.
 
 ```{r,eval=FALSE}
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
-  filterBounds(ee$Geometry$Point(-122.1, 37.2))$
-  sort('system:time_start')
+ee_geom <- ee$Geometry$Point(-122.1, 37.2)
+s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
+  ee$ImageCollection$filterBounds() %>% 
+  ee$ImageCollection$sort('system:time_start')
 ```
 
 Or perhaps the order should be defined by increasing cloudiness, as in this case of Sentinel-2 imagery.
