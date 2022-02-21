@@ -6,6 +6,7 @@ rmd_files:
     "index.Rmd",
 
     'chapters/00_r_gui.Rmd',
+    'chapters/00_R6Map.Rmd',
 
     "chapters/01_get_started.Rmd",
     "chapters/02_dev_env.Rmd",
@@ -21,3 +22,5 @@ rmd_files:
     'chapters/09_asset_manag.Rmd',
     'chapters/10_cust_appl.Rmd',
   ]
+
+
