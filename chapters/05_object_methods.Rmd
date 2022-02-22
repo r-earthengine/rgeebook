@@ -3473,14 +3473,14 @@ Reducers take an input dataset and produce a single output. When a single input 
 
 Some reducers produce multiple outputs, for example `ee$Reducer$minMax()`, `ee$Reducer$histogram()` or `ee$Reducer$toList()`. For example:
 
-```{js}
-// Load and filter the Sentinel-2 image collection.
-var collection = ee.ImageCollection('COPERNICUS/S2')
-    .filterDate('2016-01-01', '2016-12-31')
-    .filterBounds(ee.Geometry.Point([-81.31, 29.90]));
+```{r}
+# Load and filter the Sentinel-2 image collection.
+collection <- ee$ImageCollection("COPERNICUS/S2")$
+  filterDate("2016-01-01", "2016-12-31")$
+  filterBounds(ee$Geometry$Point(c(-81.31, 29.90)))
 
-// Reduce the collection.
-var extrema = collection.reduce(ee.Reducer.minMax());
+# Reduce the collection$
+extrema <- collection$reduce(ee$Reducer$minMax())
 ```
 
 This will produce an output with twice the number of bands of the inputs, where band names in the output have ‘_min’ or ‘_max’ appended to the band name.

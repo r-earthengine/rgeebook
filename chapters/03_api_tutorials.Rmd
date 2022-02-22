@@ -1705,7 +1705,7 @@ The first statement references the Earth Engine [Image object]() for the GSW dat
 Click on the Rstudio's "Run" button, and after a few seconds you should see a map with grey coloring along the coastlines, similar to Figure 1.
 
 <center>
-<img src="./images/chapter_03/figure_GSW_01.png" width=95%>
+<img src="./images/chapter_03/figure_GSW_01.png">
 </center>
 
 Figure 1. Default visualization of the global surface water occurrence data layer.
