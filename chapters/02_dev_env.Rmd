@@ -7,12 +7,614 @@ source("common.R")
 
 # Earth Engine in Rstudio {-}
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+This section requires the next libraries:
 
-# R and Python installation {-}
+```{r}
+library(rgee)
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+ee_Initialize()
+```
 
-# Command Line tool {-}
+RStudio is the most popular R-based integrated development environment (IDE). It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging, and workspace management. Combining Rstudio with rgee, users can develop complex geospatial workflows fast and easily. This environment has the  following features:
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+- R code editor.
+- Map display for visualizing geospatial datasets.
+- API reference documentation (Using the `ee_help` addin).
+- Git-based Script Manager (Git tab).
+- Console output (Console tab).
+- Task Manager to handle long-running queries using the ee_manage_* functions.
+- Search of the data archive or saved scripts.
+- Geometry drawing tools, using `rgee` with [`**mapedit**`](https://github.com/r-spatial/mapedit).
+
+<center>
+<img src="images/chapter_02/fig_01.png" width=95%>
+</center>
+
+
+## API documentation display  {-}
+
+The GEE API is quite extensive and users can easily get overwhelmed. Therefore, having a tool that enables users 
+to fast search documentation without leaving the Rstudio IDE is critical to coding more efficiently. For this reason, the [`**ee_help**`](https://r-spatial.github.io/rgee/reference/ee_help.html) function is implemented in rgee.
+
+```{r}
+ee$Image()$geometry()$centroid %>% ee_help()
+ee$Image()$geometry() %>% ee_help()
+ee$Image %>% ee_help()
+ee$Image %>% ee_help(browser = TRUE)
+```
+
+<center>
+<img src="images/chapter_02/fig_02.png" width=95%>
+</center>
+
+<br>
+While `ee_help` is really helpful, a one-click bottom, similar to how Rstudio's rendering 
+function works (just pressing F1!), would make the process even easier. This functionality 
+is implemented at rgee through a [Rstudio addin](http://rstudio.github.io/rstudioaddins/). To 
+activate this feature, go to **Tools -> Modify keyword shortcuts**.
+
+<center>
+<img src="images/chapter_02/fig_03.png" width=95%>
+</center>
+<br>    
+Then (1) type in the browser ee_help, (2) click the Shortcut column, and finally (3) press F3 or another desired keyword.
+
+<center>
+<img src="images/chapter_02/fig_04.png" width=95%>
+</center>
+
+<br>
+After terminating your Rstudio session you will now be able to display documentation with just a 
+single keystroke!
+
+
+# R and Python installation  {-}
+
+`rgee` requires both R and Python third-party packages, making the installation a 
+little tricky. Installation of R packages should be simple thanks to [Rtools](https://cran.r-project.org/bin/windows/Rtools/rtools40.html).
+
+Install from CRAN with:
+
+``` r
+install.packages("rgee")
+```
+
+Install the development versions from github with
+
+``` r
+library(remotes)
+install_github("r-spatial/rgee")
+```
+
+
+However, certain issues may arise when users attempt to install Python requirements. In a nutshell,
+`rgee` needs:
+
+ 1. A Python environment (PYENV).
+ 2. Install in that PYENV: Numpy and earthengine-api
+
+The [**`ee_install`**](https://r-spatial.github.io/rgee/reference/ee_install.html) built-in function is 
+best way to set up the previous Python prerequisite. In short, it performs the following tasks: (1) create a Python environment, (2) establish an environment variable “EARTHENGINE_PYTHON” that saves your Python interpreter path (it will let rgee where to search the next time you log in), and (3) install the requirements in the previously created environment. Users who want to utilize their own Python environment may alternatively run:
+
+```{r}
+# IMPORTANT: Change 'py_path' argument for your own Python PATH
+ee_install_set_pyenv(
+  py_path = "/home/pc-user01/.virtualenvs/rgee/bin/python",
+  py_env = "rgee" # Change it for your own Python ENV
+)
+```
+
+Take into account that the Python PATH you set must have installations of the Earth Engine Python API and numpy. The use of **miniconda/anaconda is mandatory for Windows users,** Linux and MacOS users could also use virtualenv. See [reticulate](https://rstudio.github.io/reticulate/articles/python_packages.html) documentation for more details.
+
+Another way, which is only available on MacOS and Linux, is to simply change the Python PATH:
+
+``` r
+rgee::ee_install_set_pyenv(
+  py_path = "/usr/bin/python3",
+  py_env = NULL
+)
+```
+
+However, [**rgee::ee_install_upgrade**](https://r-spatial.github.io/rgee/reference/ee_install_upgrade.html) and [**reticulate::py_install**](https://rstudio.github.io/reticulate/reference/py_install.html) will not work until you set a Python ENV. Your R session may need to be closed after the installation process.
+
+
+## Package import {-}
+
+The R API package is called `rgee`. It must be imported and initialized for each new R session and script:
+
+```{r}
+library(rgee)
+```
+
+Authenticate to the Earth Engine servers:
+
+```{r}
+ee_Initialize()
+```
+
+
+> How you obtain authentication credentials may vary depending on your environment. In general, authentication for local    installations is a one-time step that generates a persistent authorization token, while VM services such as Colab, limit the token's lifetime.
+
+Initialize the API:
+
+```{r}
+ee_Initialize()
+```
+
+# Extra considerations {-}
+
+This section requires the next libraries:
+
+```{r}
+library(rgee)
+
+ee_Initialize()
+```
+
+The R, Python and JavaScript APIs access the same server-side functionality, but client-side expressions ([learn more about client vs. server]()) can vary because of language syntax differences. The following table includes a list of the common syntax differences you'll encounter when working with the R API relative to the Python and JavaScript API.
+
+
+### Function definition	{-}
+
+- **JavaScript**
+
+```{js}
+function myFun(arg) {
+  return arg;
+}
+
+var myFun = function(arg) {
+  return arg;
+};
+```
+
+- **Python**
+
+
+```{python}
+def my_fun(arg):
+  return arg
+```
+
+
+- **R**
+
+```{r}
+my_fun <- function(arg){
+  return(arg)
+}
+```
+
+
+### Anonymous function mapping {-}
+
+- **JavaScript**
+
+```{js}
+var foo = col.map(function(arg) {
+  return arg;
+});
+```
+
+- **Python**
+
+
+```{python}
+foo = col.map(lambda arg: arg)
+```
+
+
+- **R**
+
+```{r}
+foor <- lapply(col, function(arg) arg)
+```
+
+
+### Variable definition	{-}
+
+- **JavaScript**
+
+```{js}
+var myVar = 'var';
+```
+
+- **Python**
+
+
+```{python}
+my_var = 'var'
+```
+
+
+- **R**
+
+```{r}
+my_var <- 'var'
+```
+
+
+### Logical operators	{-}
+
+
+- **JavaScript**
+
+```{js}
+var match = such.and(that);
+var match = such.or(that);
+var match = such.not(that);
+```
+
+- **Python**
+
+
+```{python}
+match = such.And(that)
+match = such.Or(that)
+match = such.Not(that)
+```
+
+- **R**
+
+```{r}
+match <- such$And(that)
+match <- such$Or(that)
+match <- such$Not(that)
+```
+
+
+
+### Multi-line method chain	{-}
+
+- **JavaScript**
+
+```{js}
+var foo = my.really()
+              .reallyLong()
+              .methodChain();
+```
+
+- **Python**
+
+
+```{python}
+foo = (my.really()
+       .reallyLong()
+       .methodChain())
+```
+
+- **R**
+
+```{r}
+foo = my %>% 
+  really() %>% 
+  reallyLong() %>% 
+  methodChain()
+```
+
+### Dictionary keys	{-}
+
+
+- **JavaScript**
+
+```{js}
+var dic = {'key': value};
+var dic = {key: value};
+```
+
+- **Python**
+
+
+```{python}
+dic = {'key': value}
+```
+
+- **R**
+
+```{r}
+dic <- list(key = value)
+```
+
+### Dictionary object access {-}
+
+- **JavaScript**
+
+```{js}
+var value = dic.key;
+var value = dic['key'];
+```
+
+- **Python**
+
+
+```{python}
+value = dic['key']
+```
+
+- **R**
+
+```{r}
+value <- dic[['key']]
+```
+
+
+### Function argument definition {-}
+
+- **JavaScript**
+
+```{js}
+// Positional arguments.
+var foo = fun(argX, argY, argZ);
+// Keyword arguments object.
+var foo = fun({y: argY});
+```
+
+- **Python**
+
+
+```{python}
+# Positional arguments.
+foo = fun(arg_x, arg_y, arg_z)
+# Keyword arguments dictionary.
+foo = fun(**{'y': arg_y})
+# Keyword arguments.
+foo = fun(x=arg_x, z=arg_z)
+```
+
+- **R**
+
+```{r}
+# Positional arguments.
+foo <- fun(arg_x, arg_y, arg_z)
+
+# Keyword arguments.
+foo <- fun(x=arg_x, z=arg_z)
+```
+
+### Boolean {-}
+
+- **JavaScript**
+
+```{js}
+	var t = true;
+var f = false;
+```
+
+- **Python**
+
+
+```{python}
+t = True
+f = False
+```
+
+- **R**
+
+```{r}
+t <- TRUE
+f <- FALSE
+```
+
+### Boolean {-}
+
+- **JavaScript**
+
+```{js}
+var na = null;
+```
+
+- **Python**
+
+
+```{python}
+na = None
+```
+
+- **R**
+
+```{r}
+na <- NULL
+```
+
+### Comment {-}
+
+- **JavaScript**
+
+```{js}
+//
+```
+
+- **Python**
+
+
+```{python}
+#
+```
+
+- **R**
+
+```{r}
+#
+```
+
+
+Thanks to **reticulate**, it is possible to embed a Python session within an R session. The **[Earth Engine Python API](https://pypi.org/project/earthengine-api/)** and **rgee** share the **same modules, classes, functions, and methods**. In other words, the logic of the syntax is the same and just as fast (just change **.** by a **$**). Nonetheless, variations in the architecture of R and Python's languages may present specific issues in particular instances. We identify **four** bug-potential cases. Each of them is explained in-depth below.
+
+
+
+## 1. The map message error in List EE objects {-}
+
+This issue happens when the **map** method is used while: (1) running a reticulate version
+lower than &lt; 1.14 (please update it!); or (2) leading
+with **ee$List** objects. For instance:
+
+``` r
+mylist = ee$List$sequence(10)
+mylist$map(function(x) ee$Number(x)$add(1))
+#> Error in py_call_impl(callable, dots$args, dots$keywords): RuntimeError: Evaluation error: argument "x" is missing, with no default.
+#> 
+#> Detailed traceback: 
+#>   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/apifunction.py", line 205, in <lambda>
+#>     return lambda *args, **kwargs: func.call(*args, **kwargs)  # pylint: disable=unnecessary-lambda
+#>   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/function.py", line 67, in call
+#>     return self.apply(self.nameArgs(args, kwargs))
+#>   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/function.py", line 80, in apply
+#>     result = computedobject.ComputedObject(self, self.promoteArgs(named_args))
+#>   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/function.py", line 107, in promoteArgs
+#>     promoted_args[name] = Function._promoter(args[name], spec['type'])
+#>   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/__init__.py", line 242, in _Promote
+#>     return CustomFunction.create(arg, 'Object', ['Object'] * args_count)
+#>   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/customfunction.py", line 121, in create
+#>     return CustomFunction(signature, func)
+#>   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/customfunction.py", line 47, in __init__
+#>     self._body = body(*variables)
+#>   File "/home/aybarpc01/R/x86_64-pc-linux-gnu-library/3.6/reticulate/python/rpytools/call.py", line 21, in python_function
+#>     raise RuntimeError(res[kErrorKey])
+```
+
+The code before is perfectly valid but `rgee` will produce an error.
+This problem should be easily solved by adding the function **ee_utils_pyfunc**.
+It will permit to wrap R functions before to send it to `reticulate`. Let’s see:
+
+``` r
+mylist = ee$List$sequence(0,10)
+mynewlist = mylist$map(
+  ee_utils_pyfunc(
+    function(x) ee$Number(x)$add(1)   
+  )
+)
+mynewlist$getInfo()
+#>  [1]  1  2  3  4  5  6  7  8  9 10 11
+```
+
+## 2. Do not forget the L {-}
+
+By default, when you define a number in R it will produce a **double
+precision** value. This does not happen in Python because, by default it
+will create an **int** value.
+
+**Python**
+
+``` python
+type(1)
+#> <class 'int'>
+```
+
+**R**
+
+``` r
+class(1)
+#> [1] "numeric"
+```
+
+But why does this matter? Let's explain with an example:
+
+**Python**
+
+``` python
+ee.Initialize()
+and_bitwise = ee.Number(32).bitwiseAnd(100)
+and_bitwise.getInfo()
+#> 32
+```
+
+**R**
+
+``` r
+and_bitwise = ee$Number(32)$bitwiseAnd(100) #caution: silent error
+and_bitwise$getInfo()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/home/aybarpc01/.local/lib/python3.7/site-packages/ee/computedobject.py", line 95, in getInfo
+    return data.computeValue(self)
+  File "/home/aybarpc01/.local/lib/python3.7/site-packages/ee/data.py", line 490, in computeValue
+    return send_('/value', ({'json': obj.serialize(), 'json_format': 'v2'}))
+  File "/home/aybarpc01/.local/lib/python3.7/site-packages/ee/data.py", line 1186, in send_
+    raise ee_exception.EEException(json_content['error']['message'])
+ee.ee_exception.EEException: Number.bitwiseAnd: Bitwise operands must be integer only.
+```
+
+Users need to take into consideration that most of the arguments of the
+Earth Engine methods are strict to admit only **integer values**. The
+creation of integers in R is quite simple; you just need to add the
+letter **L** to the end of the specific number or employ the
+function `as.integer`. The **correct code** in R would be:
+
+``` r
+and_bitwise = ee$Number(32L)$bitwiseAnd(100L)
+and_bitwise$getInfo()
+#> [1] 32
+```
+
+## 3. Be careful with ee$Date {-}
+
+This problem also appears due to differences between the design of R and
+Python as programming languages. Currently, R only supports integer data 
+type of 32 bits. Such integers can only count up to about 2 billion. Unfortunately, 
+this range is insufficient to deal with [Google Earth
+Engine timestamp](https://developers.google.com/earth-engine/glossary/)
+which is saved in milliseconds since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+
+**Python**
+
+``` python
+my_date = ee.Date('1990-01-01')
+my_date.getInfo()
+#> {'type': 'Date', 'value': 631152000000} # greater than 2 billion
+```
+
+**R**
+
+``` r
+my_date <- ee$Date('1990-01-01')
+my_date$getInfo()
+#> $type
+#> [1] "Date"
+#> 
+#> $value
+#> [1] -208192512
+```
+
+The problems with `ee$Date` just appear in the last mile (Python to R or
+vice-versa, `reticulate`), and they should not be too severe if treated
+with care. `rgee` implements two functions to deal with Earth Engine
+dates: `eedate_to_rdate` and `rdate_to_eedate`.
+
+``` r
+# Era5 dataset
+era_img <- ee$ImageCollection("ECMWF/ERA5/DAILY")$
+  filterDate("2019-01-01", "2019-12-31")$
+  first()
+# Extracting init date
+ee_date <- era_img$get('system:time_start')
+ee_date$getInfo() # Silent error
+#> [1] 112573440
+eedate_to_rdate(ee_date = ee_date, timestamp = TRUE)
+#> [1] 1.546301e+12
+```
+
+## 4. Take into consideration reserved words in R {-}
+
+A reserved word is a word that cannot be used as an identifier, such as the name
+of a variable or a function. According with `?reserved`, the reserved words in R's parser
+are: `if`, `else`, **`repeat`**, `while`, `function`, `for`, `in`, `next`, `break`, `TRUE`, `FALSE`, `NULL`,
+`Inf`, `NaN`, `NA`, `NA_integer_`, `NA_real_`, `NA_complex_`, `NA_character_`. Of these words,
+the only one that is part of the Earth Engine API is **repeat**.
+
+We can find **repeat** as a
+method for an Earth Engine List object. See **[`ee$List$repeat(value, count)`](https://developers.google.com/earth-engine/apidocs/ee-list-repeat)**:
+
+``` r
+ee_list <- ee$List(1:10)
+ee_list$repeat(10,2)$getInfo()
+#> Error: unexpected 'repeat' in "ee_list$repeat"
+```
+
+To avoid this error use backticks/quotation marks:
+
+``` r
+ee_list <- ee$List(1:10)
+ee_list$'repeat'(10,2)$getInfo()
+#> 10 10
+```
+

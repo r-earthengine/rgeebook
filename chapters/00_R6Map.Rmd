@@ -404,7 +404,7 @@ m1 + m2
 m1 | m2
 ```
 
-  <figure>
+<figure>
   <center>
     <img src="https://user-images.githubusercontent.com/16768318/104091120-9a699d80-527b-11eb-8d4a-ee9bfd57360e.png" width="95%"><br>
     <caption><strong>Figure N°08:</strong> Side by side example </caption>
