@@ -30,7 +30,7 @@ This tutorial covers just enough R to get you started writing Earth Engine scrip
 
 Time to write your first code in R for Earth Engine! In your Rstudio,  copy the following into the Code Editor:
 
-```{r, eval=FALSE}
+```{r}
 print('Hello World!')
 ```
 
@@ -1705,7 +1705,7 @@ The first statement references the Earth Engine [Image object]() for the GSW dat
 Click on the Rstudio's "Run" button, and after a few seconds you should see a map with grey coloring along the coastlines, similar to Figure 1.
 
 <center>
-<img src="./images/chapter_03/figure_GSW_01.png">
+<img src="./images/chapter_03/figure_GSW_01.png" width=95%>
 </center>
 
 Figure 1. Default visualization of the global surface water occurrence data layer.
@@ -1724,6 +1724,10 @@ Map$addLayer(eeObject = occurrence, name = 'Water Occurrence (1984-2015)')
 
 Run the code again to make sure it still works after the refactoring changes. The resulting map should remain unchanged.
 
+<center>
+<img src="./images/chapter_03/figure_GSW_01b.png" width=95%>
+</center>
+
 ### Adding Visualization Parameters {-}
 
 Next, we will work on improving upon the default visualization parameters, which are making our water appear gray. Add a new statement that creates a variable `VIS_OCCURRENCE` and pass it as an additional argument to the addLayer method.
@@ -1732,14 +1736,14 @@ Next, we will work on improving upon the default visualization parameters, which
 VIS_OCCURRENCE <- list(
   min = 0,
   max = 100,
-  palette = c('red', 'blue')
+  palette = c("red", "blue")
 )
 ```
 
 ```{r}
 Map$addLayer(
   eeObject = occurrence$updateMask(occurrence$divide(100)),
-  name = 'Water Occurrence (1984-2015)',
+  name = "Water Occurrence (1984-2015)",
   visParams = VIS_OCCURRENCE
 )
 ```
@@ -1764,7 +1768,7 @@ First we define a new visualization variable `VIS_WATER_MASK` for holding stylin
 
 ```{r}
 VIS_WATER_MASK <- list(
-  palette = c('white', 'black')
+  palette = c("white", "black")
 )
 ```
 
@@ -1782,7 +1786,7 @@ And finally, add the layer to the map. In order to have this layer rendered unde
 Map$addLayer(
   eeObject = water_mask,
   visParams = VIS_WATER_MASK,
-  name = '90% occurrence water mask'
+  name = "90% occurrence water mask"
 )
 ```
 
@@ -1796,18 +1800,18 @@ Figure 3. Screenshot of a 90% water mask for the Paraná Delta near Buenos Aires
 
 It is fun to explore the world by panning and zooming around, but the world is large and sometimes it helps to jump directly to a particular location. Here is a series of statements that provide a small sample of interesting locations, in terms of surface water. Just uncomment one of the statements at a time, and your script will go to that location when it is run.
 
-```{js}
-// Uncomment one of the following statements to center the map.
-// Map.setCenter(-90.162, 29.8597, 10);   // New Orleans, USA
-// Map.setCenter(-114.9774, 31.9254, 10); // Mouth of the Colorado River, Mexico
-// Map.setCenter(-111.1871, 37.0963, 11); // Lake Powell, USA
-// Map.setCenter(149.412, -35.0789, 11);  // Lake George, Australia
-// Map.setCenter(105.26, 11.2134, 9);     // Mekong River Basin, SouthEast Asia
-// Map.setCenter(90.6743, 22.7382, 10);   // Meghna River, Bangladesh
-// Map.setCenter(81.2714, 16.5079, 11);   // Godavari River Basin Irrigation Project, India
-// Map.setCenter(14.7035, 52.0985, 12);   // River Oder, Germany & Poland
-// Map.setCenter(-59.1696, -33.8111, 9);  // Buenos Aires, Argentina
-Map.setCenter(-74.4557, -8.4289, 11);  // Ucayali River, Peru
+```{r}
+# Uncomment one of the following statements to center the map.
+# Map$setCenter(-90.162, 29.8597, 10)   # New Orleans, USA
+# Map$setCenter(-114.9774, 31.9254, 10) # Mouth of the Colorado River, Mexico
+# Map$setCenter(-111.1871, 37.0963, 11) # Lake Powell, USA
+# Map$setCenter(149.412, -35.0789, 11)  # Lake George, Australia
+# Map$setCenter(105.26, 11.2134, 9)     # Mekong River Basin, SouthEast Asia
+# Map$setCenter(90.6743, 22.7382, 10)   # Meghna River, Bangladesh
+# Map$setCenter(81.2714, 16.5079, 11)   # Godavari River Basin Irrigation Project, India
+# Map$setCenter(14.7035, 52.0985, 12)   # River Oder, Germany & Poland
+# Map$setCenter(-59.1696, -33.8111, 9)  # Buenos Aires, Argentina
+Map$setCenter(-74.4557, -8.4289, 11) # Ucayali River, Peru
 ```
 
 This is just a small sample of interesting locations. Feel free to add your own!
@@ -1818,66 +1822,68 @@ Before we move on to the next layer of the GSW dataset, we are going to do a lit
 
 Here is the final refactored script:
 
-```{js}
-//////////////////////////////////////////////////////////////
-// Asset List
-//////////////////////////////////////////////////////////////
+```{r}
+#############################################################
+# Asset List
+#############################################################
 
-var gsw = ee.Image('JRC/GSW1_0/GlobalSurfaceWater');
-var occurrence = gsw.select('occurrence');
+gsw <- ee$Image("JRC/GSW1_0/GlobalSurfaceWater")
+occurrence <- gsw$select("occurrence")
 
-//////////////////////////////////////////////////////////////
-// Constants
-//////////////////////////////////////////////////////////////
+#############################################################
+# Constants
+#############################################################
 
-var VIS_OCCURRENCE = {
-  min: 0,
-  max: 100,
-  palette: ['red', 'blue']
-};
-var VIS_WATER_MASK = {
-  palette: ['white', 'black']
-};
+VIS_OCCURRENCE <- list(
+  min = 0,
+  max = 100,
+  palette = c("red", "blue")
+)
 
-//////////////////////////////////////////////////////////////
-// Calculations
-//////////////////////////////////////////////////////////////
 
-// Create a water mask layer, and set the image mask so that non-water areas
-// are opaque.
-var water_mask = occurrence.gt(90).unmask(0);
+VIS_WATER_MASK <- list(
+  palette = c("white", "black")
+)
 
-//////////////////////////////////////////////////////////////
-// Initialize Map Location
-//////////////////////////////////////////////////////////////
+#############################################################
+# Calculations
+#############################################################
 
-// Uncomment one of the following statements to center the map.
-// Map.setCenter(-90.162, 29.8597, 10);   // New Orleans, USA
-// Map.setCenter(-114.9774, 31.9254, 10); // Mouth of the Colorado River, Mexico
-// Map.setCenter(-111.1871, 37.0963, 11); // Lake Powell, USA
-// Map.setCenter(149.412, -35.0789, 11);  // Lake George, Australia
-// Map.setCenter(105.26, 11.2134, 9);     // Mekong River Basin, SouthEast Asia
-// Map.setCenter(90.6743, 22.7382, 10);   // Meghna River, Bangladesh
-// Map.setCenter(81.2714, 16.5079, 11);   // Godavari River Basin Irrigation Project, India
-// Map.setCenter(14.7035, 52.0985, 12);   // River Oder, Germany & Poland
-// Map.setCenter(-59.1696, -33.8111, 9);  // Buenos Aires, Argentina
-Map.setCenter(-74.4557, -8.4289, 11);  // Ucayali River, Peru
+# Create a water mask layer, and set the image mask so that non-water areas
+# are opaque.
+water_mask <- occurrence$gt(90)$unmask(0)
 
-//////////////////////////////////////////////////////////////
-// Map Layers
-//////////////////////////////////////////////////////////////
+#############################################################
+# Initialize Map Location
+#############################################################
 
-Map.addLayer({
-  eeObject: water_mask,
-  visParams: VIS_WATER_MASK,
-  name: '90% occurrence water mask',
-  shown: false
-});
-Map.addLayer({
-  eeObject: occurrence.updateMask(occurrence.divide(100)),
-  name: 'Water Occurrence (1984-2015)',
-  visParams: VIS_OCCURRENCE
-});
+# Uncomment one of the following statements to center the map.
+# Map$setCenter(-90.162, 29.8597, 10)   # New Orleans, USA
+# Map$setCenter(-114.9774, 31.9254, 10) # Mouth of the Colorado River, Mexico
+# Map$setCenter(-111.1871, 37.0963, 11) # Lake Powell, USA
+# Map$setCenter(149.412, -35.0789, 11)  # Lake George, Australia
+# Map$setCenter(105.26, 11.2134, 9)     # Mekong River Basin, SouthEast Asia
+# Map$setCenter(90.6743, 22.7382, 10)   # Meghna River, Bangladesh
+# Map$setCenter(81.2714, 16.5079, 11)   # Godavari River Basin Irrigation Project, India
+# Map$setCenter(14.7035, 52.0985, 12)   # River Oder, Germany & Poland
+# Map$setCenter(-59.1696, -33.8111, 9)  # Buenos Aires, Argentina
+Map$setCenter(-74.4557, -8.4289, 11) # Ucayali River, Peru
+
+#############################################################
+# Map Layers
+#############################################################
+
+Map$addLayer(
+  eeObject = water_mask,
+  visParams = VIS_WATER_MASK,
+  name = "90% occurrence water mask",
+  shown = FALSE
+) |
+Map$addLayer(
+  eeObject = occurrence$updateMask(occurrence$divide(100)),
+  name = "Water Occurrence (1984-2015)",
+  visParams = VIS_OCCURRENCE
+)
 ```
 
 In the [next section](), you explore how water occurrence has changed over time.
@@ -1903,20 +1909,20 @@ In the Constants section of the code, add a statement that creates a new variabl
 
 ```{r}
 VIS_CHANGE <- list(
-    min = -50,
-    max = 50,
-    palette = c('red', 'black', 'limegreen')
+  min = -50,
+  max = 50,
+  palette = c("red", "black", "limegreen")
 )
 ```
 
 At the end of the Map Layers section of code, add a statement that adds a new layer to the map.
 
 ```{r}
-Map$setCenter(-74.4557, -8.4289, 11)  # Ucayali River, Peru
+Map$setCenter(-74.4557, -8.4289, 11) # Ucayali River, Peru
 Map$addLayer(
   eeObject = change,
   visParams = VIS_CHANGE,
-  name = 'occurrence change intensity'
+  name = "occurrence change intensity"
 )
 ```
 
@@ -1942,7 +1948,7 @@ This section of the tutorial will:
 In the Asset List section of the script, add the following statement which creates a single band image object called `transition`:
 
 ```{r}
-transition <- gsw$select('transition')
+transition <- gsw$select("transition")
 ```
 
 The GSW images contain metadata on the transition class numbers and names, and a default palette for styling the transition classes. When the transition layer is added to the map, these visualzation parameters will be used automatically.
@@ -1950,10 +1956,10 @@ The GSW images contain metadata on the transition class numbers and names, and a
 At the bottom of the Map Layers section of your script, add the following statement which adds a new map layer that displays the transition classes:
 
 ```{r}
-Map$setCenter(105.26, 11.2134, 9)     # Mekong River Basin, SouthEast Asia
+Map$setCenter(105.26, 11.2134, 9) # Mekong River Basin, SouthEast Asia
 Map$addLayer(
   eeObject = transition,
-  name = 'Transition classes (1984-2015)',
+  name = "Transition classes (1984-2015)",
 )
 ```
 
@@ -2032,15 +2038,35 @@ The map key for the transition classes is:
       
 ### Summarizing Area by Transition Class {-}
 
-In this section we will once again use the geometry polygon tool to define a region-of-interest. If you want to analyze a new location, you will want to first select and delete the original polygon that you drew so that you don't get results from the combined areas. See the [Geometry tools]() section of the Code Editor docs from information on how to modify geometries.
+In this section we will once again use the geometry polygon tool to define a region-of-interest. If you want to analyze a new location, you will want to first select and delete the original polygon that you create so that you don't get results from the combined areas. See the [Geometry tools]() section of the Rstudio from information on how to modify geometries.
 
-For this example we will draw a new polygon within the Mekong River delta.
+For this example we will create a new polygon within the Mekong River delta.
+
+```{r}
+roi <- ee$Geometry$Polygon(
+  c(
+    c(105.61356262001948, 10.292654070507828),
+    c(105.96512512001948, 10.514171198992166),
+    c(105.73166564736323, 10.765211642467452),
+    c(105.37735656533198, 10.516871653561891)
+  )
+)
+```
+
+```{r}
+Map$setCenter(105.26, 11.2134, 9) # Mekong River Basin, SouthEast Asia
+Map$addLayer(
+  eeObject = transition,
+  name = "Transition classes (1984-2015)",
+) +
+  Map$addLayer(roi, list(color = "red"), "roi")
+```
 
 <center>
 <img src="./images/chapter_03/figure_GSW_06.png" width=95%>
 </center>
 
-Figure 6. The Mekong River delta in Vietnam, with a region-of-interest created by using the Code Editor's polygon drawing tool.
+Figure 6. The Mekong River delta in Vietnam, with a region-of-interest.
 
 In order to calculate the area covered by parts of an image, we will add an additional band to the transition image object that identifies the size of each pixel in square meters using the `ee$Image$pixelArea` method.
 
@@ -2056,16 +2082,15 @@ We then summarize the class transitions within a region of interest (`roi`) usin
 reduction_results <- area_image_with_transition_class$reduceRegion(
   reducer = ee$Reducer$sum()$group(
     groupField = 1,
-    groupName = 'transition_class_value',
+    groupName = "transition_class_value"
   ),
   geometry = roi,
   scale = 30,
-  bestEffort = TRUE,
+  bestEffort = TRUE
 )
-print('reduction_results', paste0(ee$Dictionary$getInfo(reduction_results)))
+
+print(ee$Dictionary$getInfo(reduction_results))
 ```
-
-
 
 # Video Tutorials {-}
 
