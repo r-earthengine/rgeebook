@@ -201,6 +201,15 @@ Another example of requesting something is displaying it on the map with `Map$ad
 
 # Scale {-}
 
+This section requires the next libraries:
+
+```{r}
+library(rgee)
+library(rgeeExtra)
+
+ee_Initialize()
+```
+
 Understanding how Earth Engine handles scale is crucial to interpreting scientific results obtained from Earth Engine. Here, scale means pixel resolution. Unlike other GIS and image processing platforms, the scale of analysis is determined from the output, rather than the input. Specifically, when you make a request for results, an image to display or a statistic, for example, you specify the scale at which data is input to the analysis. This concept is illustrated in Figure 1.
 
 <center>
@@ -219,25 +228,27 @@ The lowest level of the image pyramid represents image data at native resolution
 
 Scale of analysis in Earth Engine is determined on a "pull" basis. The scale at which to request inputs to a computation is determined from the output. For example, if you add an image to the map with `Map$addLayer()`, the zoom level of the map in the Rstudio determines the scale at which inputs are requested from the image pyramid. For other computations, you specify `scale` as an argument. For example, using the NIR band of a Landsat image, which has 30 meters native resolution:
 
-```{js}
-var image = ee.Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318').select('B4');
+```{r}
+image <- ee$Image("LANDSAT/LC08/C01/T1/LC08_044034_20140318")$select("B4")
 
-var printAtScale = function(scale) {
-  print('Pixel value at '+scale+' meters scale',
-    image.reduceRegion({
-      reducer: ee.Reducer.first(),
-      geometry: image.geometry().centroid(),
-      // The scale determines the pyramid level from which to pull the input
-      scale: scale
-  }).get('B4'));
-};
+printAtScale <- function(scale) {
+  cat(
+    "Pixel value at ", scale, " meters scale",
+    image$reduceRegion(
+      reducer = ee$Reducer$first(),
+      geometry = image$geometry()$centroid(),
+      # The scale determines the pyramid level from which to pull the input
+      scale = scale
+    )$get("B4")$getInfo()
+  )
+}
 
-printAtScale(10); // 8883
-printAtScale(30); // 8883
-printAtScale(50); // 8337
-printAtScale(70); // 9215
-printAtScale(200); // 8775
-printAtScale(500); // 8300
+printAtScale(10) # 8883
+printAtScale(30) # 8883
+printAtScale(50) # 8337
+printAtScale(70) # 9215
+printAtScale(200) # 8775
+printAtScale(500) # 8300
 ```
 
 In this example, note that the pixel value at a constant location (the image centroid) varies based on scale. This is due to the fact that different pyramid levels are selected for different scales. For similar scales, nearest neighbor resampling results in the same pixel value being returned. The important point is that by varying the scale, different image inputs are requested.
@@ -246,27 +257,45 @@ In this example, note that the pixel value at a constant location (the image cen
 
 When you visualize an image by adding it to the map, Earth Engine determines scale from the zoom level. Consider the following simple example, which simply displays a Landsat image:
 
-```{js}
-var image = ee.Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318');
-Map.centerObject(image, 17);
-Map.addLayer(image, {bands: ['B4', 'B3', 'B2'], max: 12000}, 'image');
+```{r}
+image <- ee$Image("LANDSAT/LC08/C01/T1/LC08_044034_20140318")
+
+Map$centerObject(image, 17)
+Map$addLayer(image, list(bands = c("B4", "B3", "B2"), max = 12000), "image")
 ```
+
+<center>
+<img src="./images/chapter_04/figure_code_01.png" width=95%>
+</center>
 
 The map starts zoomed all the way in, such that the native resolution pixels are clearly visible. Zooming out far enough will not display the same pixels, but will instead display higher levels of the image pyramid. It is also worth noting that the Rstudio map uses the [maps mercator (EPSG:3857)]() projection, so the appropriate level of the image pyramid also needs to be reprojected prior to display. Learn more about how Earth Engine handles projections from the [projections doc]().
 
 # Projections {-}
 
+This section requires the next libraries:
+
+```{r}
+library(rgee)
+library(rgeeExtra)
+
+ee_Initialize()
+```
+
 Earth Engine is designed so that you rarely have to worry about map projections when doing computations. As with scale, the projection in which computations take place is determined on a "pull" basis. Specifically, inputs are requested in the output projection. The output may be determined from a function parameter (e.g. `crs`), the `Map` in the Rstudio (which has a [maps mercator (EPSG:3857)]() projection), or with a `reproject()` call. When you display images in the Rstudio, inputs are requested in [maps mercator](). Consider the following simple operation on a MODIS image, which has a [sinusoidal]() projection:
 
-```{js}
-// The input image has a SR-ORG:6974 (sinusoidal) projection.
-var image = ee.Image('MODIS/006/MOD13A1/2014_05_09').select(0);
+```{r}
+# The input image has a SR-ORG:6974 (sinusoidal) projection.
+image <- ee$Image("MODIS/006/MOD13A1/2014_05_09")$select(0)
 
-// Normalize the image and add it to the map.
-var rescaled = image.unitScale(-2000, 10000);
-var visParams = {min: 0.15, max: 0.7};
-Map.addLayer(rescaled, visParams, 'Rescaled');
+# Normalize the image and add it to the map.
+rescaled <- image$unitScale(-2000, 10000)
+visParams <- list(min = 0.15, max = 0.7)
+Map$addLayer(rescaled, visParams, "Rescaled")
 ```
+
+<center>
+<img src="./images/chapter_04/figure_PRJ_code_01.png" width=95%>
+</center>
 
 The order of operations for this code sample is diagrammed in Figure 1. Note that the projection of the input is determined by the output, specifically the [maps mercator]() projection of the map display in the Rstudio. This projection propagates back through the sequence of operations such that the inputs are requested in maps mercator, at a scale determined by the zoom level of the map.
 
@@ -278,10 +307,13 @@ Figure 1. Flow chart of operations corresponding to the display of a MODIS image
 
 In Earth Engine, projections are specified by a Coordinate Reference System (CRS or the `crs` parameter of many methods). You can check the projection of an image by calling `projection()` on it:
 
-```{js}
-var image = ee.Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318').select(0);
-print('Projection, crs, and crs_transform:', image.projection());
-print('Scale in meters:', image.projection().nominalScale());
+```{r}
+image <- ee$Image("LANDSAT/LC08/C01/T1/LC08_044034_20140318")$select(0)
+
+# Projection, crs, and crs_transform
+print(image$projection()$getInfo())
+
+cat("Scale in meters:", image$projection()$nominalScale()$getInfo())
 ```
 
 Note that by calling `nominalScale()` on the `ee$Projection` returned by `projection()`, you can determine the native resolution of the image. The native resolution is the nominal pixel scale in meters of the lowest level of the [image pyramid](). Because each band of an image can have a different scale and/or projection, if you call `projection()` on an image with at least one band that doesn't have the same projection as the others, you may see an error like:
@@ -290,10 +322,11 @@ Note that by calling `nominalScale()` on the `ee$Projection` returned by `projec
 
 Unless you need your computation to occur in a specific projection, there is generally no need to specify a projection. Only for output that's ambiguous will Earth Engine require you to specify a projection and/or scale. Ambiguity can result from reducing an `ImageCollection` containing images with different projections (i.e. [creating a composite]()). An image which is a composite or mosaic of input images with different projections will have the default projection, which is [WGS84]() with 1-degree scale. For example:
 
-```{js}
-var collection = ee.ImageCollection('LANDSAT/LC08/C01/T1');
-var mosaic = collection.mosaic();
-print(mosaic.projection());
+```{r}
+collection <- ee$ImageCollection("LANDSAT/LC08/C01/T1")
+mosaic <- collection$mosaic()
+
+print(mosaic$projection()$getInfo())
 ```
 
 If you try to use an image like this in a computation, you may see an error like:
@@ -310,10 +343,10 @@ If the optimized display image somehow isn't sufficient, computation in a specif
 
 You can force operations to be performed in a specific projection with the `reproject()` method. Using `reproject()` results in the inputs being requested in the projection specified in the `reproject()` call. Computations in your code before the `reproject()` call will be done in the specified projection. For example, to force a composite to be produced in a specific projection:
 
-```{js}
-// Some projection that is suitable for your area of interest.
-var proj = ee.Projection(...);
-var output = collection.reduce(...).reproject(proj);
+```{r}
+# Some projection that is suitable for your area of interest.
+proj <- ee$Projection(...)
+output <- collection$reduce(...)$reproject(proj)
 ```
 
 A few cases that require a fixed projection include:
@@ -325,17 +358,22 @@ There are several reasons you should avoid using `reproject()` unless you absolu
 
 If the eventual output is in a different projection from that specified in the `reproject()` call, that will result in another reprojection. This is another reason to be cautious about using `reproject()` in your code. Consider the following example, which forces the MODIS image to first be reprojected to [WGS84](), then reprojected to [maps mercator]() for display in the Rstudio map:
 
-```{js}
-// The input image has a SR-ORG:6974 (sinusoidal) projection.
-var image = ee.Image('MODIS/006/MOD13A1/2014_05_09').select(0);
+```{r}
+# The input image has a SR-ORG:6974 (sinusoidal) projection.
+image <- ee$Image("MODIS/006/MOD13A1/2014_05_09")$select(0)
 
-// Operations *before* the reproject call will be done in the projection
-// specified by reproject().  The output results in another reprojection.
-var reprojected = image
-    .unitScale(-2000, 10000)
-    .reproject('EPSG:4326', null, 500);
-Map.addLayer(reprojected, visParams, 'Reprojected');
+# Operations *before* the reproject call will be done in the projection
+# specified by reproject().  The output results in another reprojection.
+reprojected <- image$
+  unitScale(-2000, 10000)$
+  reproject("EPSG:4326", NULL, 500)
+
+Map$addLayer(reprojected, visParams, "Reprojected")
 ```
+
+<center>
+<img src="./images/chapter_04/figure_PRJ_code_02.png" width=95%>
+</center>
 
 Figure 2 diagrams the flow of operations corresponding to this simple reprojection example. Note that the first reprojection is explicit, as specified in the `reproject()` call. The second reprojection is implicit, performed by Earth Engine automatically in order to display the result on the map. Also observe that the information about what projection to use propagates back from the request to the input.
 

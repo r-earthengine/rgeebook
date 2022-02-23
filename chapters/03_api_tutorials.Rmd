@@ -943,6 +943,15 @@ That concludes this introduction to the Earth Engine API! You have now seen much
 
 # Global Forest Change {-}
 
+This section requires the next libraries:
+
+```{r}
+library(rgee)
+library(rgeeExtra)
+
+ee_Initialize()
+```
+
 ## Introduction to Forest Change Analysis in Earth Engine {-}
 
   <figure>
@@ -1644,6 +1653,15 @@ Map$addLayer(
 This concludes the overview of forest change datasets in Earth Engine. We're looking forward to seeing what you can do with them!
 
 # Global Surface Water {-}
+
+This section requires the next libraries:
+
+```{r}
+library(rgee)
+library(rgeeExtra)
+
+ee_Initialize()
+```
 
 ## Introduction {-}
 
