@@ -1886,6 +1886,10 @@ Map$addLayer(
 )
 ```
 
+<center>
+<img src="./images/chapter_03/figure_GSW_03b.png" width=95%>
+</center>
+
 In the [next section](), you explore how water occurrence has changed over time.
 
 ## Water Occurrence Change Intensity {-}
