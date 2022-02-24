@@ -55,8 +55,8 @@ Map$addLayer(first, vizParams, "first")
 ```
 
 <center>
-![](../images/chapter_05/figure_csaybar_01.png){width=670px}
-
+![](./images/chapter_05/figure_csaybar_01.png){width=670px}
+<br>
 Note that the `sort` is *after* the filters. Avoid sorting the entire collection.
 
 ### Images from Cloud GeoTIFFs {-}
