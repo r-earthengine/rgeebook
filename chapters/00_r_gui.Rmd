@@ -9,19 +9,421 @@ source("common.R")
 
 ## R Guides {-}
 
-The guides are written primarily for R with [Rstudio](). The [R Quickstart]() guide and the [tutorials]() describe basic concepts and example workflows to help beginning users.
+The guides are written primarily for R with [Rstudio](). The [R Quickstart]() guide and the [tutorials]() describe basic concepts and example workflows to help beginning users. The guides have several examples for both [rgee](https://github.com/r-spatial/rgee) and [rgeeExtra](https://github.com/r-earthengine/rgeeExtra).
 
 The [Best Practices]() and [Debugging]() guides have more complex examples and provide techniques useful for overcoming errors and scaling your Earth Engine analyses to larger areas, longer time series and more data. More advanced [Earth Engine concepts]() provide necessary background for understanding how the Earth Engine service works and writing effective code.
 
 The remainder of the guides are intended to illustrate important concepts about data types such as:
 
-  - [`Image`](), The fundamental raster data type in Earth Engine.
-  - [`ImageCollection`](), a stack or time-series of images.
-  - [`Geometry`](), the fundamental vector data type in Earth Engine.
-  - [`Feature`](), or a `Geometry` with attributes.
-  - [`FeatureCollection`](), or a set of features.
-  - [`Reducer`](), an object used to compute statistics or perform aggregations.
-  - [`Join`](), or how to combine datasets (`Image` or `Feature` collections) based on time, location, or an attribute property.
-  - [`Array`](), for multi-dimensional analyses.
-  
-There are also sections for machine learning, specialized or sensor specific algorithms (e.g. Landsat algorithms), and Rstudio addins, Earth Engine apps, and data (asset) management.
+   - [`Image`](), The fundamental raster data type in Earth Engine.
+   - [`ImageCollection`](), a stack or time-series of images.
+   - [`Geometry`](), the fundamental vector data type in Earth Engine.
+   - [`Feature`](), or a `Geometry` with attributes.
+   - [`FeatureCollection`](), or a set of features.
+   - [`Reducer`](), an object used to compute statistics or perform aggregations.
+   - [`Join`](), or how to combine datasets (`Image` or `Feature` collections) based on time, location, or an attribute property.
+   - [`Array`](), for multi-dimensional analyses.
+   
+There are also sections for machine learning, specialized or sensor specific algorithms (e.g. Landsat algorithms), and Rstudio addins, Earth Engine apps, and data (asset) management. 
+
+
+
+## What is Google Earth Engine? {-}
+
+Google Earth Engine (GEE) is a cloud-based platform that helps access high-performance computing resources for processing and analyzing large geospatial datasets (Golerick et al.,2017). At the moment, GEE only supports client libraries for the JavaScript and Python programming languages. Check out its official GitHub repository for more details: [https://github.com/google/earthengine-api](https://github.com/google/earthengine-api).
+
+__*client library*__: Sometimes known as a **helper library**, is a collection of code that help to communicate more effectively with an API. For example, if you want to invoke a certain image asset, you must type the following:
+
+```{r}
+# Connecting to GEE server via web API(POST request).
+{
+   "functionInvocationValue": {
+      "functionName": "Image.load",
+      "arguments": {
+         "id": {
+            "constantValue": "USGS/SRTMGL1_003"
+         }
+      }
+   }
+}
+```
+
+However, using the GEE client library, the code is reduced to only one line of code!
+
+```{r}
+# Connecting to GEE server via client library + web API.
+ee$Image("USGS/SRTMGL1_003")
+```
+
+
+## What is rgee? {-}
+
+**rgee** is the simplest method for using GEE from inside R. Using **reticulate**, rgee can connect R and Python.
+Therefore, you may think on rgee as a **nested wrapper**. One wrapper connects R to the Python Earth Engine API, 
+while another connects Python to the Web REST API (see figure below).
+
+<center>
+![rgee depends on the Earth Engine Python client library](./images/chapter_00/figure_rgee_01.png){width=500px}
+</center>
+
+When an Earth Engine request is created in R, *reticulate* will translate it into Python and send it to the Earth Engine Python client library, which will convert the request to JSON. Then, the GEE Platform will receive the JSON request through a Web REST API. The response will take the same path as before, but in reverse.
+
+<center>
+![rgee workflow](./images/chapter_00/figure_rgee_00.png){width=700px}
+</center>
+
+# rgeeExtra {-}
+
+The rgeeExtra R package extends the following Earth Engine classes:
+
+- ee$Feature
+- ee$FeatureCollection
+- ee$Geometry
+- ee$Image
+- ee$ImageCollection
+- ee$List
+- ee$Number
+
+
+New utility methods and constructors are added to above-mentioned classes in order to create a more fluid code by being friendly with the Python method chaining. These methods are mandatory for some pre-processing and processing tasks (e.g. clouds masking, shadows masking, image scaling, spectral indices computation, etc.), and they are presented as simple functions that give researchers, students and analysts the chance to analyze data with far fewer lines of code.
+
+Look at this simple example where a [Sentinel-2 Surface Reflectance Image Collection](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR) is pre-processed and processed in just one step:
+
+```{r}
+library(rgee)
+library(rgeeExtra)
+
+ee_Initialize()
+
+
+# Lima, Peru
+point <- ee$Geometry$Point(-77.04111, -12.02228)
+
+# Estimate the NDVI of a specific ee$Image
+S2 <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
+   ee$ImageCollection$filterBounds(point) %>%  # Filter by geometry (EE API)
+   ee_ImageCollection_closest('2020-10-15') %>% # Get the closest image to a specific date (rgeeExtra)
+   ee_model_cloudmask(prob = 70L) %>% # Cloud mask using ee_extra algorithm.
+   ee_ImageCollection_scaleAndOffset() %>%   # Convert from integer to float (real values)
+   ee_ImageCollection_spectralIndex(c('NDVI','NDWI','BAIS2')) %>% # Compute spectral indices
+   '[['(1) # Yes rgeeExtra also support subsettings operators!
+
+# Get the band names
+names(S2)
+
+# Get the band names
+Map$centerObject(point, 11)
+Map$addLayer(S2[["NDVI"]])
+```
+
+
+<center>
+![NDVI Sentinel-2 Lima, Peru](./images/chapter_00/figure_rgee_02.png){width=600px}
+</center>
+
+Let's see some of the main features of eemont and how simple they are compared to the GEE API original methods:
+
+## Subsettings {-}
+
+rgeeExtra also supports subsetting operators!. It works similar to the fantastic [raster R package](https://cran.r-project.org/web/packages/raster/index.html) created by Robert J. Hijmans.
+
+
+### rgee style {-}
+
+```{r}
+# it does not supported without dozen of lines!
+```
+
+
+### rgeeExtra style {-}
+
+```{r}
+ic <- lapply(1:5, function(x) ee$Image(x)) %>% ee$ImageCollection()
+ic[[1]] <- ic[[2]] # Replace an ee$Image from an ee$ImageCollection.
+ic[[3]] # From the ee$ImageCollection get the image with index 3. The index starts with 1.
+ic[[4:5]] # From the ee$ImageCollection get the images with index 4 and 5.
+ic[[3]][["Mar"]] # From the ee$ImageCollection get the images with index 3, and select the band with name "Mar"
+```
+
+
+
+## Overloaded Operators {-}
+
+The following operators are overloaded: +, -, \*, /, //, %, \**\ , <<, >>, &, |, <, <=, ==, !=, >, >=, -, ~. (and you can avoid the eecImage$expression() method!)
+
+
+### rgee style {-}
+
+```{r}
+S2 <- ee$ImageCollection("COPERNICUS/S2_SR")$first()
+
+scaleImage <- function(img) {
+  scaling <- img$select("B.*")
+  x <- scaling$multiply(0.0001)
+  scaling <- img$select(c("AOT", "WVP"))
+  scaling <- scaling$multiply(0.001)
+  x <- x$addBands(scaling)
+  notScaling <- img$select(
+    c(
+      "SCL",
+      "TCI.*",
+      "MSK.*",
+      "QA.*"
+    )
+  )
+  x$addBands(notScaling)
+}
+
+S2 <- scaleImage(S2)
+
+exp <- "2.5*(N-R)/(N+(6*R)-(7.5*B)+1)"
+
+imgDict <- list(
+  N = S2$select("B8"),
+  R = S2$select("B4"),
+  B = S2$select("B2")
+)
+
+EVI <- S2$expression(exp, imgDict)
+```
+
+### rgeeExtra style {-}
+
+```{r}
+S2 <- ee$ImageCollection$Dataset$COPERNICUS_S2_SR$first() %>% 
+  ee_ImageCollection_scaleAndOffset()
+          
+N <- S2[["B8"]]
+R <- S2[["B4"]]
+B <- S2[["B2"]]
+
+EVI = 2.5*(N-R)/(N+(6*R)-(7.5*B)+1)
+```
+
+## Clouds and Shadows Masking {-}
+
+Masking clouds and shadows can be done using eemont with just one method: `maskClouds()!`
+
+### rgee style {-}
+
+```{r}
+ds <- 'LANDSAT/LC08/C01/T1_SR'
+
+maskCloudsShadows <- function(img) {
+  cloud_c <- 2**3
+  cloud_s <- 2**5
+  qa <- 'pixel_qa'
+  qa <- img$select(qa)
+  cm <- qa$bitwiseAnd(cloud_c)$eq(0)
+  sm <- qa$bitwiseAnd(cloud_s)$eq(0)
+  mask <- cm$And(sm)
+  img$updateMask(mask)
+}
+
+ee$ImageCollection(ds)$map(maskCloudsShadows)
+```
+
+
+### rgeeExtra style {-}
+
+```{r}
+ds <- 'LANDSAT/LC08/C01/T1_SR'
+ee$ImageCollection(ds) %>% 
+  ee_model_cloudmask()
+```
+
+
+## Image Scaling and Offsetting {-}
+
+Scaling and offsetting can also be done using eemont with just one method: `scale()`!
+
+### rgee style {-}
+
+```{r}
+library(rgee)
+
+ee_Initialize()
+
+scaleBands <- function(img) {
+  scaling <- img$select(c('NDVI', 'EVI', 'sur.*'))
+  x <- scaling$multiply(0.0001)
+  scaling <- img$select('.*th')
+  scaling <- scaling$multiply(0.01)
+  x <- x$addBands(scaling)
+  notScaling <- img$select(c('DetailedQA', 'DayOfYear', 'SummaryQA'))
+  x$addBands(notScaling)
+}
+
+ds <- 'MODIS/006/MOD13Q1'
+
+ee$ImageCollection(ds)$map(scaleBands)
+```
+
+### rgeeExtra style {-}
+
+```{r}
+ds <- 'MODIS/006/MOD13Q1'
+          
+ee$ImageCollection(ds) %>% 
+  ee_ImageCollection_scaleAndOffset()
+```
+
+## Complete Preprocessing {-}
+
+The complete preprocessing workflow (Masking clouds and shadows, and image scaling and offsetting) can be done using eemont with just one method: `preprocess()`!
+
+### rgee style {-}
+
+```{r}
+ds <- 'LANDSAT/LC08/C01/T1_SR'
+
+maskCloudsShadows <- function(img) {
+  cloud_c <- 2**3
+  cloud_s <- 2**5
+  qa <- 'pixel_qa'
+  qa <- img$select(qa)
+  cm <- qa$bitwiseAnd(cloud_c)$eq(0)
+  sm <- qa$bitwiseAnd(cloud_s)$eq(0)
+  mask <- cm$And(sm)
+  img$updateMask(mask)
+}
+
+scaleBands <- function(img) {
+  scaling <- img$select('B[1-7]')
+  x <- scaling$multiply(0.0001)
+  scaling <- img$select(c('B10', 'B11'))
+  scaling <- scaling$multiply(0.1)
+  x <- x$addBands(scaling)
+  notScaling <- img$select(c(
+    'sr_aerosol',
+    'pixel_qa',
+    'radsat_qa'
+  ))
+  x$addBands(notScaling)
+}
+
+ee$ImageCollection(ds) %>% 
+  ee$ImageCollection$map(maskCloudsShadows) %>% 
+  ee$ImageCollection$map(scaleBands)
+```
+
+
+### rgeeExtra style {-}
+
+```{r}
+ds <- 'LANDSAT/LC08/C01/T1_SR'
+ee$ImageCollection(ds) %>% 
+    ee_ImageCollection_preprocess()
+```
+
+## Spectral Indices {-}
+
+Do you need to compute several spectral indices? Use the `ee_ImageCollection_spectralIndex()` or `ee_Image_spectralIndex` functions! The
+indices are taken from [Awesome Spectral Indices](https://github.com/davemlz/awesome-spectral-indices).
+
+### rgee style {-}
+
+```{r}
+scaleBands <- function(img) {
+  scaling <- img$select("B[1-7]")
+  x <- scaling$multiply(0.0001)
+  scaling <- img$select(c("B10", "B11"))
+  scaling <- scaling$multiply(0.1)
+  x <- x$addBands(scaling)
+  notScaling <- img$select(c(
+    "sr_aerosol",
+    "pixel_qa",
+    "radsat_qa"
+  ))
+  x$addBands(notScaling)
+}
+
+addIndices <- function(img) {
+  x <- c("B5", "B4")
+  a <- img$normalizedDifference(x)
+  a <- a$rename("NDVI")
+  x <- c("B5", "B3")
+  b <- img$normalizedDifference(x)
+  b <- b$rename("GNDVI")
+  x <- c("B3", "B6")
+  c <- img$normalizedDifference(x)
+  c <- b$rename("NDSI")
+  img$addBands(c(a, b, c))
+}
+
+ee$ImageCollection(ds) %>%
+  ee$ImageCollection$map(scaleImage) %>%
+  ee$ImageCollection$map(addIndices)
+```
+
+### rgeeExtra style {-}
+
+```{r}
+ds <- 'LANDSAT/LC08/C01/T1_SR'
+          
+ee$ImageCollection(ds) %>% 
+  ee_ImageCollection_scaleAndOffset() %>% 
+  ee_ImageCollection_spectralIndex(c('NDVI', 'GNDVI', 'NDSI'))
+```
+
+The list of available indices can be retrieved by running:
+
+```{r}
+ee_list_spectral_indices()
+```
+
+Information about the indices can also be checked:
+
+```{r}
+indices <- ee_spectral_indices() 
+indices$BAIS2$formula
+indices$BAIS2$reference
+```
+
+
+## Closest Image to a Specific Date {-}
+
+Struggling to get the closest image to a specific date? Here is the solution: the `closest()` method!
+
+### rgee style {-}
+
+```{r}
+ds <- 'COPERNICUS/S5P/OFFL/L3_NO2'
+
+xy <- c(-76.21, 3.45)
+poi <- ee$Geometry$Point(xy)
+
+date <- ee$Date('2020-10-15')
+date <- date$millis()
+
+setTimeDelta <- function(img) {
+  prop <- 'system:time_start'
+  prop <- img$get(prop)
+  prop <- ee$Number(prop)              
+  delta <- prop$subtract(date)
+  delta <- delta$abs()              
+  img$set('dateDist', delta)
+}
+
+                  
+ee$ImageCollection(ds) %>% 
+  ee$ImageCollection$filterBounds(poi) %>% 
+  ee$ImageCollection$map(setTimeDelta) %>% 
+  ee$ImageCollection$sort('dateDist') %>% 
+  ee$ImageCollection$first()
+```
+
+
+### rgeeExtra style {-}
+
+```{r}
+ds <- 'COPERNICUS/S5P/OFFL/L3_NO2'
+          
+xy <- c(-76.21, 3.45)
+poi <- ee$Geometry$Point(xy)
+
+ee$ImageCollection(ds) %>% 
+    ee$ImageCollection$filterBounds(poi) %>% 
+    ee_ImageCollection_closest('2020-10-15')
+```
+
