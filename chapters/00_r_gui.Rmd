@@ -4,38 +4,16 @@
 source("common.R")
 ```
 
-
 # Overview {-}
-
-## R Guides {-}
-
-The guides are written primarily for R with [Rstudio](). The [R Quickstart]() guide and the [tutorials]() describe basic concepts and example workflows to help beginning users. The guides have several examples for both [rgee](https://github.com/r-spatial/rgee) and [rgeeExtra](https://github.com/r-earthengine/rgeeExtra).
-
-The [Best Practices]() and [Debugging]() guides have more complex examples and provide techniques useful for overcoming errors and scaling your Earth Engine analyses to larger areas, longer time series and more data. More advanced [Earth Engine concepts]() provide necessary background for understanding how the Earth Engine service works and writing effective code.
-
-The remainder of the guides are intended to illustrate important concepts about data types such as:
-
-   - [`Image`](), The fundamental raster data type in Earth Engine.
-   - [`ImageCollection`](), a stack or time-series of images.
-   - [`Geometry`](), the fundamental vector data type in Earth Engine.
-   - [`Feature`](), or a `Geometry` with attributes.
-   - [`FeatureCollection`](), or a set of features.
-   - [`Reducer`](), an object used to compute statistics or perform aggregations.
-   - [`Join`](), or how to combine datasets (`Image` or `Feature` collections) based on time, location, or an attribute property.
-   - [`Array`](), for multi-dimensional analyses.
-   
-There are also sections for machine learning, specialized or sensor specific algorithms (e.g. Landsat algorithms), and Rstudio addins, Earth Engine apps, and data (asset) management. 
-
-
 
 ## What is Google Earth Engine? {-}
 
 Google Earth Engine (GEE) is a cloud-based platform that helps access high-performance computing resources for processing and analyzing large geospatial datasets (Golerick et al.,2017). At the moment, GEE only supports client libraries for the JavaScript and Python programming languages. Check out its official GitHub repository for more details: [https://github.com/google/earthengine-api](https://github.com/google/earthengine-api).
 
-__*client library*__: Sometimes known as a **helper library**, is a collection of code that help to communicate more effectively with an API. For example, if you want to invoke a certain image asset, you must type the following:
+__*client library*__: Sometimes known as a **_helper library_**, is a collection of code that help to communicate more effectively with an API. For example, if you want to invoke certain image asset in GEE, you must type the following:
 
 ```{r}
-# Connecting to GEE server via web API(POST request).
+# Connecting to GEE server via POST request.
 {
    "functionInvocationValue": {
       "functionName": "Image.load",
@@ -58,19 +36,40 @@ ee$Image("USGS/SRTMGL1_003")
 
 ## What is rgee? {-}
 
-**rgee** is the simplest method for using GEE from inside R. Using **reticulate**, rgee can connect R and Python.
-Therefore, you may think on rgee as a **nested wrapper**. One wrapper connects R to the Python Earth Engine API, 
-while another connects Python to the Web REST API (see figure below).
+**rgee** is the simplest way for using GEE from within R. Using **reticulate** in the back-end, rgee connects R and Python.
+Therefore, you may think on rgee as a **nested wrapper**. One wrapper to connect R to the Python Earth Engine API, 
+while the other connects Python to the Web REST API (see figure below).
 
 <center>
 ![rgee depends on the Earth Engine Python client library](./images/chapter_00/figure_rgee_01.png){width=500px}
 </center>
 
-When an Earth Engine request is created in R, *reticulate* will translate it into Python and send it to the Earth Engine Python client library, which will convert the request to JSON. Then, the GEE Platform will receive the JSON request through a Web REST API. The response will take the same path as before, but in reverse.
+When an Earth Engine request is created in R, *reticulate* translate the R code into Python and send it to the Earth Engine Python client library, which converts Python code in JSON format. Then, the GEE Platform receives the JSON request through a Web REST API. The response takes the same path as before, but in reverse.
 
 <center>
 ![rgee workflow](./images/chapter_00/figure_rgee_00.png){width=700px}
 </center>
+
+
+## rgee Guides {-}
+
+The guides are written for R with [Rstudio](https://www.rstudio.com/). The [R Quickstart](https://rgeebook.netlify.app/r-quickstart.html) guide and the [tutorials](https://rgeebook.netlify.app/overview-1.html) describe basic concepts and example workflows to help beginning users. The guides have several examples for both [rgee](https://github.com/r-spatial/rgee) and [rgeeExtra](https://github.com/r-earthengine/rgeeExtra).
+
+The [Best Practices](https://rgeebook.netlify.app/coding-best-practices.html) and [Debugging](https://rgeebook.netlify.app/debugging.html) guides have more complex examples and provide techniques useful for overcoming errors and scaling your Earth Engine analyses to larger areas, longer time series and more data. More advanced [Earth Engine concepts](https://rgeebook.netlify.app/how-earth-engine-works.html) provide necessary background for understanding how the Earth Engine service works and writing effective code.
+
+The remainder of the guides are intended to illustrate important concepts about data types such as:
+
+   - [`Image`](https://rgeebook.netlify.app/image.html), The fundamental raster data type in Earth Engine.
+   - [`ImageCollection`](https://rgeebook.netlify.app/imagecollection.html), a stack or time-series of images.
+   - [`Geometry`](https://rgeebook.netlify.app/geometry.html), the fundamental vector data type in Earth Engine.
+   - [`Feature`](https://rgeebook.netlify.app/feature-featurecollection.html#featurecollection-overview), or a `Geometry` with attributes.
+   - [`FeatureCollection`](https://rgeebook.netlify.app/feature-featurecollection.html#featurecollection-overview), or a set of features.
+   - [`Reducer`](https://rgeebook.netlify.app/reducer.html), an object used to compute statistics or perform aggregations.
+   - [`Join`](https://rgeebook.netlify.app/join.html), or how to combine datasets (`Image` or `Feature` collections) based on time, location, or an attribute property.
+   - [`Array`](https://rgeebook.netlify.app/array.html), for multi-dimensional analyses.
+   
+There are also sections for machine learning, specialized or sensor specific algorithms (e.g. Landsat algorithms), and Rstudio addins, [shinyapps.io](https://www.shinyapps.io/) apps, and data (asset) management. 
+
 
 # rgeeExtra {-}
 

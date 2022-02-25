@@ -13,9 +13,8 @@ suppress-bibliography: yes
 
 # Welcome {-}
 
-This is the official website for the book [Earth Engine with R](). The book is 
-intended for R users who wish to learn how to use R and [Google Earth Engine](https://earthengine.google.com/) together. There is a full overview of 
-the GEE API functionality, multiple real-world applications, and a detailed description 
+This is the official website for the book [Earth Engine with R](https://rgeebook.netlify.app/). The book is 
+intended for R users who wish to learn how to use R and [Google Earth Engine](https://earthengine.google.com/) in the same workflow. There is a full overview of the GEE API functionality, multiple real-world applications, and a detailed description 
 of all [rgee](https://github.com/r-spatial/rgee) and [rgeeExtra](https://github.com/r-earthengine/rgeeExtra/) features. The majority
 of the examples are directly adapted from the original  [Earth Engine documentation](https://developers.google.com/earth-engine/guides) and rebuilt in R.
 
@@ -35,7 +34,7 @@ of the examples are directly adapted from the original  [Earth Engine documentat
 - Asking questions about, making suggestions, or even better, proposing a PR on Github.
 
 <br>
-This book was written by [Junior Calvo](https://github.com/junior0428), [Fernando Herrera](https://github.com/ferherreraq), [Karen Gonzales](https://github.com/andrea29-star), and [Cesar Aybar](https://github.com/csaybar). We gratefully acknowledge financial support from the 
+This book was written by [Junior Calvo](https://github.com/junior0428), [Fernando Herrera](https://github.com/ferherreraq), [Karen Gonzales](https://github.com/andrea29-star),  [Antony Barja](https://github.com/ambarja) and [Cesar Aybar](https://github.com/csaybar). We gratefully acknowledge financial support from the 
 
 <a href="https://www.r-consortium.org/">
 <img src="https://www.r-consortium.org/wp-content/uploads/sites/13/2016/09/RConsortium_Horizontal_Pantone.png" alt="Markdownify" width="200">
@@ -60,5 +59,47 @@ description of R syntax. **This book uses its template.**
 * __"[Spatial Data Science](https://keen-swartz-3146c4.netlify.app/)"__ by Edzer Pebesma and Roger Bivand, is another excellent great resource for geographic data but focused on analysis.
 
 * __"[R for Data Science](http://r4ds.had.co.nz/)"__ by Hadley Wickham and Garrett Grolemund, introduces you to R as a data science tool, with a particular emphasis on the tidyverse package.
+
+# earthengine-examples {-}
+
+Many excellent articles and examples about how to use the Earth Engine API can be found on the internet. Many of the examples, however, are written in different programming languages, such as R, Julia, Javascript, or Python. To face this issue, [**earthengine-examples**](https://r-earthengine.github.io/examples/) is created with the aim to collect all of these examples in one place. The website counts with multi-programming language support. If you want to contribute to this project, please see our [contributing guide](https://github.com/r-earthengine/examples).
+
+<br>
+<center>
+<p class=centered>
+  <a href="https://r-earthengine.github.io/examples/">
+    <button class="button">Go to **earthengine-examples**</button>
+  </a>
+</p>
+</center>
+
+# rgee-cheatsheet {-}
+
+When was the last time you couldn't remember a specific GEE API method name?. We understand! It occurs to us often, and we lose valuable time deviating in the [official documentation](https://developers.google.com/earth-engine/apidocs). To prevent this from happening, we create [**rgee-cheatsheet**](https://github.com/r-earthengine/cheatsheet) with the most important rgee and GEE features that you should always keep in mind. If you want to contribute, open an [issue](https://github.com/r-earthengine/cheatsheet) in our official repository.
+
+### **Preview the first part** {-}
+
+<br>
+<center>
+<a href="https://github.com/r-earthengine/cheatsheet" rel="some text">
+![](./images/cheatsheet/rgee_Cheatsheet_page01.svg){width=500px}
+</a>
+
+### **Preview the second part** {-}
+
+<br>
+<center>
+<a href="https://github.com/r-earthengine/cheatsheet" rel="some text">
+![](./images/cheatsheet/rgee_Cheatsheet_page02.svg){width=500px}
+</a>
+
+<br>
+<center>
+<p class=centered>
+  <a href="https://github.com/r-earthengine/cheatsheet">
+    <button class="button">**rgee cheatsheet in PDF**</button>
+  </a>
+</p>
+</center>
 
 `r if (knitr::is_latex_output()) '-->'`
