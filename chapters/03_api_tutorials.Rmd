@@ -250,18 +250,20 @@ In this example, observe that once you have an `ee.Dictionary`, you must use met
 
 ### Dates {-}
 
-Date objects are the way Earth Engine represents time. As in the previous examples, it is important to distinguish between a R Date object and an Earth Engine `ee.Date` object. Construct an `ee.Date` from a string, from a R `Date`, or using static methods provided by the `ee.Date` class. (See the Date section in the Docs tab for details). This example illustrates the construction of dates from strings or a JavaScript date representing milliseconds since midnight on January 1, 1970:
+Date objects are the way Earth Engine represents time. As in the previous examples, it is important to distinguish between a R Date object and an Earth Engine `ee$Date` object. Construct an `ee$Date` from a string, from a R `Date`, or using static methods provided by the `ee$Date` class. (See the Date section in the Docs tab for details). This example illustrates the construction of dates from strings or a JavaScript date representing milliseconds since midnight on January 1, 1970:
 
 ```{r, eval=FALSE}
 # Define a date in Earth Engine.
 date <- ee$Date('2015-12-31')
-print('Date:', date)
+date$getInfo()
+eedate_to_rdate(date, timestamp = TRUE)
+rdate_to_eedate(date, timestamp = TRUE)
 
-# Get the current time using the JavaScript Date.now() method.
+# Get the current time using the R Date$now() method.
 now <- Date$now()
 print('Milliseconds since January 1, 1970', now)
 
-# Initialize an ee.Date object.
+# Initialize an ee$Date object.
 eeNow <- ee$Date(now)
 print('Now:', eeNow)
 ```
@@ -270,22 +272,26 @@ Dates are useful for filtering collections, specifically as arguments to the `fi
 
 ### Digression: passing parameters by name {-}
 
-Arguments to Earth Engine methods can be passed in order, for example to create an `ee.Date` from year, month and day, you can pass parameters of the `fromYMD()` static method in the order year, month, day:
+Arguments to Earth Engine methods can be passed in order, for example to create an `ee$Date` from year, month and day, you can pass parameters of the `fromYMD()` static method in the order year, month, day:
 
 ```{r, eval=FALSE}
 aDate <- ee$Date$fromYMD(2017, 1, 13)
-print('aDate:', aDate)
+aDate$getInfo()
+eedate_to_rdate(date, timestamp = TRUE)
+rdate_to_eedate(date, timestamp = TRUE)
 ```
 
 Alternatively, you can pass the parameters by name, in any order. While it might be more code, it can improve readability and reusability. To pass parameters by name, pass in a R object in which the keys of the object are the names of the method parameters and the values are the arguments to the method. For example:
 
 ```{r, eval=FALSE}
-theDate <- ee$Date$fromYMD({
-  day <- 13,
-  month <- 1,
-  year <- 2017
-})
-print('theDate:', theDate)
+theDate <- ee$Date$fromYMD(
+  day = 13,
+  month = 1,
+  year = 2017
+)
+theDate$getInfo()
+eedate_to_rdate(theDate, timestamp = TRUE)
+rdate_to_eedate(theDate, timestamp = TRUE)
 ```
 
 Note that the names of the object properties (the keys) match the names specified in the `ee.Date.fromYMD()` docs. Also note that the object that is passed as an argument can be saved in a variable for reuse, as illustrated by the R object example.
