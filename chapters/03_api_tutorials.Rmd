@@ -51,9 +51,9 @@ Using variables to store objects and primitives helps code readability. For exam
 
 ```{r, eval=FALSE}
 # Use single (or double) quotes to make a string.
-greetString <- 'Ahoy there!'
+greetString <- ee$String('Ahoy there!')
 # Use parentheses to pass arguments to functions.
-print(greetString)
+paste0(greetString$getInfo())
 ```
 
 ### Numbers {-}
@@ -61,29 +61,31 @@ print(greetString)
 Note that variables are defined with the keyword `var`. Variables can also store numbers:
 
 ```{r, eval=FALSE}
-# Store a number in a variable.
-number <- 42
-print('The answer is:', number)
+# Designate a number in Google Earth Engine.
+number <- ee$Number(42)
+print(paste0("The answer is: ", ee$Number(number)$getInfo()))
 ```
 
 In this example, observe that when `print()` is given two arguments separated by commas, each argument is printed on a different line.
 
 ### List {-}
 
-Define lists with square brackets `[]`. A list of numbers, for example:
+Define lists with square brackets `ee$List`. A list of numbers, for example:
 
 ```{r, eval=FALSE}
-# Use square brackets [] to make a list.
-listOfNumbers <- [0, 1, 1, 2, 3, 5]
-print('List of numbers:', listOfNumbers)
+# Use square ee$List to make a list.
+listOfNumbers <- ee$List(c(0, 1, 1, 2, 3, 5))
+listOfNumbers$getInfo()
+cat("List of numbers:", listOfNumbers$getInfo())
 ```
 
 Lists can also store strings or other objects. For example:
 
 ```{r, eval=FALSE}
 # Make a list of strings.
-listOfStrings <- ['a', 'b', 'c', 'd']
-print('List of strings:', listOfStrings)
+listOfStrings <- ee$List(c("a", "b", "c", "d"))
+listOfStrings$getInfo()
+cat("List of strings:", listOfStrings$getInfo())
 ```
 
 ### Dictionary {-}
@@ -145,18 +147,20 @@ Now that you're comfortable with R, learn how to put  objects in R and primitive
 For example, define a string, then put it into the `ee$String()` container to be sent to Earth Engine:
 
 ```{r, eval=FALSE}
-#Define a string, then put it into an EE container.
-aString <- 'To the cloud!'
+# Define a string, then put it into an EE container.
+aString <- "To the cloud!"
 eeString <- ee$String(aString)
-print('Where to?', eeString)
+eeString$getInfo()
+cat("Where to?", eeString$getInfo())
 ```
 
 Think of `ee$Thing` as a container for a thing that exists on the server. In this example, the string is defined first, then put into the container. You can also define the container and its contents all at once. For example:
 
 ```{r, eval=FALSE}
 # Define a string that exists on the server.
-serverString <- ee$String('This is on the server.')
-print('String on the server:', serverString)
+serverString <- ee$String("This is on the server.")
+serverString$getInfo()
+cat("String on the server:", serverString$getInfo())
 ```
 
 Although the first argument to `print()` is just a string on the client, the second argument is actually sent to the server to be evaluated, then sent back.
@@ -167,8 +171,9 @@ Use `ee$Number()` to create number objects on the server. For example, use the `
 
 ```{r, eval=FALSE}
 # Define a number that exists on the server.
-serverNumber <- ee$Number(Math$E)
-print('e=', serverNumber)
+serverNumber <- ee$Number(exp(1))
+serverNumber$getInfo()
+cat("e =", serverNumber$getInfo()))
 ```
 
 The `ee$String()` and `ee$Number()` methods are constructors. A constructor takes its argument (and possibly other parameters), puts it in a container, and returns the container and its contents as an Earth Engine object that you can manipulate in your code. Any constructor starting with `ee` returns an Earth Engine object.
@@ -180,7 +185,8 @@ Note that once you've created an Earth Engine object, you have to use Earth Engi
 ```{r, eval=FALSE}
 # Use a built-in function to perform an operation on the number.
 logE <- serverNumber$log()
-print('log(e)=', logE)
+logE$getInfo()
+cat("log(e)=", logE$getInfo())
 ```
 
 In this example, `log()` is a method for a `ee$Number` object. (Use the Docs tab at the left side of the code editor to see a list of all the methods for every Earth Engine object type, for example ee.Number > log()). Note that the methods of Earth Engine objects return other Earth Engine objects.
@@ -191,10 +197,11 @@ To make a JavaScript list into an `ee$List` object on the server, you can put a 
 
 ```{r, eval=FALSE}
 # Make a sequence the hard way.
-eeList <- ee$List([1, 2, 3, 4, 5])
+eeList <- ee$List(c(1, 2, 3, 4, 5))
 # Make a sequence the easy way!
 sequence <- ee$List$sequence(1, 5)
-print('Sequence:', sequence)
+sequence$getInfo()
+cat("Sequence:", sequence$getInfo())
 ```
 
 Since the `ee$List` objects only exist on the server, use Earth Engine provided functions to interact with them. For example, to get something out of the list, use the `get()` method of the `ee$List` object:
@@ -202,7 +209,8 @@ Since the `ee$List` objects only exist on the server, use Earth Engine provided 
 ```{r, eval=FALSE}
 # Use a method on an ee.List to extract a value.
 value <- sequence$get(2)
-print('Value at index 2:', value)
+value$getInfo()
+cat('Value at index 2:', value$getInfo())
 ```
 
 ### Casting {-}
