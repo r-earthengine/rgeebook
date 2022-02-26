@@ -55,8 +55,8 @@ Map$addLayer(first, vizParams, "first")
 ```
 
 <center>
-![](./images/chapter_05/figure_csaybar_01.png){width=670px}
-<br>
+![](../images/chapter_05/figure_csaybar_01.png){width=670px}
+
 Note that the `sort` is *after* the filters. Avoid sorting the entire collection.
 
 ### Images from Cloud GeoTIFFs {-}
@@ -1311,11 +1311,20 @@ In this example, the results of `register()` differ from the results of `displac
 
 # ImageCollection {-}
 
+This section requires the next libraries:
+
+```{r, eval=FALSE}
+library(rgee)
+library(rgeeExtra)
+
+ee_Initialize()
+```
+
 ## ImageCollection Overview {-}
 
 An `ImageCollection` is a stack or sequence of images. An `ImageCollection` can be loaded by pasting an Earth Engine asset ID into the `ImageCollection` constructor. You can find `ImageCollection` IDs in the [data catalog](https://developers.google.com/earth-engine/datasets). For example, to load the [Sentinel-2 surface reflectance collection](https://developers.google.com/earth-engine/guides/datasets/catalog/COPERNICUS_S2_SR):
 
-```{r}
+```{r, eval=FALSE}
 sentinelCollection <- ee$ImageCollection("COPERNICUS/S2_SR")
 ```
 
@@ -1343,14 +1352,14 @@ ee_print(mergedCollection)
 
 # Create a toy FeatureCollection.
 features <- ee$FeatureCollection(
-  ee$Feature(NULL, list(foo = 1)), 
+  ee$Feature(NULL, list(foo = 1)),
   ee$Feature(NULL, list(foo = 2))
 )
 
 # Create an ImageCollection from the FeatureCollection
 # by mapping a function over the FeatureCollection.
 images <- features$map(function(feature) {
-  return(ee$Image(ee$Number(feature$get('foo'))))
+  return(ee$Image(ee$Number(feature$get("foo"))))
 })
 
 # Print the resultant collection.
@@ -1385,8 +1394,16 @@ collection <- ee$ImageCollection(images)
 rgb <- collection$toBands()$rename(c("B2", "B3", "B4", "B5"))
 
 Map$centerObject(rgb)
-Map$addLayer(rgb, list(bands = c("B4", "B3", "B2"), min = 0, max = 20000), "rgb")
+Map$addLayer(rgb, list(
+  bands = c("B4", "B3", "B2"), 
+  min = 0, 
+  max = 20000), 
+  "rgb")
 ```
+
+|<img src="./images/chapter_05/figure_ico.png" width=100%>|
+|:------------|
+|Figure 1. `ImageCollection` from GeoTiffs in Cloud Storage|
 
 [Learn more about loading images from Cloud GeoTiffs]()
 
@@ -1401,7 +1418,7 @@ The following sections describe how to prepare an `ImageCollection` for visualiz
 
 |<img src="./gif/chapter_05/gif_01.gif" width=100%>|
 |:-------------------------------------------------|
-|Figure 1. Animation showing a three-day progression of Atlantic hurricanes in September, 2017.|
+|Figure 2. Animation showing a three-day progression of Atlantic hurricanes in September, 2017.|
 
 ### Collection preparation {-}
 
@@ -1416,39 +1433,40 @@ For instance, filter a Sentinel-2 surface reflectance collection by:
 a single date range,
 
 ```{r,eval=FALSE}
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
-  ee$ImageCollection$filterDate('2018-01-01', '2019-01-01')
+s2col <- ee$ImageCollection("COPERNICUS/S2_SR") %>%
+  ee$ImageCollection$filterDate("2018-01-01", "2019-01-01")
 ```
 
 a serial day-of-year range,
 
 ```{r,eval=FALSE}
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
-  ee$ImageCollection$filter(ee$Filter$calendarRange(171, 242, 'day_of_year'))
+s2col <- ee$ImageCollection("COPERNICUS/S2_SR") %>%
+  ee$ImageCollection$filter(ee$Filter$calendarRange(171, 242, "day_of_year"))
 ```
 
 a region of interest,
 
 ```{r,eval=FALSE}
 ee_geom <- ee$Geometry$Point(-122.1, 37.2)
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
+s2col <- ee$ImageCollection("COPERNICUS/S2_SR") %>%
   ee$ImageCollection$filterBounds(ee_geom)
 ```
 
 or an image property.
 
 ```{r,eval=FALSE}
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
-  ee$ImageCollection$filter(ee$Filter$lt('CLOUDY_PIXEL_PERCENTAGE', 50))
+s2col <- ee$ImageCollection("COPERNICUS/S2_SR") %>%
+  ee$ImageCollection$filter(ee$Filter$lt("CLOUDY_PIXEL_PERCENTAGE", 50))
 ```
 
 Chain multiple filters.
 
 ```{r,eval=FALSE}
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
-  ee$ImageCollection$filterDate('2018-01-01', '2019-01-01') %>% 
-  ee$ImageCollection$filterBounds(ee$Geometry$Point(-122.1, 37.2)) %>% 
-  ee$ImageCollection$filter('CLOUDY_PIXEL_PERCENTAGE < 50')
+ee_geom <- ee$Geometry$Point(-122.1, 37.2)
+s2col <- ee$ImageCollection("COPERNICUS/S2_SR") %>%
+  ee$ImageCollection$filterDate("2018-01-01", "2019-01-01") %>%
+  ee$ImageCollection$filterBounds(ee_geom) %>%
+  ee$ImageCollection$filter("CLOUDY_PIXEL_PERCENTAGE < 50")
 ```
 
 #### Compositing {-}
@@ -1456,9 +1474,9 @@ s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>%
 Composite intra- and inter-annual date ranges to reduce the number of images in a collection and improve quality. For example, suppose you were to create a visualization of annual NDVI for Africa. One option is to simply filter a MODIS 16-day NDVI collection to include all 2018 observations.
 
 ```{r,eval=FALSE}
-ndviCol <- ee$ImageCollection('MODIS/006/MOD13A2') %>% 
-  ee$ImageCollection$filterDate('2018-01-01', '2019-01-01') %>% 
-  ee$ImageCollection$select('NDVI')
+ndviCol <- ee$ImageCollection("MODIS/006/MOD13A2") %>%
+  ee$ImageCollection$filterDate("2018-01-01", "2019-01-01") %>%
+  ee$ImageCollection$select("NDVI")
 ```
 
 ##### **Inter-annual composite by filter and reduce** {-}
@@ -1470,19 +1488,19 @@ Visualization of the above collection shows considerable noise in the forested r
 doyList <- ee$List$sequence(1, 365, 16)
 
 # Import a MODIS NDVI collection.
-ndviCol <- ee$ImageCollection('MODIS/006/MOD13A2')$select('NDVI')
+ndviCol <- ee$ImageCollection("MODIS/006/MOD13A2")$select("NDVI")
 
 # Map over the list of days to build a list of image composites.
 map_over_days <- function(startDoy) {
-  #Ensure that startDoy is a number.
+  # Ensure that startDoy is a number.
   startDoy <- ee$Number(startDoy)
-  
+
   # Filter images by date range; starting with the current startDate and
   # ending 15 days later. Reduce the resulting image collection by median.
-  ndviCol %>% 
+  ndviCol %>%
     ee$ImageCollection$filter(
-      ee$Filter$calendarRange(startDoy, startDoy$add(15), 'day_of_year')
-    ) %>% 
+      ee$Filter$calendarRange(startDoy, startDoy$add(15), "day_of_year")
+    ) %>%
     ee$ImageCollection$reduce(ee$Reducer$median())
 }
 ndviCompList <- doyList$map(ee_utils_pyfunc(map_over_days))
@@ -1491,11 +1509,11 @@ ndviCompList <- doyList$map(ee_utils_pyfunc(map_over_days))
 ndviCol <- ee$ImageCollection$fromImages(ndviCompList)
 ```
 
-The animation resulting from this collection is less noisy, as each image represents the median of a 16-day NDVI composite for 20+ years of data (Figure 1b). See [this tutorial]() for more information on this animation.
+The animation resulting from this collection is less noisy, as each image represents the median of a 16-day NDVI composite for 20+ years of data (Figure 3b). See [this tutorial]() for more information on this animation.
 
 |<img src="./gif/chapter_05/gif_02_1.gif" width=100%>|<img src="./gif/chapter_05/gif_02_2.gif" width=100%>|
 |:------|:------|
-| Figure 2a. Annual NDVI *without* inter-annual compositing. | Figure 2b. Annual NDVI *with* inter-annual compositing.|
+| Figure 3a. Annual NDVI *without* inter-annual compositing. | Figure 3b. Annual NDVI *with* inter-annual compositing.|
 
 ##### **Intra-annual composite by filter and reduce** {-}
 
@@ -1506,19 +1524,19 @@ The previous example applies inter-annual compositing. It can also be helpful to
 doyList <- ee$List$sequence(1, 365, 16)
 
 # Import a MODIS NDVI collection.
-ndviCol <- ee$ImageCollection('MODIS/006/MOD13A2')$select('NDVI')
+ndviCol <- ee$ImageCollection("MODIS/006/MOD13A2")$select("NDVI")
 
 # Map over the list of days to build a list of image composites.
 map_over_days <- function(startDoy) {
-  #Ensure that startDoy is a number.
+  # Ensure that startDoy is a number.
   startDoy <- ee$Number(startDoy)
-  
+
   # Filter images by date range; starting with the current startDate and
   # ending 15 days later. Reduce the resulting image collection by median.
-  ndviCol %>% 
+  ndviCol %>%
     ee$ImageCollection$filter(
-      ee$Filter$calendarRange(startDoy, startDoy$add(15), 'day_of_year')
-    ) %>% 
+      ee$Filter$calendarRange(startDoy, startDoy$add(15), "day_of_year")
+    ) %>%
     ee$ImageCollection$reduce(ee$Reducer$median())
 }
 ndviCompList <- doyList$map(ee_utils_pyfunc(map_over_days))
@@ -1529,12 +1547,12 @@ ndviCol <- ee$ImageCollection$fromImages(ndviCompList)
 # Assemble a collection of Landsat surface reflectance images for a given
 # region and day-of-year range.
 ee_geom <- ee$Geometry$Point(-122.9, 43.6)
-lsCol <- ee$ImageCollection('LANDSAT/LT05/C02/T1_L2') %>% 
-  ee$ImageCollection$filterBounds(ee_geom) %>% 
-  ee$ImageCollection$filter(ee$Filter$dayOfYear(182, 243)) %>% 
+lsCol <- ee$ImageCollection("LANDSAT/LT05/C02/T1_L2") %>%
+  ee$ImageCollection$filterBounds(ee_geom) %>%
+  ee$ImageCollection$filter(ee$Filter$dayOfYear(182, 243)) %>%
   # Add the observation year as a property to each image.
   ee$ImageCollection$map(function(img) {
-    img$set('year', ee$Image(img)$date()$get('year'))
+    img$set("year", ee$Image(img)$date()$get("year"))
   })
 
 # Define a function to scale the data and mask unwanted pixels.
@@ -1544,35 +1562,35 @@ maskL457sr <- function(image) {
   # Bit 2 - Unused
   # Bit 3 - Cloud
   # Bit 4 - Cloud Shadow
-  qaMask <- image$select('QA_PIXEL')$bitwiseAnd(31)$eq(0)
-  saturationMask <- image$select('QA_RADSAT')$eq(0)
-  
+  qaMask <- image$select("QA_PIXEL")$bitwiseAnd(31)$eq(0)
+  saturationMask <- image$select("QA_RADSAT")$eq(0)
+
   # Apply the scaling factors to the appropriate bands.
-  opticalBands <- image$select('SR_B.')$multiply(0.0000275)$add(-0.2)
-  thermalBand <- image$select('ST_B6')$multiply(0.00341802)$add(149.0)
-  
+  opticalBands <- image$select("SR_B.")$multiply(0.0000275)$add(-0.2)
+  thermalBand <- image$select("ST_B6")$multiply(0.00341802)$add(149.0)
+
   # Replace the original bands with the scaled ones and apply the masks.
-  image %>% 
-    ee$Image$addBands(opticalBands, NULL, TRUE) %>% 
-    ee$Image$addBands(thermalBand, NULL, TRUE) %>% 
-    ee$Image$updateMask(qaMask) %>% 
+  image %>%
+    ee$Image$addBands(opticalBands, NULL, TRUE) %>%
+    ee$Image$addBands(thermalBand, NULL, TRUE) %>%
+    ee$Image$updateMask(qaMask) %>%
     ee$Image$updateMask(saturationMask)
 }
 
 # Define a list of unique observation years from the image collection.
-years <- ee$List(lsCol$aggregate_array('year'))$distinct()$sort()
+years <- ee$List(lsCol$aggregate_array("year"))$distinct()$sort()
 
 # Map over the list of years to build a list of annual image composites.
 map_over_year <- function(year) {
-  lsCol %>% 
+  lsCol %>%
     # Filter image collection by year.
-    ee$ImageCollection$filterMetadata('year', 'equals', year) %>% 
+    ee$ImageCollection$filterMetadata("year", "equals", year) %>%
     # Apply cloud mask.
-    ee$ImageCollection$map(maskL457sr) %>% 
+    ee$ImageCollection$map(maskL457sr) %>%
     # Reduce image collection by median.
-    ee$ImageCollection$reduce(ee$Reducer$median()) %>% 
+    ee$ImageCollection$reduce(ee$Reducer$median()) %>%
     # Set composite year as an image property.
-    ee$Image$set('year', year)
+    ee$Image$set("year", year)
 }
 lsCompList <- years$map(ee_utils_pyfunc(map_over_year))
 
@@ -1588,22 +1606,22 @@ Note that the previous two compositing methods map over a `List` of days and yea
 # Assemble a collection of Landsat surface reflectance images for a given
 # region and day-of-year range.
 ee_geom <- ee$Geometry$Point(-122.9, 43.6)
-lsCol <- ee$ImageCollection('LANDSAT/LT05/C02/T1_L2') %>% 
-  ee$ImageCollection$filterBounds(ee_geom) %>% 
-  ee$ImageCollection$filter(ee$Filter$dayOfYear(182, 243)) %>% 
+lsCol <- ee$ImageCollection("LANDSAT/LT05/C02/T1_L2") %>%
+  ee$ImageCollection$filterBounds(ee_geom) %>%
+  ee$ImageCollection$filter(ee$Filter$dayOfYear(182, 243)) %>%
   # Add the observation year as a property to each image.
   ee$ImageCollection$map(function(img) {
-    return(img$set('year', ee$Image(img)$date()$get('year')))
+    return(img$set("year", ee$Image(img)$date()$get("year")))
   })
 
 # Make a distinct year collection; one image representative per year.
-distinctYears <- lsCol$distinct('year')$sort('year')
+distinctYears <- lsCol$distinct("year")$sort("year")
 
 # Define a join filter; one-to-many join on ‘year’ property.
-filter <- ee$Filter$equals(list(leftField = 'year', rightField = 'year'))
+filter <- ee$Filter$equals(list(leftField = "year", rightField = "year"))
 
 # Define a join.
-join <- ee$Join$saveAll('year_match')
+join <- ee$Join$saveAll("year_match")
 
 # Apply the join; results in 'year_match' property being added to each distinct
 # year representative image. The list includes all images in the collection
@@ -1617,31 +1635,31 @@ maskL457sr <- function(image) {
   # Bit 2 - Unused
   # Bit 3 - Cloud
   # Bit 4 - Cloud Shadow
-  qaMask <- image$select('QA_PIXEL')$bitwiseAnd(31)$eq(0)
-  saturationMask <- image$select('QA_RADSAT')$eq(0)
-  
+  qaMask <- image$select("QA_PIXEL")$bitwiseAnd(31)$eq(0)
+  saturationMask <- image$select("QA_RADSAT")$eq(0)
+
   # Apply the scaling factors to the appropriate bands.
-  opticalBands <- image$select('SR_B.')$multiply(0.0000275)$add(-0.2)
-  thermalBand <- image$select('ST_B6')$multiply(0.00341802)$add(149.0)
-  
+  opticalBands <- image$select("SR_B.")$multiply(0.0000275)$add(-0.2)
+  thermalBand <- image$select("ST_B6")$multiply(0.00341802)$add(149.0)
+
   # Replace the original bands with the scaled ones and apply the masks.
   return(image$addBands(opticalBands, NULL, TRUE)$
-           addBands(thermalBand, NULL, TRUE)$
-           updateMask(qaMask)$
-           updateMask(saturationMask))
+    addBands(thermalBand, NULL, TRUE)$
+    updateMask(qaMask)$
+    updateMask(saturationMask))
 }
 
 # Map over the distinct years collection to build a list of annual image
 # composites.
 lsCompList <- joinCol$map(function(img) {
   # Get the list of images belonging to the given year.
-  ee$ImageCollection$fromImages(img$get('year_match')) %>% 
-  # Apply cloud mask.
-  ee$ImageCollection$map(maskL457sr) %>% 
-  # Reduce image collection by median.
-  ee$ImageCollection$reduce(ee$Reducer$median()) %>% 
-  # Set composite year as an image property.
-  ee$ImageCollection$copyProperties(img, list('year'))
+  ee$ImageCollection$fromImages(img$get("year_match")) %>%
+    # Apply cloud mask.
+    ee$ImageCollection$map(maskL457sr) %>%
+    # Reduce image collection by median.
+    ee$ImageCollection$reduce(ee$Reducer$median()) %>%
+    # Set composite year as an image property.
+    ee$ImageCollection$copyProperties(img, list("year"))
 })
 
 # Convert the image List to an ImageCollection.
@@ -1653,21 +1671,30 @@ lsCompCol <- ee$ImageCollection(lsCompList)
 An additional case for compositing is to create spatially contiguous image mosaics. Suppose your region of interest spans two Landsat rows within the same path and your objective is to display an image mosaic of the two images for each Landsat 8 orbit in 2017 and 2018. Here, after filtering the collection by path and row, a join operation is used to mosaic Landsat images from the same obit, defined by acquisition date.
 
 ```{r,eval=FALSE}
-lsCol <- ee$ImageCollection('LANDSAT/LC08/C02/T1_L2')$
-  filterDate('2017-01-01', '2019-01-01')$
-  filter('WRS_PATH == 38 && (WRS_ROW == 28 || WRS_ROW == 29)')$
-  map(function(img) {
-    date <- img$date()$format('YYYY-MM-dd')
-    return(img$set('date', date))
+lsCol <- ee$ImageCollection("LANDSAT/LC08/C02/T1_L2") %>% 
+  ee$ImageCollection$filterDate("2017-01-01", "2019-01-01") %>% 
+  ee$ImageCollection$filter("WRS_PATH == 38 && (WRS_ROW == 28 || WRS_ROW == 29)") %>% 
+  ee$ImageCollection$map(function(img) {
+    date <- img$date()$format("YYYY-MM-dd")
+    return(img$set("date", date))
   })
 
-distinctDates <- lsCol$distinct('date')$sort('date')
-filter <- ee$Filter$equals({leftField = 'date', rightField = 'date'})
-join <- ee$Join$saveAll('date_match')
+# Make a distinct date collection; one image representative per date.
+distinctDates <- lsCol$distinct("date")$sort("date")
+
+# Define a join filter; one-to-many join on ‘date’ property.
+filter <- ee$Filter$equals(list(leftField = "date", rightField = "date"))
+
+# Define a join.
+join <- ee$Join$saveAll("date_match")
+
+# Apply the join; results in 'date_match' property being added to each distinct
+# date representative image. The list includes all images in the collection
+# belonging to the respective date.
 joinCol <- join$apply(distinctDates, lsCol, filter)
 
-lsColMos = ee$ImageCollection(joinCol$map(function(col) {
-return (ee$ImageCollection$fromImages(col$get('date_match'))$mosaic())
+lsColMos <- ee$ImageCollection(joinCol$map(function(col) {
+  return(ee$ImageCollection$fromImages(col$get("date_match"))$mosaic())
 }))
 ```
 
@@ -1677,17 +1704,18 @@ Sort a collection by time to ensure proper chronological sequence, or order by a
 
 ```{r,eval=FALSE}
 ee_geom <- ee$Geometry$Point(-122.1, 37.2)
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR') %>% 
-  ee$ImageCollection$filterBounds() %>% 
-  ee$ImageCollection$sort('system:time_start')
+s2col <- ee$ImageCollection("COPERNICUS/S2_SR") %>%
+  ee$ImageCollection$filterBounds(ee_geom) %>%
+  ee$ImageCollection$sort("system:time_start")
 ```
 
 Or perhaps the order should be defined by increasing cloudiness, as in this case of Sentinel-2 imagery.
 
 ```{r,eval=FALSE}
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
-  filterBounds(ee$Geometry$Point(-122.1, 37.2))$
-  sort('CLOUDY_PIXEL_PERCENTAGE')
+ee_geom <- ee$Geometry$Point(-122.1, 37.2)
+s2col <- ee$ImageCollection("COPERNICUS/S2_SR") %>% 
+  ee$ImageCollection$filterBounds(ee_geom) %>% 
+  ee$ImageCollection$sort("CLOUDY_PIXEL_PERCENTAGE")
 ```
 
 Order can also be defined by a derived property, such as mean regional NDVI. Here, regional NDVI is added as a property to each image in a mapped function, followed by a sort on the new property.
@@ -1697,18 +1725,24 @@ Order can also be defined by a derived property, such as mean regional NDVI. Her
 aoi <- ee$Geometry$Point(-122.1, 37.2)$buffer(1e4)
 
 # Filter MODIS NDVI image collection by a date range.
-ndviCol <- ee$ImageCollection('MODIS/006/MOD13A1')$
-  filterDate('2018-01-01', '2019-01-01')$
-  select('NDVI')$
+ndviCol <- ee$ImageCollection("MODIS/006/MOD13A1") %>%
+  ee$ImageCollection$filterDate("2018-01-01", "2019-01-01") %>% 
+  ee$ImageCollection$filterBounds(aoi) %>% 
+  ee$ImageCollection$select("NDVI") %>%
+  
   # Map over the image collection to calculate regional mean NDVI and add
   # the result to each image as a property.
-  map(function(img) {
-    meanNdvi <-  img$reduceRegion({reducer = ee$Reducer$mean(), geometry = aoi, scale = 500})
-    return(img$set('meanNdvi', meanNdvi$get('NDVI')))
-  })$
+  ee$ImageCollection$map(function(img) {
+    meanNdvi <- img$reduceRegion(
+      reducer = ee$Reducer$mean(),
+      geometry = aoi,
+      scale = 500
+    )
+    return(img$set("meanNdvi", meanNdvi$get("NDVI")))
+  }) %>%
   
   # Sort the collection by descending regional mean NDVI.
-  sort('meanNdvi', FALSE)
+  ee$ImageCollection$sort("meanNdvi", FALSE)
 ```
 
 #### Image visualization {-}
@@ -1778,31 +1812,30 @@ Data range scaling is an important consideration when visualizing images. By def
 
 ```{r,eval=FALSE}
 # Import SRTM global elevation model.
-demImg <- ee$Image('USGS/SRTMGL1_003')
+demImg <- ee$Image("USGS/SRTMGL1_003")
 
 # Define a rectangular area of interest.
-aoi <- ee$Geometry$Polygon([[
-  [-103.84153083119054, 49.083004219142886],
-  [-103.84153083119054, 25.06838270664608],
-  [-85.64817145619054, 25.06838270664608],
-  [-85.64817145619054, 49.083004219142886]
-]],
-NULL, FALSE)
+aoi <- ee$Geometry$Polygon(c(
+  c(-103.84153083119054, 49.083004219142886),
+  c(-103.84153083119054, 25.06838270664608),
+  c(-85.64817145619054, 25.06838270664608),
+  c(-85.64817145619054, 49.083004219142886)
+))
 
 # Calculate the 2nd and 98th percentile elevation values from rescaled (to
 # 500m) pixels intersecting the area of interest. A Dictionary is returned.
-percentClip <- demImg$reduceRegion({
-  reducer = ee$Reducer$percentile([2, 98]),
+percentClip <- demImg$reduceRegion(
+  reducer = ee$Reducer$percentile(c(2, 98)),
   geometry = aoi,
   scale = 500,
   maxPixels = 3e7
-})
+)
 
 # Print the regional 2nd and 98th percentile elevation values. Get the
 # dictionary keys and use them to get the values for each percentile summary.
 keys <- percentClip$keys()
-print('Set vis min to:', ee$Number(percentClip$get(keys$get(0)))$round())
-print('Set vis max to:', ee$Number(percentClip$get(keys$get(1)))$round())
+print(ee$Number(percentClip$get(keys$get(0)))$round())
+print(ee$Number(percentClip$get(keys$get(1)))$round())
 ```
 
 The `palette` parameter defines the colors to represent the 8-bit visualization image. It applies only to single-band representations; specifying it with a multi-band image results in an error. If the data are single-band or you would like to visualize a single band from a multi-band image, set the `forceRgbOutput` parameter to `true` (unnecessary if the `palette` argument is provided). Use the `min` and `max` parameters to define the range of values to linearly scale between 0 and 255.
@@ -1816,20 +1849,20 @@ An example of mapping a visualization function over a single-band image collecti
 
 ```{r,eval=FALSE}
 # Filter MODIS NDVI image collection by a date range.
-ndviCol <- ee$ImageCollection('MODIS/006/MOD13A1')$
-  filterDate('2018-01-01', '2019-01-01')$
-  select('NDVI')
+ndviCol <- ee$ImageCollection("MODIS/006/MOD13A1") %>% 
+  ee$ImageCollection$filterDate("2018-01-01", "2019-01-01") %>% 
+  ee$ImageCollection$select("NDVI")
 
 # Define visualization arguments.
-visArgs <- {
+visArgs <- list(
   min = 0,
   max = 9000,
-  palette = [
-    'FFFFFF', 'CE7E45', 'DF923D', 'F1B555', 'FCD163', '99B718', '74A901', 
-    '66A000', '529400', '3E8601', '207401', '056201', '004C00', '023B01', 
-    '012E01', '011D01', '011301'
-  ]
-}
+  palette = c(
+    "FFFFFF", "CE7E45", "DF923D", "F1B555", "FCD163", "99B718", "74A901",
+    "66A000", "529400", "3E8601", "207401", "056201", "004C00", "023B01",
+    "012E01", "011D01", "011301"
+  )
+)
 
 # Define a function to convert an image to an RGB visualization image and copy
 # properties from the original image to the RGB image.
@@ -1847,12 +1880,16 @@ Here is an example of mapping a visualization function over a multi-band image c
 ```{r,eval=FALSE}
 # Assemble a collection of Sentinel-2 surface reflectance images for a given
 # region and date range.
-s2col <- ee$ImageCollection('COPERNICUS/S2_SR')$
-  filterBounds(ee$Geometry$Point(-96.9037, 48.0395))$
-  filterDate('2019-06-01', '2019-10-01')
+s2col <- ee$ImageCollection("COPERNICUS/S2_SR") %>% 
+  ee$ImageCollection$filterBounds(ee$Geometry$Point(-96.9037, 48.0395)) %>% 
+  ee$ImageCollection$filterDate("2019-06-01", "2019-10-01")
 
 # Define visualization arguments.
-visArgs <- {bands = ['B11', 'B8', 'B3'], min = 300, max = 3500}
+visArgs <- list(
+  bands = c("B11", "B8", "B3"),
+  min = 300,
+  max = 3500
+)
 
 # Define a function to convert an image to an RGB visualization image and copy
 # properties from the original image to the RGB image.
@@ -1886,31 +1923,32 @@ The following example illustrates generating an animation depicting global tempe
 ```{r, eval=FALSE}
 # Define an area of interest geometry with a global non-polar extent.
 aoi <- ee$Geometry$Polygon(
-  [[[-179.0, 78.0], [-179.0, -58.0], [179.0, -58.0], [179.0, 78.0]]], NULL, FALSE)
+  c(c(-179.0, 78.0), c(-179.0, -58.0), c(179.0, -58.0), c(179.0, 78.0))
+)
 
 # Import hourly predicted temperature image collection for northern winter
 # solstice. Note that predictions extend for 384 hours; limit the collection
 # to the first 24 hours.
-tempCol <- ee$ImageCollection('NOAA/GFS0P25')$
-  filterDate('2018-12-22', '2018-12-23')$
-  limit(24)$
-  select('temperature_2m_above_ground')
+tempCol <- ee$ImageCollection("NOAA/GFS0P25") %>% 
+  ee$ImageCollection$filterDate("2018-12-22", "2018-12-23") %>% 
+  ee$ImageCollection$limit(24) %>% 
+  ee$ImageCollection$select("temperature_2m_above_ground")
 
 # Define arguments for animation function parameters.
-videoArgs <- {
+videoArgs <- list(
   dimensions = 768,
   region = aoi,
-  framesPerSecond <- 7,
-  crs = 'EPSG:3857',
+  framesPerSecond = 7,
+  crs = "EPSG:3857",
   min = -40.0,
   max = 35.0,
-  palette = ['blue', 'purple', 'cyan', 'green', 'yellow', 'red']
-}
+  palette = c("blue", "purple", "cyan", "green", "yellow", "red")
+)
 
 # Print the animation to the console as a ui.Thumbnail using the above defined
 # arguments. Note that ui.Thumbnail produces an animation when the first input
 # is an ee.ImageCollection instead of an ee$Image.
-print(paste0(ui$Thumbnail(tempCol, videoArgs)))
+print(ui$Thumbnail(tempCol, videoArgs))
 
 # Alternatively, print a URL that will produce the animation when accessed.
 print(tempCol$getVideoThumbURL(videoArgs))
@@ -1918,7 +1956,7 @@ print(tempCol$getVideoThumbURL(videoArgs))
 
 |<img src="./gif/chapter_05/gif_03.gif" width=100%>|
 |:-------------|
-|Figure 3. Hourly surface temperature for the northern winter solstice represented as an animated GIF image.|
+|Figure 4. Hourly surface temperature for the northern winter solstice represented as an animated GIF image.|
 
 **Note:**
 - The maximum number of pixels allowed in an animation is 6,553,600 (e.g., 256 x 256 x 100).
@@ -1935,26 +1973,26 @@ The following code snippet uses the same collection as the video thumb example a
 ```{r,eval=FALSE}
 # Define an area of interest geometry with a global non-polar extent.
 aoi <- ee$Geometry$Polygon(
-  [[[-179.0, 78.0], [-179.0, -58.0], [179.0, -58.0], [179.0, 78.0]]], NULL, FALSE
+  c(c(c(-179.0, 78.0), c(-179.0, -58.0), c(179.0, -58.0), c(179.0, 78.0))), NULL, FALSE
 )
 
 # Import hourly predicted temperature image collection for northern winter
 # solstice. Note that predictions extend for 384 hours; limit the collection
 # to the first 24 hours.
-tempCol <- ee$ImageCollection('NOAA/GFS0P25')$
-  filterDate('2018-12-22', '2018-12-23')$
-  limit(24)$
-  select('temperature_2m_above_ground')
+tempCol <- ee$ImageCollection("NOAA/GFS0P25") %>% 
+  ee$ImageCollection$filterDate("2018-12-22", "2018-12-23") %>% 
+  ee$ImageCollection$limit(24) %>% 
+  ee$ImageCollection$select("temperature_2m_above_ground")
 
 # Define arguments for the getFilmstripThumbURL function parameters.
-videoArgs <- {
+filmArgs <- list(
   dimensions = 128,
   region = aoi,
-  crs = 'EPSG:3857',
+  crs = "EPSG:3857",
   min = -40.0,
   max = 35.0,
-  palette = ['blue', 'purple', 'cyan', 'green', 'yellow', 'red']
-}
+  palette = c("blue", "purple", "cyan", "green", "yellow", "red")
+)
 
 # Print a URL that will produce the filmstrip when accessed.
 print(tempCol$getFilmstripThumbURL(filmArgs))
@@ -1962,7 +2000,7 @@ print(tempCol$getFilmstripThumbURL(filmArgs))
 
 |<img src="./images/chapter_05/figure_04.png" width=100%>|
 |:-------------------------------------------------|
-|Figure 4. Hourly surface temperature for the northern winter solstice represented as a filmstrip PNG image. Note that the filmstrip has been divided into four sections for display; the result of getFilmstripThumbURL is a single series of collection images joined north-south.|
+|Figure 5. Hourly surface temperature for the northern winter solstice represented as a filmstrip PNG image. Note that the filmstrip has been divided into four sections for display; the result of getFilmstripThumbURL is a single series of collection images joined north-south.|
 
 ### Advanced techniques {-}
 
@@ -1974,18 +2012,18 @@ Note that all of the following examples in this section use the same base `Image
 # Import hourly predicted temperature image collection for northern winter
 # solstice. Note that predictions extend for 384 hours; limit the collection
 # to the first 24 hours.
-tempCol <- ee$ImageCollection('NOAA/GFS0P25')$
-  filterDate('2018-12-22', '2018-12-23')$
-  limit(24)$
-  select('temperature_2m_above_ground')
+tempCol <- ee$ImageCollection("NOAA/GFS0P25") %>% 
+  ee$ImageCollection$filterDate("2018-12-22", "2018-12-23") %>% 
+  ee$ImageCollection$limit(24) %>% 
+  ee$ImageCollection$select("temperature_2m_above_ground")
 
 # Define visualization arguments to control the stretch and color gradient
 # of the data.
-videoArgs <- {
+videoArgs <- list(
   min = -40.0,
   max = 35.0,
-  palette = ['blue', 'purple', 'cyan', 'green', 'yellow', 'red']
-}
+  palette = c("blue", "purple", "cyan", "green", "yellow", "red")
+)
 
 # Convert each image to an RGB visualization image by mapping the visualize
 # function over the image collection using the arguments defined previously.
@@ -1994,12 +2032,13 @@ tempColVis <- tempCol$map(function(img) {
 })
 
 # Import country features and filter to South American countries.
-southAmCol <- ee$FeatureCollection('USDOS/LSIB_SIMPLE/2017')$
-  filterMetadata('wld_rgn', 'equals', 'South America')
+southAmCol <- ee$FeatureCollection("USDOS/LSIB_SIMPLE/2017")$
+  filterMetadata("wld_rgn", "equals", "South America")
 
 # Define animation region (South America with buffer).
-southAmAoi <- ee$Geometry$Rectangle({
-  coords = [-103.6, -58.8, -18.4, 17.4], geodesic = FALSE})
+southAmAoi <- ee$Geometry$Rectangle(
+  coords = c(-103.6, -58.8, -18.4, 17.4), 
+  geodesic = FALSE)
 ```
 
 #### Overlays {-}
@@ -2020,24 +2059,33 @@ empty <- ee$Image()$byte()
 
 # Paint country feature edges to the empty image.
 southAmOutline <- empty$
-  paint({featureCollection = southAmCol, color = 1, width = 1})$
-  
+  paint(
+  featureCollection = southAmCol,
+  color = 1,
+  width = 1
+)$
+
   # Convert to an RGB visualization image; set line color to black.
-  visualize({palette = '000000'})
-  
+  visualize(list(palette = "000000"))
+
 # Map a blend operation over the temperature collection to overlay the country
 # border outline image on all collection images.
 tempColOutline <- tempColVis$map(function(img) {
   return(img$blend(southAmOutline))
 })
 
+# Define animation region (South America with buffer).
+southAmAoi <- ee$Geometry$Rectangle(
+  coords = c(-103.6, -58.8, -18.4, 17.4)
+)
+
 # Define animation arguments.
-videoArgs <- {
+videoArgs <- list(
   dimensions = 768,
   region = southAmAoi,
   framesPerSecond = 7,
-  crs = 'EPSG:3857'
-}
+  crs = "EPSG:3857"
+)
 
 # Display the animation.
 print(ui$Thumbnail(tempColOutline, videoArgs))
@@ -2045,7 +2093,7 @@ print(ui$Thumbnail(tempColOutline, videoArgs))
 
 |<img src="./gif/chapter_05/gif_05.gif" width=100%>|
 |:-------------------------------------------------|
-|Figure 5. Add vector overlays to images in a collection to provide spatial context.|
+|Figure 6. Add vector overlays to images in a collection to provide spatial context.|
 
 ##### Image overlay {-}
 
@@ -2056,10 +2104,9 @@ Several images can be overlaid to achieve a desired style. Suppose you want to e
 empty <- ee$Image()$byte()
 
 # Paint country feature edges to the empty image.
-southAmOutline <- empty$
-  paint({featureCollection = southAmCol, color = 1, width = 1})$
+southAmOutline <- empty$paint(featureCollection = southAmCol,color = 1,width = 1)$
   # Convert to an RGB visualization image; set line color to black.
-  visualize({palette =  '000000'})
+  visualize(list(palette = "000000"))
 
 # Map a blend operation over the temperature collection to overlay the country
 # border outline image on all collection images.
@@ -2069,8 +2116,12 @@ tempColOutline <- tempColVis$map(function(img) {
 
 # Define a partially opaque grey RGB image to dull the underlying image when
 # blended as an overlay.
-dullLayer <- ee$Image$constant(175)$visualize({
-  opacity = 0.6, min = 0, max = 255, forceRgbOutput = TRUE})
+dullLayer <- ee$Image$constant(175)$visualize(list(
+  opacity = 0.6,
+  min = 0,
+  max = 255,
+  forceRgbOutput = TRUE
+))
 
 # Map a two-part blending operation over the country outline temperature
 # collection for final styling.
@@ -2083,13 +2134,18 @@ finalVisCol <- tempColOutline$map(function(img) {
     blend(img$clipToCollection(southAmCol))
 })
 
+# Define animation region (South America with buffer).
+southAmAoi <- ee$Geometry$Rectangle(
+  coords = c(-103.6, -58.8, -18.4, 17.4)
+)
+
 # Define animation arguments.
-videoArgs <- {
+videoArgs <- list(
   dimensions = 768,
   region = southAmAoi,
   framesPerSecond = 7,
-  crs = 'EPSG:3857'
-}
+  crs = "EPSG:3857"
+)
 
 # Display the animation.
 print(ui$Thumbnail(finalVisCol, videoArgs))
@@ -2097,15 +2153,15 @@ print(ui$Thumbnail(finalVisCol, videoArgs))
 
 |<img src="./gif/chapter_05/gif_06.gif" width=100%>|
 |:-------------------------------------------------|
-|Figure 6. Emphasize an area of interest by clipping the image and overlaying it on a muted copy.|
+|Figure 7. Emphasize an area of interest by clipping the image and overlaying it on a muted copy.|
 
 You can also blend image data with a hillshade base layer to indicate terrain and give the visualization some depth (Figure 7).
 
 ```{r,eval=FALSE}
 # Define a hillshade layer from SRTM digital elevation model.
-hillshade <- ee$Terrain$hillshade(ee$Image('USGS/SRTMGL1_003')$
-                                    # Exaggerate the elevation to increase contrast in hillshade
-                                    multiply(100))$
+hillshade <- ee$Terrain$hillshade(ee$Image("USGS/SRTMGL1_003")$
+  # Exaggerate the elevation to increase contrast in hillshade
+  multiply(100))$
   # Clip the DEM by South American boundary to clean boundary between
   # land and ocean.
   clipToCollection(southAmCol)
@@ -2114,16 +2170,23 @@ hillshade <- ee$Terrain$hillshade(ee$Image('USGS/SRTMGL1_003')$
 # opaque temperature layer on the hillshade layer.
 finalVisCol <- tempColVis$map(function(img) {
   return(hillshade$
-           blend(img$clipToCollection(southAmCol)$visualize({opacity = 0.6})))
+    blend(img$clipToCollection(southAmCol)$visualize({
+    opacity <- 0.6
+  })))
 })
 
+# Define animation region (South America with buffer).
+southAmAoi <- ee$Geometry$Rectangle(
+  coords = c(-103.6, -58.8, -18.4, 17.4)
+)
+
 # Define animation arguments.
-videoArgs <- {
+videoArgs <- list(
   dimensions = 768,
   region = southAmAoi,
   framesPerSecond = 7,
-  crs = 'EPSG:3857'
-}
+  crs = "EPSG:3857"
+)
 
 # Display the animation.
 print(ui$Thumbnail(finalVisCol, videoArgs))
@@ -2131,7 +2194,7 @@ print(ui$Thumbnail(finalVisCol, videoArgs))
 
 |<img src="./gif/chapter_05/gif_07.gif" width=100%>|
 |:-------------------------------------------------|
-|Figure 7. Show terrain by overlaying partially transparent image data on a hillshade layer.|
+|Figure 8. Show terrain by overlaying partially transparent image data on a hillshade layer.|
 
 #### Transitions {-}
 
@@ -2140,50 +2203,50 @@ Customize an image collection to produce animations that reveal differences betw
 ```{r,eval=FALSE}
 # Define an area of interest geometry with a global non-polar extent.
 aoi <- ee$Geometry$Polygon(
-  [[[-179.0, 78.0], [-179.0, -58.0], [179.0, -58.0], [179.0, 78.0]]], NULL, FALSE
+  c(c(c(-179.0, 78.0), c(-179.0, -58.0), c(179.0, -58.0), c(179.0, 78.0)))
 )
 
 # Import hourly predicted temperature image collection.
-temp <- ee$ImageCollection('NOAA/GFS0P25')
+temp <- ee$ImageCollection("NOAA/GFS0P25")
 
 # Define a northern summer solstice temperature image.
 summerSolTemp <- temp$
-  filterDate('2018-06-21', '2018-06-22')$
-  filterMetadata('forecast_hours', 'equals', 12)$
+  filterDate("2018-06-21", "2018-06-22")$
+  filterMetadata("forecast_hours", "equals", 12)$
   first()$
-  select('temperature_2m_above_ground')
+  select("temperature_2m_above_ground")
 
 # Define a northern winter solstice temperature image.
 winterSolTemp <- temp$
-  filterDate('2018-12-22', '2018-12-23')$
-  filterMetadata('forecast_hours', 'equals', 12)$
+  filterDate("2018-12-22", "2018-12-23")$
+  filterMetadata("forecast_hours", "equals", 12)$
   first()$
-  select('temperature_2m_above_ground')
+  select("temperature_2m_above_ground")
 
 # Combine the solstice images into a collection.
-tempCol <- ee$ImageCollection([
-  summerSolTemp$set('season', 'summer'),
-  winterSolTemp$set('season', 'winter')
-])
+tempCol <- ee$ImageCollection(c(
+  summerSolTemp$set("season", "summer"),
+  winterSolTemp$set("season", "winter")
+))
 
 # Import international boundaries feature collection.
-countries <- ee$FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+countries <- ee$FeatureCollection("USDOS/LSIB_SIMPLE/2017")
 
 ## Define visualization arguments.
-visArgs <- {
+visArgs <- list(
   min = -40.0,
   max = 35.0,
-  palette = ['blue', 'purple', 'cyan', 'green', 'yellow', 'red']
-}
+  palette = c("blue", "purple", "cyan", "green", "yellow", "red")
+)
 
 # Convert the image data to RGB visualization images.
 # The clip and unmask combination sets ocean pixels to black.
-tempColVis <-  tempCol$map(function(img) {
+tempColVis <- tempCol$map(function(img) {
   return(img$
-           visualize(visArgs)$
-           visualize(visArgs)$
-           unmask(0)$
-           copyProperties(img, img$propertyNames()))
+    visualize(visArgs)$
+    visualize(visArgs)$
+    unmask(0)$
+    copyProperties(img, img$propertyNames()))
 })
 ```
 
@@ -2193,12 +2256,12 @@ With only two images in a collection, as is the case here, flicker is the defaul
 
 ```{r,eval=FALSE}
 # Define arguments for animation function parameters.
-videoArgs <- {
+videoArgs <- list(
   dimensions = 768,
   region = aoi,
   framesPerSecond = 2,
-  crs = 'EPSG:3857'
-}
+  crs = "EPSG:3857"
+)
 
 # Display animation to the Rstudio console.
 print(ui$Thumbnail(tempColVis, videoArgs))
@@ -2206,7 +2269,7 @@ print(ui$Thumbnail(tempColVis, videoArgs))
 
 |<img src="./gif/chapter_05/gif_08.gif" width=100%>|
 |:-------------------------------------------------|
-|Figure 8. Example of flickering between 12pm GMT surface temperature for northern and winter solstice.|
+|Figure 9. Example of flickering between 12pm GMT surface temperature for northern and winter solstice.|
 
 ##### Fade {-}
 
@@ -2217,20 +2280,28 @@ A fade transition between two layers is achieved by simultaneously decreasing th
 # be 0, so near 1 and 0 are used. Near 1 is needed because a compliment is
 # calculated in a following step that can result in 0 if 1 is an element of the
 # list.
-opacityList <- ee$List$sequence({start = 0.99999, end = 0.00001, count = 20})
+opacityList <- ee$List$sequence(
+  start = 0.99999,
+  end = 0.00001,
+  count = 20
+)
 
 # Filter the summer and winter solstice images from the collection and set as
 # image objects.
-summerImg <- tempColVis$filter(ee$Filter$eq('season', 'summer'))$first()
-winterImg <- tempColVis$filter(ee$Filter$eq('season', 'winter'))$first()
+summerImg <- tempColVis$filter(ee$Filter$eq("season", "summer"))$first()
+winterImg <- tempColVis$filter(ee$Filter$eq("season", "winter"))$first()
 
 # Map over the list of opacity increments to iteratively adjust the opacity of
 # the two solstice images. Returns a list of images.
 imgList <- opacityList$map(function(opacity) {
   opacityCompliment <- ee$Number(1)$subtract(ee$Number(opacity))
-  winterImgFade <- winterImg$visualize({opacity = opacity})
-  summerImgFade <- summerImg$visualize({opacity = opacityCompliment})
-  return(summerImgFade$blend(winterImgFade)$set('opacity', opacity))
+  winterImgFade <- winterImg$visualize({
+    opacity <- opacity
+  })
+  summerImgFade <- summerImg$visualize({
+    opacity <- opacityCompliment
+  })
+  return(summerImgFade$blend(winterImgFade)$set("opacity", opacity))
 })
 
 # Convert the image list to an image collection; the forward phase.
@@ -2238,18 +2309,18 @@ fadeForward <- ee$ImageCollection$fromImages(imgList)
 
 # Make a copy of the collection that is sorted by ascending opacity to
 # represent the reverse phase.
-fadeBackward <- fadeForward$sort({property = 'opacity'})
+fadeBackward <- fadeForward$sort(list(property = "opacity"))
 
 # Merge the forward and reverse phase frame collections.
 fadeCol <- fadeForward$merge(fadeBackward)
 
 # Define animation arguments.
-videoArgs <- {
+videoArgs <- list(
   dimensions = 768,
   region = aoi,
   framesPerSecond = 2,
-  crs = 'EPSG:3857'
-}
+  crs = "EPSG:3857"
+)
 
 # Display the animation.
 print(ui$Thumbnail(fadeCol, videoArgs))
@@ -2258,7 +2329,7 @@ print(ui$Thumbnail(fadeCol, videoArgs))
 <center>
 <img src="./gif/chapter_05/gif_09.gif" width=100%>
 </center>
-Figure 9. Example of fading between 12pm GMT surface temperature for summer and winter solstice.
+Figure 10. Example of fading between 12pm GMT surface temperature for summer and winter solstice.
 
 ##### Slider {-}
 
@@ -2268,7 +2339,10 @@ A slider transition progressively shows and hides the underlying image layer. It
 # Define a sequence of longitude increments. Start and end are defined by the
 # min and max longitude of the feature to be provided to the region parameter
 # of the animation arguments dictionary.
-lonSeq <- ee$List$sequence({start = -179, end = 179, count = 20})
+lonSeq <- ee$List$sequence(
+  start = -179, 
+  end = 179, 
+  count = 20)
 
 # Define a longitude image.
 longitude <- ee$Image$pixelLonLat()$select('longitude')
@@ -2292,19 +2366,19 @@ sliderColForward <- ee$ImageCollection$fromImages(imgList)
 # Make a copy of the collection that is sorted by descending longitude to
 # represent the revealing phase.
 sliderColbackward <- sliderColForward$
-  sort({property = 'lon', ascending = FALSE})
+  sort(list(property = 'lon', ascending = FALSE))
 
 
 # Merge the forward and backward phase frame collections.
 sliderCol <- sliderColForward$merge(sliderColbackward)
 
 # Define animation arguments.
-videoArgs <- {
+videoArgs <- list(
   dimensions = 768,
   region = aoi,
   framesPerSecond = 25,
   crs = 'EPSG:3857'
-}
+)
 
 # Display the animation.
 print(ui$Thumbnail(sliderCol, videoArgs))
@@ -2312,39 +2386,47 @@ print(ui$Thumbnail(sliderCol, videoArgs))
 
 |<img src="./gif/chapter_05/gif_10.gif" width=100%>|
 |:-------------------------------------------------|
-|Figure 10. Example of a sliding transition between 12pm GMT surface temperature for summer and winter solstice.|
+|Figure 11. Example of a sliding transition between 12pm GMT surface temperature for summer and winter solstice.|
 
 ## ImageCollection Information and Metadata {-}
 
 As with Images, there are a variety of ways to get information about an `ImageCollection`. The collection can be printed directly to the console, but the console printout is limited to 5000 elements. Collections larger than 5000 images will need to be filtered before printing. Printing a large collection will be correspondingly slower. The following example shows various ways of getting information about image collections programmatically:
 
-```{r,eval=FALSE}
+```{r, eval=FALSE}
 # Load a Landsat 8 ImageCollection for a single path-row.
-collection <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')$
-  filter(ee$Filter$eq('WRS_PATH', 44))$
-  filter(ee$Filter$eq('WRS_ROW', 34))$
-  filterDate('2014-03-01', '2014-08-01')
-print('Collection: ', collection)
+collection <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA') %>% 
+  ee$ImageCollection$filter(ee$Filter$eq('WRS_PATH', 44)) %>% 
+  ee$ImageCollection$filter(ee$Filter$eq('WRS_ROW', 34)) %>% 
+  ee$ImageCollection$filterDate('2014-03-01', '2014-08-01')
+ee_print(collection)
 
 # Get the number of images.
 count <- collection$size()
-print('Count: ', count)
+print("Count: ", count$getInfo())
 
 # Get the date range of images in the collection.
-range <- collection$reduceColumns(ee$Reducer$minMax(), ["system:time_start"])
-print('Date range: ', ee$Date(range$get('min')), ee$Date(range$get('max')))
+range <- collection$reduceColumns(
+  ee$Reducer$minMax(),
+  list("system:time_start"))
+
+col_min <- eedate_to_rdate(range$get("min"))
+col_max <- eedate_to_rdate(range$get("max"))
+cat("Date range: ", as.character(col_min), as.character(col_max))
 
 # Get statistics for a property of the images in the collection.
 sunStats <- collection$aggregate_stats('SUN_ELEVATION')
-print('Sun elevation statistics: ', sunStats)
+cat("Sun elevation statistics: ")
+sunStats$getInfo()
 
 # Sort by a cloud cover property, get the least cloudy image.
 image <- ee$Image(collection$sort('CLOUD_COVER')$first())
-print('Least cloudy image: ', image)
+cat("Least cloudy image: ")
+image$getInfo()
 
 # Limit the collection to the 10 most recent images.
-recent <- collection$sort('system:time_start', false)$limit(10)
-print('Recent images: ', recent)
+recent <- collection$sort('system:time_start', FALSE)$limit(10)
+cat("Recent images: ")
+recent$getInfo()
 ```
 
 ## Filtering an ImageCollection {-}
@@ -2353,13 +2435,13 @@ As illustrated in the [Get Started section]() and the [ImageCollection Informati
 
 ```{r,eval=FALSE}
 # Load Landsat 5 data, filter by date and bounds.
-collection <- ee$ImageCollection('LANDSAT/LT05/C01/T2')$
-  filterDate('1987-01-01', '1990-05-01')$
+collection <- ee$ImageCollection("LANDSAT/LT05/C01/T2")$
+  filterDate("1987-01-01", "1990-05-01")$
   filterBounds(ee$Geometry$Point(25.8544, -18.08874))
 
 # Also filter the collection by the IMAGE_QUALITY property.
 filtered <- collection$
-  filterMetadata('IMAGE_QUALITY', 'equals', 9)
+  filterMetadata("IMAGE_QUALITY", "equals", 9)
 
 # Create two composites to check the effect of filtering by IMAGE_QUALITY.
 badComposite <- ee$Algorithms$Landsat$simpleComposite(collection, 75, 3)
@@ -2367,11 +2449,28 @@ goodComposite <- ee$Algorithms$Landsat$simpleComposite(filtered, 75, 3)
 
 # Display the composites.
 Map$setCenter(25.8544, -18.08874, 13)
-Map$addLayer(badComposite,
-             {bands = ['B3', 'B2', 'B1'], gain = 3.5}, 'bad composite')
-Map$addLayer(goodComposite,
-             {bands = ['B3', 'B2', 'B1'], gain = 3.5}, 'good composite')
+Map$addLayer(
+  eeObject =  badComposite,
+  vizParams = list(bands = c("B3", "B2", "B1"), gain = 3.5), 
+  name = "bad composite"
+)
 ```
+
+|<img src="./images/chapter_05/figure_fic_bc.png" width=100%>|
+|:------------|
+|Figure 12a. Bad composite|
+
+```{r,eval=FALSE}
+Map$addLayer(
+  eeObject =  goodComposite,
+  vizParams = list(bands = c("B3", "B2", "B1"), gain = 3.5), 
+  name = "good composite"
+)
+```
+
+|<img src="./images/chapter_05/figure_fic_gc.png" width=100%>|
+|:-----------|
+|Figure 12b. Good composite|
 
 ## Mapping over an ImageCollection {-}
 
@@ -2379,17 +2478,22 @@ To apply a function to every `Image` in an `ImageCollection` use `imageCollectio
 
 ```{r,eval=FALSE}
 # Load a Landsat 8 collection for a single path-row.
-collection <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')$
-  filter(ee$Filter$eq('WRS_PATH', 44))$
-  filter(ee$Filter$eq('WRS_ROW', 34))
+collection <- ee$ImageCollection("LANDSAT/LC8_L1T_TOA") %>% 
+  ee$ImageCollection$filter(ee$Filter$eq("WRS_PATH", 44)) %>% 
+  ee$ImageCollection$filter(ee$Filter$eq("WRS_ROW", 34))
 
-# This function adds a band representing the image timestamp.
-addTime <- function(image) {
-  return (image$addBands(image$metadata('system:time_start')))
+# This function uses a conditional statement to return the image if
+# the solar elevation > 40 degrees.  Otherwise it returns a zero image.
+conditional <- function(image) {
+  return(ee$Algorithms$If(
+    ee$Number(image$get("SUN_ELEVATION"))$gt(40),
+    image,
+    ee$Image(0)
+  ))
 }
 
-# Map the function over the collection and display the result.
-print(collection$map(addTime))
+# Map the function over the collection, convert to a List and print the result.
+ee_print(collection$map(conditional))
 ```
 
 Note that in the predefined function, the `metadata()` method is used to create a new `Image` from the value of a property. As discussed in the [Reducing]() and [Compositing]() sections, having that time band is useful for the linear modeling of change and for making composites.
@@ -2398,20 +2502,22 @@ The mapped function is limited in the operations it can perform. Specifically, i
 
 ```{r,eval=FALSE}
 # Load a Landsat 8 collection for a single path-row.
-collection <- ee$ImageCollection('LANDSAT/LC8_L1T_TOA')$
-  filter(ee$Filter$eq('WRS_PATH', 44))$
-  filter(ee$Filter$eq('WRS_ROW', 34))
+collection <- ee$ImageCollection("LANDSAT/LC8_L1T_TOA") %>% 
+  ee$ImageCollection$filter(ee$Filter$eq("WRS_PATH", 44)) %>% 
+  ee$ImageCollection$filter(ee$Filter$eq("WRS_ROW", 34))
 
 # This function uses a conditional statement to return the image if
 # the solar elevation > 40 degrees.  Otherwise it returns a zero image.
 conditional <- function(image) {
-  return(ee$Algorithms$If(ee$Number(image$get('SUN_ELEVATION'))$gt(40),
-                          image,
-                          ee$Image(0)))
+  return(ee$Algorithms$If(
+    ee$Number(image$get("SUN_ELEVATION"))$gt(40),
+    image,
+    ee$Image(0)
+  ))
 }
 
 # Map the function over the collection, convert to a List and print the result.
-print('Expand this to see the result: ', collection.map(conditional))
+ee_print(collection$map(conditional))
 ```
 
 Inspect the list of images in the output ImageCollection and note that the when the condition evaluated by the `If()` algorithm is true, the output contains a constant image. Although this demonstrates a server-side conditional function (learn more about client vs. server in Earth Engine on [this page](), avoid `If()` in general and use filters instead.
@@ -2422,16 +2528,23 @@ To composite images in an `ImageCollection`, use `imageCollection$reduce()`. Thi
 
 ```{r,eval=FALSE}
 # Load a Landsat 8 collection for a single path-row.
-collection <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')$
-  filter(ee$Filter$eq('WRS_PATH', 44))$
-  filter(ee$Filter$eq('WRS_ROW', 34))$
-  filterDate('2014-01-01', '2015-01-01')
+collection <- ee$ImageCollection("LANDSAT/LC08/C01/T1_TOA") %>% 
+  ee$ImageCollection$filter(ee$Filter$eq("WRS_PATH", 44)) %>% 
+  ee$ImageCollection$filter(ee$Filter$eq("WRS_ROW", 34)) %>% 
+  ee$ImageCollection$filterDate("2014-01-01", "2015-01-01")
 
 # Compute a median image and display.
 median <- collection$median()
 Map$setCenter(-122.3578, 37.7726, 12)
-Map$addLayer(median, {bands = ['B4', 'B3', 'B2'], max = 0.3}, 'median')
+Map$addLayer(median, list(
+  bands = c("B4", "B3", "B2"), 
+  max = 0.3), 
+  "median")
 ```
+
+|<img src="./images/chapter_05/figure_ric.png" width=100%>|
+|:-----------|
+|Figure 13. Median value image from a collection|
 
 At each location in the output image, in each band, the pixel value is the median of all unmasked pixels in the input imagery (the images in the collection). In the previous example, `median()` is a convenience method for the following call:
 
@@ -2440,10 +2553,19 @@ At each location in the output image, in each band, the pixel value is the media
 median <- collection$reduce(ee$Reducer$median())
 
 # Display the median image.
-Map$addLayer(median,
-             {bands = ['B4_median', 'B3_median', 'B2_median'], max = 0.3},
-             'also median')
+Map$addLayer(
+  median,
+  list(
+    bands = c("B4_median", "B3_median", "B2_median"),
+    max = 0.3
+  ),
+  "also median"
+)
 ```
+
+|<img src="./images/chapter_05/figure_ric_01.png" width=100%>|
+|:-----------|
+|Figure 14. Median value image from a collection|
 
 Note that the band names differ as a result of using `reduce()` instead of the convenience method. Specifically, the names of the reducer have been appended to the band names.
 
@@ -2452,20 +2574,20 @@ More complex reductions are also possible using `reduce()`. For example, to comp
 ```{r,eval=FALSE}
 # This function adds a band representing the image timestamp.
 addTime <- function(image) {
-  return(image$addBands(image$metadata('system:time_start')$
-           # Convert milliseconds from epoch to years to aid in
-           # interpretation of the following trend calculation.
-           divide(1000 * 60 * 60 * 24 * 365)))
+  return(image$addBands(image$metadata("system:time_start")$
+    # Convert milliseconds from epoch to years to aid in
+    # interpretation of the following trend calculation.
+    divide(1000 * 60 * 60 * 24 * 365)))
 }
 
 # Load a MODIS collection, filter to several years of 16 day mosaics,
 # and map the time band function over it.
-collection <- ee$ImageCollection('MODIS/006/MYD13A1')$
-  filterDate('2004-01-01', '2010-10-31')$
+collection <- ee$ImageCollection("MODIS/006/MYD13A1")$
+  filterDate("2004-01-01", "2010-10-31")$
   map(addTime)
 
 # Select the bands to model with the independent variable first.
-trend <- collection$select(['system:time_start', 'EVI'])$
+trend <- collection$select(c("system:time_start", "EVI"))$
   # Compute the linear trend over time.
   reduce(ee$Reducer$linearFit())
 
@@ -2473,9 +2595,18 @@ trend <- collection$select(['system:time_start', 'EVI'])$
 Map$setCenter(-96.943, 39.436, 5)
 Map$addLayer(
   trend,
-  {min <- 0, max = [-100, 100, 10000], bands = ['scale', 'scale', 'offset']},
-  'EVI trend')
+  list(
+    min = 0,
+    max = c(-100, 100, 10000),
+    bands = c("scale", "scale", "offset")
+  ),
+  "EVI trend"
+)
 ```
+
+|<img src="./images/chapter_05/figure_ric_02.png" width=100%>|
+|:-----------|
+|Figure 15. Linear trend of MODIS Enhanced Vegetation Index (EVI)|
 
 Note that the output of the reduction in this example is a two banded image with one band for the slope of a linear regression ( `scale` ) and one band for the intercept ( `offset` ). Explore the API documentation to see a list of the reducers that are available to reduce an `ImageCollection` to a single `Image`.
 
@@ -2489,30 +2620,46 @@ In general, compositing refers to the process of combining spatially overlapping
 
 ```{r,eval=FALSE}
 # Load three NAIP quarter quads in the same location, different times.
-naip2004_2012 <- ee$ImageCollection('USDA/NAIP/DOQQ')$
-  filterBounds(ee$Geometry$Point(-71.08841, 42.39823))$
-  filterDate('2004-07-01', '2012-12-31')$
-  select(['R', 'G', 'B'])
-  
+naip2004_2012 <- ee$ImageCollection("USDA/NAIP/DOQQ") %>% 
+  ee$ImageCollection$filterBounds(ee$Geometry$Point(-71.08841, 42.39823)) %>% 
+  ee$ImageCollection$filterDate("2004-07-01", "2012-12-31") %>% 
+  ee$ImageCollection$select(c("R", "G", "B"))
+
 # Temporally composite the images with a maximum value function.
 composite <- naip2004_2012$max()
 Map$setCenter(-71.12532, 42.3712, 12)
-Map$addLayer(composite, {}, 'max value composite')
+Map$addLayer(
+  eeObject = composite,
+  visParams = list(),
+  name = "max value composite"
+)
 ```
+
+|<img src="./images/chapter_05/figure_cm.png" width=100%>|
+|:-----------|
+|Figure 16. Maxium value composite|
 
 Consider the need to mosaic four different DOQQs at the same time, but different locations. The following example demonstrates that using `imageCollection$mosaic()` :
 
 ```{r,eval=FALSE}
 # Load four 2012 NAIP quarter quads, different locations.
-naip2012 <- ee$ImageCollection('USDA/NAIP/DOQQ')$
-  filterBounds(ee$Geometry$Rectangle(-71.17965, 42.35125, -71.08824, 42.40584))$
-  filterDate('2012-01-01', '2012-12-31')
+naip2012 <- ee$ImageCollection("USDA/NAIP/DOQQ") %>% 
+  ee$ImageCollection$filterBounds(ee$Geometry$Rectangle(-71.17965, 42.35125, -71.08824, 42.40584)) %>% 
+  ee$ImageCollection$filterDate("2012-01-01", "2012-12-31")
 
 # Spatially mosaic the images in the collection and display.
 mosaic <- naip2012$mosaic()
 Map$setCenter(-71.12532, 42.3712, 12)
-Map$addLayer(mosaic, {}, 'spatial mosaic')
+Map$addLayer(
+  eeObject = mosaic,
+  visParams = list(),
+  name = "spatial mosaic"
+)
 ```
+
+|<img src="./images/chapter_05/figure_cm_01.png" width=100%>|
+|:-----------|
+|Figure 17. Spatial mosaic|
 
 Note that there is some overlap in the DOQQs in the previous example. The `mosaic()` method composites overlapping images according to their order in the collection (last on top). To control the source of pixels in a mosaic (or a composite), use image masks. For example, the following uses thresholds on spectral indices to mask the image data in a mosaic:
 
@@ -2520,35 +2667,63 @@ Note that there is some overlap in the DOQQs in the previous example. The `mosai
 # Load a NAIP quarter quad, display.
 naip <- ee$Image('USDA/NAIP/DOQQ/m_4207148_nw_19_1_20120710')
 Map$setCenter(-71.0915, 42.3443, 14)
-Map$addLayer(naip, {}, 'NAIP DOQQ')
+Map$setZoom(zoom = 14)
+Map$addLayer(
+  eeObject = naip,
+  visParams = list(),
+  name = "NAIP DOQQ"
+)
+```
 
+|<img src="./images/chapter_05/figure_cm_02.png" width=100%>|
+|:-----------|
+| |
+
+```{r,eval=FALSE}
 # Create the NDVI and NDWI spectral indices.
-ndvi <- naip$normalizedDifference(['N', 'R'])
-ndwi <- naip$normalizedDifference(['G', 'N'])
+ndvi <- naip$normalizedDifference(c('N', 'R'))
+ndwi <- naip$normalizedDifference(c('G', 'N'))
 
 # Create some binary images from thresholds on the indices.
 # This threshold is designed to detect bare land.
-bare1 <- ndvi$lt(0.2)$and(ndwi$lt(0.3))
+bare1 <- ndvi$lt(0.2)$And(ndwi$lt(0.3))
 # This detects bare land with lower sensitivity. It also detects shadows.
-bare2 <- ndvi$lt(0.2)$and(ndwi$lt(0.8))
+bare2 <- ndvi$lt(0.2)$And(ndwi$lt(0.8))
 
 # Define visualization parameters for the spectral indices.
-ndviViz <- {min = -1, max = 1, palette = ['FF0000', '00FF00']}
-ndwiViz <- {min = 0.5, max = 1, palette = ['FF0000', '00FF00']}
+ndviViz <- list(
+  min = -1, 
+  max = 1, 
+  palette = c('FF0000', '00FF00')
+)
+ndwiViz <- list(
+  min = 0.5, 
+  max = 1, 
+  palette = c('FF0000', '00FF00')
+)
 
 # Mask and mosaic visualization images.  The last layer is on top.
-mosaic <- ee$ImageCollection([
+mosaic <- ee$ImageCollection(list(
   # NDWI > 0.5 is water.  Visualize it with a blue palette.
   ndwi$updateMask(ndwi$gte(0.5))$visualize(ndwiViz),
   # NDVI > 0.2 is vegetation.  Visualize it with a green palette.
   ndvi$updateMask(ndvi$gte(0.2))$visualize(ndviViz),
   # Visualize bare areas with shadow (bare2 but not bare1) as gray.
-  bare2$updateMask(bare2$and(bare1$not()))$visualize({palette = ['AAAAAA']})
+  bare2$updateMask(bare2$And(bare1$Not()))$visualize(list(palette = c("AAAAAA"))),
   # Visualize the other bare areas as white.
-  bare1$updateMask(bare1)$visualize({palette = ['FFFFFF']})
-])$mosaic()
-Map$addLayer(mosaic, {}, 'Visualization mosaic')
+  bare1$updateMask(bare1)$visualize(list(palette = c("FFFFFF")))
+))$mosaic()
+
+Map$addLayer(
+  eeObject = ndwi,
+  visParams = list(),
+  name = "Visualization mosaic"
+)
 ```
+
+|<img src="./images/chapter_05/figure_cm_02_1.png" width=100%>|
+|:-----------|
+|Figure 18. National Agriculture Imagery Program (NAIP) Digital Orthophoto Quarter Quadrangle (DOQQ)|
 
 To make a composite which maximizes an arbitrary band in the input, use `imageCollection$qualityMosaic()`. The `qualityMosaic()` method sets each pixel in the composite based on which image in the collection has a maximum value for the specified band. For example, the following code demonstrates making a greenest pixel composite and a recent value composite:
 
@@ -2556,39 +2731,60 @@ To make a composite which maximizes an arbitrary band in the input, use `imageCo
 # This function masks clouds in Landsat 8 imagery.
 maskClouds <- function(image) {
   scored <- ee$Algorithms$Landsat$simpleCloudScore(image)
-  return(image$updateMask(scored$select(['cloud'])$lt(20)))
+  return(image$updateMask(scored$select(c("cloud"))$lt(20)))
 }
 
 # This function masks clouds and adds quality bands to Landsat 8 images.
 addQualityBands <- function(image) {
   return(maskClouds(image)$
-           # NDVI
-           addBands(image$normalizedDifference(['B5', 'B4']))$
-           addBands(image$metadata('system:time_start')))
+    # NDVI
+    addBands(image$normalizedDifference(c("B5", "B4")))$
+    addBands(image$metadata("system:time_start")))
 }
 
 # Load a 2014 Landsat 8 ImageCollection.
 # Map the cloud masking and quality band function over the collection.
-collection <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')$
-  filterDate('2014-06-01', '2014-12-31')$
+collection <- ee$ImageCollection("LANDSAT/LC08/C01/T1_TOA")$
+  filterDate("2014-06-01", "2014-12-31")$
   map(addQualityBands)
 
 # Create a cloud-free, most recent value composite.
-recentValueComposite <- collection$qualityMosaic('system:time_start')
+recentValueComposite <- collection$qualityMosaic("system:time_start")
 
 # Create a greenest pixel composite.
-greenestPixelComposite <- collection$qualityMosaic('nd')
+greenestPixelComposite <- collection$qualityMosaic("nd")
 
 # Display the results.
 Map$setCenter(-122.374, 37.8239, 12) # San Francisco Bay
-vizParams <- {bands = ['B5', 'B4', 'B3'], min = 0, max = 0.4}
-Map$addLayer(recentValueComposite, vizParams, 'recent value composite')
-Map$addLayer(greenestPixelComposite, vizParams, 'greenest pixel composite')
-
-# Compare to a cloudy image in the collection.
-cloudy <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140825')
-Map$addLayer(cloudy, vizParams, 'cloudy')
+vizParams <- list(
+  bands = c("B5", "B4", "B3"),
+  min = 0,
+  max = 0.4
+)
+Map$addLayer(recentValueComposite, vizParams, "recent value composite")
 ```
+
+|<img src="./images/chapter_05/figure_cm_03.png" width=100%>|
+|:------------|
+| |
+
+```{r,eval=FALSE}
+Map$addLayer(greenestPixelComposite, vizParams, "greenest pixel composite")
+```
+
+|<img src="./images/chapter_05/figure_cm_04.png" width=100%>|
+|:------------|
+| |
+
+```{r,eval=FALSE}
+# Compare to a cloudy image in the collection.
+cloudy <- ee$Image("LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140825")
+Map$addLayer(cloudy, vizParams, "cloudy")
+```
+
+|<img src="./images/chapter_05/figure_cm_05.png" width=100%>|
+|:------------|
+| |
 
 Use the Rstudio [Inspector tab]() to check pixel values at different locations in the composites. Observe that the `system:time_start` band varies by location, indicating that different pixels come from different times.
 
@@ -2633,7 +2829,11 @@ series <- collection$filterDate('2011-01-01', '2014-12-31')$map(function(image) 
 # Display cumulative anomalies.
 Map$setCenter(-100.811, 40.2, 5)
 Map$addLayer(series$sum(),
-             {min = -60000, max = 60000, palette = ['FF0000', '000000', '00FF00']}, 'EVI anomaly')
+             list(
+               min = -60000, 
+               max = 60000, 
+               palette = c('FF0000', '000000', '00FF00')), 
+             'EVI anomaly')
 
 # Get the timestamp from the most recent image in the reference collection.
 time0 <- reference$first()$get('system:time_start')
@@ -2641,10 +2841,10 @@ time0 <- reference$first()$get('system:time_start')
 # Use imageCollection.iterate() to make a collection of cumulative anomaly over time.
 # The initial value for iterate() is a list of anomaly images already processed.
 # The first anomaly image in the list is just 0, with the time0 timestamp.
-first <- ee$List([
+first <- ee$List(c(
   # Rename the first band 'EVI'.
-  ee$Image(0)$set('system:time_start', time0)$select([0], ['EVI'])
-])
+  ee$Image(0)$set('system:time_start', time0)$select(c(0), c('EVI'))
+))
 
 # This is a function to pass to Iterate().
 # As anomaly images are computed, add them to the list.
@@ -2667,24 +2867,24 @@ accumulate <- function(image, list) {
 cumulative <- ee$ImageCollection(ee$List(series$iterate(accumulate, first)))
 
 # Predefine the chart titles.
-title <- {
+title <- list(
   title = 'Cumulative EVI anomaly over time',
-  hAxis = {title = 'Time'},
-  vAxis = {title = 'Cumulative EVI anomaly'}
-}
+  hAxis = list(title = 'Time'),
+  vAxis = list(title = 'Cumulative EVI anomaly')
+)
 
 # Chart some interesting locations.
 pt1 <- ee$Geometry$Point(-65.544, -4.894)
 print('Amazon rainforest:',
-      Chart$image$series(cumulative, pt1, ee$Reducer$first(), 500)$setOptions(title))
+      Chart$image$series(cumulative, pt1, ee$Reducer$first(), 500)$getInfo()$setOptions(title))
 
 pt2 <- ee$Geometry$Point(116.4647, 40.1054)
 print('Beijing urbanization:',
-      Chart$image$series(cumulative, pt2, ee$Reducer$first(), 500)$setOptions(title))
+      Chart$image$series(cumulative, pt2, ee$Reducer$first(), 500)$getInfo()$setOptions(title))
 
 pt3 <- ee$Geometry$Point(-110.3412, 34.1982)
 print('Arizona forest disturbance and recovery:',
-      Chart$image$series(cumulative, pt3, ee$Reducer$first(), 500)$setOptions(title))
+      Chart$image$series(cumulative, pt3, ee$Reducer$first(), 500)$getInfo()$setOptions(title))
 ```
 
 Charting these sequences indicates whether NDVI is stabilizing relative to previous disturbances or whether NDVI is trending to a new state. Learn more about charts in Earth Engine from the [Charts section]().
