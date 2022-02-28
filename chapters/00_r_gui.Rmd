@@ -8,7 +8,7 @@ source("common.R")
 
 ## What is Google Earth Engine? {-}
 
-Google Earth Engine (GEE) is a cloud-based platform that helps access high-performance computing resources for processing and analyzing large geospatial datasets (Golerick et al.,2017). At the moment, GEE only supports client libraries for the JavaScript and Python programming languages. Check out its official GitHub repository for more details: [https://github.com/google/earthengine-api](https://github.com/google/earthengine-api).
+Google Earth Engine (GEE) is a cloud-based platform that helps access high-performance computing resources for processing and analyzing large geospatial datasets (Golerick et al.,2017). At the moment, GEE only supports **client libraries** for the JavaScript and Python programming languages. Check out its official GitHub repository for more details: [https://github.com/google/earthengine-api](https://github.com/google/earthengine-api).
 
 __*client library*__: Sometimes known as a **_helper library_**, is a collection of code that help to communicate more effectively with an API. For example, if you want to invoke certain image asset in GEE, you must type the following:
 
@@ -84,7 +84,7 @@ The rgeeExtra R package extends the following Earth Engine classes:
 - ee$Number
 
 
-New utility methods and constructors are added to above-mentioned classes in order to create a more fluid code by being friendly with the Python method chaining. These methods are mandatory for some pre-processing and processing tasks (e.g. clouds masking, shadows masking, image scaling, spectral indices computation, etc.), and they are presented as simple functions that give researchers, students and analysts the chance to analyze data with far fewer lines of code.
+New utility methods and constructors are added to above-mentioned classes in order to create a more fluid code by being friendly with the R pipe chaining. These methods are mandatory for some pre-processing and processing tasks (e.g. clouds masking, shadows masking, image scaling, spectral indices computation, etc.), and they are presented as simple functions that give researchers, students and analysts the chance to analyze data with far fewer lines of code.
 
 Look at this simple example where a [Sentinel-2 Surface Reflectance Image Collection](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR) is pre-processed and processed in just one step:
 

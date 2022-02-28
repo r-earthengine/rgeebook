@@ -53,19 +53,6 @@ jobs:
       - name: Build book
         run: Rscript -e 'bookdown::render_book("index.Rmd", quiet = TRUE)'
 
-      - name: Download artifact
-        uses: actions/download-artifact@v1.0.0
-        with:
-          # Artifact name
-          name: _book # optional
-          # Destination path
-          path: _book/ # optional
-
-      - name: Test website
-        uses: docker://klakegg/html-proofer:3.18.8
-        with:
-          args: _book
-
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/master'
         uses: crazy-max/ghaction-github-pages@v2.2.0

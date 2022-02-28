@@ -15,7 +15,7 @@ library(rgee)
 ee_Initialize()
 ```
 
-RStudio is the most popular R-based integrated development environment (IDE). It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging, and workspace management. Combining Rstudio with rgee, users can develop complex geospatial workflows fast and easily. This environment has the  following features:
+[RStudio](https://www.rstudio.com/products/rstudio/) is the most popular R-based integrated development environment (IDE). It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging, and workspace management. By combining Rstudio with rgee, users can quickly and effortlessly construct complex geospatial processes. Rstudio has the  following features:
 
 - R code editor.
 - Map display for visualizing geospatial datasets.
