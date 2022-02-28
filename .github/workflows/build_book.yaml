@@ -59,7 +59,7 @@ jobs:
           # Artifact name
           name: site # optional
           # Destination path
-          path: _book # optional
+          path: _book/ # optional
 
       - name: Test website
         uses: docker://klakegg/html-proofer:3.18.8
