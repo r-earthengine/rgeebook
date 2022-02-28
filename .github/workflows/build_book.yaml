@@ -57,12 +57,21 @@ jobs:
         uses: actions/download-artifact@v1.0.0
         with:
           # Artifact name
-          name: _book # optional
+          name: site # optional
           # Destination path
           path: _book # optional
+
+      - name: Test website
+        uses: docker://klakegg/html-proofer:3.18.8
+        with:
+          args: _book
+
       - name: Deploy to GitHub Pages
-        uses: Cecilapp/GitHub-Pages-deploy@master
+        if: github.ref == 'refs/heads/master'
+        uses: crazy-max/ghaction-github-pages@v2.2.0
+        with:
+          target_branch: gh-pages
+          build_dir: _book
+          jekyll: false
         env:
-            EMAIL: csaybar@gmail.com              # must be a verified email
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/settings/tokens
-            BUILD_DIR: _book/                     # "_site/" by default
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
