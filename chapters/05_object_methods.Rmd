@@ -2893,6 +2893,15 @@ The iterated function is limited in the operations it can perform. Specifically,
 
 # Geometry {-}
 
+This section requires the next libraries:
+
+```{r, eval=FALSE}
+library(rgee)
+library(rgeeExtra)
+
+ee_Initialize()
+```
+
 ## Geometry Overview {-}
 
 Earth Engine handles vector data with the `Geometry` type. The [GeoJSON spec](http://geojson.org/geojson-spec.html) describes in detail the type of geometries supported by Earth Engine, including `Point` (a list of coordinates in some projection), `LineString` (a list of points), `LinearRing` (a closed `LineString`), and `Polygon` (a list of `LinearRings` where the first is a shell and subsequent rings are holes). Earth Engine also supports `MultiPoint`, `MultiLineString`, and `MultiPolygon`. The GeoJSON GeometryCollection is also supported, although it has the name `MultiGeometry` within Earth Engine.
@@ -3139,6 +3148,15 @@ Map$addLayer(symDiff, list(color = "000000"), "symmetric difference")
 In these examples, note that that `maxError` parameter is set to one meter for the geometry operations. The `maxError` is the maximum allowable error, in meters, from transformations (such as projection or reprojection) that may alter the geometry. If one of the geometries is in a different projection from the other, Earth Engine will do the computation in a spherical coordinate system, with a projection precision given by `maxError`. You can also specify a specific projection in which to do the computation, if necessary.
 
 # Feature & FeatureCollection {-}
+
+This section requires the next libraries:
+
+```{r, eval=FALSE}
+library(rgee)
+library(rgeeExtra)
+
+ee_Initialize()
+```
 
 ## Feature Overview {-}
 
@@ -3789,6 +3807,15 @@ Map$addLayer(interpolated, vis, "Interpolated") |
 The size of the neighborhood in which to perform the interpolation is specified by the maxDistance parameter. Larger sizes will result in smoother output but slower computations.
 
 # Reducer {-}
+
+This section requires the next libraries:
+
+```{r, eval=FALSE}
+library(rgee)
+library(rgeeExtra)
+
+ee_Initialize()
+```
 
 ## Reducer Overview {-}
 
@@ -4588,11 +4615,11 @@ cat("Residuals:", residuals$getInfo())
 
 A dictionary containing properties `'coefficients'` and `'residuals'` are returned. The `'coefficients'` property is an array with dimensions (numX, numY); each column contains the coefficients for the corresponding dependent variable. In this case, the array has two rows and one column; row one, column one is the y-intercept and row two, column one is the slope. The `'residuals'` property is the vector of the root mean square of the residuals of each dependent variable. Extract the coefficients by casting the result as an array and then slicing out the desired elements or converting the array to a list and selecting coefficients by index position.
 
-#### ee.FeatureCollection {-}
+#### ee$FeatureCollection {-}
 
 Suppose you want to know the linear relationship between Sentinel-2 and Landsat 8 SWIR1 reflectance. In this example, a random sample of pixels formatted as a feature collection of points are used to calculate the relationship. A scatter plot of the pixel pairs along with the least squares line of best fit are generated (Figure 10).
 
-```{js}
+```{r}
 # Import a Sentinel-2 TOA image.
 s2ImgSwir1 <- ee$Image("COPERNICUS/S2/20191022T185429_20191022T185427_T10SEH")
 
@@ -4754,6 +4781,15 @@ cat('Residuals:', residuals$getInfo())
 ```
 
 # Join {-}
+
+This section requires the next libraries:
+
+```{r, eval=FALSE}
+library(rgee)
+library(rgeeExtra)
+
+ee_Initialize()
+```
 
 ## Join Overview {-}
 
@@ -5074,6 +5110,15 @@ In the previous example, note that the intersects() filter doesn’t store a dis
 Figure 1. Bar chart showing the number of power plants intersecting each US state.
 
 # Array {-}
+
+This section requires the next libraries:
+
+```{r, eval=FALSE}
+library(rgee)
+library(rgeeExtra)
+
+ee_Initialize()
+```
 
 ## Array Overview {-}
 
