@@ -57,7 +57,7 @@ jobs:
         uses: actions/download-artifact@v1.0.0
         with:
           # Artifact name
-          name: site # optional
+          name: _book # optional
           # Destination path
           path: _book/ # optional
 
