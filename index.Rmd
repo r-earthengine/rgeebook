@@ -66,11 +66,11 @@ Many excellent articles and examples about how to use the Earth Engine API can b
 
 <br>
 <center>
-<p class=centered>
-  <a href="https://r-earthengine.github.io/examples/">
-    <button class="button">Go to **earthengine-examples**</button>
-  </a>
-</p>
+  <p class=centered>
+    <a href="https://r-earthengine.github.io/examples/" class="btn btn-primary" style="font-size: 0.8rem;">
+       <i class="fas fa-book"> Go to earthengine-examples </i>
+    </a>    
+  </p>
 </center>
 
 # rgee-cheatsheet {-}
@@ -93,13 +93,15 @@ When was the last time you couldn't remember a specific GEE API method name?. We
 ![](./images/cheatsheet/rgee_Cheatsheet_page02.svg){width=500px}
 </a>
 
+
 <br>
 <center>
-<p class=centered>
-  <a href="https://github.com/r-earthengine/cheatsheet">
-    <button class="button">**rgee cheatsheet in PDF**</button>
-  </a>
-</p>
+  <p class=centered>
+    <a href="https://github.com/r-earthengine/cheatsheet" class="btn btn-primary" style="font-size: 0.8rem;">
+       <i class="fas fa-file"> rgee cheatsheet in PDF </i>
+    </a>    
+  </p>
 </center>
+
 
 `r if (knitr::is_latex_output()) '-->'`

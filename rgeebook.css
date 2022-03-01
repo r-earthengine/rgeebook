@@ -75,3 +75,5 @@ div.base::before,
   padding: 2px 0;
 }
 
+@import "./www/fontawesome.css"
+
