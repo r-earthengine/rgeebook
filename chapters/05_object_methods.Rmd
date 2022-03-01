@@ -1,4 +1,4 @@
-```{r, include = FALSE}
+```{r, include<- FALSE}
 source("common.R")
 ```
 
@@ -26,7 +26,7 @@ As mentioned in the [Get Started]() doc, raster data are represented as Image ob
 
 ### `ee$Image` constructor {-}
 
-Images can be loaded by pasting an Earth Engine asset ID into the `ee$Image` constructor. You can find image IDs in the [data catalog](https://developers.google.com/earth-engine/datasets). For example, to load [JAXA's ALOS DSM](https://developers.google.com/earth-engine/datasets/catalog/JAXA_ALOS_AW3D30_V3_2):
+Images can be loaded by pasting an Earth Engine asset ID into the `ee$Image` constructor. You can find image IDs in the [data catalog](https:#developers.google.com/earth-engine/datasets). For example, to load [JAXA's ALOS DSM](https:#developers.google.com/earth-engine/datasets/catalog/JAXA_ALOS_AW3D30_V3_2):
 
 ```{r}
 loadedImage <- ee$Image('JAXA/ALOS/AW3D30/V2_2')
@@ -36,7 +36,7 @@ Note that finding an image through the Rstudio search tool is equivalent. When y
 
 ### Get an `ee$Image` from an `ee$ImageCollection` {-}
 
-The standard way to get an image out of a collection is to filter the collection, with filters in order of decreasing specificity. For example, to get an image out of the [Sentinel-2 surface reflectance collection](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR):
+The standard way to get an image out of a collection is to filter the collection, with filters in order of decreasing specificity. For example, to get an image out of the [Sentinel-2 surface reflectance collection](https:#developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR):
 
 ```{r}
 ee_geom <- ee$Geometry$Point(-70.48, 43.3631)
@@ -46,9 +46,9 @@ first <- ee$ImageCollection("COPERNICUS/S2_SR") %>%
   ee$ImageCollection$sort("CLOUDY_PIXEL_PERCENTAGE") %>%
   first()
 vizParams <- list(
-  bands = c("B4", "B3", "B2"),
-  min = 0,
-  max = 2000
+  bands<- c("B4", "B3", "B2"),
+  min<- 0,
+  max<- 2000
 )
 Map$centerObject(first, 11)
 Map$addLayer(first, vizParams, "first")
@@ -61,10 +61,10 @@ Note that the `sort` is *after* the filters. Avoid sorting the entire collection
 
 ### Images from Cloud GeoTIFFs {-}
 
-You can use `ee$Image$loadGeoTIFF()` to load images from Cloud Optimized GeoTIFFs in Google Cloud Storage. For example, the [public Landsat dataset](https://console.cloud.google.com/marketplace/details/usgs-public-data/landast) hosted in Google Cloud contains [this GeoTIFF](https://console.cloud.google.com/storage/browser/_details/gcp-public-data-landsat/LC08/01/001/002/LC08_L1GT_001002_20160817_20170322_01_T2/LC08_L1GT_001002_20160817_20170322_01_T2_B5.TIF), corresponding to band 5 from a Landsat 8 scene. You can load this image from Cloud Storage using `ee$Image$loadGeoTIFF()`:
+You can use `ee$Image$loadGeoTIFF()` to load images from Cloud Optimized GeoTIFFs in Google Cloud Storage. For example, the [public Landsat dataset](https:#console.cloud.google.com/marketplace/details/usgs-public-data/landast) hosted in Google Cloud contains [this GeoTIFF](https:#console.cloud.google.com/storage/browser/_details/gcp-public-data-landsat/LC08/01/001/002/LC08_L1GT_001002_20160817_20170322_01_T2/LC08_L1GT_001002_20160817_20170322_01_T2_B5.TIF), corresponding to band 5 from a Landsat 8 scene. You can load this image from Cloud Storage using `ee$Image$loadGeoTIFF()`:
 
 ```{r}
-uri <- 'gs://gcp-public-data-landsat/LC08/01/001/002/' +
+uri <- 'gs:#gcp-public-data-landsat/LC08/01/001/002/' +
     'LC08_L1GT_001002_20160817_20170322_01_T2/' +
     'LC08_L1GT_001002_20160817_20170322_01_T2_B5.TIF'
 cloudImage <- ee$Image$loadGeoTIFF(uri)
@@ -92,7 +92,7 @@ multiband <- ee$Image(c(1, 2, 3))
 print(multiband)
 
 # Select and (optionally) rename bands.
-renamed = multiband$select(
+renamed<- multiband$select(
   c('constant', 'constant_1', 'constant_2'), ## old names
   c('band1', 'band2', 'band3')               ## new names
 )
@@ -130,10 +130,10 @@ The following illustrates the use of parameters to style a Landsat 8 image as a 
 image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
 
 # Define the visualization parameters.
-vizParams <- list(bands = c('B5', 'B4', 'B3'),
-  min = 0,
-  max = 0.5,
-  gamma = c(0.95, 1.1, 1)
+vizParams <- list(bands<- c('B5', 'B4', 'B3'),
+  min<- 0,
+  max<- 0.5,
+  gamma<- c(0.95, 1.1, 1)
 )
 # Center the map and display the image.
 Map$setCenter(-122.1899, 37.5010, 10); ## San Francisco Bay
@@ -159,9 +159,9 @@ image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
 # Create an NDWI image, define visualization parameters and display.
 ndwi <- image$normalizedDifference(c('B3', 'B5'))
 ndwiViz <- list(
-  min = 0.5, 
-  max = 1, 
-  palette = c('00FFFF', '0000FF')
+  min<- 0.5, 
+  max<- 1, 
+  palette<- c('00FFFF', '0000FF')
 )
 Map$addLayer(ndwi, ndwiViz, 'NDWI')
 ```
@@ -190,14 +190,14 @@ Use the `image.visualize()` method to convert an image into an 8-bit RGB image f
 ```{r}
 # Create visualization layers.
 imageRGB <- image$visualize(list(
-  bands = c('B5', 'B4', 'B3'), 
-  max = 0.5
+  bands<- c('B5', 'B4', 'B3'), 
+  max<- 0.5
 ))
 
 ndwiRGB <- ndwiMasked$visualize(list(
-  min = 0.5,
-  max = 1,
-  palette = c('00FFFF', '0000FF'))
+  min<- 0.5,
+  max<- 1,
+  palette<- c('00FFFF', '0000FF'))
 )
 ```
 
@@ -309,7 +309,7 @@ To create a visualization image with a color ramp, set the type of the ColorMap 
 image <- ee$Image('CGIAR/SRTM90_V4')
 
 # Define an SLD style of discrete intervals to apply to the image.
-var sld_intervals <-
+sld_intervals <-
   '<RasterSymbolizer>' +
     '<ColorMap type="intervals" extended="false" >' +
       '<ColorMapEntry color="#0000ff" quantity="0" label="0"/>' +
@@ -344,7 +344,7 @@ SLDs are also useful for stretching pixel values to improve visualizations of co
 
 ```{r}
 # Load a Landsat 8 raw image.
-image = ee$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')
+image<- ee$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')
 
 # Define a RasterSymbolizer element with '_enhance_' for a placeholder.
 template_sld <-
@@ -468,7 +468,7 @@ image <- ee$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')
 print('All metadata:', image)
 
 # Get information about the bands as a list.
-var bandNames <- image$bandNames()
+bandNames <- image$bandNames()
 print('Band names:', bandNames)  ## ee$List of band names
 
 # Get projection information from band 1.
@@ -569,7 +569,7 @@ Map$centerObject(image, 9)
 Map$addLayer(evi, {min: -1, max: 1, palette: ['FF0000', '00FF00']})
 ```
 
-Observe that the first argument to `expression()` is the textual representation of the math operation, the second argument is a dictionary where the keys are variable names used in the expression and the values are the image bands to which the variables should be mapped. Bands in the image may be referred to as `b("band name")` or `b(index)`, for example `b(0)`, instead of providing the dictionary. Bands can be defined from images other than the input when using the band map dictionary. Note that `expression()` uses "floor division", which discards the remainder and returns an integer when two integers are divided. For example `10 / 20 = 0`. To change this behavior, multiply one of the operands by `1.0: 10 * 1.0 / 20 = 0.5`. Only the intersection of unmasked pixels are considered and returned as unmasked when bands from more than one source image are evaluated. Supported expression operators are listed in the following table.
+Observe that the first argument to `expression()` is the textual representation of the math operation, the second argument is a dictionary where the keys are variable names used in the expression and the values are the image bands to which the variables should be mapped. Bands in the image may be referred to as `b("band name")` or `b(index)`, for example `b(0)`, instead of providing the dictionary. Bands can be defined from images other than the input when using the band map dictionary. Note that `expression()` uses "floor division", which discards the remainder and returns an integer when two integers are divided. For example `10 / 20<- 0`. To change this behavior, multiply one of the operands by `1.0: 10 * 1.0 / 20<- 0.5`. Only the intersection of unmasked pixels are considered and returned as unmasked when bands from more than one source image are evaluated. Supported expression operators are listed in the following table.
 
 **Operators for expression()**
 
@@ -690,16 +690,16 @@ To perform linear convolutions on images, use `image.convolve()`. The only argum
 ```{r}
 # Load and display an image.
 image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
-vizParams <- list(bands = c('B5', 'B4', 'B3'),
-                  max = 0.5)
+vizParams <- list(bands<- c('B5', 'B4', 'B3'),
+                  max<- 0.5)
 Map$setCenter(-121.9785, 37.8694, 11)
 Map$addLayer(image,vizParams, 'input image')
 
 # Define a boxcar or low-pass kernel.
 boxcar <- ee$Kernel$square(list(
-  radius = 7,
-  units = 'pixels', 
-  normalize = TRUE
+  radius<- 7,
+  units<- 'pixels', 
+  normalize<- TRUE
 ))
 
 # Smooth the image by convolving with the boxcar kernel.
@@ -764,7 +764,7 @@ Map$setCenter(-122.1899, 37.5010, 13)
 Map$addLayer(image, {}, 'NIR threshold')
 
 # Define a kernel.
-kernel <- ee$Kernel$circle(radius = 1)
+kernel <- ee$Kernel$circle(radius<- 1)
 
 # Perform an erosion followed by a dilation, display.
 opened <- image$
@@ -807,7 +807,7 @@ Note that `gradient()` outputs two bands: the gradient in the X-direction and th
 
 ## Edge detection {-}
 
-[Edge detection](https://en.wikipedia.org/wiki/Edge_detection) is applicable to a wide range of image processing tasks. In addition to the edge detection kernels described in the [convolutions section](), there are several specialized edge detection algorithms in Earth Engine. The Canny edge detection algorithm ([Canny 1986](https://ieeexplore.ieee.org/document/)) uses four separate filters to identify the diagonal, vertical, and horizontal edges. The calculation extracts the first derivative value for the horizontal and vertical directions and computes the gradient magnitude. Gradients of smaller magnitude are suppressed. To eliminate high-frequency noise, optionally pre-filter the image with a Gaussian kernel. For example:
+[Edge detection](https:#en.wikipedia.org/wiki/Edge_detection) is applicable to a wide range of image processing tasks. In addition to the edge detection kernels described in the [convolutions section](), there are several specialized edge detection algorithms in Earth Engine. The Canny edge detection algorithm ([Canny 1986](https:#ieeexplore.ieee.org/document/)) uses four separate filters to identify the diagonal, vertical, and horizontal edges. The calculation extracts the first derivative value for the horizontal and vertical directions and computes the gradient magnitude. Gradients of smaller magnitude are suppressed. To eliminate high-frequency noise, optionally pre-filter the image with a Gaussian kernel. For example:
 
 ```{r}
 # Load a Landsat 8 image, select the panchromatic band.
@@ -815,15 +815,15 @@ image <- ee.$Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318')$select('B8')
 
 # Perform Canny edge detection and display the result.
 canny <- ee$Algorithms$CannyEdgeDetector(list(
-  image = image, 
-  threshold = 10, 
-  sigma = 1)
+  image<- image, 
+  threshold<- 10, 
+  sigma<- 1)
   )
 Map$setCenter(-122.054, 37.7295, 10)
 Map$addLayer(canny, {}, 'canny')
 ```
 
-Note that the `threshold` parameter determines the minimum gradient magnitude and the `sigma` parameter is the standard deviation (SD) of a Gaussian pre-filter to remove high-frequency noise. For line extraction from an edge detector, Earth Engine implements the Hough transform ([Duda and Hart 1972](https://dl.acm.org/doi/10.1145/361237.361242)). Continuing the previous example, extract lines from the Canny detector with:
+Note that the `threshold` parameter determines the minimum gradient magnitude and the `sigma` parameter is the standard deviation (SD) of a Gaussian pre-filter to remove high-frequency noise. For line extraction from an edge detector, Earth Engine implements the Hough transform ([Duda and Hart 1972](https:#dl.acm.org/doi/10.1145/361237.361242)). Continuing the previous example, extract lines from the Canny detector with:
 
 ```{r}
 # Perform Hough transform of the Canny result and display.
@@ -840,19 +840,19 @@ Map$addLayer(image, list(max: 12000))
 
 # Define a "fat" Gaussian kernel.
 fat <- ee$Kernel$gaussian(list(
-  radius = 3,
-  sigma = 3,
-  units = 'pixels',
-  normalize = true,
-  magnitude = -1)
+  radius<- 3,
+  sigma<- 3,
+  units<- 'pixels',
+  normalize<- true,
+  magnitude<- -1)
 )
 
 # Define a "skinny" Gaussian kernel.
 skinny <- ee$Kernel$gaussian(list(
-  radius = 3,
-  sigma = 1,
-  units = 'pixels',
-  normalize = true)
+  radius<- 3,
+  sigma<- 1,
+  units<- 'pixels',
+  normalize<- true)
 )
 
 # Compute a difference-of-Gaussians (DOG) kernel.
@@ -861,7 +861,7 @@ dog <- fat$add(skinny)
 # Compute the zero crossings of the second derivative, display.
 zeroXings <- image$convolve(dog)$zeroCrossing()
 Map.setCenter(-122.054, 37.7295, 10)
-Map.addLayer(zeroXings$selfMask(), list(palette = 'FF0000'), 'zero crossings')
+Map.addLayer(zeroXings$selfMask(), list(palette<- 'FF0000'), 'zero crossings')
 ```
 
 
@@ -885,7 +885,7 @@ Pan sharpening improves the resolution of a multiband image through enhancement 
 image <- ee$Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
 Map$addLayer(
     image,
-    list(bands = c('B4', 'B3', 'B2'), min = 0, max = 0.25, gamma = c(1.1, 1.1, 1)),
+    list(bands<- c('B4', 'B3', 'B2'), min<- 0, max<- 0.25, gamma<- c(1.1, 1.1, 1)),
     'rgb')
 
 # Convert the RGB bands to the HSV color space.
@@ -899,7 +899,7 @@ sharpened <- ee$Image.cat([
 # Display the pan-sharpened result.
 Map$setCenter(-122.44829, 37.76664, 13);
 Map$addLayer(sharpened,
-             list(min = 0, max = 0.25, gamma = c(1.3, 1.3, 1.3)),
+             list(min<- 0, max<- 0.25, gamma<- c(1.3, 1.3, 1.3)),
              'pan-sharpened')
 ```
 
@@ -913,7 +913,7 @@ bands <- ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7']
 image <- ee$Image('LANDSAT/LT05/C01/T1/LT05_044034_20080214')$
   select(bands)
 Map$setCenter(-122.1899, 37.5010, 10); ## San Francisco Bay
-Map$addLayer(image, list(bands = c('B4', 'B3', 'B2'), min = 0, max = 128), 'image')
+Map$addLayer(image, list(bands<- c('B4', 'B3', 'B2'), min<- 0, max<- 128), 'image')
 
 # Define spectral endmembers.
 urban <- c(88, 42, 48, 38, 86, 115, 59)
@@ -935,7 +935,7 @@ Map$addLayer(fractions, {}, 'unmixed');
 
 ## Texture {-}
 
-Earth Engine has several special methods for estimating spatial texture. When the image is discrete valued (not floating point), you can use `image$entropy()` to compute the [entropy](http://en.wikipedia.org/wiki/Entropy_(information_theory)) in a neighborhood:
+Earth Engine has several special methods for estimating spatial texture. When the image is discrete valued (not floating point), you can use `image$entropy()` to compute the [entropy](http:#en.wikipedia.org/wiki/Entropy_(information_theory)) in a neighborhood:
 
 ```{r}
 # Load a high-resolution NAIP image.
@@ -949,12 +949,12 @@ Map$addLayer(image, {max: 255}, 'image')
 nir <- image.select('N')
 
 # Define a neighborhood with a kernel.
-square <- ee$Kernel$square(radius = 4)
+square <- ee$Kernel$square(radius<- 4)
 
 # Compute entropy and display.
 entropy <- nir.entropy(square)
 Map$addLayer(entropy,
-             list(min = 1, max = 5, palette = c('0000CC', 'CC0000') ),
+             list(min<- 1, max<- 5, palette<- c('0000CC', 'CC0000') ),
              'entropy')
 ```
 
@@ -964,14 +964,14 @@ Another way to measure texture is with a gray-level co-occurrence matrix (GLCM).
 
 ```{r}
 # Compute the gray-level co-occurrence matrix (GLCM), get contrast.
-glcm <- nir$glcmTexture(size = 4)
+glcm <- nir$glcmTexture(size<- 4)
 contrast <- glcm$select('N_contrast')
 Map$addLayer(contrast,
-             list(min = 0, max = 1500, palette = c('0000CC', 'CC0000')),
+             list(min<- 0, max<- 1500, palette<- c('0000CC', 'CC0000')),
              'contrast')
 ```
 
-Many measures of texture are output by `image$glcm()`. For a complete reference on the outputs, see [Haralick et al. (1973)](https://ieeexplore.ieee.org/document/4309314) and [Conners et al. (1984)](https://www.sciencedirect.com/science/article/abs/pii/0734189X8490197X).
+Many measures of texture are output by `image$glcm()`. For a complete reference on the outputs, see [Haralick et al. (1973)](https:#ieeexplore.ieee.org/document/4309314) and [Conners et al. (1984)](https:#www.sciencedirect.com/science/article/abs/pii/0734189X8490197X).
 
 Local measures of spatial association such as Geary’s C (Anselin 1995) can be computed in Earth Engine using `image$neighborhoodToBands()`. Using the image from the previous example:
 
@@ -979,7 +979,7 @@ Local measures of spatial association such as Geary’s C (Anselin 1995) can be 
 # Create a list of weights for a 9x9 kernel.
 row <- c(1, 1, 1, 1, 1, 1, 1, 1, 1)
 # The center of the kernel is zero.
-centerRow = c(1, 1, 1, 1, 0, 1, 1, 1, 1)
+centerRow<- c(1, 1, 1, 1, 0, 1, 1, 1, 1)
 # Assemble a list of lists: the 9x9 kernel weights as a 2-D matrix.
 rows <- c(row, row, row, row, centerRow, row, row, row, row)
 # Create the kernel from the weights.
@@ -993,7 +993,7 @@ neighs <- nir$neighborhoodToBands(kernel)
 gearys <- nir$subtract(neighs)$pow(2)$reduce(ee$Reducer$sum())
              $divide(Math$pow(9, 2))
 Map$addLayer(gearys,
-             list(min = 20, max = 2500, palette = c('0000CC', 'CC0000')),
+             list(min<- 20, max<- 2500, palette<- c('0000CC', 'CC0000')),
              "Geary's C")
 ```
 
@@ -1029,13 +1029,13 @@ aoi <- point.buffer(10000);
 
 # Import a Landsat 8 image, subset the thermal band, and clip to the
 # area of interest.
-kelvin = ee.Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
+kelvin<- ee.Image('LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318')
   .select(['B10'], ['kelvin'])
   .clip(aoi)
 
 # Display the thermal band.
 Map$centerObject(point, 13);
-Map.$addLayer(kelvin, list(min = 288, max = 305), 'Kelvin')
+Map.$addLayer(kelvin, list(min<- 288, max<- 305), 'Kelvin')
 
 # Threshold the thermal band to set hot pixels as value 1, mask all else.
 hotspots <- kelvin.gt(303)
@@ -1043,7 +1043,7 @@ hotspots <- kelvin.gt(303)
   .rename('hotspots')
 
 # Display the thermal hotspots on the Map.
-Map$addLayer(hotspots, list(palette = 'FF0000'), 'Hotspots')
+Map$addLayer(hotspots, list(palette<- 'FF0000'), 'Hotspots')
 ```
 <center>
 ![Figure 13. Temperature for a region of San Francisco. Pixels with temperature greater than 303 degrees Kelvin are distinguished by the color red (thermal hotspots).](../images/chapter_05/figure_13.png){width=670px}
@@ -1058,8 +1058,8 @@ Labeling objects is often the first step in object analysis. Here, the `connecte
 ```{r}
 # Uniquely label the hotspot image objects.
 objectId <- hotspots$connectedComponents(list(
-  connectedness = ee.Kernel.plus(1),
-  maxSize = 128)
+  connectedness<- ee.Kernel.plus(1),
+  maxSize<- 128)
   )
 
 # Display the uniquely ID'ed objects to the Map.
@@ -1082,7 +1082,7 @@ Calculate the number of pixels composing objects using the `connectedPixelCount(
 # Compute the number of pixels in each object defined by the "labels" band.
 objectSize <- objectId$select('labels')$
   connectedPixelCount(list(
-     maxSize = 128, eightConnected = false)
+     maxSize<- 128, eightConnected<- false)
      )
 
 # Display object pixel count to the Map.
@@ -1110,7 +1110,7 @@ objectArea <- objectSize$multiply(pixelArea)
 
 # Display object area to the Map.
 Map$addLayer(objectArea,
-             list(min = 0, max = 30000, palette = c('0000FF', 'FF00FF')),
+             list(min<- 0, max<- 30000, palette<- c('0000FF', 'FF00FF')),
              'Object area m^2')
 ```
 
@@ -1148,14 +1148,14 @@ kelvin <- kelvin$addBands(objectId$select('labels'))
 # Calculate the mean temperature per object defined by the previously added
 # "labels" band.
 patchTemp <- kelvin$reduceConnectedComponents(list(
-  reducer = ee$Reducer$mean(),
-  labelBand = 'labels')
+  reducer<- ee$Reducer$mean(),
+  labelBand<- 'labels')
 )
 
 # Display object mean temperature to the Map.
 Map$addLayer(
   patchTemp,list(
-    min = 303, max = 304, palette = c('yellow', 'red')),
+    min<- 303, max<- 304, palette<- c('yellow', 'red')),
   'Mean temperature'
 )
 ```
@@ -1173,7 +1173,7 @@ The result is a copy of the input image without the band used to define objects,
 
 ## Cumulative Cost Mapping {-}
 
-Use `image$cumulativeCost()` to compute a cost map where every pixel contains the total cost of the lowest cost path to the nearest source location. This process is useful in a variety of contexts such as habitat analysis ([Adriaensen et al. 2003](http://www.sciencedirect.com/science/article/pii/S0169204602002426)), watershed delineation ([Melles et al. 2011](https://www.sciencedirect.com/science/article/pii/S1878029611001691)) and image segmentation ([Falcao et al. 2004](http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=1261076)). Call the cumulative cost function on an image in which each pixel represents the cost per meter to traverse it. Paths are computed through any of a pixel's eight neighbors. Required inputs include a `source` image, in which each non-zero pixel represents a potential source (or start of a path), and a `maxDistance` (in meters) over which to compute paths. The algorithm finds the cumulative cost of all paths less than *maxPixels* = `maxDistance`/*scale* in length, where scale is the pixel resolution, or [scale of analysis in Earth Engine]().
+Use `image$cumulativeCost()` to compute a cost map where every pixel contains the total cost of the lowest cost path to the nearest source location. This process is useful in a variety of contexts such as habitat analysis ([Adriaensen et al. 2003](http:#www.sciencedirect.com/science/article/pii/S0169204602002426)), watershed delineation ([Melles et al. 2011](https:#www.sciencedirect.com/science/article/pii/S1878029611001691)) and image segmentation ([Falcao et al. 2004](http:#ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=1261076)). Call the cumulative cost function on an image in which each pixel represents the cost per meter to traverse it. Paths are computed through any of a pixel's eight neighbors. Required inputs include a `source` image, in which each non-zero pixel represents a potential source (or start of a path), and a `maxDistance` (in meters) over which to compute paths. The algorithm finds the cumulative cost of all paths less than *maxPixels*<- `maxDistance`/*scale* in length, where scale is the pixel resolution, or [scale of analysis in Earth Engine]().
 
 The following example demonstrates computing least-cost paths across a land cover image:
 ```{r}
@@ -1202,15 +1202,15 @@ cost <- cover$remap(beforeRemap, afterRemap, 0)
 
 # Compute the cumulative cost to traverse the land cover.
 cumulativeCost <- cost$cumulativeCost(list(
-  source = sources,
-  maxDistance = 80 * 1000)  ## 80 kilometers
+  source<- sources,
+  maxDistance<- 80 * 1000)  ## 80 kilometers
   )
 
 # Display the results
 Map$setCenter(18.71, 4.2, 9)
 Map$addLayer(cover, {}, 'Globcover')
-Map$addLayer(cumulativeCost, list(min = 0, max = 5e4), 'accumulated cost')
-Map$addLayer(geometry, list(color = 'FF0000'), 'source geometry')
+Map$addLayer(cumulativeCost, list(min<- 0, max<- 5e4), 'accumulated cost')
+Map$addLayer(geometry, list(color<- 'FF0000'), 'source geometry')
 ```
 
 The result should look something like Figure 18, in which each output pixel represents the accumulated cost to the nearest source. Note that discontinuities can appear in places where the least cost path to the nearest source exceeds *maxPixels* in length.
@@ -1265,9 +1265,9 @@ image2RedBand <- image2Orig$select('R')
 
 # Determine the displacement by matching only the 'R' bands.
 displacement <- image2RedBand.displacement(list(
-  referenceImage = image1RedBand,
-  maxOffset = 50.0,
-  patchWidth = 100.0)
+  referenceImage<- image1RedBand,
+  maxOffset<- 50.0,
+  patchWidth<- 100.0)
 )
 
 # Compute image offset and direction.
@@ -1275,8 +1275,8 @@ offset <- displacement$select('dx')$hypot(displacement$select('dy'))
 angle <- displacement$select('dx')$atan2(displacement$select('dy'))
 
 # Display offset distance and angle.
-Map$addLayer(offset, list(min = 0, max = 20), 'offset')
-Map$addLayer(angle, list(min = -Math.PI, max = Math.PI), 'angle')
+Map$addLayer(offset, list(min<- 0, max<- 20), 'offset')
+Map$addLayer(angle, list(min<- -Math.PI, max<- Math.PI), 'angle')
 Map$setCenter(37.44,0.58, 15)
 ```
 
@@ -1289,7 +1289,7 @@ There are two ways to warp an image to match another image: `displace()` or `reg
 registered <- image2Orig$displace(displacement)
 
 # Show the results of co-registering the images.
-visParams <- list(bands = c('R', 'G', 'B'), max = 4000)
+visParams <- list(bands<- c('R', 'G', 'B'), max<- 4000)
 Map$addLayer(image1Orig, visParams, 'Reference')
 Map$addLayer(image2Orig, visParams, 'Before Registration')
 Map$addLayer(registered, visParams, 'After Registration')
@@ -1299,9 +1299,9 @@ If you don't need the displacement bands, Earth Engine provides the `register()`
 
 ```{r}
 alsoRegistered <- image2Orig$register(list(
-  referenceImage = image1Orig,
-  maxOffset = 50.0,
-  patchWidth = 100.0)
+  referenceImage<- image1Orig,
+  maxOffset<- 50.0,
+  patchWidth<- 100.0)
   )
 Map.addLayer(alsoRegistered, visParams, 'Also Registered')
 ```
@@ -1322,14 +1322,14 @@ ee_Initialize()
 
 ## ImageCollection Overview {-}
 
-An `ImageCollection` is a stack or sequence of images. An `ImageCollection` can be loaded by pasting an Earth Engine asset ID into the `ImageCollection` constructor. You can find `ImageCollection` IDs in the [data catalog](https://developers.google.com/earth-engine/datasets). For example, to load the [Sentinel-2 surface reflectance collection](https://developers.google.com/earth-engine/guides/datasets/catalog/COPERNICUS_S2_SR):
+An `ImageCollection` is a stack or sequence of images. An `ImageCollection` can be loaded by pasting an Earth Engine asset ID into the `ImageCollection` constructor. You can find `ImageCollection` IDs in the [data catalog](https:#developers.google.com/earth-engine/datasets). For example, to load the [Sentinel-2 surface reflectance collection](https:#developers.google.com/earth-engine/guides/datasets/catalog/COPERNICUS_S2_SR):
 
 ```{r, eval=FALSE}
 sentinelCollection <- ee$ImageCollection("COPERNICUS/S2_SR")
 ```
 
 
-This collection contains every Sentinel-2 image in the public catalog. There are a lot. Usually you want to filter the collection as shown [here](https://developers.google.com/earth-engine/guides/ic_info) or [here](https://developers.google.com/earth-engine/guides/ic_filtering).
+This collection contains every Sentinel-2 image in the public catalog. There are a lot. Usually you want to filter the collection as shown [here](https:#developers.google.com/earth-engine/guides/ic_info) or [here](https:#developers.google.com/earth-engine/guides/ic_filtering).
 
 In addition to loading an `ImageCollection` using an Earth Engine collection ID, Earth Engine has methods to create image collections. The constructor `ee$ImageCollection()` or the convenience method `ee$ImageCollection$fromImages()` create image collections from lists of images. You can also create new image collections by merging existing collections. For example:
 
@@ -1352,8 +1352,8 @@ ee_print(mergedCollection)
 
 # Create a toy FeatureCollection.
 features <- ee$FeatureCollection(
-  ee$Feature(NULL, list(foo = 1)),
-  ee$Feature(NULL, list(foo = 2))
+  ee$Feature(NULL, list(foo<- 1)),
+  ee$Feature(NULL, list(foo<- 2))
 )
 
 # Create an ImageCollection from the FeatureCollection
@@ -1373,7 +1373,7 @@ You can also create an `ImageCollection` from GeoTiffs in Cloud Storage. For exa
 ```{r,eval=FALSE}
 # All the GeoTiffs are in this folder.
 uriBase <- paste0(
-  "gs://gcp-public-data-landsat/LC08/01/001/002/", "LC08_L1GT_001002_20160817_20170322_01_T2/"
+  "gs:#gcp-public-data-landsat/LC08/01/001/002/", "LC08_L1GT_001002_20160817_20170322_01_T2/"
 )
 
 # List of URIs, one for each band.
@@ -1395,9 +1395,9 @@ rgb <- collection$toBands()$rename(c("B2", "B3", "B4", "B5"))
 
 Map$centerObject(rgb)
 Map$addLayer(rgb, list(
-  bands = c("B4", "B3", "B2"), 
-  min = 0, 
-  max = 20000), 
+  bands<- c("B4", "B3", "B2"), 
+  min<- 0, 
+  max<- 20000), 
   "rgb")
 ```
 
@@ -1618,7 +1618,7 @@ lsCol <- ee$ImageCollection("LANDSAT/LT05/C02/T1_L2") %>%
 distinctYears <- lsCol$distinct("year")$sort("year")
 
 # Define a join filter; one-to-many join on ‘year’ property.
-filter <- ee$Filter$equals(list(leftField = "year", rightField = "year"))
+filter <- ee$Filter$equals(list(leftField<- "year", rightField<- "year"))
 
 # Define a join.
 join <- ee$Join$saveAll("year_match")
@@ -1683,7 +1683,7 @@ lsCol <- ee$ImageCollection("LANDSAT/LC08/C02/T1_L2") %>%
 distinctDates <- lsCol$distinct("date")$sort("date")
 
 # Define a join filter; one-to-many join on ‘date’ property.
-filter <- ee$Filter$equals(list(leftField = "date", rightField = "date"))
+filter <- ee$Filter$equals(list(leftField<- "date", rightField<- "date"))
 
 # Define a join.
 join <- ee$Join$saveAll("date_match")
@@ -1734,9 +1734,9 @@ ndviCol <- ee$ImageCollection("MODIS/006/MOD13A1") %>%
   # the result to each image as a property.
   ee$ImageCollection$map(function(img) {
     meanNdvi <- img$reduceRegion(
-      reducer = ee$Reducer$mean(),
-      geometry = aoi,
-      scale = 500
+      reducer<- ee$Reducer$mean(),
+      geometry<- aoi,
+      scale<- 500
     )
     return(img$set("meanNdvi", meanNdvi$get("NDVI")))
   }) %>%
@@ -1825,10 +1825,10 @@ aoi <- ee$Geometry$Polygon(c(
 # Calculate the 2nd and 98th percentile elevation values from rescaled (to
 # 500m) pixels intersecting the area of interest. A Dictionary is returned.
 percentClip <- demImg$reduceRegion(
-  reducer = ee$Reducer$percentile(c(2, 98)),
-  geometry = aoi,
-  scale = 500,
-  maxPixels = 3e7
+  reducer<- ee$Reducer$percentile(c(2, 98)),
+  geometry<- aoi,
+  scale<- 500,
+  maxPixels<- 3e7
 )
 
 # Print the regional 2nd and 98th percentile elevation values. Get the
@@ -1855,9 +1855,9 @@ ndviCol <- ee$ImageCollection("MODIS/006/MOD13A1") %>%
 
 # Define visualization arguments.
 visArgs <- list(
-  min = 0,
-  max = 9000,
-  palette = c(
+  min<- 0,
+  max<- 9000,
+  palette<- c(
     "FFFFFF", "CE7E45", "DF923D", "F1B555", "FCD163", "99B718", "74A901",
     "66A000", "529400", "3E8601", "207401", "056201", "004C00", "023B01",
     "012E01", "011D01", "011301"
@@ -1886,9 +1886,9 @@ s2col <- ee$ImageCollection("COPERNICUS/S2_SR") %>%
 
 # Define visualization arguments.
 visArgs <- list(
-  bands = c("B11", "B8", "B3"),
-  min = 300,
-  max = 3500
+  bands<- c("B11", "B8", "B3"),
+  min<- 300,
+  max<- 3500
 )
 
 # Define a function to convert an image to an RGB visualization image and copy
@@ -1936,13 +1936,13 @@ tempCol <- ee$ImageCollection("NOAA/GFS0P25") %>%
 
 # Define arguments for animation function parameters.
 videoArgs <- list(
-  dimensions = 768,
-  region = aoi,
-  framesPerSecond = 7,
-  crs = "EPSG:3857",
-  min = -40.0,
-  max = 35.0,
-  palette = c("blue", "purple", "cyan", "green", "yellow", "red")
+  dimensions<- 768,
+  region<- aoi,
+  framesPerSecond<- 7,
+  crs<- "EPSG:3857",
+  min<- -40.0,
+  max<- 35.0,
+  palette<- c("blue", "purple", "cyan", "green", "yellow", "red")
 )
 
 # Print the animation to the console as a ui.Thumbnail using the above defined
@@ -1986,12 +1986,12 @@ tempCol <- ee$ImageCollection("NOAA/GFS0P25") %>%
 
 # Define arguments for the getFilmstripThumbURL function parameters.
 filmArgs <- list(
-  dimensions = 128,
-  region = aoi,
-  crs = "EPSG:3857",
-  min = -40.0,
-  max = 35.0,
-  palette = c("blue", "purple", "cyan", "green", "yellow", "red")
+  dimensions<- 128,
+  region<- aoi,
+  crs<- "EPSG:3857",
+  min<- -40.0,
+  max<- 35.0,
+  palette<- c("blue", "purple", "cyan", "green", "yellow", "red")
 )
 
 # Print a URL that will produce the filmstrip when accessed.
@@ -2020,9 +2020,9 @@ tempCol <- ee$ImageCollection("NOAA/GFS0P25") %>%
 # Define visualization arguments to control the stretch and color gradient
 # of the data.
 videoArgs <- list(
-  min = -40.0,
-  max = 35.0,
-  palette = c("blue", "purple", "cyan", "green", "yellow", "red")
+  min<- -40.0,
+  max<- 35.0,
+  palette<- c("blue", "purple", "cyan", "green", "yellow", "red")
 )
 
 # Convert each image to an RGB visualization image by mapping the visualize
@@ -2037,8 +2037,8 @@ southAmCol <- ee$FeatureCollection("USDOS/LSIB_SIMPLE/2017")$
 
 # Define animation region (South America with buffer).
 southAmAoi <- ee$Geometry$Rectangle(
-  coords = c(-103.6, -58.8, -18.4, 17.4), 
-  geodesic = FALSE)
+  coords<- c(-103.6, -58.8, -18.4, 17.4), 
+  geodesic<- FALSE)
 ```
 
 #### Overlays {-}
@@ -2060,13 +2060,13 @@ empty <- ee$Image()$byte()
 # Paint country feature edges to the empty image.
 southAmOutline <- empty$
   paint(
-  featureCollection = southAmCol,
-  color = 1,
-  width = 1
+  featureCollection<- southAmCol,
+  color<- 1,
+  width<- 1
 )$
 
   # Convert to an RGB visualization image; set line color to black.
-  visualize(list(palette = "000000"))
+  visualize(list(palette<- "000000"))
 
 # Map a blend operation over the temperature collection to overlay the country
 # border outline image on all collection images.
@@ -2076,15 +2076,15 @@ tempColOutline <- tempColVis$map(function(img) {
 
 # Define animation region (South America with buffer).
 southAmAoi <- ee$Geometry$Rectangle(
-  coords = c(-103.6, -58.8, -18.4, 17.4)
+  coords<- c(-103.6, -58.8, -18.4, 17.4)
 )
 
 # Define animation arguments.
 videoArgs <- list(
-  dimensions = 768,
-  region = southAmAoi,
-  framesPerSecond = 7,
-  crs = "EPSG:3857"
+  dimensions<- 768,
+  region<- southAmAoi,
+  framesPerSecond<- 7,
+  crs<- "EPSG:3857"
 )
 
 # Display the animation.
@@ -2104,9 +2104,9 @@ Several images can be overlaid to achieve a desired style. Suppose you want to e
 empty <- ee$Image()$byte()
 
 # Paint country feature edges to the empty image.
-southAmOutline <- empty$paint(featureCollection = southAmCol,color = 1,width = 1)$
+southAmOutline <- empty$paint(featureCollection<- southAmCol,color<- 1,width<- 1)$
   # Convert to an RGB visualization image; set line color to black.
-  visualize(list(palette = "000000"))
+  visualize(list(palette<- "000000"))
 
 # Map a blend operation over the temperature collection to overlay the country
 # border outline image on all collection images.
@@ -2117,10 +2117,10 @@ tempColOutline <- tempColVis$map(function(img) {
 # Define a partially opaque grey RGB image to dull the underlying image when
 # blended as an overlay.
 dullLayer <- ee$Image$constant(175)$visualize(list(
-  opacity = 0.6,
-  min = 0,
-  max = 255,
-  forceRgbOutput = TRUE
+  opacity<- 0.6,
+  min<- 0,
+  max<- 255,
+  forceRgbOutput<- TRUE
 ))
 
 # Map a two-part blending operation over the country outline temperature
@@ -2136,15 +2136,15 @@ finalVisCol <- tempColOutline$map(function(img) {
 
 # Define animation region (South America with buffer).
 southAmAoi <- ee$Geometry$Rectangle(
-  coords = c(-103.6, -58.8, -18.4, 17.4)
+  coords<- c(-103.6, -58.8, -18.4, 17.4)
 )
 
 # Define animation arguments.
 videoArgs <- list(
-  dimensions = 768,
-  region = southAmAoi,
-  framesPerSecond = 7,
-  crs = "EPSG:3857"
+  dimensions<- 768,
+  region<- southAmAoi,
+  framesPerSecond<- 7,
+  crs<- "EPSG:3857"
 )
 
 # Display the animation.
@@ -2177,15 +2177,15 @@ finalVisCol <- tempColVis$map(function(img) {
 
 # Define animation region (South America with buffer).
 southAmAoi <- ee$Geometry$Rectangle(
-  coords = c(-103.6, -58.8, -18.4, 17.4)
+  coords<- c(-103.6, -58.8, -18.4, 17.4)
 )
 
 # Define animation arguments.
 videoArgs <- list(
-  dimensions = 768,
-  region = southAmAoi,
-  framesPerSecond = 7,
-  crs = "EPSG:3857"
+  dimensions<- 768,
+  region<- southAmAoi,
+  framesPerSecond<- 7,
+  crs<- "EPSG:3857"
 )
 
 # Display the animation.
@@ -2234,9 +2234,9 @@ countries <- ee$FeatureCollection("USDOS/LSIB_SIMPLE/2017")
 
 ## Define visualization arguments.
 visArgs <- list(
-  min = -40.0,
-  max = 35.0,
-  palette = c("blue", "purple", "cyan", "green", "yellow", "red")
+  min<- -40.0,
+  max<- 35.0,
+  palette<- c("blue", "purple", "cyan", "green", "yellow", "red")
 )
 
 # Convert the image data to RGB visualization images.
@@ -2257,10 +2257,10 @@ With only two images in a collection, as is the case here, flicker is the defaul
 ```{r,eval=FALSE}
 # Define arguments for animation function parameters.
 videoArgs <- list(
-  dimensions = 768,
-  region = aoi,
-  framesPerSecond = 2,
-  crs = "EPSG:3857"
+  dimensions<- 768,
+  region<- aoi,
+  framesPerSecond<- 2,
+  crs<- "EPSG:3857"
 )
 
 # Display animation to the Rstudio console.
@@ -2281,9 +2281,9 @@ A fade transition between two layers is achieved by simultaneously decreasing th
 # calculated in a following step that can result in 0 if 1 is an element of the
 # list.
 opacityList <- ee$List$sequence(
-  start = 0.99999,
-  end = 0.00001,
-  count = 20
+  start<- 0.99999,
+  end<- 0.00001,
+  count<- 20
 )
 
 # Filter the summer and winter solstice images from the collection and set as
@@ -2309,17 +2309,17 @@ fadeForward <- ee$ImageCollection$fromImages(imgList)
 
 # Make a copy of the collection that is sorted by ascending opacity to
 # represent the reverse phase.
-fadeBackward <- fadeForward$sort(list(property = "opacity"))
+fadeBackward <- fadeForward$sort(list(property<- "opacity"))
 
 # Merge the forward and reverse phase frame collections.
 fadeCol <- fadeForward$merge(fadeBackward)
 
 # Define animation arguments.
 videoArgs <- list(
-  dimensions = 768,
-  region = aoi,
-  framesPerSecond = 2,
-  crs = "EPSG:3857"
+  dimensions<- 768,
+  region<- aoi,
+  framesPerSecond<- 2,
+  crs<- "EPSG:3857"
 )
 
 # Display the animation.
@@ -2340,9 +2340,9 @@ A slider transition progressively shows and hides the underlying image layer. It
 # min and max longitude of the feature to be provided to the region parameter
 # of the animation arguments dictionary.
 lonSeq <- ee$List$sequence(
-  start = -179, 
-  end = 179, 
-  count = 20)
+  start<- -179, 
+  end<- 179, 
+  count<- 20)
 
 # Define a longitude image.
 longitude <- ee$Image$pixelLonLat()$select('longitude')
@@ -2366,7 +2366,7 @@ sliderColForward <- ee$ImageCollection$fromImages(imgList)
 # Make a copy of the collection that is sorted by descending longitude to
 # represent the revealing phase.
 sliderColbackward <- sliderColForward$
-  sort(list(property = 'lon', ascending = FALSE))
+  sort(list(property<- 'lon', ascending<- FALSE))
 
 
 # Merge the forward and backward phase frame collections.
@@ -2374,10 +2374,10 @@ sliderCol <- sliderColForward$merge(sliderColbackward)
 
 # Define animation arguments.
 videoArgs <- list(
-  dimensions = 768,
-  region = aoi,
-  framesPerSecond = 25,
-  crs = 'EPSG:3857'
+  dimensions<- 768,
+  region<- aoi,
+  framesPerSecond<- 25,
+  crs<- 'EPSG:3857'
 )
 
 # Display the animation.
@@ -2450,9 +2450,9 @@ goodComposite <- ee$Algorithms$Landsat$simpleComposite(filtered, 75, 3)
 # Display the composites.
 Map$setCenter(25.8544, -18.08874, 13)
 Map$addLayer(
-  eeObject =  badComposite,
-  vizParams = list(bands = c("B3", "B2", "B1"), gain = 3.5), 
-  name = "bad composite"
+  eeObject<-  badComposite,
+  vizParams<- list(bands<- c("B3", "B2", "B1"), gain<- 3.5), 
+  name<- "bad composite"
 )
 ```
 
@@ -2462,9 +2462,9 @@ Map$addLayer(
 
 ```{r,eval=FALSE}
 Map$addLayer(
-  eeObject =  goodComposite,
-  vizParams = list(bands = c("B3", "B2", "B1"), gain = 3.5), 
-  name = "good composite"
+  eeObject<-  goodComposite,
+  vizParams<- list(bands<- c("B3", "B2", "B1"), gain<- 3.5), 
+  name<- "good composite"
 )
 ```
 
@@ -2537,8 +2537,8 @@ collection <- ee$ImageCollection("LANDSAT/LC08/C01/T1_TOA") %>%
 median <- collection$median()
 Map$setCenter(-122.3578, 37.7726, 12)
 Map$addLayer(median, list(
-  bands = c("B4", "B3", "B2"), 
-  max = 0.3), 
+  bands<- c("B4", "B3", "B2"), 
+  max<- 0.3), 
   "median")
 ```
 
@@ -2556,8 +2556,8 @@ median <- collection$reduce(ee$Reducer$median())
 Map$addLayer(
   median,
   list(
-    bands = c("B4_median", "B3_median", "B2_median"),
-    max = 0.3
+    bands<- c("B4_median", "B3_median", "B2_median"),
+    max<- 0.3
   ),
   "also median"
 )
@@ -2596,9 +2596,9 @@ Map$setCenter(-96.943, 39.436, 5)
 Map$addLayer(
   trend,
   list(
-    min = 0,
-    max = c(-100, 100, 10000),
-    bands = c("scale", "scale", "offset")
+    min<- 0,
+    max<- c(-100, 100, 10000),
+    bands<- c("scale", "scale", "offset")
   ),
   "EVI trend"
 )
@@ -2629,9 +2629,9 @@ naip2004_2012 <- ee$ImageCollection("USDA/NAIP/DOQQ") %>%
 composite <- naip2004_2012$max()
 Map$setCenter(-71.12532, 42.3712, 12)
 Map$addLayer(
-  eeObject = composite,
-  visParams = list(),
-  name = "max value composite"
+  eeObject<- composite,
+  visParams<- list(),
+  name<- "max value composite"
 )
 ```
 
@@ -2651,9 +2651,9 @@ naip2012 <- ee$ImageCollection("USDA/NAIP/DOQQ") %>%
 mosaic <- naip2012$mosaic()
 Map$setCenter(-71.12532, 42.3712, 12)
 Map$addLayer(
-  eeObject = mosaic,
-  visParams = list(),
-  name = "spatial mosaic"
+  eeObject<- mosaic,
+  visParams<- list(),
+  name<- "spatial mosaic"
 )
 ```
 
@@ -2667,11 +2667,11 @@ Note that there is some overlap in the DOQQs in the previous example. The `mosai
 # Load a NAIP quarter quad, display.
 naip <- ee$Image('USDA/NAIP/DOQQ/m_4207148_nw_19_1_20120710')
 Map$setCenter(-71.0915, 42.3443, 14)
-Map$setZoom(zoom = 14)
+Map$setZoom(zoom<- 14)
 Map$addLayer(
-  eeObject = naip,
-  visParams = list(),
-  name = "NAIP DOQQ"
+  eeObject<- naip,
+  visParams<- list(),
+  name<- "NAIP DOQQ"
 )
 ```
 
@@ -2692,14 +2692,14 @@ bare2 <- ndvi$lt(0.2)$And(ndwi$lt(0.8))
 
 # Define visualization parameters for the spectral indices.
 ndviViz <- list(
-  min = -1, 
-  max = 1, 
-  palette = c('FF0000', '00FF00')
+  min<- -1, 
+  max<- 1, 
+  palette<- c('FF0000', '00FF00')
 )
 ndwiViz <- list(
-  min = 0.5, 
-  max = 1, 
-  palette = c('FF0000', '00FF00')
+  min<- 0.5, 
+  max<- 1, 
+  palette<- c('FF0000', '00FF00')
 )
 
 # Mask and mosaic visualization images.  The last layer is on top.
@@ -2709,15 +2709,15 @@ mosaic <- ee$ImageCollection(list(
   # NDVI > 0.2 is vegetation.  Visualize it with a green palette.
   ndvi$updateMask(ndvi$gte(0.2))$visualize(ndviViz),
   # Visualize bare areas with shadow (bare2 but not bare1) as gray.
-  bare2$updateMask(bare2$And(bare1$Not()))$visualize(list(palette = c("AAAAAA"))),
+  bare2$updateMask(bare2$And(bare1$Not()))$visualize(list(palette<- c("AAAAAA"))),
   # Visualize the other bare areas as white.
-  bare1$updateMask(bare1)$visualize(list(palette = c("FFFFFF")))
+  bare1$updateMask(bare1)$visualize(list(palette<- c("FFFFFF")))
 ))$mosaic()
 
 Map$addLayer(
-  eeObject = ndwi,
-  visParams = list(),
-  name = "Visualization mosaic"
+  eeObject<- ndwi,
+  visParams<- list(),
+  name<- "Visualization mosaic"
 )
 ```
 
@@ -2757,9 +2757,9 @@ greenestPixelComposite <- collection$qualityMosaic("nd")
 # Display the results.
 Map$setCenter(-122.374, 37.8239, 12) # San Francisco Bay
 vizParams <- list(
-  bands = c("B5", "B4", "B3"),
-  min = 0,
-  max = 0.4
+  bands<- c("B5", "B4", "B3"),
+  min<- 0,
+  max<- 0.4
 )
 Map$addLayer(recentValueComposite, vizParams, "recent value composite")
 ```
@@ -2797,8 +2797,8 @@ Use the Rstudio [Inspector tab]() to check pixel values at different locations i
       f(Image<sub>t</sub>, A<sub>t-1</sub>)</i>, mapping won't work because the function
       (<i>f</i>) depends on the previous result (<i>A<sub>t-1</sub></i>).  For example, suppose
       you want to compute a series of cumulative Normalized Difference Vegetation Index (NDVI)
-      anomaly images relative to a baseline.  Let <i>A<sub>0</sub></i> = 0 and
-      <i>f(Image<sub>t</sub>, A<sub>t-1</sub>)</i> = <i>Image<sub>t</sub> + A<sub>t-1</sub></i>
+      anomaly images relative to a baseline.  Let <i>A<sub>0</sub></i><- 0 and
+      <i>f(Image<sub>t</sub>, A<sub>t-1</sub>)</i><- <i>Image<sub>t</sub> + A<sub>t-1</sub></i>
       where <i>A<sub>t-1</sub></i> is the cumulative anomaly up to time <i>t-1</i> and
       <i>Image<sub>t</sub></i> is the anomaly at time <i>t</i>.  Use
       <code translate="no" dir="ltr">imageCollection.iterate()</code> to make this recursively defined
@@ -2830,9 +2830,9 @@ series <- collection$filterDate('2011-01-01', '2014-12-31')$map(function(image) 
 Map$setCenter(-100.811, 40.2, 5)
 Map$addLayer(series$sum(),
              list(
-               min = -60000, 
-               max = 60000, 
-               palette = c('FF0000', '000000', '00FF00')), 
+               min<- -60000, 
+               max<- 60000, 
+               palette<- c('FF0000', '000000', '00FF00')), 
              'EVI anomaly')
 
 # Get the timestamp from the most recent image in the reference collection.
@@ -2868,9 +2868,9 @@ cumulative <- ee$ImageCollection(ee$List(series$iterate(accumulate, first)))
 
 # Predefine the chart titles.
 title <- list(
-  title = 'Cumulative EVI anomaly over time',
-  hAxis = list(title = 'Time'),
-  vAxis = list(title = 'Cumulative EVI anomaly')
+  title<- 'Cumulative EVI anomaly over time',
+  hAxis<- list(title<- 'Time'),
+  vAxis<- list(title<- 'Cumulative EVI anomaly')
 )
 
 # Chart some interesting locations.
@@ -2904,7 +2904,7 @@ ee_Initialize()
 
 ## Geometry Overview {-}
 
-Earth Engine handles vector data with the `Geometry` type. The [GeoJSON spec](http://geojson.org/geojson-spec.html) describes in detail the type of geometries supported by Earth Engine, including `Point` (a list of coordinates in some projection), `LineString` (a list of points), `LinearRing` (a closed `LineString`), and `Polygon` (a list of `LinearRings` where the first is a shell and subsequent rings are holes). Earth Engine also supports `MultiPoint`, `MultiLineString`, and `MultiPolygon`. The GeoJSON GeometryCollection is also supported, although it has the name `MultiGeometry` within Earth Engine.
+Earth Engine handles vector data with the `Geometry` type. The [GeoJSON spec](http:#geojson.org/geojson-spec.html) describes in detail the type of geometries supported by Earth Engine, including `Point` (a list of coordinates in some projection), `LineString` (a list of points), `LinearRing` (a closed `LineString`), and `Polygon` (a list of `LinearRings` where the first is a shell and subsequent rings are holes). Earth Engine also supports `MultiPoint`, `MultiLineString`, and `MultiPolygon`. The GeoJSON GeometryCollection is also supported, although it has the name `MultiGeometry` within Earth Engine.
 
 ### Creating Geometry objects {-}
 
@@ -2982,8 +2982,8 @@ planarPolygon <- ee$Geometry(polygon, NULL, FALSE)
 
 # Display the polygons by adding them to the map.
 Map$centerObject(polygon)
-Map$addLayer(polygon, list(color = 'FF0000'), 'geodesic polygon')
-Map$addLayer(planarPolygon, list(color = '000000'), 'planar polygon')
+Map$addLayer(polygon, list(color<- 'FF0000'), 'geodesic polygon')
+Map$addLayer(planarPolygon, list(color<- '000000'), 'planar polygon')
 ```
 
 </center>
@@ -3043,7 +3043,7 @@ Map$addLayer(
 ) +
   Map$addLayer(
     centroid,
-    list(color = "red"),
+    list(color<- "red"),
     "centroid"
   )
 ```
@@ -3061,21 +3061,21 @@ To demonstrate the difference between geometries created with the "left-inside" 
 ```{r}
 # Create a right-inside polygon.
 holePoly <- ee$Geometry$Polygon(
-  coords = list(
+  coords<- list(
     c(-35, -10), c(-35, 10), c(35, 10), c(35, -10), c(-35, -10)
   ),
-  proj = "EPSG:4326",
-  geodesic = TRUE,
-  maxError = 1.,
-  evenOdd = FALSE
+  proj<- "EPSG:4326",
+  geodesic<- TRUE,
+  maxError<- 1.,
+  evenOdd<- FALSE
 )
 
 
 # Create an even-odd version of the polygon.
 evenOddPoly <- ee$Geometry(
-  geo_json = holePoly$getInfo(),
-  opt_proj = "EPSG:4326",
-  opt_evenOdd = TRUE
+  geo_json<- holePoly$getInfo(),
+  opt_proj<- "EPSG:4326",
+  opt_evenOdd<- TRUE
 )
 
 # Create a point to test the insideness of the polygon.
@@ -3097,8 +3097,8 @@ poly2 <- ee$Geometry$Point(c(-40, 30))$buffer(1e6)
 
 # Display polygon 1 in red and polygon 2 in blue.
 Map$setCenter(-45, 30)
-Map$addLayer(poly1, list(color = "FF0000"), "poly1")
-Map$addLayer(poly2, list(color = "0000FF"), "poly2")
+Map$addLayer(poly1, list(color<- "FF0000"), "poly1")
+Map$addLayer(poly2, list(color<- "0000FF"), "poly2")
 ```
 
 </center>
@@ -3108,7 +3108,7 @@ Map$addLayer(poly2, list(color = "0000FF"), "poly2")
 ```{r}
 # Compute the intersection, display it in green.
 intersection <- poly1$intersection(poly2, ee$ErrorMargin(1))
-Map$addLayer(intersection, list(color = "00FF00"), "intersection")
+Map$addLayer(intersection, list(color<- "00FF00"), "intersection")
 ```
 
 </center>
@@ -3118,7 +3118,7 @@ Map$addLayer(intersection, list(color = "00FF00"), "intersection")
 ```{r}
 # Compute the union, display it in magenta.
 union <- poly1$union(poly2, ee$ErrorMargin(1))
-Map$addLayer(union, list(color = "FF00FF"), "union")
+Map$addLayer(union, list(color<- "FF00FF"), "union")
 ```
 
 </center>
@@ -3128,7 +3128,7 @@ Map$addLayer(union, list(color = "FF00FF"), "union")
 ```{r}
 # Compute the difference, display in yellow.
 diff1 <- poly1$difference(poly2, ee$ErrorMargin(1))
-Map$addLayer(diff1, list(color = "FFFF00"), "diff1")
+Map$addLayer(diff1, list(color<- "FFFF00"), "diff1")
 ```
 
 </center>
@@ -3138,7 +3138,7 @@ Map$addLayer(diff1, list(color = "FFFF00"), "diff1")
 ```{r}
 # Compute symmetric difference, display in black.
 symDiff <- poly1$symmetricDifference(poly2, ee$ErrorMargin(1))
-Map$addLayer(symDiff, list(color = "000000"), "symmetric difference")
+Map$addLayer(symDiff, list(color<- "000000"), "symmetric difference")
 ```
 
 </center>
@@ -3173,7 +3173,7 @@ polygon <- ee$Geometry$Polygon(
 )
 
 # Create a Feature from the Geometry.
-polyFeature <- ee$Feature(polygon, list(foo = 42, bar = "tart"))
+polyFeature <- ee$Feature(polygon, list(foo<- 42, bar<- "tart"))
 ```
 
 As with a `Geometry`, a `Feature` may be printed or added to the map for inspection and visualization:
@@ -3195,7 +3195,7 @@ A Feature need not have a Geometry and may simply wrap a dictionary of propertie
 
 ```{r}
 # Create a dictionary of properties, some of which may be computed values.
-dict <- list(foo = ee$Number(8)$add(88), bar = "nihao")
+dict <- list(foo<- ee$Number(8)$add(88), bar<- "nihao")
 
 # Create a NULL geometry feature with the dictionary of properties.
 nowhereFeature <- ee$Feature(NULL, dict)
@@ -3218,7 +3218,7 @@ print(ee$Feature$getInfo(species))
 feature <- feature$set("presence", 1)
 
 # Overwrite the old properties with a new dictionary.
-newDict <- list(genus = "Brachyramphus", species = "marmoratus")
+newDict <- list(genus<- "Brachyramphus", species<- "marmoratus")
 feature <- feature$set(newDict)
 
 # Check the result.
@@ -3238,9 +3238,9 @@ One way to create a `FeatureCollection` is to provide the constructor with a lis
 ```{r}
 # Make a list of Features.
 features <- c(
-  ee$Feature(ee$Geometry$Rectangle(30.01, 59.80, 30.59, 60.15), list(name = "Voronoi")),
-  ee$Feature(ee$Geometry$Point(-73.96, 40.781), list(name = "Thiessen")),
-  ee$Feature(ee$Geometry$Point(6.4806, 50.8012), list(name = "Dirichlet"))
+  ee$Feature(ee$Geometry$Rectangle(30.01, 59.80, 30.59, 60.15), list(name<- "Voronoi")),
+  ee$Feature(ee$Geometry$Point(-73.96, 40.781), list(name<- "Thiessen")),
+  ee$Feature(ee$Geometry$Point(6.4806, 50.8012), list(name<- "Dirichlet"))
 )
 
 # Create a FeatureCollection from the list and print it.
@@ -3275,7 +3275,7 @@ Map$addLayer(
 </center>
 
 
-Note that as with image datasets, you can search for table datasets and import them into your script using the [Rstudio search tool]() or discover them in the [Earth Engine Data Catalog](https://developers.google.com/earth-engine/datasets).
+Note that as with image datasets, you can search for table datasets and import them into your script using the [Rstudio search tool]() or discover them in the [Earth Engine Data Catalog](https:#developers.google.com/earth-engine/datasets).
 
 ### Random Samples {-}
 
@@ -3303,7 +3303,7 @@ Map$addLayer(
 
 ## Feature and FeatureCollection Visualization {-}
 
-As with images, geometries and features, feature collections can be added to the map directly with `Map$addLayer()`. The default visualization will display the vectors with solid black lines and semi-opaque black fill. To render the vectors in color, specify the `color` parameter. The following displays the ‘RESOLVE’ ecoregions ([Dinerstein et al. 2017](https://academic.oup.com/bioscience/article/67/6/534/3102935)) as the default visualization and in red:
+As with images, geometries and features, feature collections can be added to the map directly with `Map$addLayer()`. The default visualization will display the vectors with solid black lines and semi-opaque black fill. To render the vectors in color, specify the `color` parameter. The following displays the ‘RESOLVE’ ecoregions ([Dinerstein et al. 2017](https:#academic.oup.com/bioscience/article/67/6/534/3102935)) as the default visualization and in red:
 
 ```{r}
 # Load a FeatureCollection from a table dataset: 'RESOLVE' ecoregions.
@@ -3317,7 +3317,7 @@ Map$addLayer(
 ) |
   Map$addLayer(
     ecoregions,
-    list(color = "FF0000"),
+    list(color<- "FF0000"),
     "colored"
   )
 ```
@@ -3330,7 +3330,7 @@ For additional display options, use `featureCollection$draw()`. Specifically, pa
 
 ```{r}
 Map$addLayer(
-  ecoregions$draw(color = "006600", strokeWidth = 5),
+  ecoregions$draw(color<- "006600", strokeWidth<- 5),
   {},
   "drawn"
 )
@@ -3350,13 +3350,13 @@ empty <- ee$Image()$byte()
 
 # Paint all the polygon edges with the same number and width, display.
 outline <- empty$paint(
-  featureCollection = ecoregions,
-  color = 1,
-  width = 3
+  featureCollection<- ecoregions,
+  color<- 1,
+  width<- 3
 )
 Map$addLayer(
   outline,
-  list(palette = "FF0000"),
+  list(palette<- "FF0000"),
   "edges"
 )
 ```
@@ -3370,16 +3370,16 @@ Note that the empty image into which you paint the features needs to be cast pri
 ```{r}
 # Paint the edges with different colors, display.
 outlines <- empty$paint(
-  featureCollection = ecoregions,
-  color = "BIOME_NUM",
-  width = 4
+  featureCollection<- ecoregions,
+  color<- "BIOME_NUM",
+  width<- 4
 )
 
 palette <- c("FF0000", "00FF00", "0000FF")
 
 Map$addLayer(
   outlines,
-  list(palette = palette, max = 14),
+  list(palette<- palette, max<- 14),
   "different color edges"
 )
 ```
@@ -3393,13 +3393,13 @@ Both the color and width with which the boundaries are drawn can be set with pro
 ```{r}
 # Paint the edges with different colors and widths.
 outlines <- empty$paint(
-  featureCollection = ecoregions,
-  color = "BIOME_NUM",
-  width = "NNH"
+  featureCollection<- ecoregions,
+  color<- "BIOME_NUM",
+  width<- "NNH"
 )
 Map$addLayer(
   outlines,
-  list(palette = palette, max = 14),
+  list(palette<- palette, max<- 14),
   "different color, width edges"
 )
 ```
@@ -3413,12 +3413,12 @@ If the `width` parameter is not provided, the interior of the features is painte
 ```{r}
 # Paint the interior of the polygons with different colors.
 fills <- empty$paint(
-  featureCollection = ecoregions,
-  color = "BIOME_NUM"
+  featureCollection<- ecoregions,
+  color<- "BIOME_NUM"
 )
 Map$addLayer(
   fills,
-  list(palette = palette, max = 14),
+  list(palette<- palette, max<- 14),
   "colored fills"
 )
 ```
@@ -3437,8 +3437,8 @@ filledOutlines <- empty$paint(ecoregions, "BIOME_NUM")$
 Map$addLayer(
   filledOutlines,
   list(
-    palette = c("000000", palette),
-    max = 14
+    palette<- c("000000", palette),
+    max<- 14
   ), "edges and fills"
 )
 ```
@@ -3540,7 +3540,7 @@ sheds <- ee$FeatureCollection("USGS/WBD/2017/HUC06")
 
 # This function computes the feature's geometry area and adds it as a property.
 addArea <- function(feature) {
-  return(feature$set(list(lareaHa = feature$geometry()$area()$divide(100 * 100))))
+  return(feature$set(list(lareaHa<- feature$geometry()$area()$divide(100 * 100))))
 }
 
 # Map the area getting function over the FeatureCollection.
@@ -3569,7 +3569,7 @@ getCentroid <- function(feature) {
 centroids <- sheds$map(getCentroid)
 
 # Display the results.
-Map$addLayer(centroids, list(color = "FF0000"), "centroids")
+Map$addLayer(centroids, list(color<- "FF0000"), "centroids")
 ```
 
 </center>
@@ -3661,7 +3661,7 @@ Interpolation from vector to raster in Earth Engine creates an `Image` from a `F
 
 ### Inverse Distance Weighted Interpolation {-}
 
-The inverse distance weighting (IDW) function in Earth Engine is based on the method described by [Basso et al. (1999)](https://ieeexplore.ieee.org/abstract/document/805606). An additional control parameter is added in the form of a decay factor (`gamma`) on the inverse distance. Other parameters include the mean and standard deviation of the property to interpolate and the maximum range distance over which to interpolate. The following example creates an interpolated surface of [methane concentration](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S5P_OFFL_L3_CH4) to fill spatial gaps in the original raster dataset. The `FeatureCollection` is generated by sampling a two-week methane composite.
+The inverse distance weighting (IDW) function in Earth Engine is based on the method described by [Basso et al. (1999)](https:#ieeexplore.ieee.org/abstract/document/805606). An additional control parameter is added in the form of a decay factor (`gamma`) on the inverse distance. Other parameters include the mean and standard deviation of the property to interpolate and the maximum range distance over which to interpolate. The following example creates an interpolated surface of [methane concentration](https:#developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S5P_OFFL_L3_CH4) to fill spatial gaps in the original raster dataset. The `FeatureCollection` is generated by sampling a two-week methane composite.
 
 ```{r}
 # Import two weeks of S5P methane and composite by mean.
@@ -3685,42 +3685,42 @@ aoi <-
 # Sample the methane composite to generate a FeatureCollection.
 samples <- ch4$addBands(ee$Image$pixelLonLat())$
   sample(
-  region = aoi, numPixels = 1500,
-  scale = 1000, projection = "EPSG:4326"
+  region<- aoi, numPixels<- 1500,
+  scale<- 1000, projection<- "EPSG:4326"
 )$
   map(function(sample) {
   lat <- sample$get("latitude")
   lon <- sample$get("longitude")
   ch4 <- sample$get("ch4")
-  return(ee$Feature(ee$Geometry$Point(c(lon, lat)), list(ch4 = ch4)))
+  return(ee$Feature(ee$Geometry$Point(c(lon, lat)), list(ch4<- ch4)))
 })
 
 # Combine mean and standard deviation reducers for efficiency.
 combinedReducer <- ee$Reducer$mean()$combine(
-  reducer2 = ee$Reducer$stdDev(),
-  sharedInputs = TRUE
+  reducer2<- ee$Reducer$stdDev(),
+  sharedInputs<- TRUE
 )
 
 # Estimate global mean and standard deviation from the points.
 stats <- samples$reduceColumns(
-  reducer = combinedReducer,
-  selectors = list("ch4")
+  reducer<- combinedReducer,
+  selectors<- list("ch4")
 )
 
 # Do the interpolation, valid to 70 kilometers.
 interpolated <- samples$inverseDistance(
-  range = 7e4,
-  propertyName = "ch4",
-  mean = stats$get("mean"),
-  stdDev = stats$get("stdDev"),
-  gamma = 0.3
+  range<- 7e4,
+  propertyName<- "ch4",
+  mean<- stats$get("mean"),
+  stdDev<- stats$get("stdDev"),
+  gamma<- 0.3
 )
 
 # Define visualization arguments.
 band_viz <- list(
-  min = 1800,
-  max = 1900,
-  palette = c(
+  min<- 1800,
+  max<- 1900,
+  palette<- c(
     "0D0887", "5B02A3", "9A179B", "CB4678",
     "EB7852", "FBB32F", "F0F921"
   )
@@ -3740,7 +3740,7 @@ Note that, as specified by the `range` parameter, the interpolation only exists 
 
 ### Kriging {-}
 
-[Kriging](https://en.wikipedia.org/wiki/Kriging) is an interpolation method that uses a modeled estimate of [semi-variance](https://en.wikipedia.org/wiki/Semivariance) to create an image of interpolated values that is an optimal combination of the values at known locations. The Kriging estimator requires parameters that describe the shape of a [semi-variogram](https://en.wikipedia.org/wiki/Variogram) fit to the known data points. These parameters are illustrated by Figure 1.
+[Kriging](https:#en.wikipedia.org/wiki/Kriging) is an interpolation method that uses a modeled estimate of [semi-variance](https:#en.wikipedia.org/wiki/Semivariance) to create an image of interpolated values that is an optimal combination of the values at known locations. The Kriging estimator requires parameters that describe the shape of a [semi-variogram](https:#en.wikipedia.org/wiki/Variogram) fit to the known data points. These parameters are illustrated by Figure 1.
 
 <center>
 <img src="./images/chapter_05/figure_fea_01.png" width=95%>
@@ -3762,23 +3762,23 @@ geometry <- ee$Geometry$Rectangle(c(-65.60, 31.75, -52.18, 43.12))
 
 # Sample the SST image at 1000 random locations.
 samples <- sst$addBands(ee$Image$pixelLonLat())$
-  sample(region = geometry, numPixels = 1000)$
+  sample(region<- geometry, numPixels<- 1000)$
   map(function(sample) {
   lat <- sample$get("latitude")
   lon <- sample$get("longitude")
   sst <- sample$get("sst")
-  ee$Feature(ee$Geometry$Point(list(lon, lat)), list(sst = sst))
+  ee$Feature(ee$Geometry$Point(list(lon, lat)), list(sst<- sst))
 })
 
 # Interpolate SST from the sampled points.
 interpolated <- samples$kriging(
-  propertyName = "sst",
-  shape = "exponential",
-  range = 100 * 1000,
-  sill = 1.0,
-  nugget = 0.1,
-  maxDistance = 100 * 1000,
-  reducer = "mean"
+  propertyName<- "sst",
+  shape<- "exponential",
+  range<- 100 * 1000,
+  sill<- 1.0,
+  nugget<- 0.1,
+  maxDistance<- 100 * 1000,
+  reducer<- "mean"
 )
 
 colors <- c(
@@ -3787,7 +3787,7 @@ colors <- c(
   "FF3700", "C30000", "790000"
 )
 
-vis <- list(min = -3, max = 40, palette = colors)
+vis <- list(min<- -3, max<- 40, palette<- colors)
 
 Map$setCenter(-60.029, 36.457, 5)
 Map$addLayer(interpolated, vis, "Interpolated") |
@@ -3855,14 +3855,14 @@ image <- ee$Image("LANDSAT/LC08/C01/T1/LC08_044034_20140318")
 
 # Combine the mean and standard deviation reducers.
 reducers <- ee$Reducer$mean()$combine(
-  reducer2 = ee$Reducer$stdDev(),
-  sharedInputs = TRUE
+  reducer2<- ee$Reducer$stdDev(),
+  sharedInputs<- TRUE
 )
 
 # Use the combined reducer to get the mean and SD of the image.
 stats <- image$reduceRegion(
-  reducer = reducers,
-  bestEffort = TRUE
+  reducer<- reducers,
+  bestEffort<- TRUE
 )
 
 # Display the dictionary of band means and SDs.
@@ -3896,8 +3896,8 @@ median <- collection$reduce(ee$Reducer$median())
 
 # The output is an Image.  Add it to the map.
 vis_param <- list(
-  bands = c("B4_median", "B3_median", "B2_median"),
-  gamma = 1.6
+  bands<- c("B4_median", "B3_median", "B2_median"),
+  gamma<- 1.6
 )
 Map$setCenter(-122.3355, 37.7924, 9)
 Map$addLayer(median, vis_param)
@@ -3925,7 +3925,7 @@ maxValue <- image$reduce(ee$Reducer$max())
 
 # Display the result.
 Map$centerObject(image, 10)
-Map$addLayer(maxValue, list(max = 13000), "Maximum value image")
+Map$addLayer(maxValue, list(max<- 13000), "Maximum value image")
 ```
 
 </center>
@@ -3957,10 +3957,10 @@ region <- ee$Feature(ee$FeatureCollection("EPA/Ecoregions/2013/L3")$
 
 # Reduce the region. The region parameter is the Feature geometry.
 meanDictionary <- image$reduceRegion(
-  reducer = ee$Reducer$mean(),
-  geometry = region$geometry(),
-  scale = 30,
-  maxPixels = 1e9
+  reducer<- ee$Reducer$mean(),
+  geometry<- region$geometry(),
+  scale<- 30,
+  maxPixels<- 1e9
 )
 
 # The result is a Dictionary.  Print it.
@@ -3996,11 +3996,11 @@ affine <- c(0.00026949458523585647, 0, -180, 0, -0.00026949458523585647, 86.0000
 
 # Perform the reduction, print the result.
 print(image$reduceRegion(
-  reducer = ee$Reducer$mean(),
-  geometry = region$geometry(),
-  crs = "EPSG:4326",
-  crsTransform = affine,
-  maxPixels = 1e9
+  reducer<- ee$Reducer$mean(),
+  geometry<- region$geometry(),
+  crs<- "EPSG:4326",
+  crsTransform<- affine,
+  maxPixels<- 1e9
 )$getInfo())
 ```
 
@@ -4031,9 +4031,9 @@ maineCounties <- ee$FeatureCollection("TIGER/2016/Counties")$
 
 # Add reducer output to the Features in the collection.
 maineMeansFeatures <- image$reduceRegions(
-  collection = maineCounties,
-  reducer = ee$Reducer$mean(),
-  scale = 30
+  collection<- maineCounties,
+  reducer<- ee$Reducer$mean(),
+  scale<- 30
 )
 
 # Print the first feature, to illustrate the result.
@@ -4072,8 +4072,8 @@ naipNDVI <- naip$normalizedDifference(c("N", "R"))
 
 # Compute standard deviation (SD) as texture of the NDVI.
 texture <- naipNDVI$reduceNeighborhood(
-  reducer = ee$Reducer$stdDev(),
-  kernel = ee$Kernel$circle(7)
+  reducer<- ee$Reducer$stdDev(),
+  kernel<- ee$Kernel$circle(7)
 )
 
 # Display the results.
@@ -4085,12 +4085,12 @@ Map$addLayer(
 )
 Map$addLayer(
   naipNDVI,
-  list(min = -1, max = 1, palette = c("FF0000", "00FF00")),
+  list(min<- -1, max<- 1, palette<- c("FF0000", "00FF00")),
   "NDVI"
 )
 Map$addLayer(
   texture,
-  list(min = 0, max = 0.3),
+  list(min<- 0, max<- 0.3),
   "SD of NDVI"
 )
 ```
@@ -4108,16 +4108,16 @@ To reduce properties of features in a `FeatureCollection`, use `featureCollectio
 ```{r}
 # Make a toy FeatureCollection.
 aFeatureCollection <- ee$FeatureCollection(c(
-  ee$Feature(NULL, list(foo = 1, weight = 1)),
-  ee$Feature(NULL, list(foo = 2, weight = 2)),
-  ee$Feature(NULL, list(foo = 3, weight = 3))
+  ee$Feature(NULL, list(foo<- 1, weight<- 1)),
+  ee$Feature(NULL, list(foo<- 2, weight<- 2)),
+  ee$Feature(NULL, list(foo<- 3, weight<- 3))
 ))
 
 # Compute a weighted mean and display it.
 print(aFeatureCollection$reduceColumns(
-  reducer = ee$Reducer$mean(),
-  selectors = list("foo"),
-  weightSelectors = list("weight")
+  reducer<- ee$Reducer$mean(),
+  selectors<- list("foo"),
+  weightSelectors<- list("weight")
 )$getInfo())
 ```
 
@@ -4147,8 +4147,8 @@ properties <- c("pop10", "housing10")
 sums <- benton$
   filter(ee$Filter$notNull(properties))$
   reduceColumns(
-    reducer = ee$Reducer$sum()$`repeat`(2),
-    selectors = properties
+    reducer<- ee$Reducer$sum()$`repeat`(2),
+    selectors<- properties
 )
 
 # Print the resultant Dictionary.
@@ -4187,13 +4187,13 @@ zones <- zones$updateMask(zones$neq(0))
 
 # Convert the zones of the thresholded nightlights to vectors.
 vectors <- zones$addBands(nl2012)$reduceToVectors(
-  geometry = japan,
-  crs = nl2012$projection(),
-  scale = 1000,
-  geometryType = "polygon",
-  eightConnected = FALSE,
-  labelProperty = "zone",
-  reducer = ee$Reducer$mean()
+  geometry<- japan,
+  crs<- nl2012$projection(),
+  scale<- 1000,
+  geometryType<- "polygon",
+  eightConnected<- FALSE,
+  labelProperty<- "zone",
+  reducer<- ee$Reducer$mean()
 )
 
 # Make a display image for the vectors, add it to the map.
@@ -4203,12 +4203,12 @@ display <- ee$Image(0)$updateMask(0)$paint(vectors, "000000", 3)
 Map$setCenter(139.6225, 35.712, 9)
 Map$addLayer(
   zones,
-  list(min = 1, max = 3, palette = c("0000FF", "00FF00", "FF0000")),
+  list(min<- 1, max<- 3, palette<- c("0000FF", "00FF00", "FF0000")),
   "raster"
 ) +
   Map$addLayer(
     display,
-    list(palette = "000000"),
+    list(palette<- "000000"),
     "vectors"
   )
 ```
@@ -4235,16 +4235,16 @@ counties <- ee$FeatureCollection("TIGER/2018/Counties")
 landAreaImg <- counties$
   filter(ee$Filter$notNull(list("ALAND")))$
   reduceToImage(
-  properties = list("ALAND"),
-  reducer = ee$Reducer$first()
+  properties<- list("ALAND"),
+  reducer<- ee$Reducer$first()
 )
 
 # Display the county land area image.
 Map$setCenter(-99.976, 40.38, 5)
 Map$addLayer(landAreaImg, list(
-  min = 3e8,
-  max = 1.5e10,
-  palette = c("FCFDBF", "FDAE78", "EE605E", "B63679", "711F81", "2C105C")
+  min<- 3e8,
+  max<- 1.5e10,
+  palette<- c("FCFDBF", "FDAE78", "EE605E", "B63679", "711F81", "2C105C")
 ))
 ```
 
@@ -4271,10 +4271,10 @@ sums <- blocks$
   ee$Filter$neq("housing10", list())
 ))$
   reduceColumns(
-  selectors = c("pop10", "housing10", "statefp10"),
-  reducer = ee$Reducer$sum()$`repeat`(2)$group(
-    groupField = 2,
-    groupName = "state-code"
+  selectors<- c("pop10", "housing10", "statefp10"),
+  reducer<- ee$Reducer$sum()$`repeat`(2)$group(
+    groupField<- 2,
+    groupName<- "state-code"
   )
 )
 
@@ -4306,13 +4306,13 @@ nlDiff <- nl2012$subtract(nl2001)$addBands(landcover)
 
 # Grouped a mean 'reducer': change of nightlights by land cover category.
 means <- nlDiff$reduceRegion(
-  reducer = ee$Reducer$mean()$group(
-    groupField = 1,
-    groupName = "code"
+  reducer<- ee$Reducer$mean()$group(
+    groupField<- 1,
+    groupName<- "code"
   ),
-  geometry = region$geometry(),
-  scale = 1000,
-  maxPixels = 1e8
+  geometry<- region$geometry(),
+  scale<- 1000,
+  maxPixels<- 1e8
 )
 
 # Print the resultant Dictionary.
@@ -4338,17 +4338,17 @@ ndwi <- image$normalizedDifference(c("B3", "B5"))
 # Compute the weighted mean of the NDWI image clipped to the region.
 weighted <- ndwi$clip(geometry)$
   reduceRegion(
-  reducer = ee$Reducer$sum(),
-  geometry = geometry,
-  scale = 30
+  reducer<- ee$Reducer$sum(),
+  geometry<- geometry,
+  scale<- 30
 )$get("nd")
 
 # Compute the UN-weighted mean of the NDWI image clipped to the region.
 unweighted <- ndwi$clip(geometry)$
   reduceRegion(
-  reducer = ee$Reducer$sum()$unweighted(),
-  geometry = geometry,
-  scale = 30
+  reducer<- ee$Reducer$sum()$unweighted(),
+  geometry<- geometry,
+  scale<- 30
 )$get("nd")
 
 # Observe the difference between weighted and unweighted reductions.
@@ -4400,7 +4400,7 @@ Earth Engine has several methods for performing linear regression using reducers
   - `ee$Reducer$robustLinearRegression()`
   - `ee$Reducer$ridgeRegression()`
 
-The simplest linear regression reducer is `linearFit()` which computes the least squares estimate of a linear function of one variable with a constant term. For a more flexible approach to linear modelling, use one of the linear regression reducers which allow for a variable number of independent and dependent variables. `linearRegression()` implements ordinary least squares regression(OLS). `robustLinearRegression()` uses a cost function based on regression residuals to iteratively de-weight outliers in the data ([O’Leary, 1990](http://epubs.siam.org/doi/abs/10.1137/0611032)). `ridgeRegression()` does linear regression with L2 regularization.
+The simplest linear regression reducer is `linearFit()` which computes the least squares estimate of a linear function of one variable with a constant term. For a more flexible approach to linear modelling, use one of the linear regression reducers which allow for a variable number of independent and dependent variables. `linearRegression()` implements ordinary least squares regression(OLS). `robustLinearRegression()` uses a cost function based on regression residuals to iteratively de-weight outliers in the data ([O’Leary, 1990](http:#epubs.siam.org/doi/abs/10.1137/0611032)). `ridgeRegression()` does linear regression with L2 regularization.
 
 Regression analysis with these methods is suitable for reducing `ee$ImageCollection`, `ee$Image`, `ee$FeatureCollection`, and `ee$List` objects. The following examples demonstrate an application for each. Note that `linearRegression()`, `robustLinearRegression()`, and `ridgeRegression()` all have the same input and output structures, but `linearFit()` expects a two-band input (X followed by Y) and `ridgeRegression()` has an additional parameter (`lambda`, optional) and output (`pValue`).
 
@@ -4416,7 +4416,7 @@ createTimeBand <- function(image) {
   image$addBands(image$metadata("system:time_start")$divide(1e18))
 }
 
-# createTimeBand = function(image) .
+# createTimeBand<- function(image) .
 #   # Scale milliseconds by a large constant to avoid very small slope.
 #   # in the linear regression output.
 #   image$addBands(image$metadata('system:time_start')$divide(1e18).
@@ -4435,9 +4435,9 @@ linearFit <- collection$select(c("system:time_start", "pr_mean"))$
 # Display the results.
 Map$setCenter(-100.11, 40.38, 5)
 Map$addLayer(
-  eeObject = linearFit,
-  visParams = list(min = 0, max = c(-0.9, 8e-5, 1), bands = c("scale", "offset", "scale")),
-  name = "fit"
+  eeObject<- linearFit,
+  visParams<- list(min<- 0, max<- c(-0.9, 8e-5, 1), bands<- c("scale", "offset", "scale")),
+  name<- "fit"
 )
 ```
 
@@ -4478,16 +4478,16 @@ collection <- ee$ImageCollection("NASA/NEX-DCP30_ENSEMBLE_STATS")$
 # Compute ordinary least squares regression coefficients.
 linearRegression <- collection$reduce(
   ee$Reducer$linearRegression(
-    numX = 2,
-    numY = 2
+    numX<- 2,
+    numY<- 2
   )
 )
 
 # Compute robust linear regression coefficients.
 robustLinearRegression <- collection$reduce(
   ee$Reducer$robustLinearRegression(
-    numX = 2,
-    numY = 2
+    numX<- 2,
+    numY<- 2
   )
 )
 
@@ -4506,20 +4506,20 @@ rlrImage <- robustLinearRegression$select("coefficients")$arrayFlatten(bandNames
 Map$setCenter(-100.11, 40.38, 5)
 Map$addLayer(
   lrImage,
-  list(min = 0, max = c(-0.9, 8e-5, 1), bands = c("time_precip", "constant_precip", "time_precip")), "OLS"
+  list(min<- 0, max<- c(-0.9, 8e-5, 1), bands<- c("time_precip", "constant_precip", "time_precip")), "OLS"
 )
 
 # Compare the results at a specific point:
 cat("OLS estimates:", unlist(lrImage$reduceRegion(
-  reducer = ee$Reducer$first(),
-  geometry = ee$Geometry$Point(c(-96.0, 41.0)),
-  scale = 1000
+  reducer<- ee$Reducer$first(),
+  geometry<- ee$Geometry$Point(c(-96.0, 41.0)),
+  scale<- 1000
 )$getInfo()))
 
 cat("Robust estimates:", unlist(rlrImage$reduceRegion(
-  reducer = ee$Reducer$first(),
-  geometry = ee$Geometry$Point(c(-96.0, 41.0)),
-  scale = 1000
+  reducer<- ee$Reducer$first(),
+  geometry<- ee$Geometry$Point(c(-96.0, 41.0)),
+  scale<- 1000
 )$getInfo()))
 ```
 
@@ -4553,9 +4553,9 @@ imgRegress <- img$select(c("B5", "B6"))
 # Calculate regression coefficients for the set of pixels intersecting the
 # above defined region using reduceRegion with ee.Reducer.linearFit().
 linearFit <- imgRegress$reduceRegion(
-  reducer = ee$Reducer$linearFit(),
-  geometry = sanFrancisco,
-  scale = 30
+  reducer<- ee$Reducer$linearFit(),
+  geometry<- sanFrancisco,
+  scale<- 30
 )
 
 # Inspect the results.
@@ -4578,8 +4578,8 @@ img <- ee$Image("LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318")
 # Create a new image that is the concatenation of three images: a constant,
 # the SWIR1 band, and the SWIR2 band.
 constant <- ee$Image(1)
-xVar <- img$select("B5")
-yVar <- img$select("B6")
+x<- img$select("B5")
+y<- img$select("B6")
 imgRegress <- ee$Image$cat(constant, xVar, yVar)
 
 # Calculate regression coefficients for the set of pixels intersecting the
@@ -4588,12 +4588,12 @@ imgRegress <- ee$Image$cat(constant, xVar, yVar)
 # are the first two bands in the stack numY is set as 1 because there is only
 # one dependent variable (SWIR2) and it follows as band three in the stack.
 linearRegression <- imgRegress$reduceRegion(
-  reducer = ee$Reducer$linearRegression(
-    numX = 2,
-    numY = 1
+  reducer<- ee$Reducer$linearRegression(
+    numX<- 2,
+    numY<- 1
   ),
-  geometry = sanFrancisco,
-  scale = 30
+  geometry<- sanFrancisco,
+  scale<- 30
 )
 
 # Convert the coefficients array to a list.
@@ -4632,8 +4632,8 @@ aoi <- s2ImgSwir1$geometry()$intersection(l8ImgSwir1$geometry())
 # Get a set of 1000 random points from within the aoi. A feature collection
 # is returned.
 sample <- ee$FeatureCollection$randomPoints(
-  region = aoi,
-  points = 1000
+  region<- aoi,
+  points<- 1000
 )
 
 # Combine the SWIR1 bands from each image into a single image.
@@ -4643,8 +4643,8 @@ swir1Bands <- s2ImgSwir1$select("B11")$
 
 # Sample the SWIR1 bands using the sample point feature collection.
 imgSamp <- swir1Bands$sampleRegions(
-  collection = sample,
-  scale = 30
+  collection<- sample,
+  scale<- 30
 )$
   # Add a constant property to each feature to be used as an independent variable.
   map(function(feature) {
@@ -4656,11 +4656,11 @@ imgSamp <- swir1Bands$sampleRegions(
 # because there is a single dependent variable: 'l8_swir1'. Cast the resulting
 # object to an ee.Dictionary for easy access to the properties.
 linearRegression <- ee$Dictionary(imgSamp$reduceColumns(
-  reducer = ee$Reducer$linearRegression(
-    numX = 2,
-    numY = 1
+  reducer<- ee$Reducer$linearRegression(
+    numX<- 2,
+    numY<- 1
   ),
-  selectors = c("constant", "s2_swir1", "l8_swir1")
+  selectors<- c("constant", "s2_swir1", "l8_swir1")
 ))
 
 # Convert the coefficients array to a list.
@@ -4673,13 +4673,13 @@ slope <- ee$List(coefList$get(1))$get(0) # slope
 # Gather the SWIR1 values from the point sample into a list of lists.
 props <- ee$List(c("s2_swir1", "l8_swir1"))
 regressionVarsList <- ee$List(imgSamp$reduceColumns(
-  reducer = ee$Reducer$toList()$`repeat`(props$size()),
-  selectors = props
+  reducer<- ee$Reducer$toList()$`repeat`(props$size()),
+  selectors<- props
 )$get("list"))
 ```
 
 <center>
-<img src="./images/chapter_05/figure_red_10.png" width=90%>
+<img src="./images/chapter_05/figure_red_10.png" width=95%>
 </center>
 
 Figure 10. Scatter plot and least squares linear regression line for a sample of pixels representing Sentinel-2 and Landsat 8 SWIR1 TOA reflectance.
@@ -4759,8 +4759,8 @@ listsVarColumns <- ee$List(list(
 # object to an ee.Dictionary for easy access to the properties.
 linearRegression <- ee$Dictionary(
   listsVarColumns$reduce(ee$Reducer$linearRegression(
-    numX = 2,
-    numY = 1
+    numX<- 2,
+    numY<- 1
   )))
 
 # Convert the coefficients array to a list.
@@ -4799,38 +4799,43 @@ Joins are used to combine elements from different collections (e.g. `ImageCollec
 
 A simple join returns elements from the `primary` collection that match any element in the `secondary` collection according to the match condition in the filter. To perform a simple join, use an `ee$Join$simple()`. This might be useful for finding the common elements among different collections or filtering one collection by another. For example, consider two image collections which (might) have some matching elements, where “matching” is defined by the condition specified in a filter. For example, let matching mean the image IDs are equal. Since the matching images in both collections are the same, use a simple join to discover this set of matching images:
 
-```{js}
-// Load a Landsat 8 image collection at a point of interest.
-var collection = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
-    .filterBounds(ee.Geometry.Point(-122.09, 37.42));
+```{r}
+# Load a Landsat 8 image collection at a point of interest.
+collection <- ee$ImageCollection("LANDSAT/LC08/C01/T1_TOA")$
+  filterBounds(ee$Geometry$Point(-122.09, 37.42))
 
-// Define start and end dates with which to filter the collections.
-var april = '2014-04-01';
-var may = '2014-05-01';
-var june = '2014-06-01';
-var july = '2014-07-01';
+# Define start and end dates with which to filter the collections.
+april <- "2014-04-01"
+may <- "2014-05-01"
+june <- "2014-06-01"
+july <- "2014-07-01"
 
-// The primary collection is Landsat images from April to June.
-var primary = collection.filterDate(april, june);
+# The primary collection is Landsat images from April to June.
+primary <- collection$filterDate(april, june)
 
-// The secondary collection is Landsat images from May to July.
-var secondary = collection.filterDate(may, july);
+# The secondary collection is Landsat images from May to July.
+secondary <- collection$filterDate(may, july)
 
-// Use an equals filter to define how the collections match.
-var filter = ee.Filter.equals({
-  leftField: 'system:index',
-  rightField: 'system:index'
-});
+# Use an equals filter to define how the collections match.
+filter <- ee$Filter$equals(
+  leftField<- "system:index",
+  rightField<- "system:index"
+)
 
-// Create the join.
-var simpleJoin = ee.Join.simple();
+# Create the join.
+simpleJoin <- ee$Join$simple()
 
-// Apply the join.
-var simpleJoined = simpleJoin.apply(primary, secondary, filter);
+# Apply the join.
+simpleJoined <- simpleJoin$apply(primary, secondary, filter)
 
-// Display the result.
-print('Simple join: ', simpleJoined);
+# Display the result.
+cat("Simple join: ", unlist(ee_get_date_ic(simpleJoined)))
 ```
+
+<pre translate="no" dir="ltr">
+Image LANDSAT/LC8_L1T_TOA/LC80440342014125LGN00 (12 bands)
+Image LANDSAT/LC8_L1T_TOA/LC80440342014141LGN00 (12 bands)
+</pre>
 
 In the previous example, observe that the collections to join temporally overlap by about a month. Note that when this join is applied, the output will be an `ImageCollection` with only the matching images in the `primary` collection.
 
@@ -4838,13 +4843,21 @@ In the previous example, observe that the collections to join temporally overlap
 
 Suppose that the purpose of the join is to retain all images in the `primary` collection that are not in the `secondary` collection. You can perform this type of inverted join using `ee$Join$inverted()`. Using the filter, `primary` and `secondary` collections as defined in the [simple join example](), specify the inverted join as:
 
-```{js}
-// Define the join.
-var invertedJoin = ee.Join.inverted();
+```{r}
+# Define the join.
+invertedJoin <- ee$Join$inverted()
 
-// Apply the join.
-var invertedJoined = invertedJoin.apply(primary, secondary, filter);
+# Apply the join.
+invertedJoined <- invertedJoin$apply(primary, secondary, filter)
+
+# Display the result.
+ee_get_date_ic(invertedJoined)
 ```
+
+<pre translate="no" dir="ltr">
+Image LANDSAT/LC8_L1T_TOA/LC80440342014093LGN00 (12 bands)
+Image LANDSAT/LC8_L1T_TOA/LC80440342014109LGN00 (12 bands)
+</pre>
 
 The inverted join contains the images from April 3 and April 19, indicating the images that are present in the `primary` collection but not in the `secondary` collection.
 
@@ -4854,81 +4867,81 @@ To enumerate all matches between the elements of two collections, use an `ee$Joi
 
 Join examples using `ImageCollection` inputs apply without modification to `FeatureCollection` inputs. It is also possible to join a `FeatureCollection` to an `ImageCollection` and vice versa. Consider the following toy example of inner join:
 
-```{js}
-// Create the primary collection.
-var primaryFeatures = ee.FeatureCollection([
-  ee.Feature(null, {foo: 0, label: 'a'}),
-  ee.Feature(null, {foo: 1, label: 'b'}),
-  ee.Feature(null, {foo: 1, label: 'c'}),
-  ee.Feature(null, {foo: 2, label: 'd'}),
-]);
+```{r}
+# Create the primary collection.
+primaryFeatures <- ee$FeatureCollection(list(
+  ee$Feature(NULL, list(foo<- 0, label<- "a")),
+  ee$Feature(NULL, list(foo<- 1, label<- "b")),
+  ee$Feature(NULL, list(foo<- 1, label<- "c")),
+  ee$Feature(NULL, list(foo<- 2, label<- "d"))
+))
 
-// Create the secondary collection.
-var secondaryFeatures = ee.FeatureCollection([
-  ee.Feature(null, {bar: 1, label: 'e'}),
-  ee.Feature(null, {bar: 1, label: 'f'}),
-  ee.Feature(null, {bar: 2, label: 'g'}),
-  ee.Feature(null, {bar: 3, label: 'h'}),
-]);
+# Create the secondary collection.
+secondaryFeatures <- ee$FeatureCollection(list(
+  ee$Feature(NULL, list(bar<- 1, label<- "e")),
+  ee$Feature(NULL, list(bar<- 1, label<- "f")),
+  ee$Feature(NULL, list(bar<- 2, label<- "g")),
+  ee$Feature(NULL, list(bar<- 3, label<- "h"))
+))
 
-// Use an equals filter to specify how the collections match.
-var toyFilter = ee.Filter.equals({
-  leftField: 'foo',
-  rightField: 'bar'
-});
+# Use an equals filter to specify how the collections match.
+toyFilter <- ee$Filter$equals(
+  leftField<- "foo",
+  rightField<- "bar"
+)
 
-// Define the join.
-var innerJoin = ee.Join.inner('primary', 'secondary');
+# Define the join.
+innerJoin <- ee$Join$inner("primary", "secondary")
 
-// Apply the join.
-var toyJoin = innerJoin.apply(primaryFeatures, secondaryFeatures, toyFilter);
+# Apply the join.
+toyJoin <- innerJoin$apply(primaryFeatures, secondaryFeatures, toyFilter)
 
-// Print the result.
-print('Inner join toy example:', toyJoin);
+# Print the result.
+cat("Inner join toy example:", unlist(toyJoin$getInfo()))
 ```
 
 In the previous example, notice that the relationship between the tables is defined in the filter, which indicates that fields `‘foo’` and `‘bar’` are the join fields. An inner join is then specified and applied to the collections. Inspect the output and observe that each possible match is represented as one `Feature`.
 
 For a motivated example, consider joining MODIS `ImageCollection` objects. MODIS quality data are sometimes stored in a separate collection from the image data, so an inner join is convenient for joining the two collections in order to apply the quality data. In this case, the image acquisition times are identical, so an equals filter handles the job of specifying this relationship between the two collections:
 
-```{js}
-// Make a date filter to get images in this date range.
-var dateFilter = ee.Filter.date('2014-01-01', '2014-02-01');
+```{r}
+# Make a date filter to get images in this date range.
+dateFilter <- ee$Filter$date("2014-01-01", "2014-02-01")
 
-// Load a MODIS collection with EVI data.
-var mcd43a4 = ee.ImageCollection('MODIS/MCD43A4_006_EVI')
-    .filter(dateFilter);
+# Load a MODIS collection with EVI data.
+mcd43a4 <- ee$ImageCollection("MODIS/MCD43A4_006_EVI")$
+  filter(dateFilter)
 
-// Load a MODIS collection with quality data.
-var mcd43a2 = ee.ImageCollection('MODIS/006/MCD43A2')
-    .filter(dateFilter);
+# Load a MODIS collection with quality data.
+mcd43a2 <- ee$ImageCollection("MODIS/006/MCD43A2")$
+  filter(dateFilter)
 
-// Define an inner join.
-var innerJoin = ee.Join.inner();
+# Define an inner join.
+innerJoin <- ee$Join$inner()
 
-// Specify an equals filter for image timestamps.
-var filterTimeEq = ee.Filter.equals({
-  leftField: 'system:time_start',
-  rightField: 'system:time_start'
-});
+# Specify an equals filter for image timestamps.
+filterTimeEq <- ee$Filter$equals(
+  leftField<- "system:time_start",
+  rightField<- "system:time_start"
+)
 
-// Apply the join.
-var innerJoinedMODIS = innerJoin.apply(mcd43a4, mcd43a2, filterTimeEq);
+# Apply the join.
+innerJoinedMODIS <- innerJoin$apply(mcd43a4, mcd43a2, filterTimeEq)
 
-// Display the join result: a FeatureCollection.
-print('Inner join output:', innerJoinedMODIS);
+# Display the join result: a FeatureCollection.
+cat("Inner join output:", unlist(innerJoinedMODIS$getInfo()))
 ```
 
 To make use of the joined images in the output `FeatureCollection`, `map()` a combining function over the output. For example, the matching images can be stacked together such that the quality bands are added to the image data:
 
-```{js}
-// Map a function to merge the results in the output FeatureCollection.
-var joinedMODIS = innerJoinedMODIS.map(function(feature) {
-  return ee.Image.cat(feature.get('primary'), feature.get('secondary'));
-});
+```{r}
+# Map a function to merge the results in the output FeatureCollection.
+joinedMODIS <- innerJoinedMODIS$map(function(feature) {
+  ee$Image$cat(feature$get("primary"), feature$get("secondary"))
+})
 
-// Print the result of merging.
-print('Inner join, merged bands:', joinedMODIS);
+# Print the result of merging.
+ee_get_date_ic(joinedMODIS)
 ```
 
 Although this function is mapped over a `FeatureCollection`, the result is an `ImageCollection`. Each image in the resultant `ImageCollection` has all the bands of the images in the primary collection (in this example just `‘EVI’`) and all the bands of the matching image in the secondary collection (the quality bands).
@@ -4937,45 +4950,45 @@ Although this function is mapped over a `FeatureCollection`, the result is an `I
 
 Saving joins are one way of representing one-to-many relationships in Earth Engine. Unlike an [inner join](), a saving join stores matches from the `secondary` collection as a named property of the features in the `primary` collection. To save all such matches, use an `ee$Join$saveAll()`. If there is a one-to-many relationship, a `saveAll()` join stores all matching features as an `ee$List`. Unmatched elements in the `primary` collection are dropped. For example, suppose there is a need to get all MODIS imagery acquired within two days of each Landsat image in a collection. This example uses a `saveAll()` join for that purpose:
 
-```{js}
-// Load a primary collection: Landsat imagery.
-var primary = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
-    .filterDate('2014-04-01', '2014-06-01')
-    .filterBounds(ee.Geometry.Point(-122.092, 37.42));
+```{r}
+# Load a primary collection: Landsat imagery.
+primary <- ee$ImageCollection("LANDSAT/LC08/C01/T1_TOA")$
+  filterDate("2014-04-01", "2014-06-01")$
+  filterBounds(ee$Geometry$Point(-122.092, 37.42))
 
-// Load a secondary collection: MODIS imagery.
-var modSecondary = ee.ImageCollection('MODIS/006/MOD09GA')
-    .filterDate('2014-03-01', '2014-07-01');
+# Load a secondary collection: MODIS imagery.
+modSecondary <- ee$ImageCollection("MODIS/006/MOD09GA")$
+  filterDate("2014-03-01", "2014-07-01")
 
-// Define an allowable time difference: two days in milliseconds.
-var twoDaysMillis = 2 * 24 * 60 * 60 * 1000;
+# Define an allowable time difference: two days in milliseconds.
+twoDaysMillis <- 2 * 24 * 60 * 60 * 1000
 
-// Create a time filter to define a match as overlapping timestamps.
-var timeFilter = ee.Filter.or(
-  ee.Filter.maxDifference({
-    difference: twoDaysMillis,
-    leftField: 'system:time_start',
-    rightField: 'system:time_end'
-  }),
-  ee.Filter.maxDifference({
-    difference: twoDaysMillis,
-    leftField: 'system:time_end',
-    rightField: 'system:time_start'
-  })
-);
+# Create a time filter to define a match as overlapping timestamps.
+timeFilter <- ee$Filter$Or(
+  ee$Filter$maxDifference(
+    difference<- twoDaysMillis,
+    leftField<- "system:time_start",
+    rightField<- "system:time_end"
+  ),
+  ee$Filter$maxDifference(
+    difference<- twoDaysMillis,
+    leftField<- "system:time_end",
+    rightField<- "system:time_start"
+  )
+)
 
-// Define the join.
-var saveAllJoin = ee.Join.saveAll({
-  matchesKey: 'terra',
-  ordering: 'system:time_start',
-  ascending: true
-});
+# Define the join.
+saveAllJoin <- ee$Join$saveAll(
+  matchesKey<- "terra",
+  ordering<- "system:time_start",
+  ascending<- TRUE
+)
 
-// Apply the join.
-var landsatModis = saveAllJoin.apply(primary, modSecondary, timeFilter);
+# Apply the join.
+landsatModis <- saveAllJoin$apply(primary, modSecondary, timeFilter)
 
-// Display the result.
-print('Join.saveAll:', landsatModis);
+# Display the result.
+ee_get_date_ic(landsatModis)
 ```
 
 In this example, note that the `secondary` MODIS collection is pre-filtered to be chronologically similar to the `primary` Landsat collection for efficiency. To compare the Landsat acquisition time to the MODIS composite time, which has a daily range, the filter compares the endpoints of the image timestamps. The join is defined with the name of the property used to store the list of matches for each Landsat image (`‘terra’`) and optional parameter to sort the list of matches by the `system:time_start` property
@@ -4986,33 +4999,33 @@ Inspection of the result indicates that images within the primary collection hav
 
 To save only the best match for each element in a collection, use an `ee$Join$saveBest()`. The `saveBest()` join functions in an equivalent way to the `saveAll()` join, except for each element in the `primary` collection, it saves the element from the `secondary` collection with the best match. Unmatched elements in the primary collection are dropped. Suppose the intention is to find a meteorological image closest in time to each Landsat image in the `primary` collection. To perform this join, the `ee$Filter` must be redefined for a single join condition (combined filters will not work with `saveBest()` since it is ambiguous how to combine ranks from multiple sub-Filters):
 
-```{js}
-// Load a primary collection: Landsat imagery.
-var primary = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
-    .filterDate('2014-04-01', '2014-06-01')
-    .filterBounds(ee.Geometry.Point(-122.092, 37.42));
+```{r}
+# Load a primary collection: Landsat imagery.
+primary <- ee$ImageCollection("LANDSAT/LC08/C01/T1_TOA")$
+  filterDate("2014-04-01", "2014-06-01")$
+  filterBounds(ee$Geometry$Point(-122.092, 37.42))
 
-// Load a secondary collection: GRIDMET meteorological data
-var gridmet = ee.ImageCollection('IDAHO_EPSCOR/GRIDMET');
+# Load a secondary collection: GRIDMET meteorological data
+gridmet <- ee$ImageCollection("IDAHO_EPSCOR/GRIDMET")
 
-// Define a max difference filter to compare timestamps.
-var maxDiffFilter = ee.Filter.maxDifference({
-  difference: 2 * 24 * 60 * 60 * 1000,
-  leftField: 'system:time_start',
-  rightField: 'system:time_start'
-});
+# Define a max difference filter to compare timestamps.
+maxDiffFilter <- ee$Filter$maxDifference(
+  difference<- 2 * 24 * 60 * 60 * 1000,
+  leftField<- "system:time_start",
+  rightField<- "system:time_start"
+)
 
-// Define the join.
-var saveBestJoin = ee.Join.saveBest({
-  matchKey: 'bestImage',
-  measureKey: 'timeDiff'
-});
+# Define the join.
+saveBestJoin <- ee$Join$saveBest(
+  matchKey<- "bestImage",
+  measureKey<- "timeDiff"
+)
 
-// Apply the join.
-var landsatMet = saveBestJoin.apply(primary, gridmet, maxDiffFilter);
+# Apply the join.
+landsatMet <- saveBestJoin$apply(primary, gridmet, maxDiffFilter)
 
-// Print the result.
-print(landsatMet);
+# Print the result.
+ee_get_date_ic(landsatMet)
 ```
 
 Note that a `saveBest()` join defines the name of the property with which to store the best match (`‘bestImage’`) and the name of the property with which to store the goodness of the match metric (`‘timeDiff’`). Inspection of the results indicates that a matching DAYMET image has been added to the property `bestImage` for each Landsat scene in the `primary` collection. Each of these DAYMET images has the property `timeDiff` indicating the time difference in milliseconds between the DAYMET image and the Landsat image, which will be minimum among the DAYMET images passing the condition in the filter.
@@ -5025,80 +5038,73 @@ To save only the first match for each element in a collection, use an `ee$Join$s
 
 Collections can be joined by spatial location as well as by property values. To join based on spatial location, use a `withinDistance()` filter with `.geo` join fields specified. The `.geo` field indicates that the item's geometry is to be used to compute the distance metric. For example, consider the task of finding all [power plants]() within 100 kilometers of Yosemite National Park, USA. For that purpose, use a filter on the geometry fields, with the maximum distance set to 100 kilometers using the `distance` parameter:
 
-```{js}
-// Load a primary collection: protected areas (Yosemite National Park).
-var primary = ee.FeatureCollection("WCMC/WDPA/current/polygons")
-  .filter(ee.Filter.eq('NAME', 'Yosemite National Park'));
+```{r}
+# Load a primary collection: protected areas (Yosemite National Park).
+primary <- ee$FeatureCollection("WCMC/WDPA/current/polygons")$
+  filter(ee$Filter$eq("NAME", "Yosemite National Park"))
 
-// Load a secondary collection: power plants.
-var powerPlants = ee.FeatureCollection('WRI/GPPD/power_plants');
+# Load a secondary collection: power plants.
+powerPlants <- ee$FeatureCollection("WRI/GPPD/power_plants")
 
-// Define a spatial filter, with distance 100 km.
-var distFilter = ee.Filter.withinDistance({
-  distance: 100000,
-  leftField: '.geo',
-  rightField: '.geo',
-  maxError: 10
-});
+# Define a spatial filter, with distance 100 km.
+distFilter <- ee$Filter$withinDistance(
+  distance<- 100000,
+  leftField<- ".geo",
+  rightField<- ".geo",
+  maxError<- 10
+)
 
-// Define a saveAll join.
-var distSaveAll = ee.Join.saveAll({
-  matchesKey: 'points',
-  measureKey: 'distance'
-});
+# Define a saveAll join.
+distSaveAll <- ee$Join$saveAll(
+  matchesKey<- "points",
+  measureKey<- "distance"
+)
 
-// Apply the join.
-var spatialJoined = distSaveAll.apply(primary, powerPlants, distFilter);
+# Apply the join.
+spatialJoined <- distSaveAll$apply(primary, powerPlants, distFilter)
 
-// Print the result.
-print(spatialJoined);
+# Print the result.
+print(spatialJoined$getInfo())
 ```
 
 Note that the previous example joins a `FeatureCollection` to another `FeatureCollection`. The `saveAll()` join sets a property (`points`) on each feature in the `primary` collection which stores a list of the points within 100 km of the feature. The distance of each point to the feature is stored in the `distance` property of each joined point.
 
 Spatial joins can also be used to identify which features in one collection intersect those in another. For example, consider two feature collections: a `primary` collection containing polygons representing the boundaries of US states, a `secondary` collection containing point locations representing power plants. Suppose there is need to determine the number intersecting each state. This can be accomplished with a spatial join as follows:
 
-```{js}
-// Load the primary collection: US state boundaries.
-var states = ee.FeatureCollection('TIGER/2018/States');
+```{r}
+# Load the primary collection: US state boundaries.
+states <- ee$FeatureCollection("TIGER/2018/States")
 
-// Load the secondary collection: power plants.
-var powerPlants = ee.FeatureCollection('WRI/GPPD/power_plants');
+# Load the secondary collection: power plants.
+powerPlants <- ee$FeatureCollection("WRI/GPPD/power_plants")
 
-// Define a spatial filter as geometries that intersect.
-var spatialFilter = ee.Filter.intersects({
-  leftField: '.geo',
-  rightField: '.geo',
-  maxError: 10
-});
+# Define a spatial filter as geometries that intersect.
+spatialFilter <- ee$Filter$intersects(
+  leftField<- ".geo",
+  rightField<- ".geo",
+  maxError<- 10
+)
 
-// Define a save all join.
-var saveAllJoin = ee.Join.saveAll({
-  matchesKey: 'power_plants',
-});
+# Define a save all join.
+saveAllJoin <- ee$Join$saveAll(
+  matchesKey<- "power_plants"
+)
 
-// Apply the join.
-var intersectJoined = saveAllJoin.apply(states, powerPlants, spatialFilter);
+# Apply the join.
+intersectJoined <- saveAllJoin$apply(states, powerPlants, spatialFilter)
 
-// Add power plant count per state as a property.
-intersectJoined = intersectJoined.map(function(state) {
-  // Get "power_plant" intersection list, count how many intersected this state.
-  var nPowerPlants = ee.List(state.get('power_plants')).size();
-  // Return the state feature with a new property: power plant count.
-  return state.set('n_power_plants', nPowerPlants);
-});
+# Add power plant count per state as a property.
+intersectJoined <- intersectJoined$map(function(state) {
+  # Get "power_plant" intersection list, count how many intersected this state.
+  nPowerPlants <- ee$List(state$get("power_plants"))$size()
+  # Return the state feature with a new property: power plant count.
+  state$set("n_power_plants", nPowerPlants)
+})
 
-// Make a bar chart for the number of power plants per state.
-var chart = ui.Chart.feature.byFeature(intersectJoined, 'NAME', 'n_power_plants')
-  .setChartType('ColumnChart')
-  .setSeriesNames({n_power_plants: 'Power plants'})
-  .setOptions({
-    title: 'Power plants per state',
-    hAxis: {title: 'State'},
-    vAxis: {title: 'Frequency'}});
+# Make a bar chart for the number of power plants per state.
 
-// Print the chart to the console.
-print(chart);
+
+# Print the chart to the console.
 ```
 
 In the previous example, note that the intersects() filter doesn’t store a distance as the withinDistance() filter does. The output should look something like Figure 1.
@@ -5125,7 +5131,7 @@ ee_Initialize()
 Earth Engine represents 1-D vectors, 2-D matrices, 3-D cubes, and higher dimensional hypercubes with the `ee$Array` type. Arrays are a flexible data structure, but in exchange for the power they offer, they do not scale as well as other data structures in Earth Engine. If the problem can be solved without using arrays, the result will be computed faster and more efficiently. But if the problem requires a higher dimension model, flexible linear algebra, or anything else arrays are uniquely suited to, you can use the `Array` class.
 
 <center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/-qo8L5GmKO0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https:#www.youtube.com/embed/-qo8L5GmKO0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </center>
 
 ### Array dimension, shape and size {-}
@@ -5134,25 +5140,26 @@ The dimension of an array refers to the number of axes along which the underlyin
 
 ## Arrays and Array Images {-}
 
-Arrays in Earth Engine are constructed from lists of numbers and lists of lists. The degree of nesting determines the number of dimensions. To get started with a simple, motivated example, consider the following example of an `Array` created from Landsat 8 tasseled cap (TC) coefficients ([Baig et al., 2014](http://dx.doi.org/10.1080/2150704X.2014.915434)):
+Arrays in Earth Engine are constructed from lists of numbers and lists of lists. The degree of nesting determines the number of dimensions. To get started with a simple, motivated example, consider the following example of an `Array` created from Landsat 8 tasseled cap (TC) coefficients ([Baig et al., 2014](http:#dx.doi.org/10.1080/2150704X.2014.915434)):
 
-```{js}
-// Create an Array of Tasseled Cap coefficients.
-var coefficients = ee.Array([
-  [0.3029, 0.2786, 0.4733, 0.5599, 0.508, 0.1872],
-  [-0.2941, -0.243, -0.5424, 0.7276, 0.0713, -0.1608],
-  [0.1511, 0.1973, 0.3283, 0.3407, -0.7117, -0.4559],
-  [-0.8239, 0.0849, 0.4396, -0.058, 0.2013, -0.2773],
-  [-0.3294, 0.0557, 0.1056, 0.1855, -0.4349, 0.8085],
-  [0.1079, -0.9023, 0.4119, 0.0575, -0.0259, 0.0252],
-]);
+```{r}
+# Create an Array of Tasseled Cap coefficients.
+coefficients <- ee$Array(list(
+  c(0.3029, 0.2786, 0.4733, 0.5599, 0.508, 0.1872),
+  c(-0.2941, -0.243, -0.5424, 0.7276, 0.0713, -0.1608),
+  c(0.1511, 0.1973, 0.3283, 0.3407, -0.7117, -0.4559),
+  c(-0.8239, 0.0849, 0.4396, -0.058, 0.2013, -0.2773),
+  c(-0.3294, 0.0557, 0.1056, 0.1855, -0.4349, 0.8085),
+  c(0.1079, -0.9023, 0.4119, 0.0575, -0.0259, 0.0252)
+))
+
 ```
 
 Confirm that this is a 6x6, 2-D Array using `length()`, which will return the lengths of each axis:
 
-```{js}
-// Print the dimensions.
-print(coefficients.length()); //    [6,6]
+```{r}
+# Print the dimensions.
+print(coefficients$length()$getInfo()) #    [1]: 6 6
 ```
 
 The following table illustrates the arrangement of the matrix entries along the 0-axis and the 1-axis:
@@ -5186,16 +5193,16 @@ The following table illustrates the arrangement of the matrix entries along the 
 
 The indices on the left of the table indicate positions along the 0-axis. The n-th element within each list on the 0-axis is in the n-th position along the 1-axis. For example, the entry at coordinate [3,1] of the array is 0.0849. Suppose ‘greenness’ is the TC component of interest. You can get the greenness sub-matrix using `slice()`:
 
-```{js}
-// Get the 1x6 greenness slice, display it.
-var greenness = coefficients.slice({axis: 0, start: 1, end: 2, step: 1});
-print(greenness);
+```{r}
+# Get the 1x6 greenness slice, display it.
+greenness <- coefficients$slice(axis<- 0, start<- 1, end<- 2, step<- 1)
+print(greenness$getInfo())
 ```
 
 The 2-D greenness matrix should look something like:
 
-```{js}
-[[-0.2941,-0.243,-0.5424,0.7276,0.0713,-0.1608]]
+```{r}
+c(-0.2941,-0.243,-0.5424,0.7276,0.0713,-0.1608)
 ```
 
 Observe that the `start` and `end` parameters of `slice()` correspond to the 0-axis indices displayed in the table (`start` is inclusive and `end` is exclusive).
@@ -5204,90 +5211,121 @@ Observe that the `start` and `end` parameters of `slice()` correspond to the 0-a
 
 To get a greenness image, matrix multiply the bands of a Landsat 8 image by the greenness matrix. To do that, first convert the multi-band Landsat image into an “Array Image”, where each pixel is an `Array` of band values. For example:
 
-```{js}
-// Load a Landsat 8 image, select the bands of interest.
-var image = ee.Image('LANDSAT/LC08/C02/T1_TOA/LC08_044034_20140318')
-  .select(['B2', 'B3', 'B4', 'B5', 'B6', 'B7']);
+```{r}
+# Load a Landsat 8 image, select the bands of interest.
+image <- ee$Image('LANDSAT/LC08/C02/T1_TOA/LC08_044034_20140318')$
+  select(c('B2', 'B3', 'B4', 'B5', 'B6', 'B7'))
 
-// Make an Array Image, with a 1-D Array per pixel.
-var arrayImage1D = image.toArray();
+# Make an Array Image, with a 1-D Array per pixel.
+arrayImage1D <- image$toArray()
 
-// Make an Array Image with a 2-D Array per pixel, 6x1.
-var arrayImage2D = arrayImage1D.toArray(1);
+# Make an Array Image with a 2-D Array per pixel, 6x1.
+arrayImage2D <- arrayImage1D$toArray(1)
 ```
 
 In this example, note that `toArray()` converts `image` to an array image in which each pixel is a 1-D vector, the entries of which correspond to the 6 values at the corresponding positions in the bands of `image`. An array image of 1-D vectors created in this manner has no concept of 2-D shape. To perform 2-D only operations such as matrix multiplication, convert it into a 2-D array per-pixel image with `toArray(1)`. In each pixel of the 2-D array image, there is a 6x1 matrix of band values. To see this, consider the following toy example:
 
-```{js}
-var array1D = ee.Array([1, 2, 3]);              // [1,2,3]
-var array2D = ee.Array.cat([array1D], 1);     // [[1],[2],[3]]
+```{r}
+array1D <- ee$Array(c(1, 2, 3)) # 1,2,3
+array2D <- ee$Array$cat(list(array1D), 1) # [[1],[2],[3]]
 ```
 
 Observe that the `array1D` vector varies along the 0-axis. The `array2D` matrix does as well, but it’s got an extra dimension. Calling `toArray(1)` on the array image is like calling `cat(bandVector, 1)` on every pixel. Using the 2-D array image, left multiply by an image where each pixel contains a 2-D matrix of greenness coefficients:
 
-```{js}
-// Do a matrix multiplication: 1x6 times 6x1.
-// Cast the greenness Array to an Image prior to multiplication.
-var greennessArrayImage = ee.Image(greenness).matrixMultiply(arrayImage2D);
+```{r}
+# Do a matrix multiplication: 1x6 times 6x1.
+# Cast the greenness Array to an Image prior to multiplication.
+greennessArrayImage <- ee$Image(greenness)$matrixMultiply(arrayImage2D)
 ```
 
 The result is a new array image where every pixel is the 1x1 matrix that results from matrix multiplying the 1x6 greenness matrix (left) and the 6x1 band matrix (right). For display purposes, convert to a regular, one-band image with `arrayGet()`:
 
-```{js}
-// Get the result from the 1x1 array in each pixel of the 2-D array image.
-var greennessImage = greennessArrayImage.arrayGet([0, 0]);
+```{r}
+# Get the result from the 1x1 array in each pixel of the 2-D array image.
+greennessImage <- greennessArrayImage$arrayGet(c(0, 0))
 
-// Display the input imagery with the greenness result.
-Map.setCenter(-122.3, 37.562, 10);
-Map.addLayer(image, {bands: ['B5', 'B4', 'B3'], min: 0, max: 0.5}, 'image');
-Map.addLayer(greennessImage, {min: -0.1, max: 0.13}, 'greenness');
+# Display the input imagery with the greenness result.
+Map$setCenter(-122.3, 37.562, 10)
+Map$addLayer(
+  image,
+  list(bands = c("B5", "B4", "B3"), min = 0, max = 0.5),
+  "image"
+) |
+  Map$addLayer(
+    greennessImage,
+    list(min = -0.1, max = 0.13),
+    "greenness"
+  )
 ```
+
+<center>
+<img src="./images/chapter_05/figure_ar_code_01.png" width=95%>
+</center>
 
 Here is a complete example, which uses the entire coefficients array to compute multiple tasseled cap components at once and display the result:
 
-```{js}
-// Define an Array of Tasseled Cap coefficients.
-var coefficients = ee.Array([
-  [0.3029, 0.2786, 0.4733, 0.5599, 0.508, 0.1872],
-  [-0.2941, -0.243, -0.5424, 0.7276, 0.0713, -0.1608],
-  [0.1511, 0.1973, 0.3283, 0.3407, -0.7117, -0.4559],
-  [-0.8239, 0.0849, 0.4396, -0.058, 0.2013, -0.2773],
-  [-0.3294, 0.0557, 0.1056, 0.1855, -0.4349, 0.8085],
-  [0.1079, -0.9023, 0.4119, 0.0575, -0.0259, 0.0252],
-]);
+```{r}
+# Define an Array of Tasseled Cap coefficients.
+coefficients <- ee$Array(list(
+  c(0.3029, 0.2786, 0.4733, 0.5599, 0.508, 0.1872),
+  c(-0.2941, -0.243, -0.5424, 0.7276, 0.0713, -0.1608),
+  c(0.1511, 0.1973, 0.3283, 0.3407, -0.7117, -0.4559),
+  c(-0.8239, 0.0849, 0.4396, -0.058, 0.2013, -0.2773),
+  c(-0.3294, 0.0557, 0.1056, 0.1855, -0.4349, 0.8085),
+  c(0.1079, -0.9023, 0.4119, 0.0575, -0.0259, 0.0252)
+))
 
-// Load a Landsat 8 image, select the bands of interest.
-var image = ee.Image('LANDSAT/LC08/C02/T1_TOA/LC08_044034_20140318')
-  .select(['B2', 'B3', 'B4', 'B5', 'B6', 'B7']);
+# Load a Landsat 8 image, select the bands of interest.
+image <- ee$Image("LANDSAT/LC08/C02/T1_TOA/LC08_044034_20140318")$
+  select(c("B2", "B3", "B4", "B5", "B6", "B7"))
 
-// Make an Array Image, with a 1-D Array per pixel.
-var arrayImage1D = image.toArray();
+# Make an Array Image, with a 1-D Array per pixel.
+arrayImage1D <- image$toArray()
 
-// Make an Array Image with a 2-D Array per pixel, 6x1.
-var arrayImage2D = arrayImage1D.toArray(1);
+# Make an Array Image with a 2-D Array per pixel, 6x1.
+arrayImage2D <- arrayImage1D$toArray(1)
 
-// Do a matrix multiplication: 6x6 times 6x1.
-var componentsImage = ee.Image(coefficients)
-  .matrixMultiply(arrayImage2D)
-  // Get rid of the extra dimensions.
-  .arrayProject([0])
-  .arrayFlatten(
-    [['brightness', 'greenness', 'wetness', 'fourth', 'fifth', 'sixth']]);
+# Do a matrix multiplication: 6x6 times 6x1.
+componentsImage <- ee$Image(coefficients)$
+  matrixMultiply(arrayImage2D)$
+  # Get rid of the extra dimensions.
+  arrayProject(list(0))$
+  arrayFlatten(
+  list(
+    c(
+      "brightness",
+      "greenness",
+      "wetness",
+      "fourth",
+      "fifth",
+      "sixth"
+    )
+  )
+)
 
-// Display the first three bands of the result and the input imagery.
-var vizParams = {
-  bands: ['brightness', 'greenness', 'wetness'],
-  min: -0.1, max: [0.5, 0.1, 0.1]
-};
-Map.setCenter(-122.3, 37.562, 10);
-Map.addLayer(image, {bands: ['B5', 'B4', 'B3'], min: 0, max: 0.5}, 'image');
-Map.addLayer(componentsImage, vizParams, 'components');
+# Display the first three bands of the result and the input imagery.
+vizParams <- list(
+  bands = list("brightness", "greenness", "wetness"),
+  min = -0.1,
+  max = c(0.5, 0.1, 0.1)
+)
+Map$setCenter(-122.3, 37.562, 10)
+Map$addLayer(
+  image,
+  list(bands = c("B5", "B4", "B3"), min = 0, max = 0.5),
+  "image"
+) |
+  Map$addLayer(
+    componentsImage,
+    vizParams,
+    "components"
+  )
 ```
 
 Note that when getting bands from an array image, first get rid of the extra dimensions with project(), then convert it back to a regular image with `arrayFlatten()`. The output should look something like:
 
 <center>
-<img src="./images/chapter_05/figure_arr_01.png" width=90%>
+<img src="./images/chapter_05/figure_arr_01.png" width=95%>
 </center>
 
 Figure 1. Tasseled cap components “brightness” (red), “greenness” (green), and “wetness” (blue).
@@ -5296,157 +5334,150 @@ Figure 1. Tasseled cap components “brightness” (red), “greenness” (green
 
 Earth Engine supports array transformations such as transpose, inverse and pseudo-inverse. As an example, consider an ordinary least squares (OLS) regression of a time series of images. In the following example, an image with bands for predictors and a response is converted to an array image, then “solved” to obtain least squares coefficients estimates three ways. First, assemble the image data and convert to arrays:
 
-```{js}
-// Scales and masks Landsat 8 surface reflectance images.
-function prepSrL8(image) {
-  // Develop masks for unwanted pixels (fill, cloud, cloud shadow).
-  var qaMask = image.select('QA_PIXEL').bitwiseAnd(parseInt('11111', 2)).eq(0);
-  var saturationMask = image.select('QA_RADSAT').eq(0);
-
-  // Apply the scaling factors to the appropriate bands.
-  var opticalBands = image.select('SR_B.').multiply(0.0000275).add(-0.2);
-  var thermalBands = image.select('ST_B.*').multiply(0.00341802).add(149.0);
-
-  // Replace the original bands with the scaled ones and apply the masks.
-  return image.addBands(opticalBands, null, true)
-      .addBands(thermalBands, null, true)
-      .updateMask(qaMask)
-      .updateMask(saturationMask);
+```{r}
+# This function masks the input with a threshold on the simple cloud score.
+cloudMask <- function(img) {
+  cloudscore <- ee$Algorithms$Landsat$simpleCloudScore(img)$select("cloud")
+  img$updateMask(cloudscore$lt(50))
 }
 
-// Load a Landsat 8 surface reflectance image collection.
-var collection = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2')
-  // Filter to get only two years of data.
-  .filterDate('2019-04-01', '2021-04-01')
-  // Filter to get only imagery at a point of interest.
-  .filterBounds(ee.Geometry.Point(-122.08709, 36.9732))
-  // Prepare images by mapping the prepSrL8 function over the collection.
-  .map(prepSrL8)
-  // Select NIR and red bands only.
-  .select(['SR_B5', 'SR_B4'])
-  // Sort the collection in chronological order.
-  .sort('system:time_start', true);
+# This function computes the predictors and the response from the input.
+makeVariables <- function(img) {
+  # Compute time of the image in fractional years relative to the Epoch.
+  year <- ee$Image(img$date()$difference(ee$Date("1970-01-01"), "year"))
+  # Compute the season in radians, one cycle per year.
+  season <- year$multiply(2 * base::pi)
+  # Return an image of the predictors followed by the response.
+  img$select()$
+    addBands(ee$Image(1))$
+    addBands(year$rename("t"))$
+    addBands(season$sin()$rename("sin"))$
+    addBands(season$cos()$rename("cos"))$
+    addBands(image$normalizedDifference()$rename("NDVI"))$
+    toFloat()
+}
 
-// This function computes the predictors and the response from the input.
-var makeVariables = function(image) {
-  // Compute time of the image in fractional years relative to the Epoch.
-  var year = ee.Image(image.date().difference(ee.Date('1970-01-01'), 'year'));
-  // Compute the season in radians, one cycle per year.
-  var season = year.multiply(2 * Math.PI);
-  // Return an image of the predictors followed by the response.
-  return image.select()
-    .addBands(ee.Image(1))                                  // 0. constant
-    .addBands(year.rename('t'))                             // 1. linear trend
-    .addBands(season.sin().rename('sin'))                   // 2. seasonal
-    .addBands(season.cos().rename('cos'))                   // 3. seasonal
-    .addBands(image.normalizedDifference().rename('NDVI'))  // 4. response
-    .toFloat();
-};
 
-// Define the axes of variation in the collection array.
-var imageAxis = 0;
-var bandAxis = 1;
+# Load a Landsat 5 image collection.
+collection <- ee$ImageCollection("LANDSAT/LT05/C01/T1_TOA")$
+  filterDate("2008-04-01", "2010-04-01")$
+  filterBounds(ee$Geometry$Point(-122.2627, 37.8735))$
+  map(cloudMask)$
+  select(c("B4", "B3"))$
+  sort("system:time_start", TRUE)
 
-// Convert the collection to an array.
-var array = collection.map(makeVariables).toArray();
+# Define the axes of variation in the collection array.
+imageAxis <- 0
+bandAxis <- 1
 
-// Check the length of the image axis (number of images).
-var arrayLength = array.arrayLength(imageAxis);
-// Update the mask to ensure that the number of images is greater than or
-// equal to the number of predictors (the linear model is solvable).
-array = array.updateMask(arrayLength.gt(4));
+# Convert the collection to an array.
+array <- collection$map(makeVariables)$toArray()
 
-// Get slices of the array according to positions along the band axis.
-var predictors = array.arraySlice(bandAxis, 0, 4);
-var response = array.arraySlice(bandAxis, 4);
+# Check the length of the image axis (number of images).
+arrayLength <- array$arrayLength(imageAxis)
+
+# Update the mask to ensure that the number of images is greater than or
+# equal to the number of predictors (the linear model is solveable).
+array <- array$updateMask(arrayLength$gt(4))
+
+# Get slices of the array according to positions along the band axis.
+predictors <- array$arraySlice(bandAxis, 0, 4)
+response <- array$arraySlice(bandAxis, 4)
 ```
 
 Note that `arraySlice()` returns all the images in the time series for the range of indices specified along the `bandAxis` (the 1-axis). At this point, matrix algebra can be used to solve for the OLS coefficients:
 
-```{js}
-// Compute coefficients the hard way.
-var coefficients1 = predictors.arrayTranspose().matrixMultiply(predictors)
-  .matrixInverse().matrixMultiply(predictors.arrayTranspose())
-    .matrixMultiply(response);
+```{r}
+# Compute coefficients the hard way.
+coefficients1 <- predictors$arrayTranspose()$matrixMultiply(predictors)$
+  matrixInverse()$matrixMultiply(predictors$arrayTranspose())$
+  matrixMultiply(response)
 ```
 
 Although this method works, it is inefficient and makes for difficult to read code. A better way is to use the `pseudoInverse()` method (`matrixPseudoInverse()` for an array image):
 
-```{js}
-// Compute coefficients the easy way.
-var coefficients2 = predictors.matrixPseudoInverse()
-  .matrixMultiply(response);
+```{r}
+# Compute coefficients the easy way.
+coefficients2 <- predictors$matrixPseudoInverse()$
+  matrixMultiply(response)
 ```
 
 From a readability and computational efficiency perspective, the best way to get the OLS coefficients is `solve()` (`matrixSolve()` for an array image). The `solve()` function determines how to best solve the system from characteristics of the inputs, using the pseudo-inverse for overdetermined systems, the inverse for square matrices and special techniques for nearly singular matrices:
 
-```{js}
-// Compute coefficients the easiest way.
-var coefficients3 = predictors.matrixSolve(response);
+```{r}
+# Compute coefficients the easiest way.
+coefficients3 <- predictors$matrixSolve(response)
 ```
 
 To get a multi-band image, project the array image into a lower dimensional space, then flatten it:
 
-```{js}
-// Turn the results into a multi-band image.
-var coefficientsImage = coefficients3
-  // Get rid of the extra dimensions.
-  .arrayProject([0])
-  .arrayFlatten([
-    ['constant', 'trend', 'sin', 'cos']
-]);
+```{r}
+# Turn the results into a multi-band image.
+coefficientsImage <- coefficients3$
+  # Get rid of the extra dimensions.
+  arrayProject(list(0))$
+  arrayFlatten(list(c("constant", "trend", "sin", "cos")))
+
+print(coefficientsImage$getInfo())
+Map$setCenter(-122.2627, 37.8735, 10)
+Map$addLayer(coefficientsImage, name = "coefficientsImage")
 ```
+
+<center>
+<img src="./images/chapter_05/figure_ar_code_02.png" width=95%>
+</center>
 
 Examine the outputs of the three methods and observe that the resultant matrix of coefficients is the same regardless of the solver. That `solve()` is flexible and efficient makes it a good choice for general purpose linear modeling.
 
 ## Eigen Analysis {-}
 
-The [principal components (PC) transform](http://en.wikipedia.org/wiki/Principal_component_analysis) (also known as the Karhunen-Loeve transform) is a spectral rotation that takes spectrally correlated image data and outputs uncorrelated data. The PC transform accomplishes this by diagonalizing the input band correlation matrix through Eigen-analysis. To do this in Earth Engine, use a covariance reducer on an array image and the `eigen()` command on the resultant covariance array. Consider the following function for that purpose (which is part of a [complete example]()):
+The [principal components (PC) transform](http:#en.wikipedia.org/wiki/Principal_component_analysis) (also known as the Karhunen-Loeve transform) is a spectral rotation that takes spectrally correlated image data and outputs uncorrelated data. The PC transform accomplishes this by diagonalizing the input band correlation matrix through Eigen-analysis. To do this in Earth Engine, use a covariance reducer on an array image and the `eigen()` command on the resultant covariance array. Consider the following function for that purpose (which is part of a [complete example]()):
 
-```{js}
-var getPrincipalComponents = function(centered, scale, region) {
-  // Collapse the bands of the image into a 1D array per pixel.
-  var arrays = centered.toArray();
+```{r}
+getPrincipalComponents <- function(centered, scale, region) {
+  # Collapse the bands of the image into a 1D array per pixel.
+  arrays <- centered$toArray()
 
-  // Compute the covariance of the bands within the region.
-  var covar = arrays.reduceRegion({
-    reducer: ee.Reducer.centeredCovariance(),
-    geometry: region,
-    scale: scale,
-    maxPixels: 1e9
-  });
+  # Compute the covariance of the bands within the region.
+  covar <- arrays$reduceRegion(
+    reducer = ee.Reducer.centeredCovariance(),
+    geometry = region,
+    scale = scale,
+    maxPixels = 1e9
+  )
 
-  // Get the 'array' covariance result and cast to an array.
-  // This represents the band-to-band covariance within the region.
-  var covarArray = ee.Array(covar.get('array'));
+  # Get the 'array' covariance result and cast to an array.
+  # This represents the band-to-band covariance within the region.
+  covarArray <- ee$Array(covar$get("array"))
 
-  // Perform an eigen analysis and slice apart the values and vectors.
-  var eigens = covarArray.eigen();
+  # Perform an eigen analysis and slice apart the values and vectors.
+  eigens <- covarArray$eigen()
 
-  // This is a P-length vector of Eigenvalues.
-  var eigenValues = eigens.slice(1, 0, 1);
-  // This is a PxP matrix with eigenvectors in rows.
-  var eigenVectors = eigens.slice(1, 1);
+  # This is a P-length vector of Eigenvalues.
+  eigenValues <- eigens$slice(1, 0, 1)
+  # This is a PxP matrix with eigenvectors in rows.
+  eigenVectors <- eigens$slice(1, 1)
 
-  // Convert the array image to 2D arrays for matrix computations.
-  var arrayImage = arrays.toArray(1);
+  # Convert the array image to 2D arrays for matrix computations.
+  arrayImage <- arrays$toArray(1)
 
-  // Left multiply the image array by the matrix of eigenvectors.
-  var principalComponents = ee.Image(eigenVectors).matrixMultiply(arrayImage);
+  # Left multiply the image array by the matrix of eigenvectors.
+  principalComponents <- ee$Image(eigenVectors)$matrixMultiply(arrayImage)
 
-  // Turn the square roots of the Eigenvalues into a P-band image.
-  var sdImage = ee.Image(eigenValues.sqrt())
-      .arrayProject([0]).arrayFlatten([getNewBandNames('sd')]);
+  # Turn the square roots of the Eigenvalues into a P-band image.
+  sdImage <- ee$Image(eigenValues$sqrt())$
+    arrayProject(list(0))$
+    arrayFlatten(list(getNewBandNames("sd")))
 
-  // Turn the PCs into a P-band image, normalized by SD.
-  return principalComponents
-      // Throw out an an unneeded dimension, [[]] -> [].
-      .arrayProject([0])
-      // Make the one band array image a multi-band image, [] -> image.
-      .arrayFlatten([getNewBandNames('pc')])
-      // Normalize the PCs by their SDs.
-      .divide(sdImage);
-};
+  # Turn the PCs into a P-band image, normalized by SD.
+  principalComponents$
+    # Throw out an an unneeded dimension.
+    arrayProject(list(0))$
+    # Make the one band array image a multi-band image.
+    arrayFlatten(list(getNewBandNames("pc")))$
+    # Normalize the PCs by their SDs.
+    divide(sdImage)
+}
 ```
 
 The input to the function is a mean zero image, a scale and a region over which to perform the analysis. Note that the input imagery first needs to be converted to a 1-D array image and then reduced using `ee$Reducer$centeredCovariance()`. The array returned by this reduction is the symmetric variance-covariance matrix of the input. Use the `eigen()` command to get the eigenvalues and eigenvectors of the covariance matrix. The matrix returned by `eigen()` contains the eigenvalues in the 0-th position of the 1-axis. As shown in the above function, use `slice()` to separate the eigenvalues and the eigenvectors. Each element along the 0-axis of the eigenVectors matrix is an eigenvector. As in the [tasseled cap (TC) example](), perform the transformation by matrix multiplying the `arrayImage` by the eigenvectors. In this example, each eigenvector multiplication results in a PC.
@@ -5455,75 +5486,54 @@ The input to the function is a mean zero image, a scale and a region over which 
 
 Array sorting is useful for obtaining custom quality mosaics which involve reducing a subset of image bands according to the values in a different band. The following example sorts by NDVI, then gets the mean of a subset of observations in the collection with the highest NDVI values:
 
-```{js}
-// Define a function that scales and masks Landsat 8 surface reflectance images
-// and adds an NDVI band.
-function prepSrL8(image) {
-  // Develop masks for unwanted pixels (fill, cloud, cloud shadow).
-  var qaMask = image.select('QA_PIXEL').bitwiseAnd(parseInt('11111', 2)).eq(0);
-  var saturationMask = image.select('QA_RADSAT').eq(0);
+```{r}
+# Define an arbitrary region of interest as a point.
+roi <- ee$Geometry$Point(-122.26032, 37.87187)
 
-  // Apply the scaling factors to the appropriate bands.
-  var opticalBands = image.select('SR_B.').multiply(0.0000275).add(-0.2);
-  var thermalBands = image.select('ST_B.*').multiply(0.00341802).add(149.0);
+# Use these bands.
+bandNames <- ee$List(c("B2", "B3", "B4", "B5", "B6", "B7", "B10", "B11"))
 
-  // Calculate NDVI.
-  var ndvi = opticalBands.normalizedDifference(['SR_B5', 'SR_B4'])
-      .rename('NDVI');
+# Load a Landsat 8 collection.
+collection <- ee$ImageCollection("LANDSAT/LC08/C01/T1_TOA")$
+  select(bandNames)$
+  filterBounds(roi)$
+  filterDate("2014-06-01", "2014-12-31")$
+  map(function(img) ee$Algorithms$Landsat$simpleCloudScore(img))
 
-  // Replace original bands with scaled bands, add NDVI band, and apply masks.
-  return image.addBands(opticalBands, null, true)
-      .addBands(thermalBands, null, true)
-      .addBands(ndvi)
-      .updateMask(qaMask)
-      .updateMask(saturationMask);
-}
+# Convert the collection to an array.
+array <- collection$toArray()
 
-// Define an arbitrary region of interest as a point.
-var roi = ee.Geometry.Point(-122.26032, 37.87187);
+# Label of the axes.
+imageAxis <- 0
+bandAxis <- 1
 
-// Load a Landsat 8 surface reflectance collection.
-var collection = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2')
-  // Filter to get only imagery at a point of interest.
-  .filterBounds(roi)
-  // Filter to get only six months of data.
-  .filterDate('2021-01-01', '2021-07-01')
-  // Prepare images by mapping the prepSrL8 function over the collection.
-  .map(prepSrL8)
-  // Select the bands of interest to avoid taking up unneeded memory.
-  .select('SR_B.|NDVI');
+# Get the cloud slice and the bands of interest.
+bands <- array$arraySlice(bandAxis, 0, bandNames$length())
+clouds <- array$arraySlice(bandAxis, bandNames$length())
 
-// Convert the collection to an array.
-var array = collection.toArray();
+# Sort by cloudiness.
+sorted <- bands$arraySort(clouds)
 
-// Label of the axes.
-var imageAxis = 0;
-var bandAxis = 1;
+# Get the least cloudy images, 20% of the total.
+numImages <- sorted$arrayLength(imageAxis)$multiply(0.2)$int()
+leastCloudy <- sorted$arraySlice(imageAxis, 0, numImages)
 
-// Get the NDVI slice and the bands of interest.
-var bandNames = collection.first().bandNames();
-var bands = array.arraySlice(bandAxis, 0, bandNames.length());
-var ndvi = array.arraySlice(bandAxis, -1);
+# Get the mean of the least cloudy images by reducing along the image axis.
+mean <- leastCloudy$arrayReduce(
+  reducer = ee$Reducer$mean(),
+  axes = list(imageAxis)
+)
 
-// Sort by descending NDVI.
-var sorted = bands.arraySort(ndvi.multiply(-1));
-
-// Get the highest 20% NDVI observations per pixel.
-var numImages = sorted.arrayLength(imageAxis).multiply(0.2).int();
-var highestNdvi = sorted.arraySlice(imageAxis, 0, numImages);
-
-// Get the mean of the highest 20% NDVI observations by reducing
-// along the image axis.
-var mean = highestNdvi.arrayReduce({
-  reducer: ee.Reducer.mean(),
-  axes: [imageAxis]
-});
-
-// Turn the reduced array image into a multi-band image for display.
-var meanImage = mean.arrayProject([bandAxis]).arrayFlatten([bandNames]);
-Map.centerObject(roi, 12);
-Map.addLayer(meanImage, {bands: ['SR_B6', 'SR_B5', 'SR_B4'], min: 0, max: 0.4});
+# Turn the reduced array image into a multi-band image for display.
+vizParams <- list("bands" = c("B5", "B4", "B2"), min = 0, max = 0.5)
+meanImage <- mean$arrayProject(list(bandAxis))$arrayFlatten(list(bandNames))
+Map$centerObject(ee$FeatureCollection(roi), zoom = 12)
+Map$addLayer(meanImage, vizParams, "Mean Image")
 ```
+
+<center>
+<img src="./images/chapter_05/figure_ar_code_03.png" width=95%>
+</center>
 
 As in the linear modeling example, separate the bands of interest from the sort index (NDVI) using `arraySlice()` along the band axis. Then sort the bands of interest by sort index using `arraySort()`. After the pixels have been sorted by descending NDVI, use `arraySlice()` along the `imageAxis` to get 20% of the highest NDVI pixels. Lastly, apply `arrayReduce()` along the `imageAxis` with a mean reducer to get the mean of the highest NDVI pixels. The final step converts the array image back to a multi-band image for display.
 
