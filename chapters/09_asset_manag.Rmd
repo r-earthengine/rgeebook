@@ -325,22 +325,41 @@ Export.video.toDrive({
 })
 ```
 
-Note that the frame rate and dimensions can be set from a dictionary of parameters passed to the export. Adjust these parameters to customize the video. Also note that the input `ImageCollection` is required to have 3-band (RGB), 8-bit images. In this example, the 8-bit, 3-band format is explicitly set. Alternatively, map a function which calls `image.visualize()` over the collection. See [the section on Visualization images]() for details. Video exports can take a significant amount of time to complete, so it's not unusual to see the export task running for an extended period.
+Note that the frame rate and dimensions can be set from a dictionary of parameters passed to the export. Adjust these parameters to customize the video. Also note that the input `ImageCollection` is required to have 3-band (RGB), 8-bit images. In this example, the 8-bit, 3-band format is explicitly set. Alternatively, map a function which calls `image$visualize()` over the collection. See [the section on Visualization images]() for details. Video exports can take a significant amount of time to complete, so it's not unusual to see the export task running for an extended period.
 
 ### to Cloud Storage {-}
 
-To export a video to Cloud Storage, use `Export.video.toCloudStorage()`. For example, using the `ImageCollection` from the previous example:
+To export a video to Cloud Storage, use `Export$video$toCloudStorage()`. For example, using the `ImageCollection` from the previous example:
 
 ```{r, eval=FALSE}
+# Load a Landsat 5 image collection.
+collection <- ee$ImageCollection('LANDSAT/LT05/C01/T1_TOA') %>% 
+  # San Francisco Bay.
+  ee$ImageCollection$filter(ee$Filter$eq('WRS_PATH', 44)) %>% 
+  ee$ImageCollection$filter(ee$Filter$eq('WRS_ROW', 34)) %>% 
+  # Filter cloudy scenes.
+  ee$ImageCollection$filter(ee$Filter$lt('CLOUD_COVER', 30)) %>% 
+  # Get 20 years of imagery.
+  ee$ImageCollection$filterDate('1991-01-01','2011-12-30') %>% 
+  # Need to have 3-band imagery for the video.
+  ee$ImageCollection$select(c('B4', 'B3', 'B2')) %>% 
+  # Need to make the data 8-bit.
+  ee$ImageCollection$map(function(image) {
+  return (image$multiply(512)$uint8())
+  })
+
+# Define an area to export.
+polygon = ee$Geometry$Rectangle(c(-122.7286, 37.6325, -122.0241, 37.9592))
+
 # Export video to cloud storage.
-Export.video.toCloudStorage({
-  collection: collection,
-  description: 'sfVideoExampleToCloud',
-  bucket: 'your-bucket-name',
-  dimensions: 720,
-  framesPerSecond: 12,
-  region: polygon
-})
+Export$video$toCloudStorage(list(
+  collection = collection,
+  description = 'sfVideoExampleToCloud',
+  bucket = 'your-bucket-name',
+  dimensions = 720,
+  framesPerSecond = 12,
+  region = polygon
+))
 ```
 
 ## Exporting maps {-}
@@ -370,14 +389,12 @@ There are four steps to follow:
 
 - (Recommended) Click the API Console link under the new key to set referrer restrictions. See [referrer and application restrictions]() for more details.
 
-
 [Create Maps Platform API Key]()
 
-
 <figure style="text-align: center">
-      <img alt="" src="./images/chapter_09/image_12.png" width="45%" style="vertical-align: top">
-      <span class="material-icons" style="vertical-align: top" aria-hidden="true" translate="no"> ► </span>
-      <img alt="" src="./images/chapter_09/image_13.png" width="45%" style="vertical-align: top">
+      <img alt="" src="./images/chapter_09/image_12.png" width="100%" style="vertical-align: top">
+      <span class="material-icons" style="vertical-align: top" aria-hidden="true" translate="no"> ▼ </span>
+      <img alt="" src="./images/chapter_09/image_13.png" width="100%" style="vertical-align: top">
 </figure>
 
 ### Adding Referrer Restrictions {-}
@@ -392,9 +409,9 @@ Referrer restrictions ensure that only the designated app(s) can use your key. Y
 
 - Hit Save. The "Saving..." indicator should appear.
 
-<center>
-![](../images/chapter_09/image_14.png){width=400, height=340}
-</center>
+|<img src="./images/chapter_09/image_14.png" width=100%>|
+|:------------:|
+| |
 
 ### To Cloud Storage {-}
 
@@ -410,43 +427,54 @@ accessibilityPalette <- c('f2fef8', 'defce1', 'c9f3bc', 'cbeca7', 'd6e793',
   '3a1453', '1b0c3c', '050526', '00030f', '000000')
 
 # Apply the color palette to the log of travel time.
-accessibilityVis <- {min: 0, max: 10, palette: accessibilityPalette}
+accessibilityVis <- list(
+  min = 0, 
+  max = 10, 
+  palette = accessibilityPalette)
 logAccessibility <- accessibility$where(accessibility$gt(0), accessibility$log())
 accessibilityRgb <- logAccessibility$visualize(accessibilityVis)
 
 # Composite onto a solid-color background to fill in the oceans.
-background <- ee$Image(0)$visualize({palette: c('11101e')})
+background <- ee$Image(0)$visualize(list(palette = c('11101e')))
 accessibilityBlended <- background$blend(accessibilityRgb)$updateMask(1)
+accessibility
 
 # Check the visualization.
-Map$addLayer(accessibilityBlended, {}, 'accessibilityBlended')
+Map$addLayer(
+  eeObject = accessibilityBlended,
+  visParams = list(),
+  name = "accessibilityBlended"
+)
 
 # Define an export region.
 exportRegion <- ee$Geometry$Rectangle(c(34, -3, 40, 1))
 Map$centerObject(exportRegion)
-Map$addLayer(exportRegion, {}, 'exportRegion')
+Map$addLayer(
+  eeObject = exportRegion,
+  visParams = list(),
+  name = "exportRegion"
+)
 
 # Export the visualization image as map tiles.
-Export$map$toCloudStorage({
+Export$map$toCloudStorage(list( 
   # All tiles that intersect the region get exported in their entirety.
   # Clip the image to prevent low resolution tiles from appearing outside
   # of the region.
-  image: accessibilityBlended$clip(exportRegion),
-  description: 'mapToCloudExample',
-  bucket: 'your-bucket-name',
-  maxZoom: 13,
-  region: exportRegion
-})
-
+  image = accessibilityBlended$clip(exportRegion),
+  description = 'mapToCloudExample',
+  bucket = 'your-bucket-name',
+  maxZoom = 13,
+  region = exportRegion
+))
 ```
 
 Note that this creates a new directory in the specified Cloud Storage bucket, named according to the **`description`** parameter by default. You can change the name of the directory or specify subdirectories with the **`path`** parameter.
 
 To allow public access (and Earth Engine app access) to your tiles, the exported files will be public by default (you are assumed to be the owner of the output bucket). If you are a writer on the specified output bucket (but not the owner), set **`writePublicTiles`** to **false** to use the output bucket's default object ACL. ACLs and CORS can be set from the **`writePublicTiles`** and **`bucketCorsUris`** parameters, respectively, or from the export dialog:
 
-<center>
-![](../images/chapter_09/image_15.png){width=372, height=396}
-</center>
+|<img src="./images/chapter_09/image_15.png" width=100%>|
+|:------------:|
+| |
 
 The **`Export.map.toCloudStorage()`** dialog.
 
