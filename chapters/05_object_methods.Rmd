@@ -2959,7 +2959,7 @@ Map$addLayer(
 )
 ```
 
-![](../images/chapter_05/figure_ioi.png){width=670px}
+![Cumulative anomalies](../images/chapter_05/figure_ioi.png){width=670px}
 
 ```{r, eval=FALSE}
 # Get the timestamp from the most recent image in the reference collection.
