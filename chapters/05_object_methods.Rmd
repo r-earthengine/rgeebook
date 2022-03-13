@@ -5255,7 +5255,7 @@ ee_Initialize()
 Earth Engine represents 1-D vectors, 2-D matrices, 3-D cubes, and higher dimensional hypercubes with the `ee$Array` type. Arrays are a flexible data structure, but in exchange for the power they offer, they do not scale as well as other data structures in Earth Engine. If the problem can be solved without using arrays, the result will be computed faster and more efficiently. But if the problem requires a higher dimension model, flexible linear algebra, or anything else arrays are uniquely suited to, you can use the `Array` class.
 
 <center>
-<iframe width="560" height="315" src="https:#www.youtube.com/embed/-qo8L5GmKO0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-qo8L5GmKO0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </center>
 
 ### Array dimension, shape and size {-}
