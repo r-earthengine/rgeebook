@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Visualization | Earth Engine with R</title>
+
+    <meta name="author" content="rgee team" />
+  
+   
+   <meta name="generator" content="placeholder" />
+  <meta property="og:title" content="Visualization | Earth Engine with R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Visualization | Earth Engine with R" />
+  
+  
+  
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script>
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet" />
+    <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script>
+    <script src="libs/bs3compat-0.3.1/transition.js"></script>
+    <script src="libs/bs3compat-0.3.1/tabs.js"></script>
+    <script src="libs/bs3compat-0.3.1/bs3compat.js"></script>
+    <link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet" />
+    <script src="libs/bs4_book-1.0.0/bs4_book.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-141212623-1');
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script>
+
+  <!-- CSS -->
+  
+</head>
+
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book">
+    <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+      </form>
+
+      <nav aria-label="Table of contents">
+        <h2>Table of contents</h2>
+        <div id="book-toc"></div>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="#">View book source <i class="fab fa-github"></i></a></li></p>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="col-sm-12 col-md-9 col-lg-7" id="content">
+<div id="visualization" class="section level1 unnumbered">
+<h1>Visualization</h1>
+<p>This section requires the next libraries:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="visualization.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgee)</span>
+<span id="cb20-2"><a href="visualization.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgeeExtra)</span>
+<span id="cb20-3"><a href="visualization.html#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="visualization.html#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ee_Initialize</span>()</span></code></pre></div>
+<div id="introduction" class="section level2 unnumbered">
+<h2>Introduction</h2>
+<p><a href="https://r-spatial.github.io/rgee/reference/Map.html"><strong>Map$addLayer(…)</strong></a> can be used to visualize a image. When you add a layer (ee$Image) to the map without any other settings, rgee automatically allocates the first three bands to red (R), green (G), and blue (B), in that order. The default stretch is determined by band data type (for example, floats are stretched in [0,1], whereas 16-bit data is stretched to [0-65536]), which may or may not be appropriate. You may specify visualization settings to <code>Map$addLayer(...)</code> to create desired visualization effects. The parameters are as follows:</p>
+<center>
+<style type="text/css">
+  .tg  {border-collapse:collapse;border-spacing:0;}
+  .tg td{border-bottom-width:1px;border-color:black;border-style:solid;border-top-width:1px;border-width:0px;
+    font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}
+  .tg th{border-bottom-width:1px;border-color:black;border-style:solid;border-top-width:1px;border-width:0px;
+    font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+  .tg .tg-abx8{background-color:#c0c0c0;font-weight:bold;text-align:left;vertical-align:top}
+  .tg .tg-uqo3{background-color:#efefef;text-align:center;vertical-align:top}
+  .tg .tg-8zwo{font-style:italic;text-align:left;vertical-align:top}
+  .tg .tg-0lax{text-align:left;vertical-align:top}
+  </style>
+<table class="tg" style="undefined;table-layout: fixed; width: 646px">
+<colgroup>
+<col style="width: 79.75px">
+<col style="width: 312.75px">
+<col style="width: 253.75px">
+</colgroup>
+<thead>
+<tr>
+<th class="tg-uqo3" colspan="3">
+<span style="font-weight:bold">Visualization parameters for</span> Map$addLayer()
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tg-abx8">
+Parameter
+</td>
+<td class="tg-abx8">
+Description
+</td>
+<td class="tg-abx8">
+Type
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+bands
+</td>
+<td class="tg-0lax">
+Comma-delimited list of three band names to be mapper to RGB
+</td>
+<td class="tg-0lax">
+list
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+min
+</td>
+<td class="tg-0lax">
+Value(s) to map to 0
+</td>
+<td class="tg-0lax">
+number or list of three numbers, one for each band
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+max
+</td>
+<td class="tg-0lax">
+Value(s) to map to 255
+</td>
+<td class="tg-0lax">
+number or list of three numbers, one for each band
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+gain
+</td>
+<td class="tg-0lax">
+Value(s) by which to multiply each pixel value
+</td>
+<td class="tg-0lax">
+number or list of three numbers, one for each band
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+bias
+</td>
+<td class="tg-0lax">
+Value(s) to add to each DN
+</td>
+<td class="tg-0lax">
+number or list of three numbers, one for each band
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+gamma
+</td>
+<td class="tg-0lax">
+Gamma correction factor(s)
+</td>
+<td class="tg-0lax">
+<span style="font-weight:400;font-style:normal">number or list of three numbers, one for each band</span>
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+palette
+</td>
+<td class="tg-0lax">
+List of CSS-style color strings (single-band images only)
+</td>
+<td class="tg-0lax">
+comma-separated list hex strings
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+opacity
+</td>
+<td class="tg-0lax">
+The opacity of the layer (0.0 is fully transparent and 1.0 is fully opaque)
+</td>
+<td class="tg-0lax">
+number
+</td>
+</tr>
+</tbody>
+</table>
+</center>
+</div>
+<div id="rgb-composites" class="section level2 unnumbered">
+<h2>RGB composites</h2>
+<p>The following example illustrates how to style a Landsat 8 image as a false-color composite:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="visualization.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an image.</span></span>
+<span id="cb21-2"><a href="visualization.html#cb21-2" aria-hidden="true" tabindex="-1"></a>landsat <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&quot;LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318&quot;</span>)</span>
+<span id="cb21-3"><a href="visualization.html#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the visualization parameters.</span></span>
+<span id="cb21-4"><a href="visualization.html#cb21-4" aria-hidden="true" tabindex="-1"></a>vizParams <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb21-5"><a href="visualization.html#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">bands =</span> <span class="fu">c</span>(<span class="st">&quot;B5&quot;</span>, <span class="st">&quot;B4&quot;</span>, <span class="st">&quot;B3&quot;</span>),</span>
+<span id="cb21-6"><a href="visualization.html#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">min =</span> <span class="dv">0</span>,</span>
+<span id="cb21-7"><a href="visualization.html#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">max =</span> <span class="fl">0.5</span>,</span>
+<span id="cb21-8"><a href="visualization.html#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">gamma =</span> <span class="fu">c</span>(<span class="fl">0.95</span>, <span class="fl">1.1</span>, <span class="dv">1</span>)</span>
+<span id="cb21-9"><a href="visualization.html#cb21-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-10"><a href="visualization.html#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Center the map and display the image.</span></span>
+<span id="cb21-11"><a href="visualization.html#cb21-11" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">setCenter</span>(<span class="at">lon =</span> <span class="sc">-</span><span class="fl">122.1899</span>, <span class="at">lat =</span> <span class="fl">37.5010</span>, <span class="at">zoom =</span> <span class="dv">10</span>) <span class="co"># San Francisco Bay</span></span>
+<span id="cb21-12"><a href="visualization.html#cb21-12" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(landsat, vizParams, <span class="st">&quot;false color composite&quot;</span>)</span></code></pre></div>
+<p>In this example, band <code>B5</code> is assigned to red, <code>B4</code> is assigned to green, and <code>B3</code> is assigned to blue. The result should look something like the figure bellow.</p>
+<figure>
+<center>
+<img src="https://user-images.githubusercontent.com/49989177/104054975-04bb0900-51bc-11eb-9737-6e4f12063e30.png" width="95%"><br>
+<caption>
+<strong>Figure N°01:</strong> Landsat 8 false color composite of San Francisco bay area, California, USA.
+</caption>
+</center>
+<br>
+</figure>
+</div>
+<div id="color-palettes" class="section level2 unnumbered">
+<h2>Color palettes</h2>
+<p>Set the <code>palette</code> argument expressed by a list of CSS-style color strings to display a single band of an image in color (See <a href="https://en.wikipedia.org/wiki/Web_colors"><strong>this reference</strong></a> for more information). The following example illustrates how to use colors from cyan (<code>‘00FFFF’</code>) to blue (<code>‘0000FF’</code>) to render a <a href="https://www.tandfonline.com/doi/abs/10.1080/01431169608948714"><strong>Normalized Difference Water Index (NDWI)</strong></a> image:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="visualization.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an image.</span></span>
+<span id="cb22-2"><a href="visualization.html#cb22-2" aria-hidden="true" tabindex="-1"></a>landsat <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&quot;LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318&quot;</span>)</span>
+<span id="cb22-3"><a href="visualization.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an NDWI image.</span></span>
+<span id="cb22-4"><a href="visualization.html#cb22-4" aria-hidden="true" tabindex="-1"></a>ndwi <span class="ot">&lt;-</span> landsat<span class="sc">$</span><span class="fu">normalizedDifference</span>(<span class="fu">c</span>(<span class="st">&quot;B3&quot;</span>, <span class="st">&quot;B5&quot;</span>))</span>
+<span id="cb22-5"><a href="visualization.html#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># define visualization parameters and display image.</span></span>
+<span id="cb22-6"><a href="visualization.html#cb22-6" aria-hidden="true" tabindex="-1"></a>ndwiViz <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb22-7"><a href="visualization.html#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">min =</span> <span class="fl">0.5</span>,</span>
+<span id="cb22-8"><a href="visualization.html#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">max =</span> <span class="dv">1</span>,</span>
+<span id="cb22-9"><a href="visualization.html#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&quot;00FFFF&quot;</span>, <span class="st">&quot;0000FF&quot;</span>)</span>
+<span id="cb22-10"><a href="visualization.html#cb22-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-11"><a href="visualization.html#cb22-11" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(</span>
+<span id="cb22-12"><a href="visualization.html#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">eeObject =</span> ndwi,</span>
+<span id="cb22-13"><a href="visualization.html#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">visParams =</span> ndwiViz,</span>
+<span id="cb22-14"><a href="visualization.html#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="st">&quot;NDWI&quot;</span>,</span>
+<span id="cb22-15"><a href="visualization.html#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">shown =</span> <span class="cn">FALSE</span></span>
+<span id="cb22-16"><a href="visualization.html#cb22-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>In this example, note that the <code>min</code> and <code>max</code> parameters indicate the range of pixel values to which the palette should be applied. Intermediate values are linearly stretched. Also note that if you define <code>shown</code> parameter as <code>FALSE</code>, this results in the visibility of the layer being off when it is added to the map. It can always be turned on again using the <strong>Layer Manager</strong> in the upper left corner of the map. The result should look something like <strong>Figure 2</strong>.</p>
+<figure>
+<center>
+<img src="https://user-images.githubusercontent.com/49989177/104057949-f4595d00-51c0-11eb-980e-575f119b0098.png" width="95%"><br>
+<caption>
+<strong>Figure N°02:</strong> Landsat 8 NDWI, San Francisco bay area, USA. Same area as Figure 1. Cyan are low values, blue are high values.
+</caption>
+</center>
+<br>
+</figure>
+</div>
+<div id="masking" class="section level2 unnumbered">
+<h2>Masking</h2>
+<p>You can use <a href="https://developers.google.com/earth-engine/apidocs/ee-image-updatemask"><strong>image$updateMask(…)</strong></a> to set the opacity of individual pixels based on where pixels in a mask image are non-zero. Pixels equal to zero in the mask are excluded from computations and the opacity is set to 0 for display. The following example uses an NDWI threshold to update the mask on the NDWI layer created previously:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="visualization.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mask the non-watery parts of the image, where NDWI &lt; 0.4.</span></span>
+<span id="cb23-2"><a href="visualization.html#cb23-2" aria-hidden="true" tabindex="-1"></a>ndwiMasked <span class="ot">&lt;-</span> ndwi<span class="sc">$</span><span class="fu">updateMask</span>(ndwi<span class="sc">$</span><span class="fu">gte</span>(<span class="fl">0.4</span>))</span>
+<span id="cb23-3"><a href="visualization.html#cb23-3" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(ndwiMasked, ndwiViz, <span class="st">&quot;NDWI masked&quot;</span>)</span></code></pre></div>
+<figure>
+<center>
+<img src="https://user-images.githubusercontent.com/49989177/104058569-eb1cc000-51c1-11eb-8d55-59d45e8890de.png" width="95%"><br>
+<caption>
+<strong>Figure N°03:</strong> Landsat 8 NDWI, same area as Figure 2, was masked for values greater than 0,4.
+</caption>
+</center>
+<br>
+</figure>
+</div>
+<div id="visualization-images" class="section level2 unnumbered">
+<h2>Visualization images</h2>
+<p>Use the <a href="https://developers.google.com/earth-engine/apidocs/ee-image-visualize"><strong>image$visualize(…)</strong></a> method to convert an image into an 8-bit RGB image for display or export. For example, to convert the false-color composite and NDWI to 3-band display images, use:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="visualization.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an image.</span></span>
+<span id="cb24-2"><a href="visualization.html#cb24-2" aria-hidden="true" tabindex="-1"></a>landsat <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&#39;LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318&#39;</span>)</span>
+<span id="cb24-3"><a href="visualization.html#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create visualization layers.</span></span>
+<span id="cb24-4"><a href="visualization.html#cb24-4" aria-hidden="true" tabindex="-1"></a>imageRGB <span class="ot">&lt;-</span> landsat<span class="sc">$</span><span class="fu">visualize</span>(</span>
+<span id="cb24-5"><a href="visualization.html#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb24-6"><a href="visualization.html#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">bands =</span> <span class="fu">list</span>(<span class="st">&quot;B5&quot;</span>, <span class="st">&quot;B4&quot;</span>, <span class="st">&quot;B3&quot;</span>),</span>
+<span id="cb24-7"><a href="visualization.html#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">max =</span> <span class="fl">0.5</span></span>
+<span id="cb24-8"><a href="visualization.html#cb24-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-9"><a href="visualization.html#cb24-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-10"><a href="visualization.html#cb24-10" aria-hidden="true" tabindex="-1"></a>ndwiRGB <span class="ot">&lt;-</span> ndwiMasked<span class="sc">$</span><span class="fu">visualize</span>(</span>
+<span id="cb24-11"><a href="visualization.html#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb24-12"><a href="visualization.html#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">min =</span> <span class="fl">0.5</span>,</span>
+<span id="cb24-13"><a href="visualization.html#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">max =</span> <span class="dv">1</span>,</span>
+<span id="cb24-14"><a href="visualization.html#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&#39;00FFFF&#39;</span>, <span class="st">&#39;0000FF&#39;</span>)</span>
+<span id="cb24-15"><a href="visualization.html#cb24-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-16"><a href="visualization.html#cb24-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="mosaicking" class="section level2 unnumbered">
+<h2>Mosaicking</h2>
+<p>You can use masking and <a href="https://developers.google.com/earth-engine/apidocs/ee-imagecollection-mosaic"><strong>imageCollection$mosaic(…)</strong></a> to achieve various cartographic effects. The <code>mosaic()</code> method renders layers in the output image according to their order in the input collection. The following example uses <code>mosaic()</code> to combine the masked NDWI and the false color composite and obtain a new visualization:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="visualization.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mosaic the visualization layers and display (or export).</span></span>
+<span id="cb25-2"><a href="visualization.html#cb25-2" aria-hidden="true" tabindex="-1"></a>mosaic <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="fu">list</span>(imageRGB, ndwiRGB))<span class="sc">$</span><span class="fu">mosaic</span>()</span>
+<span id="cb25-3"><a href="visualization.html#cb25-3" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(<span class="at">eeObject =</span> mosaic, <span class="fu">list</span>(), <span class="at">name =</span> <span class="st">&quot;mosaic&quot;</span>)</span></code></pre></div>
+<p>In this example, observe that a list of the two visualization images is provided to the <code>ImageCollection</code> constructor. The order of the list determines the order in which the images are rendered on the map. The result should look something like <strong>Figure 3</strong>.</p>
+<figure>
+<center>
+<img src="https://user-images.githubusercontent.com/49989177/104064431-ee1cae00-51cb-11eb-97b5-0980634c8a25.png" width="95%"><br>
+<caption>
+<strong>Figure N°04:</strong> Mosaic of a Landsat 8 false color composite and NDWI. San Francisco bay area, USA.
+</caption>
+</center>
+<br>
+</figure>
+</div>
+<div id="integration-with-other-r-packages" class="section level2 unnumbered">
+<h2>Integration with other R packages</h2>
+<p><a href="https://r-spatial.github.io/rgee/reference/Map.html"><strong>Map$addLayer(…)</strong></a> creates a leaflet object
+with the following extra attributes: tokens, name, opacity, shown, min, max, palette, and legend.
+This extra data help to the users to customize their interactive maps and/or integrate <strong>Map$addLayer</strong> with other R packages such as <strong>{mapview}</strong>, <strong>{mapedit}</strong> and <strong>{leaflet}</strong>.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="visualization.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an image.</span></span>
+<span id="cb26-2"><a href="visualization.html#cb26-2" aria-hidden="true" tabindex="-1"></a>landsat <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&quot;LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318&quot;</span>)</span>
+<span id="cb26-3"><a href="visualization.html#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the visualization parameters.</span></span>
+<span id="cb26-4"><a href="visualization.html#cb26-4" aria-hidden="true" tabindex="-1"></a>vizParams <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb26-5"><a href="visualization.html#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">bands =</span> <span class="fu">c</span>(<span class="st">&quot;B5&quot;</span>, <span class="st">&quot;B4&quot;</span>, <span class="st">&quot;B3&quot;</span>),</span>
+<span id="cb26-6"><a href="visualization.html#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">min =</span> <span class="dv">0</span>,</span>
+<span id="cb26-7"><a href="visualization.html#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">max =</span> <span class="fl">0.5</span>,</span>
+<span id="cb26-8"><a href="visualization.html#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">gamma =</span> <span class="fu">c</span>(<span class="fl">0.95</span>, <span class="fl">1.1</span>, <span class="dv">1</span>)</span>
+<span id="cb26-9"><a href="visualization.html#cb26-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-10"><a href="visualization.html#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Center the map and display the image.</span></span>
+<span id="cb26-11"><a href="visualization.html#cb26-11" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">setCenter</span>(<span class="at">lon =</span> <span class="sc">-</span><span class="fl">122.1899</span>, <span class="at">lat =</span> <span class="fl">37.5010</span>, <span class="at">zoom =</span> <span class="dv">10</span>) <span class="co"># San Francisco Bay</span></span>
+<span id="cb26-12"><a href="visualization.html#cb26-12" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> Map<span class="sc">$</span><span class="fu">addLayer</span>(landsat, vizParams, <span class="st">&quot;false color composite&quot;</span>)</span>
+<span id="cb26-13"><a href="visualization.html#cb26-13" aria-hidden="true" tabindex="-1"></a>m1<span class="sc">$</span>rgee</span>
+<span id="cb26-14"><a href="visualization.html#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $tokens</span></span>
+<span id="cb26-15"><a href="visualization.html#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/maps/6f68ea5563f0787171eef294011e5b1a-54a29dea5a564831913fb1c8c1653628/tiles/{z}/{x}/{y}&quot;</span></span>
+<span id="cb26-16"><a href="visualization.html#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-17"><a href="visualization.html#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $name</span></span>
+<span id="cb26-18"><a href="visualization.html#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;false color composite&quot;</span></span>
+<span id="cb26-19"><a href="visualization.html#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-20"><a href="visualization.html#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $opacity</span></span>
+<span id="cb26-21"><a href="visualization.html#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb26-22"><a href="visualization.html#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-23"><a href="visualization.html#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $shown</span></span>
+<span id="cb26-24"><a href="visualization.html#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb26-25"><a href="visualization.html#cb26-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-26"><a href="visualization.html#cb26-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $min</span></span>
+<span id="cb26-27"><a href="visualization.html#cb26-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb26-28"><a href="visualization.html#cb26-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-29"><a href="visualization.html#cb26-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $max</span></span>
+<span id="cb26-30"><a href="visualization.html#cb26-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb26-31"><a href="visualization.html#cb26-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-32"><a href="visualization.html#cb26-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $palette</span></span>
+<span id="cb26-33"><a href="visualization.html#cb26-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $palette[[1]]</span></span>
+<span id="cb26-34"><a href="visualization.html#cb26-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb26-35"><a href="visualization.html#cb26-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-36"><a href="visualization.html#cb26-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-37"><a href="visualization.html#cb26-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $legend</span></span>
+<span id="cb26-38"><a href="visualization.html#cb26-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<p><strong>{leaflet}:</strong> Is a R package binding (develop by Rstudio) for <strong>leaflet</strong> a open-source JavaScript library for mobile-friendly interactive maps.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="visualization.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an image.</span></span>
+<span id="cb27-2"><a href="visualization.html#cb27-2" aria-hidden="true" tabindex="-1"></a>landsat <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&quot;LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318&quot;</span>)</span>
+<span id="cb27-3"><a href="visualization.html#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="visualization.html#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the visualization parameters.</span></span>
+<span id="cb27-5"><a href="visualization.html#cb27-5" aria-hidden="true" tabindex="-1"></a>vizParams <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb27-6"><a href="visualization.html#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">bands =</span> <span class="fu">c</span>(<span class="st">&quot;B5&quot;</span>, <span class="st">&quot;B4&quot;</span>, <span class="st">&quot;B3&quot;</span>),</span>
+<span id="cb27-7"><a href="visualization.html#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">min =</span> <span class="dv">0</span>,</span>
+<span id="cb27-8"><a href="visualization.html#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">max =</span> <span class="fl">0.5</span>,</span>
+<span id="cb27-9"><a href="visualization.html#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">gamma =</span> <span class="fu">c</span>(<span class="fl">0.95</span>, <span class="fl">1.1</span>, <span class="dv">1</span>)</span>
+<span id="cb27-10"><a href="visualization.html#cb27-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-11"><a href="visualization.html#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="visualization.html#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Center the map and display the image.</span></span>
+<span id="cb27-13"><a href="visualization.html#cb27-13" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">setCenter</span>(<span class="at">lon =</span> <span class="sc">-</span><span class="fl">122.1899</span>, <span class="at">lat =</span> <span class="fl">37.5010</span>, <span class="at">zoom =</span> <span class="dv">10</span>) <span class="co"># San Francisco Bay</span></span>
+<span id="cb27-14"><a href="visualization.html#cb27-14" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> Map<span class="sc">$</span><span class="fu">addLayer</span>(landsat, vizParams, <span class="st">&quot;false color composite&quot;</span>)</span>
+<span id="cb27-15"><a href="visualization.html#cb27-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-16"><a href="visualization.html#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Integrate with leaflet</span></span>
+<span id="cb27-17"><a href="visualization.html#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-18"><a href="visualization.html#cb27-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-19"><a href="visualization.html#cb27-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setView</span>(<span class="sc">-</span><span class="fl">122.1899</span>, <span class="fl">37.5010</span>, <span class="dv">9</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-20"><a href="visualization.html#cb27-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>(</span>
+<span id="cb27-21"><a href="visualization.html#cb27-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">urlTemplate =</span> m1<span class="sc">$</span>rgee<span class="sc">$</span>tokens,</span>
+<span id="cb27-22"><a href="visualization.html#cb27-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">layerId =</span> <span class="st">&quot;leaflet_false_color&quot;</span>,</span>
+<span id="cb27-23"><a href="visualization.html#cb27-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">options =</span> leaflet<span class="sc">::</span><span class="fu">tileOptions</span>(<span class="at">opacity =</span> <span class="dv">1</span>)</span>
+<span id="cb27-24"><a href="visualization.html#cb27-24" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<figure>
+<center>
+<img src="https://user-images.githubusercontent.com/49989177/104054975-04bb0900-51bc-11eb-9737-6e4f12063e30.png" width="95%"><br>
+<caption>
+<strong>Figure N°05:</strong> Map$addLayer and {leaflet} integration
+</caption>
+</center>
+<br>
+</figure>
+<p><strong>{mapview}:</strong> R package develop by Tim Appelhans which provides functions to very quickly and conveniently create interactive visualisations of R spatial data. It support the most popular
+R package for spatial data ({sp}, {sf}, {stars}, and {raster}).</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="visualization.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an image.</span></span>
+<span id="cb28-2"><a href="visualization.html#cb28-2" aria-hidden="true" tabindex="-1"></a>landsat <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&quot;LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318&quot;</span>)</span>
+<span id="cb28-3"><a href="visualization.html#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="visualization.html#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the visualization parameters.</span></span>
+<span id="cb28-5"><a href="visualization.html#cb28-5" aria-hidden="true" tabindex="-1"></a>vizParams <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb28-6"><a href="visualization.html#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">bands =</span> <span class="fu">c</span>(<span class="st">&quot;B5&quot;</span>, <span class="st">&quot;B4&quot;</span>, <span class="st">&quot;B3&quot;</span>),</span>
+<span id="cb28-7"><a href="visualization.html#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">min =</span> <span class="dv">0</span>,</span>
+<span id="cb28-8"><a href="visualization.html#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">max =</span> <span class="fl">0.5</span>,</span>
+<span id="cb28-9"><a href="visualization.html#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">gamma =</span> <span class="fu">c</span>(<span class="fl">0.95</span>, <span class="fl">1.1</span>, <span class="dv">1</span>)</span>
+<span id="cb28-10"><a href="visualization.html#cb28-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-11"><a href="visualization.html#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-12"><a href="visualization.html#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Center the map and display the image.</span></span>
+<span id="cb28-13"><a href="visualization.html#cb28-13" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">setCenter</span>(<span class="at">lon =</span> <span class="sc">-</span><span class="fl">122.1899</span>, <span class="at">lat =</span> <span class="fl">37.5010</span>, <span class="at">zoom =</span> <span class="dv">10</span>) <span class="co"># San Francisco Bay</span></span>
+<span id="cb28-14"><a href="visualization.html#cb28-14" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> Map<span class="sc">$</span><span class="fu">addLayer</span>(landsat, vizParams, <span class="st">&quot;false color composite&quot;</span>)</span>
+<span id="cb28-15"><a href="visualization.html#cb28-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-16"><a href="visualization.html#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Integrate with mapview</span></span>
+<span id="cb28-17"><a href="visualization.html#cb28-17" aria-hidden="true" tabindex="-1"></a>stp <span class="ot">&lt;-</span> <span class="fu">st_sfc</span>(<span class="fu">st_point</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">122.27234</span>, <span class="fl">37.46941</span>)), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb28-18"><a href="visualization.html#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="fu">mapview</span>(stp, m1)</span></code></pre></div>
+<figure>
+<center>
+<img src="https://user-images.githubusercontent.com/16768318/104090239-c6822000-5275-11eb-95b3-03fc9a94c40e.png" width="95%"><br>
+<caption>
+<strong>Figure N°06:</strong>Map$addLayer and {mapview} integration.
+</caption>
+</center>
+<br>
+</figure>
+<p><strong>{mapedit}:</strong> adds spatial data edition functionality to leaflet interactive maps (Similar to the <a href="https://developers.google.com/earth-engine/guides/playground#geometry-tools">Code Editor geometry tool</a>).</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="visualization.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an image.</span></span>
+<span id="cb29-2"><a href="visualization.html#cb29-2" aria-hidden="true" tabindex="-1"></a>landsat <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&quot;LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318&quot;</span>)</span>
+<span id="cb29-3"><a href="visualization.html#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="visualization.html#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the visualization parameters.</span></span>
+<span id="cb29-5"><a href="visualization.html#cb29-5" aria-hidden="true" tabindex="-1"></a>vizParams <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb29-6"><a href="visualization.html#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">bands =</span> <span class="fu">c</span>(<span class="st">&quot;B5&quot;</span>, <span class="st">&quot;B4&quot;</span>, <span class="st">&quot;B3&quot;</span>),</span>
+<span id="cb29-7"><a href="visualization.html#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">min =</span> <span class="dv">0</span>,</span>
+<span id="cb29-8"><a href="visualization.html#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">max =</span> <span class="fl">0.5</span>,</span>
+<span id="cb29-9"><a href="visualization.html#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">gamma =</span> <span class="fu">c</span>(<span class="fl">0.95</span>, <span class="fl">1.1</span>, <span class="dv">1</span>)</span>
+<span id="cb29-10"><a href="visualization.html#cb29-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-11"><a href="visualization.html#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="visualization.html#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Center the map and display the image.</span></span>
+<span id="cb29-13"><a href="visualization.html#cb29-13" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">setCenter</span>(<span class="at">lon =</span> <span class="sc">-</span><span class="fl">122.1899</span>, <span class="at">lat =</span> <span class="fl">37.5010</span>, <span class="at">zoom =</span> <span class="dv">10</span>) <span class="co"># San Francisco Bay</span></span>
+<span id="cb29-14"><a href="visualization.html#cb29-14" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> Map<span class="sc">$</span><span class="fu">addLayer</span>(landsat, vizParams, <span class="st">&quot;false color composite&quot;</span>)</span>
+<span id="cb29-15"><a href="visualization.html#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="visualization.html#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Integrate with mapedit</span></span>
+<span id="cb29-17"><a href="visualization.html#cb29-17" aria-hidden="true" tabindex="-1"></a>my_geom <span class="ot">&lt;-</span> <span class="fu">editMap</span>(m1)<span class="sc">$</span>drawn</span></code></pre></div>
+<figure>
+<center>
+<img src="https://user-images.githubusercontent.com/16768318/104090341-6b046200-5276-11eb-80ed-d65e21c4032f.png" width="95%"><br>
+<caption>
+<strong>Figure N°07:</strong>Map$addLayer and {mapedit} integration.
+</caption>
+</center>
+<br>
+</figure>
+</div>
+<div id="map-operators" class="section level2 unnumbered">
+<h2>Map Operators</h2>
+<p>From the version 1.0.5, <strong>rgee</strong> support two map operators:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="visualization.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an image.</span></span>
+<span id="cb30-2"><a href="visualization.html#cb30-2" aria-hidden="true" tabindex="-1"></a>landsat <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&quot;LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318&quot;</span>)</span>
+<span id="cb30-3"><a href="visualization.html#cb30-3" aria-hidden="true" tabindex="-1"></a>ndwi <span class="ot">&lt;-</span> landsat<span class="sc">$</span><span class="fu">normalizedDifference</span>(<span class="fu">c</span>(<span class="st">&quot;B3&quot;</span>, <span class="st">&quot;B5&quot;</span>))</span>
+<span id="cb30-4"><a href="visualization.html#cb30-4" aria-hidden="true" tabindex="-1"></a>ndwiMasked <span class="ot">&lt;-</span> ndwi<span class="sc">$</span><span class="fu">updateMask</span>(ndwi<span class="sc">$</span><span class="fu">gte</span>(<span class="fl">0.4</span>))</span>
+<span id="cb30-5"><a href="visualization.html#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="visualization.html#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the visualization parameters.</span></span>
+<span id="cb30-7"><a href="visualization.html#cb30-7" aria-hidden="true" tabindex="-1"></a>vizParams <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb30-8"><a href="visualization.html#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">bands =</span> <span class="fu">c</span>(<span class="st">&quot;B5&quot;</span>, <span class="st">&quot;B4&quot;</span>, <span class="st">&quot;B3&quot;</span>),</span>
+<span id="cb30-9"><a href="visualization.html#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">min =</span> <span class="dv">0</span>,</span>
+<span id="cb30-10"><a href="visualization.html#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">max =</span> <span class="fl">0.5</span>,</span>
+<span id="cb30-11"><a href="visualization.html#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">gamma =</span> <span class="fu">c</span>(<span class="fl">0.95</span>, <span class="fl">1.1</span>, <span class="dv">1</span>)</span>
+<span id="cb30-12"><a href="visualization.html#cb30-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-13"><a href="visualization.html#cb30-13" aria-hidden="true" tabindex="-1"></a>ndwiViz <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb30-14"><a href="visualization.html#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">min =</span> <span class="fl">0.5</span>,</span>
+<span id="cb30-15"><a href="visualization.html#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">max =</span> <span class="dv">1</span>,</span>
+<span id="cb30-16"><a href="visualization.html#cb30-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&quot;00FFFF&quot;</span>, <span class="st">&quot;0000FF&quot;</span>)</span>
+<span id="cb30-17"><a href="visualization.html#cb30-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-18"><a href="visualization.html#cb30-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-19"><a href="visualization.html#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Center the map and display the image.</span></span>
+<span id="cb30-20"><a href="visualization.html#cb30-20" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">setCenter</span>(<span class="at">lon =</span> <span class="sc">-</span><span class="fl">122.1899</span>, <span class="at">lat =</span> <span class="fl">37.5010</span>, <span class="at">zoom =</span> <span class="dv">10</span>) <span class="co"># San Francisco Bay</span></span>
+<span id="cb30-21"><a href="visualization.html#cb30-21" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> Map<span class="sc">$</span><span class="fu">addLayer</span>(landsat, vizParams, <span class="st">&quot;false color composite&quot;</span>)</span>
+<span id="cb30-22"><a href="visualization.html#cb30-22" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> Map<span class="sc">$</span><span class="fu">addLayer</span>(ndwiMasked, ndwiViz, <span class="st">&quot;NDWI masked&quot;</span>)</span></code></pre></div>
+<ul>
+<li><strong>m1 <code>+</code> m2:</strong> Overlay layers.</li>
+</ul>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="visualization.html#cb31-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="sc">+</span> m2</span></code></pre></div>
+<figure>
+<center>
+<img src="https://user-images.githubusercontent.com/16768318/104091090-5f676a00-527b-11eb-9d0c-8f7f5205559c.png" width="95%"><br>
+<caption>
+<strong>Figure N°08:</strong> Overlay map example
+</caption>
+</center>
+<br>
+</figure>
+<ul>
+<li><strong>m1<code>|</code>m2:</strong> Side by side view.</li>
+</ul>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="visualization.html#cb32-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="sc">|</span> m2</span></code></pre></div>
+<figure>
+<center>
+<img src="https://user-images.githubusercontent.com/16768318/104091120-9a699d80-527b-11eb-8d4a-ee9bfd57360e.png" width="95%"><br>
+<caption>
+<strong>Figure N°08:</strong> Side by side example
+</caption>
+</center>
+<br>
+</figure>
+
+</div>
+</div>
+
+
+
+  </main>
+
+  <div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page">
+      <h2>On this page</h2>
+      <div id="book-on-this-page"></div>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          <li><a id="book-source" href="#">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="#">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5">
+  <div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+<script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+
+</html>

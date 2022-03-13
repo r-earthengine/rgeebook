@@ -1,8 +1,8 @@
-```{r, include<- FALSE}
+```{r, include = FALSE}
 source("common.R")
 ```
 
-<<<<<<< Updated upstream
+
 # (PART) Objects and Methods {-}
 
 This section requires the next libraries:
@@ -13,9 +13,9 @@ library(rgeeExtra)
 
 ee_Initialize()
 ```
-=======
+
 This section requires the next libraries:
->>>>>>> Stashed changes
+
 
 ```{r}
 library(rgee)

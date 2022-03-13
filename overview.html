@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Overview | Earth Engine with R</title>
+
+    <meta name="author" content="rgee team" />
+  
+   
+   <meta name="generator" content="placeholder" />
+  <meta property="og:title" content="Overview | Earth Engine with R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Overview | Earth Engine with R" />
+  
+  
+  
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script>
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet" />
+    <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script>
+    <script src="libs/bs3compat-0.3.1/transition.js"></script>
+    <script src="libs/bs3compat-0.3.1/tabs.js"></script>
+    <script src="libs/bs3compat-0.3.1/bs3compat.js"></script>
+    <link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet" />
+    <script src="libs/bs4_book-1.0.0/bs4_book.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-141212623-1');
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script>
+
+  <!-- CSS -->
+  
+</head>
+
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book">
+    <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+      </form>
+
+      <nav aria-label="Table of contents">
+        <h2>Table of contents</h2>
+        <div id="book-toc"></div>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="#">View book source <i class="fab fa-github"></i></a></li></p>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="col-sm-12 col-md-9 col-lg-7" id="content">
+<div id="overview" class="section level1 unnumbered">
+<h1>Overview</h1>
+<div id="what-is-google-earth-engine" class="section level2 unnumbered">
+<h2>What is Google Earth Engine?</h2>
+<p>Google Earth Engine (GEE) is a cloud-based platform that helps access high-performance computing resources for processing and analyzing large geospatial datasets (Golerick et al.,2017). At the moment, GEE only supports <strong>client libraries</strong> for the JavaScript and Python programming languages. Check out its official GitHub repository for more details: <a href="https://github.com/google/earthengine-api">https://github.com/google/earthengine-api</a>.</p>
+<p><strong><em>client library</em></strong>: Sometimes known as a <strong><em>helper library</em></strong>, is a collection of code that help to communicate more effectively with an API. For example, if you want to invoke certain image asset in GEE, you must type the following:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="overview.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Connecting to GEE server via POST request.</span></span>
+<span id="cb1-2"><a href="overview.html#cb1-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb1-3"><a href="overview.html#cb1-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;functionInvocationValue&quot;</span><span class="sc">:</span> {</span>
+<span id="cb1-4"><a href="overview.html#cb1-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;functionName&quot;</span><span class="sc">:</span> <span class="st">&quot;Image.load&quot;</span>,</span>
+<span id="cb1-5"><a href="overview.html#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;arguments&quot;</span><span class="sc">:</span> {</span>
+<span id="cb1-6"><a href="overview.html#cb1-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">&quot;id&quot;</span><span class="sc">:</span> {</span>
+<span id="cb1-7"><a href="overview.html#cb1-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;constantValue&quot;</span><span class="sc">:</span> <span class="st">&quot;USGS/SRTMGL1_003&quot;</span></span>
+<span id="cb1-8"><a href="overview.html#cb1-8" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb1-9"><a href="overview.html#cb1-9" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb1-10"><a href="overview.html#cb1-10" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb1-11"><a href="overview.html#cb1-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>However, using the GEE client library, the code is reduced to only one line of code!</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="overview.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Connecting to GEE server via client library + web API.</span></span>
+<span id="cb2-2"><a href="overview.html#cb2-2" aria-hidden="true" tabindex="-1"></a>ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&quot;USGS/SRTMGL1_003&quot;</span>)</span></code></pre></div>
+</div>
+<div id="what-is-rgee" class="section level2 unnumbered">
+<h2>What is rgee?</h2>
+<p><strong>rgee</strong> is the simplest way for using GEE from within R. Using <strong>reticulate</strong> in the back-end, rgee connects R and Python.
+Therefore, you may think on rgee as a <strong>nested wrapper</strong>. One wrapper to connect R to the Python Earth Engine API,
+while the other connects Python to the Web REST API (see figure below).</p>
+<center>
+<img src="images/chapter_00/figure_rgee_01.png" title="fig:" width="500" alt="rgee depends on the Earth Engine Python client library" />
+</center>
+<p>When an Earth Engine request is created in R, <em>reticulate</em> translate the R code into Python and send it to the Earth Engine Python client library, which converts Python code in JSON format. Then, the GEE Platform receives the JSON request through a Web REST API. The response takes the same path as before, but in reverse.</p>
+<center>
+<img src="images/chapter_00/figure_rgee_00.png" title="fig:" width="700" alt="rgee workflow" />
+</center>
+</div>
+<div id="rgee-guides" class="section level2 unnumbered">
+<h2>rgee Guides</h2>
+<p>The guides are written for R with <a href="https://www.rstudio.com/">Rstudio</a>. The <a href="https://rgeebook.netlify.app/r-quickstart.html">R Quickstart</a> guide and the <a href="https://rgeebook.netlify.app/overview-1.html">tutorials</a> describe basic concepts and example workflows to help beginning users. The guides have several examples for both <a href="https://github.com/r-spatial/rgee">rgee</a> and <a href="https://github.com/r-earthengine/rgeeExtra">rgeeExtra</a>.</p>
+<p>The <a href="https://rgeebook.netlify.app/coding-best-practices.html">Best Practices</a> and <a href="https://rgeebook.netlify.app/debugging.html">Debugging</a> guides have more complex examples and provide techniques useful for overcoming errors and scaling your Earth Engine analyses to larger areas, longer time series and more data. More advanced <a href="https://rgeebook.netlify.app/how-earth-engine-works.html">Earth Engine concepts</a> provide necessary background for understanding how the Earth Engine service works and writing effective code.</p>
+<p>The remainder of the guides are intended to illustrate important concepts about data types such as:</p>
+<ul>
+<li><a href="https://rgeebook.netlify.app/image.html"><code>Image</code></a>, The fundamental raster data type in Earth Engine.</li>
+<li><a href="https://rgeebook.netlify.app/imagecollection.html"><code>ImageCollection</code></a>, a stack or time-series of images.</li>
+<li><a href="https://rgeebook.netlify.app/geometry.html"><code>Geometry</code></a>, the fundamental vector data type in Earth Engine.</li>
+<li><a href="https://rgeebook.netlify.app/feature-featurecollection.html#featurecollection-overview"><code>Feature</code></a>, or a <code>Geometry</code> with attributes.</li>
+<li><a href="https://rgeebook.netlify.app/feature-featurecollection.html#featurecollection-overview"><code>FeatureCollection</code></a>, or a set of features.</li>
+<li><a href="https://rgeebook.netlify.app/reducer.html"><code>Reducer</code></a>, an object used to compute statistics or perform aggregations.</li>
+<li><a href="https://rgeebook.netlify.app/join.html"><code>Join</code></a>, or how to combine datasets (<code>Image</code> or <code>Feature</code> collections) based on time, location, or an attribute property.</li>
+<li><a href="https://rgeebook.netlify.app/array.html"><code>Array</code></a>, for multi-dimensional analyses.</li>
+</ul>
+<p>There are also sections for machine learning, specialized or sensor specific algorithms (e.g. Landsat algorithms), and Rstudio addins, <a href="https://www.shinyapps.io/">shinyapps.io</a> apps, and data (asset) management.</p>
+</div>
+</div>
+  </main>
+
+  <div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page">
+      <h2>On this page</h2>
+      <div id="book-on-this-page"></div>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          <li><a id="book-source" href="#">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="#">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5">
+  <div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+<script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+
+</html>

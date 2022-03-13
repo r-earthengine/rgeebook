@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>rgeeExtra | Earth Engine with R</title>
+
+    <meta name="author" content="rgee team" />
+  
+   
+   <meta name="generator" content="placeholder" />
+  <meta property="og:title" content="rgeeExtra | Earth Engine with R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="rgeeExtra | Earth Engine with R" />
+  
+  
+  
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script>
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet" />
+    <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script>
+    <script src="libs/bs3compat-0.3.1/transition.js"></script>
+    <script src="libs/bs3compat-0.3.1/tabs.js"></script>
+    <script src="libs/bs3compat-0.3.1/bs3compat.js"></script>
+    <link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet" />
+    <script src="libs/bs4_book-1.0.0/bs4_book.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-141212623-1');
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script>
+
+  <!-- CSS -->
+  
+</head>
+
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book">
+    <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+      </form>
+
+      <nav aria-label="Table of contents">
+        <h2>Table of contents</h2>
+        <div id="book-toc"></div>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="#">View book source <i class="fab fa-github"></i></a></li></p>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="col-sm-12 col-md-9 col-lg-7" id="content">
+<div id="rgeeextra" class="section level1 unnumbered">
+<h1>rgeeExtra</h1>
+<p>The rgeeExtra R package extends the following Earth Engine classes:</p>
+<ul>
+<li>ee$Feature</li>
+<li>ee$FeatureCollection</li>
+<li>ee$Geometry</li>
+<li>ee$Image</li>
+<li>ee$ImageCollection</li>
+<li>ee$List</li>
+<li>ee$Number</li>
+</ul>
+<p>New utility methods and constructors are added to above-mentioned classes in order to create a more fluid code by being friendly with the R pipe chaining. These methods are mandatory for some pre-processing and processing tasks (e.g. clouds masking, shadows masking, image scaling, spectral indices computation, etc.), and they are presented as simple functions that give researchers, students and analysts the chance to analyze data with far fewer lines of code.</p>
+<p>Look at this simple example where a <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR">Sentinel-2 Surface Reflectance Image Collection</a> is pre-processed and processed in just one step:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="rgeeextra.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgee)</span>
+<span id="cb3-2"><a href="rgeeextra.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgeeExtra)</span>
+<span id="cb3-3"><a href="rgeeextra.html#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="rgeeextra.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ee_Initialize</span>()</span>
+<span id="cb3-5"><a href="rgeeextra.html#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="rgeeextra.html#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="rgeeextra.html#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Lima, Peru</span></span>
+<span id="cb3-8"><a href="rgeeextra.html#cb3-8" aria-hidden="true" tabindex="-1"></a>point <span class="ot">&lt;-</span> ee<span class="sc">$</span>Geometry<span class="sc">$</span><span class="fu">Point</span>(<span class="sc">-</span><span class="fl">77.04111</span>, <span class="sc">-</span><span class="fl">12.02228</span>)</span>
+<span id="cb3-9"><a href="rgeeextra.html#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="rgeeextra.html#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate the NDVI of a specific ee$Image</span></span>
+<span id="cb3-11"><a href="rgeeextra.html#cb3-11" aria-hidden="true" tabindex="-1"></a>S2 <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&#39;COPERNICUS/S2_SR&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-12"><a href="rgeeextra.html#cb3-12" aria-hidden="true" tabindex="-1"></a>   ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">filterBounds</span>(point) <span class="sc">%&gt;%</span>  <span class="co"># Filter by geometry (EE API)</span></span>
+<span id="cb3-13"><a href="rgeeextra.html#cb3-13" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ee_ImageCollection_closest</span>(<span class="st">&#39;2020-10-15&#39;</span>) <span class="sc">%&gt;%</span> <span class="co"># Get the closest image to a specific date (rgeeExtra)</span></span>
+<span id="cb3-14"><a href="rgeeextra.html#cb3-14" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ee_model_cloudmask</span>(<span class="at">prob =</span> 70L) <span class="sc">%&gt;%</span> <span class="co"># Cloud mask using ee_extra algorithm.</span></span>
+<span id="cb3-15"><a href="rgeeextra.html#cb3-15" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ee_ImageCollection_scaleAndOffset</span>() <span class="sc">%&gt;%</span>   <span class="co"># Convert from integer to float (real values)</span></span>
+<span id="cb3-16"><a href="rgeeextra.html#cb3-16" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ee_ImageCollection_spectralIndex</span>(<span class="fu">c</span>(<span class="st">&#39;NDVI&#39;</span>,<span class="st">&#39;NDWI&#39;</span>,<span class="st">&#39;BAIS2&#39;</span>)) <span class="sc">%&gt;%</span> <span class="co"># Compute spectral indices</span></span>
+<span id="cb3-17"><a href="rgeeextra.html#cb3-17" aria-hidden="true" tabindex="-1"></a>   <span class="st">&#39;[[&#39;</span>(<span class="dv">1</span>) <span class="co"># Yes rgeeExtra also support subsettings operators!</span></span>
+<span id="cb3-18"><a href="rgeeextra.html#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="rgeeextra.html#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the band names</span></span>
+<span id="cb3-20"><a href="rgeeextra.html#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(S2)</span>
+<span id="cb3-21"><a href="rgeeextra.html#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="rgeeextra.html#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the band names</span></span>
+<span id="cb3-23"><a href="rgeeextra.html#cb3-23" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">centerObject</span>(point, <span class="dv">11</span>)</span>
+<span id="cb3-24"><a href="rgeeextra.html#cb3-24" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(S2[[<span class="st">&quot;NDVI&quot;</span>]])</span></code></pre></div>
+<center>
+<img src="images/chapter_00/figure_rgee_02.png" title="fig:" width="600" alt="NDVI Sentinel-2 Lima, Peru" />
+</center>
+<p>Let’s see some of the main features of eemont and how simple they are compared to the GEE API original methods:</p>
+<div id="subsettings" class="section level2 unnumbered">
+<h2>Subsettings</h2>
+<p>rgeeExtra also supports subsetting operators!. It works similar to the fantastic <a href="https://cran.r-project.org/web/packages/raster/index.html">raster R package</a> created by Robert J. Hijmans.</p>
+<div id="rgee-style" class="section level3 unnumbered">
+<h3>rgee style</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="rgeeextra.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># it does not supported without dozen of lines!</span></span></code></pre></div>
+</div>
+<div id="rgeeextra-style" class="section level3 unnumbered">
+<h3>rgeeExtra style</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="rgeeextra.html#cb5-1" aria-hidden="true" tabindex="-1"></a>ic <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="cf">function</span>(x) ee<span class="sc">$</span><span class="fu">Image</span>(x)) <span class="sc">%&gt;%</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>()</span>
+<span id="cb5-2"><a href="rgeeextra.html#cb5-2" aria-hidden="true" tabindex="-1"></a>ic[[<span class="dv">1</span>]] <span class="ot">&lt;-</span> ic[[<span class="dv">2</span>]] <span class="co"># Replace an ee$Image from an ee$ImageCollection.</span></span>
+<span id="cb5-3"><a href="rgeeextra.html#cb5-3" aria-hidden="true" tabindex="-1"></a>ic[[<span class="dv">3</span>]] <span class="co"># From the ee$ImageCollection get the image with index 3. The index starts with 1.</span></span>
+<span id="cb5-4"><a href="rgeeextra.html#cb5-4" aria-hidden="true" tabindex="-1"></a>ic[[<span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>]] <span class="co"># From the ee$ImageCollection get the images with index 4 and 5.</span></span>
+<span id="cb5-5"><a href="rgeeextra.html#cb5-5" aria-hidden="true" tabindex="-1"></a>ic[[<span class="dv">3</span>]][[<span class="st">&quot;Mar&quot;</span>]] <span class="co"># From the ee$ImageCollection get the images with index 3, and select the band with name &quot;Mar&quot;</span></span></code></pre></div>
+</div>
+</div>
+<div id="overloaded-operators" class="section level2 unnumbered">
+<h2>Overloaded Operators</h2>
+<p>The following operators are overloaded: +, -, *, /, //, %, ** , &lt;&lt;, &gt;&gt;, &amp;, |, &lt;, &lt;=, ==, !=, &gt;, &gt;=, -, ~. (and you can avoid the eecImage$expression() method!)</p>
+<div id="rgee-style-1" class="section level3 unnumbered">
+<h3>rgee style</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="rgeeextra.html#cb6-1" aria-hidden="true" tabindex="-1"></a>S2 <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&quot;COPERNICUS/S2_SR&quot;</span>)<span class="sc">$</span><span class="fu">first</span>()</span>
+<span id="cb6-2"><a href="rgeeextra.html#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="rgeeextra.html#cb6-3" aria-hidden="true" tabindex="-1"></a>scaleImage <span class="ot">&lt;-</span> <span class="cf">function</span>(img) {</span>
+<span id="cb6-4"><a href="rgeeextra.html#cb6-4" aria-hidden="true" tabindex="-1"></a>  scaling <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(<span class="st">&quot;B.*&quot;</span>)</span>
+<span id="cb6-5"><a href="rgeeextra.html#cb6-5" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> scaling<span class="sc">$</span><span class="fu">multiply</span>(<span class="fl">0.0001</span>)</span>
+<span id="cb6-6"><a href="rgeeextra.html#cb6-6" aria-hidden="true" tabindex="-1"></a>  scaling <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="st">&quot;AOT&quot;</span>, <span class="st">&quot;WVP&quot;</span>))</span>
+<span id="cb6-7"><a href="rgeeextra.html#cb6-7" aria-hidden="true" tabindex="-1"></a>  scaling <span class="ot">&lt;-</span> scaling<span class="sc">$</span><span class="fu">multiply</span>(<span class="fl">0.001</span>)</span>
+<span id="cb6-8"><a href="rgeeextra.html#cb6-8" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x<span class="sc">$</span><span class="fu">addBands</span>(scaling)</span>
+<span id="cb6-9"><a href="rgeeextra.html#cb6-9" aria-hidden="true" tabindex="-1"></a>  notScaling <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(</span>
+<span id="cb6-10"><a href="rgeeextra.html#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(</span>
+<span id="cb6-11"><a href="rgeeextra.html#cb6-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;SCL&quot;</span>,</span>
+<span id="cb6-12"><a href="rgeeextra.html#cb6-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;TCI.*&quot;</span>,</span>
+<span id="cb6-13"><a href="rgeeextra.html#cb6-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;MSK.*&quot;</span>,</span>
+<span id="cb6-14"><a href="rgeeextra.html#cb6-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;QA.*&quot;</span></span>
+<span id="cb6-15"><a href="rgeeextra.html#cb6-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-16"><a href="rgeeextra.html#cb6-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-17"><a href="rgeeextra.html#cb6-17" aria-hidden="true" tabindex="-1"></a>  x<span class="sc">$</span><span class="fu">addBands</span>(notScaling)</span>
+<span id="cb6-18"><a href="rgeeextra.html#cb6-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-19"><a href="rgeeextra.html#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="rgeeextra.html#cb6-20" aria-hidden="true" tabindex="-1"></a>S2 <span class="ot">&lt;-</span> <span class="fu">scaleImage</span>(S2)</span>
+<span id="cb6-21"><a href="rgeeextra.html#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="rgeeextra.html#cb6-22" aria-hidden="true" tabindex="-1"></a>exp <span class="ot">&lt;-</span> <span class="st">&quot;2.5*(N-R)/(N+(6*R)-(7.5*B)+1)&quot;</span></span>
+<span id="cb6-23"><a href="rgeeextra.html#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="rgeeextra.html#cb6-24" aria-hidden="true" tabindex="-1"></a>imgDict <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb6-25"><a href="rgeeextra.html#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> S2<span class="sc">$</span><span class="fu">select</span>(<span class="st">&quot;B8&quot;</span>),</span>
+<span id="cb6-26"><a href="rgeeextra.html#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">R =</span> S2<span class="sc">$</span><span class="fu">select</span>(<span class="st">&quot;B4&quot;</span>),</span>
+<span id="cb6-27"><a href="rgeeextra.html#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">B =</span> S2<span class="sc">$</span><span class="fu">select</span>(<span class="st">&quot;B2&quot;</span>)</span>
+<span id="cb6-28"><a href="rgeeextra.html#cb6-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-29"><a href="rgeeextra.html#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="rgeeextra.html#cb6-30" aria-hidden="true" tabindex="-1"></a>EVI <span class="ot">&lt;-</span> S2<span class="sc">$</span><span class="fu">expression</span>(exp, imgDict)</span></code></pre></div>
+</div>
+<div id="rgeeextra-style-1" class="section level3 unnumbered">
+<h3>rgeeExtra style</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="rgeeextra.html#cb7-1" aria-hidden="true" tabindex="-1"></a>S2 <span class="ot">&lt;-</span> ee<span class="sc">$</span>ImageCollection<span class="sc">$</span>Dataset<span class="sc">$</span>COPERNICUS_S2_SR<span class="sc">$</span><span class="fu">first</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="rgeeextra.html#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ee_ImageCollection_scaleAndOffset</span>()</span>
+<span id="cb7-3"><a href="rgeeextra.html#cb7-3" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb7-4"><a href="rgeeextra.html#cb7-4" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> S2[[<span class="st">&quot;B8&quot;</span>]]</span>
+<span id="cb7-5"><a href="rgeeextra.html#cb7-5" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> S2[[<span class="st">&quot;B4&quot;</span>]]</span>
+<span id="cb7-6"><a href="rgeeextra.html#cb7-6" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> S2[[<span class="st">&quot;B2&quot;</span>]]</span>
+<span id="cb7-7"><a href="rgeeextra.html#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="rgeeextra.html#cb7-8" aria-hidden="true" tabindex="-1"></a>EVI <span class="ot">=</span> <span class="fl">2.5</span><span class="sc">*</span>(N<span class="sc">-</span>R)<span class="sc">/</span>(N<span class="sc">+</span>(<span class="dv">6</span><span class="sc">*</span>R)<span class="sc">-</span>(<span class="fl">7.5</span><span class="sc">*</span>B)<span class="sc">+</span><span class="dv">1</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="clouds-and-shadows-masking" class="section level2 unnumbered">
+<h2>Clouds and Shadows Masking</h2>
+<p>Masking clouds and shadows can be done using eemont with just one method: <code>maskClouds()!</code></p>
+<div id="rgee-style-2" class="section level3 unnumbered">
+<h3>rgee style</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="rgeeextra.html#cb8-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="st">&#39;LANDSAT/LC08/C01/T1_SR&#39;</span></span>
+<span id="cb8-2"><a href="rgeeextra.html#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="rgeeextra.html#cb8-3" aria-hidden="true" tabindex="-1"></a>maskCloudsShadows <span class="ot">&lt;-</span> <span class="cf">function</span>(img) {</span>
+<span id="cb8-4"><a href="rgeeextra.html#cb8-4" aria-hidden="true" tabindex="-1"></a>  cloud_c <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">**</span><span class="dv">3</span></span>
+<span id="cb8-5"><a href="rgeeextra.html#cb8-5" aria-hidden="true" tabindex="-1"></a>  cloud_s <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">**</span><span class="dv">5</span></span>
+<span id="cb8-6"><a href="rgeeextra.html#cb8-6" aria-hidden="true" tabindex="-1"></a>  qa <span class="ot">&lt;-</span> <span class="st">&#39;pixel_qa&#39;</span></span>
+<span id="cb8-7"><a href="rgeeextra.html#cb8-7" aria-hidden="true" tabindex="-1"></a>  qa <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(qa)</span>
+<span id="cb8-8"><a href="rgeeextra.html#cb8-8" aria-hidden="true" tabindex="-1"></a>  cm <span class="ot">&lt;-</span> qa<span class="sc">$</span><span class="fu">bitwiseAnd</span>(cloud_c)<span class="sc">$</span><span class="fu">eq</span>(<span class="dv">0</span>)</span>
+<span id="cb8-9"><a href="rgeeextra.html#cb8-9" aria-hidden="true" tabindex="-1"></a>  sm <span class="ot">&lt;-</span> qa<span class="sc">$</span><span class="fu">bitwiseAnd</span>(cloud_s)<span class="sc">$</span><span class="fu">eq</span>(<span class="dv">0</span>)</span>
+<span id="cb8-10"><a href="rgeeextra.html#cb8-10" aria-hidden="true" tabindex="-1"></a>  mask <span class="ot">&lt;-</span> cm<span class="sc">$</span><span class="fu">And</span>(sm)</span>
+<span id="cb8-11"><a href="rgeeextra.html#cb8-11" aria-hidden="true" tabindex="-1"></a>  img<span class="sc">$</span><span class="fu">updateMask</span>(mask)</span>
+<span id="cb8-12"><a href="rgeeextra.html#cb8-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-13"><a href="rgeeextra.html#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="rgeeextra.html#cb8-14" aria-hidden="true" tabindex="-1"></a>ee<span class="sc">$</span><span class="fu">ImageCollection</span>(ds)<span class="sc">$</span><span class="fu">map</span>(maskCloudsShadows)</span></code></pre></div>
+</div>
+<div id="rgeeextra-style-2" class="section level3 unnumbered">
+<h3>rgeeExtra style</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="rgeeextra.html#cb9-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="st">&#39;LANDSAT/LC08/C01/T1_SR&#39;</span></span>
+<span id="cb9-2"><a href="rgeeextra.html#cb9-2" aria-hidden="true" tabindex="-1"></a>ee<span class="sc">$</span><span class="fu">ImageCollection</span>(ds) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="rgeeextra.html#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ee_model_cloudmask</span>()</span></code></pre></div>
+</div>
+</div>
+<div id="image-scaling-and-offsetting" class="section level2 unnumbered">
+<h2>Image Scaling and Offsetting</h2>
+<p>Scaling and offsetting can also be done using eemont with just one method: <code>scale()</code>!</p>
+<div id="rgee-style-3" class="section level3 unnumbered">
+<h3>rgee style</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="rgeeextra.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgee)</span>
+<span id="cb10-2"><a href="rgeeextra.html#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="rgeeextra.html#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ee_Initialize</span>()</span>
+<span id="cb10-4"><a href="rgeeextra.html#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="rgeeextra.html#cb10-5" aria-hidden="true" tabindex="-1"></a>scaleBands <span class="ot">&lt;-</span> <span class="cf">function</span>(img) {</span>
+<span id="cb10-6"><a href="rgeeextra.html#cb10-6" aria-hidden="true" tabindex="-1"></a>  scaling <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="st">&#39;NDVI&#39;</span>, <span class="st">&#39;EVI&#39;</span>, <span class="st">&#39;sur.*&#39;</span>))</span>
+<span id="cb10-7"><a href="rgeeextra.html#cb10-7" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> scaling<span class="sc">$</span><span class="fu">multiply</span>(<span class="fl">0.0001</span>)</span>
+<span id="cb10-8"><a href="rgeeextra.html#cb10-8" aria-hidden="true" tabindex="-1"></a>  scaling <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(<span class="st">&#39;.*th&#39;</span>)</span>
+<span id="cb10-9"><a href="rgeeextra.html#cb10-9" aria-hidden="true" tabindex="-1"></a>  scaling <span class="ot">&lt;-</span> scaling<span class="sc">$</span><span class="fu">multiply</span>(<span class="fl">0.01</span>)</span>
+<span id="cb10-10"><a href="rgeeextra.html#cb10-10" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x<span class="sc">$</span><span class="fu">addBands</span>(scaling)</span>
+<span id="cb10-11"><a href="rgeeextra.html#cb10-11" aria-hidden="true" tabindex="-1"></a>  notScaling <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="st">&#39;DetailedQA&#39;</span>, <span class="st">&#39;DayOfYear&#39;</span>, <span class="st">&#39;SummaryQA&#39;</span>))</span>
+<span id="cb10-12"><a href="rgeeextra.html#cb10-12" aria-hidden="true" tabindex="-1"></a>  x<span class="sc">$</span><span class="fu">addBands</span>(notScaling)</span>
+<span id="cb10-13"><a href="rgeeextra.html#cb10-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-14"><a href="rgeeextra.html#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="rgeeextra.html#cb10-15" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="st">&#39;MODIS/006/MOD13Q1&#39;</span></span>
+<span id="cb10-16"><a href="rgeeextra.html#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="rgeeextra.html#cb10-17" aria-hidden="true" tabindex="-1"></a>ee<span class="sc">$</span><span class="fu">ImageCollection</span>(ds)<span class="sc">$</span><span class="fu">map</span>(scaleBands)</span></code></pre></div>
+</div>
+<div id="rgeeextra-style-3" class="section level3 unnumbered">
+<h3>rgeeExtra style</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="rgeeextra.html#cb11-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="st">&#39;MODIS/006/MOD13Q1&#39;</span></span>
+<span id="cb11-2"><a href="rgeeextra.html#cb11-2" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb11-3"><a href="rgeeextra.html#cb11-3" aria-hidden="true" tabindex="-1"></a>ee<span class="sc">$</span><span class="fu">ImageCollection</span>(ds) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-4"><a href="rgeeextra.html#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ee_ImageCollection_scaleAndOffset</span>()</span></code></pre></div>
+</div>
+</div>
+<div id="complete-preprocessing" class="section level2 unnumbered">
+<h2>Complete Preprocessing</h2>
+<p>The complete preprocessing workflow (Masking clouds and shadows, and image scaling and offsetting) can be done using eemont with just one method: <code>preprocess()</code>!</p>
+<div id="rgee-style-4" class="section level3 unnumbered">
+<h3>rgee style</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="rgeeextra.html#cb12-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="st">&#39;LANDSAT/LC08/C01/T1_SR&#39;</span></span>
+<span id="cb12-2"><a href="rgeeextra.html#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="rgeeextra.html#cb12-3" aria-hidden="true" tabindex="-1"></a>maskCloudsShadows <span class="ot">&lt;-</span> <span class="cf">function</span>(img) {</span>
+<span id="cb12-4"><a href="rgeeextra.html#cb12-4" aria-hidden="true" tabindex="-1"></a>  cloud_c <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">**</span><span class="dv">3</span></span>
+<span id="cb12-5"><a href="rgeeextra.html#cb12-5" aria-hidden="true" tabindex="-1"></a>  cloud_s <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">**</span><span class="dv">5</span></span>
+<span id="cb12-6"><a href="rgeeextra.html#cb12-6" aria-hidden="true" tabindex="-1"></a>  qa <span class="ot">&lt;-</span> <span class="st">&#39;pixel_qa&#39;</span></span>
+<span id="cb12-7"><a href="rgeeextra.html#cb12-7" aria-hidden="true" tabindex="-1"></a>  qa <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(qa)</span>
+<span id="cb12-8"><a href="rgeeextra.html#cb12-8" aria-hidden="true" tabindex="-1"></a>  cm <span class="ot">&lt;-</span> qa<span class="sc">$</span><span class="fu">bitwiseAnd</span>(cloud_c)<span class="sc">$</span><span class="fu">eq</span>(<span class="dv">0</span>)</span>
+<span id="cb12-9"><a href="rgeeextra.html#cb12-9" aria-hidden="true" tabindex="-1"></a>  sm <span class="ot">&lt;-</span> qa<span class="sc">$</span><span class="fu">bitwiseAnd</span>(cloud_s)<span class="sc">$</span><span class="fu">eq</span>(<span class="dv">0</span>)</span>
+<span id="cb12-10"><a href="rgeeextra.html#cb12-10" aria-hidden="true" tabindex="-1"></a>  mask <span class="ot">&lt;-</span> cm<span class="sc">$</span><span class="fu">And</span>(sm)</span>
+<span id="cb12-11"><a href="rgeeextra.html#cb12-11" aria-hidden="true" tabindex="-1"></a>  img<span class="sc">$</span><span class="fu">updateMask</span>(mask)</span>
+<span id="cb12-12"><a href="rgeeextra.html#cb12-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-13"><a href="rgeeextra.html#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="rgeeextra.html#cb12-14" aria-hidden="true" tabindex="-1"></a>scaleBands <span class="ot">&lt;-</span> <span class="cf">function</span>(img) {</span>
+<span id="cb12-15"><a href="rgeeextra.html#cb12-15" aria-hidden="true" tabindex="-1"></a>  scaling <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(<span class="st">&#39;B[1-7]&#39;</span>)</span>
+<span id="cb12-16"><a href="rgeeextra.html#cb12-16" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> scaling<span class="sc">$</span><span class="fu">multiply</span>(<span class="fl">0.0001</span>)</span>
+<span id="cb12-17"><a href="rgeeextra.html#cb12-17" aria-hidden="true" tabindex="-1"></a>  scaling <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="st">&#39;B10&#39;</span>, <span class="st">&#39;B11&#39;</span>))</span>
+<span id="cb12-18"><a href="rgeeextra.html#cb12-18" aria-hidden="true" tabindex="-1"></a>  scaling <span class="ot">&lt;-</span> scaling<span class="sc">$</span><span class="fu">multiply</span>(<span class="fl">0.1</span>)</span>
+<span id="cb12-19"><a href="rgeeextra.html#cb12-19" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x<span class="sc">$</span><span class="fu">addBands</span>(scaling)</span>
+<span id="cb12-20"><a href="rgeeextra.html#cb12-20" aria-hidden="true" tabindex="-1"></a>  notScaling <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(<span class="fu">c</span>(</span>
+<span id="cb12-21"><a href="rgeeextra.html#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;sr_aerosol&#39;</span>,</span>
+<span id="cb12-22"><a href="rgeeextra.html#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;pixel_qa&#39;</span>,</span>
+<span id="cb12-23"><a href="rgeeextra.html#cb12-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;radsat_qa&#39;</span></span>
+<span id="cb12-24"><a href="rgeeextra.html#cb12-24" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb12-25"><a href="rgeeextra.html#cb12-25" aria-hidden="true" tabindex="-1"></a>  x<span class="sc">$</span><span class="fu">addBands</span>(notScaling)</span>
+<span id="cb12-26"><a href="rgeeextra.html#cb12-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-27"><a href="rgeeextra.html#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-28"><a href="rgeeextra.html#cb12-28" aria-hidden="true" tabindex="-1"></a>ee<span class="sc">$</span><span class="fu">ImageCollection</span>(ds) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-29"><a href="rgeeextra.html#cb12-29" aria-hidden="true" tabindex="-1"></a>  ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">map</span>(maskCloudsShadows) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-30"><a href="rgeeextra.html#cb12-30" aria-hidden="true" tabindex="-1"></a>  ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">map</span>(scaleBands)</span></code></pre></div>
+</div>
+<div id="rgeeextra-style-4" class="section level3 unnumbered">
+<h3>rgeeExtra style</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="rgeeextra.html#cb13-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="st">&#39;LANDSAT/LC08/C01/T1_SR&#39;</span></span>
+<span id="cb13-2"><a href="rgeeextra.html#cb13-2" aria-hidden="true" tabindex="-1"></a>ee<span class="sc">$</span><span class="fu">ImageCollection</span>(ds) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="rgeeextra.html#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ee_ImageCollection_preprocess</span>()</span></code></pre></div>
+</div>
+</div>
+<div id="spectral-indices" class="section level2 unnumbered">
+<h2>Spectral Indices</h2>
+<p>Do you need to compute several spectral indices? Use the <code>ee_ImageCollection_spectralIndex()</code> or <code>ee_Image_spectralIndex</code> functions! The
+indices are taken from <a href="https://github.com/davemlz/awesome-spectral-indices">Awesome Spectral Indices</a>.</p>
+<div id="rgee-style-5" class="section level3 unnumbered">
+<h3>rgee style</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="rgeeextra.html#cb14-1" aria-hidden="true" tabindex="-1"></a>scaleBands <span class="ot">&lt;-</span> <span class="cf">function</span>(img) {</span>
+<span id="cb14-2"><a href="rgeeextra.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  scaling <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(<span class="st">&quot;B[1-7]&quot;</span>)</span>
+<span id="cb14-3"><a href="rgeeextra.html#cb14-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> scaling<span class="sc">$</span><span class="fu">multiply</span>(<span class="fl">0.0001</span>)</span>
+<span id="cb14-4"><a href="rgeeextra.html#cb14-4" aria-hidden="true" tabindex="-1"></a>  scaling <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="st">&quot;B10&quot;</span>, <span class="st">&quot;B11&quot;</span>))</span>
+<span id="cb14-5"><a href="rgeeextra.html#cb14-5" aria-hidden="true" tabindex="-1"></a>  scaling <span class="ot">&lt;-</span> scaling<span class="sc">$</span><span class="fu">multiply</span>(<span class="fl">0.1</span>)</span>
+<span id="cb14-6"><a href="rgeeextra.html#cb14-6" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x<span class="sc">$</span><span class="fu">addBands</span>(scaling)</span>
+<span id="cb14-7"><a href="rgeeextra.html#cb14-7" aria-hidden="true" tabindex="-1"></a>  notScaling <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">select</span>(<span class="fu">c</span>(</span>
+<span id="cb14-8"><a href="rgeeextra.html#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;sr_aerosol&quot;</span>,</span>
+<span id="cb14-9"><a href="rgeeextra.html#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;pixel_qa&quot;</span>,</span>
+<span id="cb14-10"><a href="rgeeextra.html#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;radsat_qa&quot;</span></span>
+<span id="cb14-11"><a href="rgeeextra.html#cb14-11" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb14-12"><a href="rgeeextra.html#cb14-12" aria-hidden="true" tabindex="-1"></a>  x<span class="sc">$</span><span class="fu">addBands</span>(notScaling)</span>
+<span id="cb14-13"><a href="rgeeextra.html#cb14-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-14"><a href="rgeeextra.html#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="rgeeextra.html#cb14-15" aria-hidden="true" tabindex="-1"></a>addIndices <span class="ot">&lt;-</span> <span class="cf">function</span>(img) {</span>
+<span id="cb14-16"><a href="rgeeextra.html#cb14-16" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;B5&quot;</span>, <span class="st">&quot;B4&quot;</span>)</span>
+<span id="cb14-17"><a href="rgeeextra.html#cb14-17" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">normalizedDifference</span>(x)</span>
+<span id="cb14-18"><a href="rgeeextra.html#cb14-18" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">&lt;-</span> a<span class="sc">$</span><span class="fu">rename</span>(<span class="st">&quot;NDVI&quot;</span>)</span>
+<span id="cb14-19"><a href="rgeeextra.html#cb14-19" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;B5&quot;</span>, <span class="st">&quot;B3&quot;</span>)</span>
+<span id="cb14-20"><a href="rgeeextra.html#cb14-20" aria-hidden="true" tabindex="-1"></a>  b <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">normalizedDifference</span>(x)</span>
+<span id="cb14-21"><a href="rgeeextra.html#cb14-21" aria-hidden="true" tabindex="-1"></a>  b <span class="ot">&lt;-</span> b<span class="sc">$</span><span class="fu">rename</span>(<span class="st">&quot;GNDVI&quot;</span>)</span>
+<span id="cb14-22"><a href="rgeeextra.html#cb14-22" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;B3&quot;</span>, <span class="st">&quot;B6&quot;</span>)</span>
+<span id="cb14-23"><a href="rgeeextra.html#cb14-23" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">normalizedDifference</span>(x)</span>
+<span id="cb14-24"><a href="rgeeextra.html#cb14-24" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> b<span class="sc">$</span><span class="fu">rename</span>(<span class="st">&quot;NDSI&quot;</span>)</span>
+<span id="cb14-25"><a href="rgeeextra.html#cb14-25" aria-hidden="true" tabindex="-1"></a>  img<span class="sc">$</span><span class="fu">addBands</span>(<span class="fu">c</span>(a, b, c))</span>
+<span id="cb14-26"><a href="rgeeextra.html#cb14-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-27"><a href="rgeeextra.html#cb14-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-28"><a href="rgeeextra.html#cb14-28" aria-hidden="true" tabindex="-1"></a>ee<span class="sc">$</span><span class="fu">ImageCollection</span>(ds) <span class="sc">%&gt;%</span></span>
+<span id="cb14-29"><a href="rgeeextra.html#cb14-29" aria-hidden="true" tabindex="-1"></a>  ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">map</span>(scaleImage) <span class="sc">%&gt;%</span></span>
+<span id="cb14-30"><a href="rgeeextra.html#cb14-30" aria-hidden="true" tabindex="-1"></a>  ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">map</span>(addIndices)</span></code></pre></div>
+</div>
+<div id="rgeeextra-style-5" class="section level3 unnumbered">
+<h3>rgeeExtra style</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="rgeeextra.html#cb15-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="st">&#39;LANDSAT/LC08/C01/T1_SR&#39;</span></span>
+<span id="cb15-2"><a href="rgeeextra.html#cb15-2" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb15-3"><a href="rgeeextra.html#cb15-3" aria-hidden="true" tabindex="-1"></a>ee<span class="sc">$</span><span class="fu">ImageCollection</span>(ds) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-4"><a href="rgeeextra.html#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ee_ImageCollection_scaleAndOffset</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb15-5"><a href="rgeeextra.html#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ee_ImageCollection_spectralIndex</span>(<span class="fu">c</span>(<span class="st">&#39;NDVI&#39;</span>, <span class="st">&#39;GNDVI&#39;</span>, <span class="st">&#39;NDSI&#39;</span>))</span></code></pre></div>
+<p>The list of available indices can be retrieved by running:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="rgeeextra.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ee_list_spectral_indices</span>()</span></code></pre></div>
+<p>Information about the indices can also be checked:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="rgeeextra.html#cb17-1" aria-hidden="true" tabindex="-1"></a>indices <span class="ot">&lt;-</span> <span class="fu">ee_spectral_indices</span>() </span>
+<span id="cb17-2"><a href="rgeeextra.html#cb17-2" aria-hidden="true" tabindex="-1"></a>indices<span class="sc">$</span>BAIS2<span class="sc">$</span>formula</span>
+<span id="cb17-3"><a href="rgeeextra.html#cb17-3" aria-hidden="true" tabindex="-1"></a>indices<span class="sc">$</span>BAIS2<span class="sc">$</span>reference</span></code></pre></div>
+</div>
+</div>
+<div id="closest-image-to-a-specific-date" class="section level2 unnumbered">
+<h2>Closest Image to a Specific Date</h2>
+<p>Struggling to get the closest image to a specific date? Here is the solution: the <code>closest()</code> method!</p>
+<div id="rgee-style-6" class="section level3 unnumbered">
+<h3>rgee style</h3>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="rgeeextra.html#cb18-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="st">&#39;COPERNICUS/S5P/OFFL/L3_NO2&#39;</span></span>
+<span id="cb18-2"><a href="rgeeextra.html#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="rgeeextra.html#cb18-3" aria-hidden="true" tabindex="-1"></a>xy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">76.21</span>, <span class="fl">3.45</span>)</span>
+<span id="cb18-4"><a href="rgeeextra.html#cb18-4" aria-hidden="true" tabindex="-1"></a>poi <span class="ot">&lt;-</span> ee<span class="sc">$</span>Geometry<span class="sc">$</span><span class="fu">Point</span>(xy)</span>
+<span id="cb18-5"><a href="rgeeextra.html#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="rgeeextra.html#cb18-6" aria-hidden="true" tabindex="-1"></a>date <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Date</span>(<span class="st">&#39;2020-10-15&#39;</span>)</span>
+<span id="cb18-7"><a href="rgeeextra.html#cb18-7" aria-hidden="true" tabindex="-1"></a>date <span class="ot">&lt;-</span> date<span class="sc">$</span><span class="fu">millis</span>()</span>
+<span id="cb18-8"><a href="rgeeextra.html#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="rgeeextra.html#cb18-9" aria-hidden="true" tabindex="-1"></a>setTimeDelta <span class="ot">&lt;-</span> <span class="cf">function</span>(img) {</span>
+<span id="cb18-10"><a href="rgeeextra.html#cb18-10" aria-hidden="true" tabindex="-1"></a>  prop <span class="ot">&lt;-</span> <span class="st">&#39;system:time_start&#39;</span></span>
+<span id="cb18-11"><a href="rgeeextra.html#cb18-11" aria-hidden="true" tabindex="-1"></a>  prop <span class="ot">&lt;-</span> img<span class="sc">$</span><span class="fu">get</span>(prop)</span>
+<span id="cb18-12"><a href="rgeeextra.html#cb18-12" aria-hidden="true" tabindex="-1"></a>  prop <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Number</span>(prop)              </span>
+<span id="cb18-13"><a href="rgeeextra.html#cb18-13" aria-hidden="true" tabindex="-1"></a>  delta <span class="ot">&lt;-</span> prop<span class="sc">$</span><span class="fu">subtract</span>(date)</span>
+<span id="cb18-14"><a href="rgeeextra.html#cb18-14" aria-hidden="true" tabindex="-1"></a>  delta <span class="ot">&lt;-</span> delta<span class="sc">$</span><span class="fu">abs</span>()              </span>
+<span id="cb18-15"><a href="rgeeextra.html#cb18-15" aria-hidden="true" tabindex="-1"></a>  img<span class="sc">$</span><span class="fu">set</span>(<span class="st">&#39;dateDist&#39;</span>, delta)</span>
+<span id="cb18-16"><a href="rgeeextra.html#cb18-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-17"><a href="rgeeextra.html#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="rgeeextra.html#cb18-18" aria-hidden="true" tabindex="-1"></a>                  </span>
+<span id="cb18-19"><a href="rgeeextra.html#cb18-19" aria-hidden="true" tabindex="-1"></a>ee<span class="sc">$</span><span class="fu">ImageCollection</span>(ds) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-20"><a href="rgeeextra.html#cb18-20" aria-hidden="true" tabindex="-1"></a>  ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">filterBounds</span>(poi) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-21"><a href="rgeeextra.html#cb18-21" aria-hidden="true" tabindex="-1"></a>  ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">map</span>(setTimeDelta) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-22"><a href="rgeeextra.html#cb18-22" aria-hidden="true" tabindex="-1"></a>  ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">sort</span>(<span class="st">&#39;dateDist&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-23"><a href="rgeeextra.html#cb18-23" aria-hidden="true" tabindex="-1"></a>  ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">first</span>()</span></code></pre></div>
+</div>
+<div id="rgeeextra-style-6" class="section level3 unnumbered">
+<h3>rgeeExtra style</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="rgeeextra.html#cb19-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="st">&#39;COPERNICUS/S5P/OFFL/L3_NO2&#39;</span></span>
+<span id="cb19-2"><a href="rgeeextra.html#cb19-2" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb19-3"><a href="rgeeextra.html#cb19-3" aria-hidden="true" tabindex="-1"></a>xy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">76.21</span>, <span class="fl">3.45</span>)</span>
+<span id="cb19-4"><a href="rgeeextra.html#cb19-4" aria-hidden="true" tabindex="-1"></a>poi <span class="ot">&lt;-</span> ee<span class="sc">$</span>Geometry<span class="sc">$</span><span class="fu">Point</span>(xy)</span>
+<span id="cb19-5"><a href="rgeeextra.html#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="rgeeextra.html#cb19-6" aria-hidden="true" tabindex="-1"></a>ee<span class="sc">$</span><span class="fu">ImageCollection</span>(ds) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-7"><a href="rgeeextra.html#cb19-7" aria-hidden="true" tabindex="-1"></a>    ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">filterBounds</span>(poi) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-8"><a href="rgeeextra.html#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ee_ImageCollection_closest</span>(<span class="st">&#39;2020-10-15&#39;</span>)</span></code></pre></div>
+
+</div>
+</div>
+</div>
+  </main>
+
+  <div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page">
+      <h2>On this page</h2>
+      <div id="book-on-this-page"></div>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          <li><a id="book-source" href="#">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="#">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5">
+  <div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+<script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+
+</html>

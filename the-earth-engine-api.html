@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>The Earth Engine API | Earth Engine with R</title>
+
+    <meta name="author" content="rgee team" />
+  
+   
+   <meta name="generator" content="placeholder" />
+  <meta property="og:title" content="The Earth Engine API | Earth Engine with R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="The Earth Engine API | Earth Engine with R" />
+  
+  
+  
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script>
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet" />
+    <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script>
+    <script src="libs/bs3compat-0.3.1/transition.js"></script>
+    <script src="libs/bs3compat-0.3.1/tabs.js"></script>
+    <script src="libs/bs3compat-0.3.1/bs3compat.js"></script>
+    <link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet" />
+    <script src="libs/bs4_book-1.0.0/bs4_book.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-141212623-1');
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script>
+
+  <!-- CSS -->
+  
+</head>
+
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book">
+    <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+      </form>
+
+      <nav aria-label="Table of contents">
+        <h2>Table of contents</h2>
+        <div id="book-toc"></div>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="#">View book source <i class="fab fa-github"></i></a></li></p>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="col-sm-12 col-md-9 col-lg-7" id="content">
+<div id="the-earth-engine-api" class="section level1 unnumbered">
+<h1>The Earth Engine API</h1>
+<p>To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you’ve already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!</p>
+<div id="visualizing-images-and-image-bands" class="section level2 unnumbered">
+<h2>Visualizing Images and Image Bands</h2>
+<p>Now that you’re ready to begin writing in R of the Earth Engine , start by copying the following code into the Code Editor:</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="the-earth-engine-api.html#cb186-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Instantiate an image with the Image constructor.</span></span>
+<span id="cb186-2"><a href="the-earth-engine-api.html#cb186-2" aria-hidden="true" tabindex="-1"></a>image <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&#39;CGIAR/SRTM90_V4&#39;</span>)</span>
+<span id="cb186-3"><a href="the-earth-engine-api.html#cb186-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb186-4"><a href="the-earth-engine-api.html#cb186-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Zoom to a location.</span></span>
+<span id="cb186-5"><a href="the-earth-engine-api.html#cb186-5" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">setCenter</span>(<span class="sc">-</span><span class="fl">112.8598</span>, <span class="fl">36.2841</span>, <span class="dv">9</span>) <span class="do">## Center on the Grand Canyon.</span></span>
+<span id="cb186-6"><a href="the-earth-engine-api.html#cb186-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb186-7"><a href="the-earth-engine-api.html#cb186-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Display the image on the map.</span></span>
+<span id="cb186-8"><a href="the-earth-engine-api.html#cb186-8" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(image)</span></code></pre></div>
+<p>Click the Run button at the top of the Code Editor and observe that a very gray image appears on the map. Don’t worry, you’ll make it look better soon.</p>
+</div>
+<div id="image-constructor" class="section level2 unnumbered">
+<h2>Image Constructor</h2>
+<p>The first new thing in this example is the image constructor <code>ee$Image()</code>. The argument provided to the constructor is the string ID of an image in the Earth Engine data catalog. (See the Docs tab, at the left of the Code Editor, to see a full list of possible arguments to the image constructor. The Docs tab represents the most up to date information about what Earth Engine can do.)</p>
+<p>To discover an image ID, search in the Earth Engine data catalog using the search tool at the top of the Code Editor. For example, type ‘elevation’ into the search field and note that a list of rasters is returned. Click the ‘SRTM Digital Elevation Data Version 4’ entry to see more information about that dataset. On the right side of the dataset description is an Image ID field. Observe that the image ID in the example is copied from the image ID shown in the dataset description.</p>
+<p>An alternative to copying and pasting image IDs is to use the Import button on the dataset description or the import link at the right side of the search results. If you click the import link or button, a variable is automatically created in a special section, named ‘Imports,’ at the top of your script. You can rename the variable by clicking on its name in the imports section.</p>
+</div>
+<div id="configuring-the-map" class="section level2 unnumbered">
+<h2>Configuring the Map</h2>
+<p>The second new part of this example is the <code>Map$setCenter()</code> call. This method on the <code>Map</code> object, which represents the Map display in the Code Editor, centers the map at the given longitude, latitude (in decimal degrees) and zoom level where 1 is zoomed out so that the map shows the entire Earth’s surface. Larger numbers zoom in from there. Discover all the methods on the <code>Map</code> object by checking the Map section in the Docs tab on the left side of the Code Editor.</p>
+</div>
+<div id="adding-a-layer-to-the-map" class="section level2 unnumbered">
+<h2>Adding a layer to the Map</h2>
+<p>The last line in the example says: use the <code>Map</code> object’s <code>addLayer()</code> method to add an image to the map display in the Code Editor.</p>
+<p>Congratulations! You’ve created your first Earth Engine script. In the next section, you’ll learn how to make that image look a little better.</p>
+</div>
+<div id="digression-images-in-earth-engine" class="section level2 unnumbered">
+<h2>Digression: Images in Earth Engine</h2>
+<p>Images in Earth Engine (see this page for more details) are made up of one or more bands. Each band in an image has its own name, pixel values, pixel resolution, and projection. As you’ll soon discover, the SRTM image has one band: ‘elevation.’</p>
+<p>When you add an image to a map using <code>Map$addLayer()</code>, Earth Engine needs to determine how to map the values in the image band(s) to colors on the display. If a single-band image is added to a map, by default Earth Engine displays the band in grayscale, where the minimum value is assigned to black, and the maximum value is assigned to white. If you don’t specify what the minimum and maximum should be, Earth Engine will use default values. For example, the image you just added to the map is displayed as a grayscale image stretched to the full range of the data, or signed 16-bit integer [-32768, 32767]. (<code>float</code> bands are stretched to [0, 1] and <code>byte</code> bands are stretched to [0, 255] by default).</p>
+<p>You can discover the data type of the image by printing it and inspecting the image object in the <strong>Console</strong> tab. For example, paste the following after the previous code:</p>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="the-earth-engine-api.html#cb187-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&#39;SRTM image&#39;</span>, image)</span></code></pre></div>
+<p>When you click run, note that an object appears in the console. To investigate the object properties, expand it by clicking on the zippy () to the left of the object or property. Expand the image object, the ‘bands’ property, the ‘elevation’ band at index ‘0’ and the ‘data_type’ property of the ‘elevation’ band to discover that it is a <code>signed int16</code> data type.</p>
+</div>
+<div id="customizing-layer-visualization" class="section level2 unnumbered">
+<h2>Customizing layer visualization</h2>
+<p>To change the way the data are stretched, you can provide another parameter to the <code>Map$addLayer()</code> call. Specifically, the second parameter, <code>visParams</code>, lets you specify the minimum and maximum values to display. To discover what values to use, activate the Inspector tab and click around on the map to get an idea of the range of pixel values. Alternatively, use the Layer manager to interactively stretch the data, then observe the minimum and maximum corresponding to percentiles or standard deviation stretches. Suppose that through such experimentation, you determine that the data should be stretched to [0, 3000]. To display the image using this range, use:</p>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="the-earth-engine-api.html#cb188-1" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(image, <span class="fu">list</span>(<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">3000</span>), <span class="st">&#39;custom visualization&#39;</span>)</span></code></pre></div>
+<p>Note that the visParams parameter is an object, with properties specifying the min and the max. Note that the third parameter for <code>Map$addLayer()</code> is the name of the layer that is displayed in the Layer manager. The result should look something like Figure 1. Hover the mouse over the <strong>Layers</strong> box on the right to see the effect of renaming that layer.</p>
+<center>
+<div class="figure">
+<img src="C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_01.png" width="670" alt="" />
+<p class="caption">Figure 8. Elevation image as grayscale, stretched to (0, 3000)</p>
+</div>
+<p><left></p>
+<p>To display a single band using a color palette, add a <code>palette</code> property to the <code>visParams</code> object:</p>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="the-earth-engine-api.html#cb189-1" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(image, <span class="fu">list</span>(<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">3000</span>, <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&#39;blue&#39;</span>, <span class="st">&#39;green&#39;</span>, <span class="st">&#39;red&#39;</span>)), </span>
+<span id="cb189-2"><a href="the-earth-engine-api.html#cb189-2" aria-hidden="true" tabindex="-1"></a>             <span class="st">&#39;custom palette&#39;</span>)</span></code></pre></div>
+<p>The result should look something like Figure .</p>
+<center>
+<div class="figure">
+<img src="C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_02.png" width="670" alt="" />
+<p class="caption">Figure 8. Elevation image as a color ramp from blue to red, stretched to (0, 3000).</p>
+</div>
+</center>
+</div>
+<div id="digression-palettes" class="section level2 unnumbered">
+<h2>Digression: Palettes</h2>
+<p>Palettes let you set the color scheme for single-band images. A palette is a comma delimited list of color strings which are linearly interpolated between the maximum and minimum values in the visualization parameters (or defaults according to the band type, as described previously). For example, pixels less than or equal to the minimum will be displayed with the first color in the list; pixels greater than or equal to the maximum will be displayed with the last color in the list. Intermediate colors are linearly stretched to intermediate pixel values.</p>
+<p>The colors are defined using the web standard CSS color value scheme (see this external reference to learn more). Colors can be specified by name or as hexadecimal strings indicating the combination of red, green and blue. The lowest value in any of the three positions is 00 (representing the decimal number 0), while the highest is FF (representing the decimal number 255). The string ‘000000’ represents the color black, ‘FFFFFF’ is white, ‘FF0000’ is red, ‘00FF00’ is green, and ‘0000FF’ is blue. See the Color palettes section for more detail. Other stretches are possible by using Styled Layer Descriptors, as described in this section.</p>
+<p>Later in this tutorial, you’ll learn how to display multi-band imagery. But first, visit the next page to learn about performing computations with images.</p>
+</div>
+<div id="computations-using-images" class="section level2 unnumbered">
+<h2>Computations using Images</h2>
+<p>Now that you know how to load and display an image, it’s time to apply a computation to it. For example, you can compute the slope of terrain, by passing the SRTM elevation image to the <code>slope</code> method of the <code>ee.Terrain</code> package.</p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="the-earth-engine-api.html#cb190-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load the SRTM image.</span></span>
+<span id="cb190-2"><a href="the-earth-engine-api.html#cb190-2" aria-hidden="true" tabindex="-1"></a>srtm <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&#39;CGIAR/SRTM90_V4&#39;</span>)</span>
+<span id="cb190-3"><a href="the-earth-engine-api.html#cb190-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb190-4"><a href="the-earth-engine-api.html#cb190-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Apply an algorithm to an image.</span></span>
+<span id="cb190-5"><a href="the-earth-engine-api.html#cb190-5" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> ee<span class="sc">$</span>Terrain<span class="sc">$</span><span class="fu">slope</span>(srtm)</span>
+<span id="cb190-6"><a href="the-earth-engine-api.html#cb190-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb190-7"><a href="the-earth-engine-api.html#cb190-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Display the result.</span></span>
+<span id="cb190-8"><a href="the-earth-engine-api.html#cb190-8" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">setCenter</span>(<span class="sc">-</span><span class="fl">112.8598</span>, <span class="fl">36.2841</span>, <span class="dv">9</span>) <span class="do">## Center on the Grand Canyon.</span></span>
+<span id="cb190-9"><a href="the-earth-engine-api.html#cb190-9" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(slope, <span class="fu">list</span>(<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">60</span>), <span class="st">&#39;slope&#39;</span>)</span></code></pre></div>
+<p>Note that in the code <code>ee.Terrain.slope(srtm)</code>, the srtm image is provided as an argument to the slope algorithm. The result should look something like Figure 3.</p>
+<center>
+<div class="figure">
+<img src="C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_03.png" width="670" alt="" />
+<p class="caption">Figure 8. Slope image.</p>
+</div>
+</center>
+</div>
+<div id="image-math" class="section level2 unnumbered">
+<h2>Image math</h2>
+<p>There are also methods in the <code>ee$Image</code> class that can be invoked on an image object. For example, suppose you’d like to do some math using image bands (sometimes called <em>band math</em> or <em>map algebra</em>). For example, you may be interested in trigonometric operations on an aspect image. To accomplish that, first convert an aspect image to radians, then call <code>sin()</code> on it. Reusing our <code>srtm</code> image.</p>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="the-earth-engine-api.html#cb191-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get the aspect (in degrees).</span></span>
+<span id="cb191-2"><a href="the-earth-engine-api.html#cb191-2" aria-hidden="true" tabindex="-1"></a>aspect <span class="ot">&lt;-</span> ee<span class="sc">$</span>Terrain<span class="sc">$</span><span class="fu">aspect</span>(srtm)</span>
+<span id="cb191-3"><a href="the-earth-engine-api.html#cb191-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb191-4"><a href="the-earth-engine-api.html#cb191-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Convert to radians, compute the sin of the aspect.</span></span>
+<span id="cb191-5"><a href="the-earth-engine-api.html#cb191-5" aria-hidden="true" tabindex="-1"></a>sinImage <span class="ot">&lt;-</span> aspect<span class="sc">$</span><span class="fu">divide</span>(<span class="dv">180</span>)<span class="sc">$</span><span class="fu">multiply</span>(Math<span class="sc">$</span>PI)<span class="sc">$</span><span class="fu">sin</span>()</span>
+<span id="cb191-6"><a href="the-earth-engine-api.html#cb191-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb191-7"><a href="the-earth-engine-api.html#cb191-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Display the result.</span></span>
+<span id="cb191-8"><a href="the-earth-engine-api.html#cb191-8" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(sinImage, <span class="fu">list</span>(<span class="at">min =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">max =</span> <span class="dv">1</span>), <span class="st">&#39;sin&#39;</span>)</span></code></pre></div>
+<p>The result should look something like Figure . It’s worth taking a closer look at the <code>aspect$divide(180)$multiply(Math$PI)$sin()</code> code. By chaining multiple methods like this, the code says, ‘divide the aspect by 180, multiply the result of that by π, and finally take the sin.’ You can perform complex mathematical operations on images by combining methods in this manner. See the <code>Image</code> <a href="https:#developers.google.com/earth-engine/apidocs/ee-image">docs</a> for a complete list of mathematical operations, <code>add()</code>, <code>subtract()</code>, <code>multiply()</code>, etc.</p>
+<center>
+<div class="figure">
+<img src="C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_04.png" width="670" alt="" />
+<p class="caption">Figure 8. Slope image.</p>
+</div>
+</div>
+<div id="image-statistics" class="section level2 unnumbered">
+<h2>Image statistics</h2>
+<p>Another useful class of operations on images involves computing pixel statistics in image regions, or raster-vector overlays. To compute statistics in Earth Engine, use a reducer as represented by classes in the <code>ee$Reducer</code> <a href="https:#developers.google.com/earth-engine/guides/reducers_intro">package</a>.For example, suppose you’re interested in the mean of elevation in some region. You can define a region by drawing a polygon using the <a href="https:#developers.google.com/earth-engine/guides/playground#geometry-tools">geometry drawing tools</a> . To interactively draw a region, get the polygon drawing tool, then digitize a polygon over your area of interest and click <strong>Exit</strong> when you’re done. Note that the resultant <code>ee$Geometry</code> object is automatically named geometry and added as an import at the top of your script. Rename that variable to ‘polygon’ by clicking on the variable name in the imports and typing the new name.</p>
+<p>Next, get the mean pixel value in the polygon using the following code:</p>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="the-earth-engine-api.html#cb192-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Compute the mean elevation in the polygon.</span></span>
+<span id="cb192-2"><a href="the-earth-engine-api.html#cb192-2" aria-hidden="true" tabindex="-1"></a>meanDict <span class="ot">&lt;-</span> srtm<span class="sc">$</span><span class="fu">reduceRegion</span>(</span>
+<span id="cb192-3"><a href="the-earth-engine-api.html#cb192-3" aria-hidden="true" tabindex="-1"></a>  reducer <span class="ot">&lt;-</span> ee<span class="sc">$</span>Reducer<span class="sc">$</span><span class="fu">mean</span>(),</span>
+<span id="cb192-4"><a href="the-earth-engine-api.html#cb192-4" aria-hidden="true" tabindex="-1"></a>  geometry <span class="ot">&lt;-</span> polygon,</span>
+<span id="cb192-5"><a href="the-earth-engine-api.html#cb192-5" aria-hidden="true" tabindex="-1"></a>  scale <span class="ot">&lt;-</span> <span class="dv">90</span></span>
+<span id="cb192-6"><a href="the-earth-engine-api.html#cb192-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb192-7"><a href="the-earth-engine-api.html#cb192-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb192-8"><a href="the-earth-engine-api.html#cb192-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Get the mean from the dictionary and print it.</span></span>
+<span id="cb192-9"><a href="the-earth-engine-api.html#cb192-9" aria-hidden="true" tabindex="-1"></a>mean <span class="ot">&lt;-</span> meanDict<span class="sc">$</span><span class="fu">get</span>(<span class="st">&#39;elevation&#39;</span>)</span>
+<span id="cb192-10"><a href="the-earth-engine-api.html#cb192-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&#39;Mean elevation&#39;</span>, mean)</span></code></pre></div>
+<p>There are several things to note here. First, observe that <code>reduceRegion()</code> is a method available for <code>Image</code> objects <a href="https:#developers.google.com/earth-engine/guides/reducers_reduce_region">learn more about reducing regions here</a>. Second, the method arguments are provided in a R object that is passed as a single argument. (Specifically, the keys of the object are the names of the method parameters. The values are the arguments to the method). Third, the <code>reducer</code> parameter specifies the type of statistic to compute and the <code>geometry</code> parameter specifies the region in which to compute the statistic. The <code>scale</code> parameter is the pixel size in meters to use. To avoid ambiguity, you should always specify scale when doing reductions as Earth Engine may not be able to automatically determine the appropriate scale from the inputs. (Learn more about scale in Earth Engine)(<a href="https:#developers.google.com/earth-engine/guides/scale" class="uri">https:#developers.google.com/earth-engine/guides/scale</a>).</p>
+<p>Lastly, the return value of <code>reduceRegion()</code> is a dictionary in which keys are band names and values are the pixel statistics for the bands. The <code>get()</code> method on a dictionary returns the value corresponding to the key provided as an argument. In this case, the <code>srtm</code> image has one band, ‘elevation,’ so the example code gets that statistic from the dictionary and prints it.</p>
+<p>When you run this code, if you get an error that looks like:</p>
+<p><strong>IMAGE</strong></p>
+<p>Fear not! There are several things you can do to resolve the error. The <code>reduceRegion()</code> method has a check to make sure you consider whether you really want to include so many pixels in your computation. This is intended to prevent you from accidentally doing something silly, like trying compute the mean of every one-meter pixel in the world (don’t do that). To resolve the error, either set the <code>bestEffort</code> parameter to <code>true</code> by adding <code>bestEffort: true</code> to the dictionary of parameters, or set the <code>maxPixels</code> parameter to a value higher than the default of 10 million pixels, or both. If <code>bestEffort</code> is true, Earth Engine will automatically recompute the scale such that <code>maxPixels</code> is not exceeded.</p>
+</div>
+<div id="digression-scale-in-earth-engine" class="section level2 unnumbered">
+<h2>Digression: Scale in Earth Engine</h2>
+<p>In the previous example, scale is set to approximately the native resolution of the SRTM image. You can discover the native resolution of an image with:</p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="the-earth-engine-api.html#cb193-1" aria-hidden="true" tabindex="-1"></a>scale <span class="ot">&lt;-</span> srtm<span class="sc">$</span><span class="fu">projection</span>()<span class="sc">$</span><span class="fu">nominalScale</span>()</span>
+<span id="cb193-2"><a href="the-earth-engine-api.html#cb193-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&#39;SRTM scale in meters&#39;</span>, scale)</span></code></pre></div>
+<p>If you specify a scale smaller than the native resolution, Earth Engine will happily resample the input image using nearest neighbor, then include all those smaller pixels in the computation. If you set the scale to be larger, Earth Engine will use input pixels from an aggregated version of the input (i.e. get pixels from a higher level of the image pyramid). Learn more about how Earth Engine handles scale in this <a href="https:#developers.google.com/earth-engine/guides/scale">doc</a>.</p>
+<p>So far, you’ve been working with a single image with a single band. In the next page, you’ll learn about multi-band images and image collections.</p>
+</div>
+<div id="image-collections" class="section level2 unnumbered">
+<h2>Image Collections</h2>
+<p>An image collection refers to a set of Earth Engine images. For example, the collection of all Landsat 8 images is an <code>ee$ImageCollection</code>. Like the SRTM image you have been working with, image collections also have an ID. As with single images, you can discover the ID of an image collection by searching the <a href="https://developers.google.com/earth-engine/datasets">Earth Engine data catalog</a> from the Code Editor and looking at the details page of the dataset. For example, search for ‘landsat 8 toa’ and click on the first result, which should correspond to the <a href="https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C01_T1_TOA">USGS Landsat 8 Collection 1 Tier 1 TOA Reflectance</a> dataset. Either import that dataset using the <strong>Import</strong> button and rename it to <code>l8</code>, or copy the ID into the image collection constructor:</p>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="the-earth-engine-api.html#cb194-1" aria-hidden="true" tabindex="-1"></a>l8 <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&#39;LANDSAT/LC08/C01/T1_TOA&#39;</span>)</span></code></pre></div>
+<div id="filtering-image-collections" class="section level3 unnumbered">
+<h3>Filtering image collections</h3>
+<p>It’s worth noting that this collection represents every Landsat 8 scene collected, all over the Earth. Often it is useful to extract a single image, or subset of images, on which to test algorithms. The way to limit the collection by time or space is by filtering it. For example, to filter the collection to images that cover a particular location, first define your area of interest with a point (or line or polygon) using the geometry drawing tools. Pan to your area of interest, hover on the <strong>Geometry Imports</strong> (if you already have one or more geometries defined) and click <strong>+new layer</strong> (if you don’t have any imports, go to the next step). Get the point drawing tool (<strong>FIGURE</strong>) and make a point in your area of interest. Name the import <code>point</code>. Now, filter the <code>l8</code> collection to get only the images that intersect the point, then add a second filter to limit the collection to only the images that were acquired in 2015:</p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="the-earth-engine-api.html#cb195-1" aria-hidden="true" tabindex="-1"></a>spatialFiltered <span class="ot">&lt;-</span> l8<span class="sc">$</span><span class="fu">filterBounds</span>(point)</span>
+<span id="cb195-2"><a href="the-earth-engine-api.html#cb195-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&#39;spatialFiltered&#39;</span>, spatialFiltered)</span>
+<span id="cb195-3"><a href="the-earth-engine-api.html#cb195-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb195-4"><a href="the-earth-engine-api.html#cb195-4" aria-hidden="true" tabindex="-1"></a>temporalFiltered <span class="ot">&lt;-</span> spatialFiltered<span class="sc">$</span><span class="fu">filterDate</span>(<span class="st">&#39;2015-01-01&#39;</span>, <span class="st">&#39;2015-12-31&#39;</span>)</span>
+<span id="cb195-5"><a href="the-earth-engine-api.html#cb195-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&#39;temporalFiltered&#39;</span>, temporalFiltered)</span></code></pre></div>
+<p>Here, <code>filterBounds()</code> and <code>filterDate()</code> are shortcut methods for the more general <code>filter()</code> method on image collections, which takes an <code>ee.Filter()</code> as its argument. Explore the <strong>Docs</strong> tab of the Code Editor to learn more about these methods. The argument to <code>filterBounds()</code> is the point you digitized and the arguments to <code>filterDate()</code> are two dates, expressed as strings.</p>
+<p>Note that you can <code>print()</code> the filtered collections. You can’t print more than 5000 things at once, so you couldn’t, for example, print the entire <code>l8</code> collection. After executing the <code>print()</code> method, you can inspect the printed collections in the console. Note that when you expand the <code>ImageCollection</code> using the zippy (<strong>IMAGE</strong>) then expand the list of <code>features</code>, you will see a list of images, each of which also can be expanded and inspected. This is one way to discover the ID of an individual image. Another, more programmatic way to get individual images for analysis is to sort the collection in order to get the most recent, oldest, or optimal image relative to some metadata property. For example, by inspecting the image objects in the printed image collections, you may have observed a metadata property called <code>CLOUD_COVER</code>. You can use that property to get the least cloudy image in 2015 in your area of interest:</p>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="the-earth-engine-api.html#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This will sort from least to most cloudy.</span></span>
+<span id="cb196-2"><a href="the-earth-engine-api.html#cb196-2" aria-hidden="true" tabindex="-1"></a>sorted <span class="ot">&lt;-</span> temporalFiltered<span class="sc">$</span><span class="fu">sort</span>(<span class="st">&#39;CLOUD_COVER&#39;</span>)</span>
+<span id="cb196-3"><a href="the-earth-engine-api.html#cb196-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb196-4"><a href="the-earth-engine-api.html#cb196-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the first (least cloudy) image.</span></span>
+<span id="cb196-5"><a href="the-earth-engine-api.html#cb196-5" aria-hidden="true" tabindex="-1"></a>scene <span class="ot">&lt;-</span> sorted<span class="sc">$</span><span class="fu">first</span>()</span></code></pre></div>
+<p>You’re now ready to display the image!</p>
+</div>
+<div id="digression-displaying-rgb-images" class="section level3 unnumbered">
+<h3>Digression: Displaying RGB images</h3>
+<p>When a multi-band image is added to a map, Earth Engine chooses the first three bands of the image and displays them as red, green, and blue by default, stretching them according to the data type, as described previously. Usually, this won’t do. For example, if you add the Landsat image (<code>scene</code> in the previous example) to the map, the result is unsatisfactory:</p>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="the-earth-engine-api.html#cb197-1" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">centerObject</span>(scene, <span class="dv">9</span>)</span>
+<span id="cb197-2"><a href="the-earth-engine-api.html#cb197-2" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(scene, {}, <span class="st">&#39;default RGB&#39;</span>)</span></code></pre></div>
+<p>Note that first, the map is centered on the image at zoom scale 9. Then the image is displayed with an empty object (<code>{}</code>) for the <code>visParams</code> parameter (see the <code>Map.addLayer()</code> docs for details). As a result, the image is displayed with the default visualization: first three bands map to R, G, B, respectively, and stretched to [0, 1] since the bands are <code>float</code> data type. This means that the coastal aerosol band (‘B1’) is rendered in red, the blue band (‘B2’) is rendered in green, and the green band (‘B3’) is rendered in blue. To render the image as a true-color composite, you need to tell Earth Engine to use the Landsat 8 bands ‘B4,’ ‘B3,’ and ‘B2’ for R, G, and B, respectively. Specify which <code>bands</code> to use with the bands property of the <code>visParams</code> object. Learn more about Landsat bands at <a href="https://www.usgs.gov/faqs/what-are-band-designations-landsat-satellites">this reference</a>.</p>
+<p>You also need to provide <code>min</code> and <code>max</code> values suitable for displaying reflectance from typical Earth surface targets. Although lists can be used to specify different values for each band, here it’s sufficient to specify 0.3 as max and use the default value of zero for the min parameter. Combining the visualization parameters into one object and displaying:</p>
+<p>You also need to provide min and max values suitable for displaying reflectance from typical Earth surface targets. Although lists can be used to specify different values for each band, here it’s sufficient to specify <code>0.3</code> as <code>max</code> and use the default value of zero for the <code>min</code> parameter. Combining the visualization parameters into one object and displaying:</p>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="the-earth-engine-api.html#cb198-1" aria-hidden="true" tabindex="-1"></a>visParams <span class="ot">&lt;-</span> {bands <span class="ot">=</span> [<span class="st">&#39;B4&#39;</span>, <span class="st">&#39;B3&#39;</span>, <span class="st">&#39;B2&#39;</span>], max <span class="ot">=</span> <span class="fl">0.3</span>}</span>
+<span id="cb198-2"><a href="the-earth-engine-api.html#cb198-2" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(scene, visParams, <span class="st">&#39;true-color composite&#39;</span>)</span></code></pre></div>
+<p>The result should look something like Figure 5. Note that this code assigns the object of visualization parameters to a variable for possible future use. As you’ll soon discover, that object will be useful when you visualize image collections!</p>
+<center>
+<div class="figure">
+<img src="C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_05.png" width="670" alt="" />
+<p class="caption">Figure 8. Landsat 8 TOA reflectance image as a true-color composite, stretched to (0, 0.3).</p>
+</div>
+</center>
+<p>Try playing with visualizing different bands. Another favorite combination is ‘B5,’ ‘B4,’ and ‘B3’ which is called a false-color composite. Some other interesting false-color composites are described <a href="https://www.usgs.gov/media/images/common-landsat-band-rgb-composites">here</a>.</p>
+<p>Since Earth Engine is designed to do large-scale analyses, you are not limited to working with just one scene. Now it’s time to display a whole collection as an RGB composite!</p>
+</div>
+<div id="displaying-image-collections" class="section level3 unnumbered">
+<h3>Displaying image collections</h3>
+<p>Adding an image collection to a map is similar to adding an image to a map. For example, using 2016 images in the <code>l8</code> collection and the <code>visParams</code> object defined previously,</p>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="the-earth-engine-api.html#cb199-1" aria-hidden="true" tabindex="-1"></a>l8 <span class="ot">=</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&#39;LANDSAT/LC08/C01/T1_TOA&#39;</span>)</span>
+<span id="cb199-2"><a href="the-earth-engine-api.html#cb199-2" aria-hidden="true" tabindex="-1"></a>landsat2016 <span class="ot">=</span> l8<span class="sc">$</span><span class="fu">filterDate</span>(<span class="st">&#39;2016-01-01&#39;</span>, <span class="st">&#39;2016-12-31&#39;</span>)</span>
+<span id="cb199-3"><a href="the-earth-engine-api.html#cb199-3" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(landsat2016, visParams, <span class="st">&#39;l8 collection&#39;</span>)</span></code></pre></div>
+<p>Note that now you can zoom out and see a continuous mosaic where Landsat imagery is collected (i.e. over land). Also note that when you use the <strong>Inspector</strong> tab and click on the image, you’ll see a list of pixel values (or a chart) in the <strong>Pixels</strong> section and a list of image objects in the <strong>Objects</strong> section of the inspector.</p>
+<p>If you zoomed out enough, you probably noticed some clouds in the mosaic. When you add an <code>ImageCollection</code> to the map, it is displayed as a recent-value composite, meaning that only the most recent pixels are displayed (like calling <code>mosaic()</code> on the collection). That is why you can see discontinuities between <a href="https://landsat.gsfc.nasa.gov/article/the-worldwide-reference-system/">paths</a> which were acquired at different times. It’s also why many areas may appear cloudy. In the next page, learn how to change the way the images are composited to get rid of those pesky clouds!.</p>
+</div>
+</div>
+<div id="compositing-masking-and-mosaicking" class="section level2 unnumbered">
+<h2>Compositing, Masking, and Mosaicking</h2>
+<p>With the <a href="https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC8_L1T_TOA">Landsat 8 TOA reflectance collection</a> loaded into a variable called l8, you saw that the following code results in a recent-value composite:</p>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="the-earth-engine-api.html#cb200-1" aria-hidden="true" tabindex="-1"></a>l8 <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&#39;LANDSAT/LC08/C01/T1_TOA&#39;</span>)</span>
+<span id="cb200-2"><a href="the-earth-engine-api.html#cb200-2" aria-hidden="true" tabindex="-1"></a>landsat2016 <span class="ot">&lt;-</span> l8<span class="sc">$</span><span class="fu">filterDate</span>(<span class="st">&#39;2016-01-01&#39;</span>, <span class="st">&#39;2016-12-31&#39;</span>)</span>
+<span id="cb200-3"><a href="the-earth-engine-api.html#cb200-3" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(landsat2016, visParams, <span class="st">&#39;l8 collection&#39;</span>)</span></code></pre></div>
+<p>One of the problems with this composite is that it’s full of clouds. Instead of just taking the last pixel in the collection (when you add a collection to the map, Earth Engine implicitly calls <code>mosaic()</code> on it), you can <em>reduce</em> the <code>ImageCollection</code> (Learn more about reducing image collections).</p>
+<div id="compositing-with-reducers" class="section level3 unnumbered">
+<h3>Compositing with Reducers</h3>
+<p>You were first introduced to reducers for getting statistics in an image region. That was a spatial reduction. Reducing an image collection to an image is a temporal reduction when the collection represents images over time. The type of <code>Reducer</code> you use defines how Earth Engine handles overlapping pixels. Landsat 8 visits the same spot on the Earth every 16 days. That means that over a 6 month period, there will be approximately 12 images (and more where the scenes overlap). Each pixel on the map is derived from a stack of pixels - one from each image in the collection being displayed.</p>
+<p>Merely adding the collection to the map results in selecting the most recent pixel - the one from the latest image in the stack. This behavior may be altered, using Earth Engine reducers. For example, rather than take the most recent pixel from the stack, Earth Engine can be instructed to pick the median value in the stack. This has the benefit of removing clouds (which have a high value) and shadows (which have a low value). When an image collection is reduced using the median reducer, the composite value is the median in each band, over time. For example, using Landsat scenes in 2016:</p>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="the-earth-engine-api.html#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the median over time, in each band, in each pixel.</span></span>
+<span id="cb201-2"><a href="the-earth-engine-api.html#cb201-2" aria-hidden="true" tabindex="-1"></a>median <span class="ot">&lt;-</span> l8<span class="sc">$</span><span class="fu">filterDate</span>(<span class="st">&#39;2016-01-01&#39;</span>, <span class="st">&#39;2016-12-31&#39;</span>)<span class="sc">$</span><span class="fu">median</span>()</span>
+<span id="cb201-3"><a href="the-earth-engine-api.html#cb201-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb201-4"><a href="the-earth-engine-api.html#cb201-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a handy variable of visualization parameters.</span></span>
+<span id="cb201-5"><a href="the-earth-engine-api.html#cb201-5" aria-hidden="true" tabindex="-1"></a>visParams <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">bands =</span> (<span class="st">&#39;B4&#39;</span>, <span class="st">&#39;B3&#39;</span>, <span class="st">&#39;B2&#39;</span>), <span class="at">max =</span> <span class="fl">0.3</span>)</span>
+<span id="cb201-6"><a href="the-earth-engine-api.html#cb201-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb201-7"><a href="the-earth-engine-api.html#cb201-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the median composite.</span></span>
+<span id="cb201-8"><a href="the-earth-engine-api.html#cb201-8" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(median, visParams, <span class="st">&#39;median&#39;</span>)</span></code></pre></div>
+<p>The new thing in this code is the <code>median()</code> method applied to an image collection. Like the filtering methods, this is a shortcut for the more general <code>reduce()</code> method on image collections which takes an <code>ee.Reducer()</code> as an argument. See the <code>ee.Reducer</code> package in the <strong>Docs</strong> tab of the Code Editor to see a list of all the Earth Engine reducers. When considering a reducer for an image collection, note that the output is an image, so reducers with non-numeric outputs, for example <code>histogram</code> or <code>toList</code> reducers, won’t work with an image collection.</p>
+<center>
+<div class="figure">
+<img src="C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_06.png" width="670" alt="" />
+<p class="caption">Figure 8. Landsat 8 median composite.</p>
+</div>
+</center>
+<p>When you zoom out on the median composite, you should see something like Figure 6. This should look considerably better than the recent value composite you made previously. At this point, it’s worth stepping back and considering what’s been done to make that median composite. Earth Engine has loaded the entire Landsat 8 collection over the continental US, and has calculated the median for every pixel. That’s a lot of data! Of course, you could compute annual medians, by first filtering the collection, <a href="https://developers.google.com/earth-engine/tutorials/tutorial_api_04#filtering-image-collections">as you’ve done previously</a>. The point is that if you had to download all that imagery and make this composite, it would be a big project. With Earth Engine, you get a result in seconds!</p>
+<p>Learn more about compositing and mosaicking here.</p>
+</div>
+<div id="masking-2" class="section level3 unnumbered">
+<h3>Masking</h3>
+<p>Although the median composite is an improvement over the recent-value composite, you may want to mask parts of the image. Masking pixels in an image makes those pixels transparent and excludes them from analysis. Each pixel in each band of an image has a mask. Those with a mask value of 0 or below will be transparent. Those with a mask of any value above 0 will be rendered. The mask of an image is set using a call like <code>image1.mask(image2)</code>. This call takes the values of <code>image2</code> and makes them the mask of <code>image1</code>. Any pixels in image2 that have the value 0 will be made transparent in <code>image1</code>.</p>
+<p>For example, suppose you would like to mask all the water pixels in the median composite. A water mask can be created using the dataset described by <a href="https://www.science.org/doi/10.1126/science.1244693">Hansen et al. (2013)</a> which is in the Earth Engine data catalog. (Learn more about the Hansen et al. dataset in this tutorial.) In this dataset, water has a value of 2, land has the value 1, and ‘no data’ has the value 0. Use a bit of logic to create a mask image that has zeros where there’s no land:</p>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="the-earth-engine-api.html#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load or import the Hansen et al. forest change dataset.</span></span>
+<span id="cb202-2"><a href="the-earth-engine-api.html#cb202-2" aria-hidden="true" tabindex="-1"></a>hansenImage <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&#39;UMD/hansen/global_forest_change_2015&#39;</span>)</span>
+<span id="cb202-3"><a href="the-earth-engine-api.html#cb202-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb202-4"><a href="the-earth-engine-api.html#cb202-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the land/water mask.</span></span>
+<span id="cb202-5"><a href="the-earth-engine-api.html#cb202-5" aria-hidden="true" tabindex="-1"></a>datamask <span class="ot">&lt;-</span> hansenImage<span class="sc">$</span><span class="fu">select</span>(<span class="st">&#39;datamask&#39;</span>)</span>
+<span id="cb202-6"><a href="the-earth-engine-api.html#cb202-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb202-7"><a href="the-earth-engine-api.html#cb202-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a binary mask.</span></span>
+<span id="cb202-8"><a href="the-earth-engine-api.html#cb202-8" aria-hidden="true" tabindex="-1"></a>mask <span class="ot">&lt;-</span> datamask<span class="sc">$</span><span class="fu">eq</span>(<span class="dv">1</span>)</span>
+<span id="cb202-9"><a href="the-earth-engine-api.html#cb202-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb202-10"><a href="the-earth-engine-api.html#cb202-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Update the composite mask with the water mask.</span></span>
+<span id="cb202-11"><a href="the-earth-engine-api.html#cb202-11" aria-hidden="true" tabindex="-1"></a>maskedComposite <span class="ot">&lt;-</span> median<span class="sc">$</span><span class="fu">updateMask</span>(mask)</span>
+<span id="cb202-12"><a href="the-earth-engine-api.html#cb202-12" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(maskedComposite, visParams, <span class="st">&#39;masked&#39;</span>)</span></code></pre></div>
+<p>There are a couple new things in this code that are worth mentioning in detail. First, the <code>select()</code> function is useful for extracting the bands of interest from an image. Here, we select only the band we care about: <code>datamask</code>. The next new thing is the logical operator <code>eq()</code> which stands for “equals.” We use <code>eq(1)</code> to create a binary image in which all the pixels that do not have the value of 1 in the <code>datamask</code> band (those that are water or no data) get a value of 0 in the resulting image.</p>
+<p>As a result of this masking, all the pixels in the median composite that are over land (according to the <a href="https://developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2015_v1_3">Hansen et al. dataset</a>) are visible, but those over water (or nodata) are transparent and will be excluded from any analysis you do on the <code>maskedComposite</code> image.</p>
+</div>
+<div id="mosaicking-1" class="section level3 unnumbered">
+<h3>Mosaicking</h3>
+<p>By combining the concepts of image collections, logical operators, masking and compositing, you can achieve interesting cartographic results. For example, suppose you want an image in which land pixels are displayed in true-color and all the other pixels are displayed in blue, you can do something like:</p>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="the-earth-engine-api.html#cb203-1" aria-hidden="true" tabindex="-1"></a>water <span class="ot">&lt;-</span> mask<span class="sc">$</span><span class="fu">not</span>()</span>
+<span id="cb203-2"><a href="the-earth-engine-api.html#cb203-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-3"><a href="the-earth-engine-api.html#cb203-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Mask water with itself to mask all the zeros (non-water).</span></span>
+<span id="cb203-4"><a href="the-earth-engine-api.html#cb203-4" aria-hidden="true" tabindex="-1"></a>water <span class="ot">&lt;-</span> water<span class="sc">$</span><span class="fu">mask</span>(water)</span>
+<span id="cb203-5"><a href="the-earth-engine-api.html#cb203-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-6"><a href="the-earth-engine-api.html#cb203-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Make an image collection of visualization images.</span></span>
+<span id="cb203-7"><a href="the-earth-engine-api.html#cb203-7" aria-hidden="true" tabindex="-1"></a>mosaic <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>([</span>
+<span id="cb203-8"><a href="the-earth-engine-api.html#cb203-8" aria-hidden="true" tabindex="-1"></a>  median<span class="sc">$</span><span class="fu">visualize</span>(visParams),</span>
+<span id="cb203-9"><a href="the-earth-engine-api.html#cb203-9" aria-hidden="true" tabindex="-1"></a>  water<span class="sc">$</span><span class="fu">visualize</span>({palette <span class="ot">=</span> <span class="st">&#39;000044&#39;</span>}),</span>
+<span id="cb203-10"><a href="the-earth-engine-api.html#cb203-10" aria-hidden="true" tabindex="-1"></a>])<span class="sc">$</span><span class="fu">mosaic</span>()</span>
+<span id="cb203-11"><a href="the-earth-engine-api.html#cb203-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-12"><a href="the-earth-engine-api.html#cb203-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the mosaic.</span></span>
+<span id="cb203-13"><a href="the-earth-engine-api.html#cb203-13" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(mosaic, {}, <span class="st">&#39;custom mosaic&#39;</span>)</span></code></pre></div>
+<p>There’s a lot going on in that code, so let’s dissect it. First, we use the <code>not()</code> logical operator to invert the mask we made earlier. Specifically, <code>not()</code> turns all the zeros into ones and all the non-zeros into zeros. It’s not completely correct to call that variable <code>water</code> because it includes some nodata pixels as well, but it’s OK in the present cartographic context. The next thing is to mask the “water” with itself. This results in an image in which all the water pixels are 1’s and everything else is masked. The final step is to combine the images with <code>mosaic()</code>. Since <code>mosaic()</code> works on an image collection, we pass a list of images that we want to combine into the image collection constructor, then call <code>mosaic()</code> as the final step. The order of the images in that list is important. Specifically, the output image will contain the last unmasked pixel from the stack of images in the input collection. In this case, that works because the water layer is the last (top) image in the collection, and only contains un-masked pixels where water occurs.</p>
+<p>Note that the images in the collection are visualization images. When you call <code>[visualize()]</code>(<a href="https://developers.google.com/earth-engine/apidocs/ee-image-visualize" class="uri">https://developers.google.com/earth-engine/apidocs/ee-image-visualize</a>) on an image, it gets turned into a 3-band, 8-bit image according to the visualization parameters you pass in. The default visualization parameters work fine for 3-band, 8-bit images, so you don’t need visualization parameters when you add the image to the map. The result should look like Figure 7.</p>
+<center>
+<div class="figure">
+<img src="C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_07.png" width="670" alt="" />
+<p class="caption">Figure 8. Custom mosaic that makes water areas a uniform color.</p>
+</div>
+</center>
+<p>At this point, you’ve seen ways to visualize image collections as recent-value composites, methods for compositing image collections using reducers, and methods for making custom composites by masking and mosaicking a collection of images. In the next page, learn how to add a vegetation index to every image in a collection and use the index to make a “greenest pixel” composite.</p>
+</div>
+</div>
+<div id="ndvi-mapping-a-function-over-a-collection-quality-mosaicking" class="section level2 unnumbered">
+<h2>NDVI, Mapping a Function over a Collection, Quality Mosaicking</h2>
+<p>Previously, you learned how to get individual Landsat scenes by doing something like this, where <code>l8</code> and <code>point</code> are imports representing the Landsat 8 TOA collection and an area-of-interest geometry:</p>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="the-earth-engine-api.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a point of interest. Use the UI Drawing Tools to import a point</span></span>
+<span id="cb204-2"><a href="the-earth-engine-api.html#cb204-2" aria-hidden="true" tabindex="-1"></a><span class="co"># geometry and name it &quot;point&quot; or set the point coordinates with the</span></span>
+<span id="cb204-3"><a href="the-earth-engine-api.html#cb204-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ee.Geometry.Point() function as demonstrated here.</span></span>
+<span id="cb204-4"><a href="the-earth-engine-api.html#cb204-4" aria-hidden="true" tabindex="-1"></a>point <span class="ot">&lt;-</span> ee<span class="sc">$</span>Geometry<span class="sc">$</span><span class="fu">Point</span>([<span class="sc">-</span><span class="fl">122.292</span>, <span class="fl">37.9018</span>])</span>
+<span id="cb204-5"><a href="the-earth-engine-api.html#cb204-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb204-6"><a href="the-earth-engine-api.html#cb204-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the Landsat 8 TOA image collection.</span></span>
+<span id="cb204-7"><a href="the-earth-engine-api.html#cb204-7" aria-hidden="true" tabindex="-1"></a>l8 <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&#39;LANDSAT/LC08/C01/T1_TOA&#39;</span>)</span>
+<span id="cb204-8"><a href="the-earth-engine-api.html#cb204-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb204-9"><a href="the-earth-engine-api.html#cb204-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the least cloudy image in 2015.</span></span>
+<span id="cb204-10"><a href="the-earth-engine-api.html#cb204-10" aria-hidden="true" tabindex="-1"></a>image <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(</span>
+<span id="cb204-11"><a href="the-earth-engine-api.html#cb204-11" aria-hidden="true" tabindex="-1"></a>  l8<span class="sc">$</span><span class="fu">filterBounds</span>(point)</span>
+<span id="cb204-12"><a href="the-earth-engine-api.html#cb204-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.filterDate</span>(<span class="st">&#39;2015-01-01&#39;</span>, <span class="st">&#39;2015-12-31&#39;</span>)</span>
+<span id="cb204-13"><a href="the-earth-engine-api.html#cb204-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.sort</span>(<span class="st">&#39;CLOUD_COVER&#39;</span>)</span>
+<span id="cb204-14"><a href="the-earth-engine-api.html#cb204-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.first</span>()</span>
+<span id="cb204-15"><a href="the-earth-engine-api.html#cb204-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>Suppose now that you want to compute a Normalized Difference Vegetation Index (NDVI) image from the Landsat image. Vegetation reflects light in the near-infrared (NIR) part of the electromagnetic spectrum and absorbs light in the red part <a href="https://science.nasa.gov/ems/08_nearinfraredwaves">(Learn more about NIR reflectance from vegetation)</a>. NDVI uses this to create a single value roughly reflecting the photosynthetic activity occurring at a pixel. The calculation is (NIR - red) / (NIR + red). This results in a number between 1 and -1, where pixels with high photosynthetic activity have a high NDVI. This is one way to compute NDVI in Earth Engine:</p>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="the-earth-engine-api.html#cb205-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the Normalized Difference Vegetation Index (NDVI).</span></span>
+<span id="cb205-2"><a href="the-earth-engine-api.html#cb205-2" aria-hidden="true" tabindex="-1"></a>nir <span class="ot">&lt;-</span> image<span class="sc">$</span><span class="fu">select</span>(<span class="st">&#39;B5&#39;</span>)</span>
+<span id="cb205-3"><a href="the-earth-engine-api.html#cb205-3" aria-hidden="true" tabindex="-1"></a>red <span class="ot">&lt;-</span> image<span class="sc">$</span><span class="fu">select</span>(<span class="st">&#39;B4&#39;</span>)</span>
+<span id="cb205-4"><a href="the-earth-engine-api.html#cb205-4" aria-hidden="true" tabindex="-1"></a>ndvi <span class="ot">&lt;-</span> nir<span class="sc">$</span><span class="fu">subtract</span>(red)<span class="sc">$</span><span class="fu">divide</span>(nir<span class="sc">$</span><span class="fu">add</span>(red))<span class="sc">$</span><span class="fu">rename</span>(<span class="st">&#39;NDVI&#39;</span>)</span>
+<span id="cb205-5"><a href="the-earth-engine-api.html#cb205-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb205-6"><a href="the-earth-engine-api.html#cb205-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the result.</span></span>
+<span id="cb205-7"><a href="the-earth-engine-api.html#cb205-7" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">centerObject</span>(image, <span class="dv">9</span>)</span>
+<span id="cb205-8"><a href="the-earth-engine-api.html#cb205-8" aria-hidden="true" tabindex="-1"></a>ndviParams <span class="ot">=</span> {min <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span>, max <span class="ot">=</span> <span class="dv">1</span>, palette <span class="ot">=</span> [<span class="st">&#39;blue&#39;</span>, <span class="st">&#39;white&#39;</span>, <span class="st">&#39;green&#39;</span>]}</span>
+<span id="cb205-9"><a href="the-earth-engine-api.html#cb205-9" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(ndvi, ndviParams, <span class="st">&#39;NDVI image&#39;</span>)</span></code></pre></div>
+<p>The result should look something like Figure 8. Note that we use the <code>select()</code> function you learned about in the previous section on masking to get the NIR and red bands, then compute NDVI using image mathematical operators that that you have also seen before in the section on <code>Image</code> math. Finally, display the image with a palette. Here we used color names instead of hex strings in the palette. (See <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value">this external reference about CSS color</a> for details.)</p>
+<center>
+<div class="figure">
+<img src="C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_08.png" width="670" alt="" />
+<p class="caption">Figure 8. NDVI for a single Landsat scene. Blue is low and green is high NDVI.</p>
+</div>
+</center>
+<p>The normalized difference operation is so ubiquitous in remote sensing, there is a <a href="https://developers.google.com/earth-engine/apidocs/ee-image-normalizeddifference">shortcut function</a> on an ee.Image that is useful for simplifying the code in the previous example:</p>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="the-earth-engine-api.html#cb206-1" aria-hidden="true" tabindex="-1"></a>ndvi <span class="ot">&lt;-</span> image<span class="sc">$</span><span class="fu">normalizedDifference</span>([<span class="st">&#39;B5&#39;</span>, <span class="st">&#39;B4&#39;</span>])<span class="sc">$</span><span class="fu">rename</span>(<span class="st">&#39;NDVI&#39;</span>)</span></code></pre></div>
+<div id="mapping-a-function-over-a-collection" class="section level3 unnumbered">
+<h3>Mapping a Function over a Collection</h3>
+<p>Suppose now that you want to add NDVI to every image in an image collection. The way to do that in Earth Engine is to <code>map()</code> a function over the collection. Don’t confuse <code>map()</code> with the <code>Map</code> object. The former is a method on a collection, and uses <em>map</em> in the <a href="https://en.wikipedia.org/wiki/Map_(parallel_pattern)">parallel computing sense</a> of applying a function to every element in a collection. The function defines the operations that will be applied to every element in the collection. You have seen a simple function in the R tutorial, but now we’re going to make a function that includes Earth Engine functionality. For example, copy the previous NDVI code into a function which returns the input image with an NDVI band:</p>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="the-earth-engine-api.html#cb207-1" aria-hidden="true" tabindex="-1"></a>addNDVI <span class="ot">&lt;-</span> <span class="cf">function</span>(image) {</span>
+<span id="cb207-2"><a href="the-earth-engine-api.html#cb207-2" aria-hidden="true" tabindex="-1"></a>  ndvi <span class="ot">&lt;-</span> image<span class="sc">$</span><span class="fu">normalizedDifference</span>([<span class="st">&#39;B5&#39;</span>, <span class="st">&#39;B4&#39;</span>])<span class="fu">.rename</span>(<span class="st">&#39;NDVI&#39;</span>)</span>
+<span id="cb207-3"><a href="the-earth-engine-api.html#cb207-3" aria-hidden="true" tabindex="-1"></a>  return image<span class="sc">$</span><span class="fu">addBands</span>(ndvi)</span>
+<span id="cb207-4"><a href="the-earth-engine-api.html#cb207-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb207-5"><a href="the-earth-engine-api.html#cb207-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb207-6"><a href="the-earth-engine-api.html#cb207-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Test the addNDVI function on a single image.</span></span>
+<span id="cb207-7"><a href="the-earth-engine-api.html#cb207-7" aria-hidden="true" tabindex="-1"></a>ndvi <span class="ot">&lt;-</span> <span class="fu">addNDVI</span>(image)<span class="sc">$</span><span class="fu">select</span>(<span class="st">&#39;NDVI&#39;</span>)</span></code></pre></div>
+<p>This code might not be as efficient for computing NDVI for a single image, but this function can be used as an argument to <code>map()</code> in order to add an NDVI band to every image in the collection. It’s often useful to first test a function on a single image, to make sure the function is behaving as you expect. Once you’ve tested the function on an individual image and have determined that it does what you want, you can map it over the collection:</p>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="the-earth-engine-api.html#cb208-1" aria-hidden="true" tabindex="-1"></a>withNDVI <span class="ot">&lt;-</span> l8<span class="sc">$</span><span class="fu">map</span>(addNDVI)</span></code></pre></div>
+<p>To verify that this is indeed putting an NDVI band in every image in this collection, you can add the <code>withNDVI</code> collection to the map and query a random location with the <strong>Inspector</strong> tab. You should notice that each image in the collection now has a band called <code>NDVI</code>.</p>
+</div>
+<div id="make-a-greenest-pixel-composite" class="section level3 unnumbered">
+<h3>Make a greenest pixel composite</h3>
+<p>Now that you’ve made an image collection in which each image has an NDVI band, we can explore a new way to make composites: <code>qualityMosaic()</code>. You may have noticed discontinuities between Landsat paths, even in the median pixel composite. Part of the reason for that may be due to differences in <a href="https://en.wikipedia.org/wiki/Phenology">phenology</a> as a result of images in adjacent paths being collected at different times (specifically, 8 days apart). One way to minimize this is to try to set pixel values in the composite from roughly the same phenological stage, for example the time of maximum greenness of plants (when the leaves are on and photosynthetically active). If we let max greenness be defined by the maximum NDVI, we can use <a href="https://developers.google.com/earth-engine/apidocs/ee-imagecollection-qualitymosaic"><code>qualityMosaic()</code></a> to make a composite in which each pixel contains the maximum NDVI pixel from the collection. Now you can make use of the added NDVI band in your <code>withNDVI</code> collection:</p>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="the-earth-engine-api.html#cb209-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a &quot;greenest&quot; pixel composite.</span></span>
+<span id="cb209-2"><a href="the-earth-engine-api.html#cb209-2" aria-hidden="true" tabindex="-1"></a>greenest <span class="ot">&lt;-</span> withNDVI<span class="sc">$</span><span class="fu">qualityMosaic</span>(<span class="st">&#39;NDVI&#39;</span>)</span>
+<span id="cb209-3"><a href="the-earth-engine-api.html#cb209-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb209-4"><a href="the-earth-engine-api.html#cb209-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the result.</span></span>
+<span id="cb209-5"><a href="the-earth-engine-api.html#cb209-5" aria-hidden="true" tabindex="-1"></a>visParams <span class="ot">&lt;-</span> {bands <span class="ot">=</span> [<span class="st">&#39;B4&#39;</span>, <span class="st">&#39;B3&#39;</span>, <span class="st">&#39;B2&#39;</span>], max <span class="ot">=</span> <span class="fl">0.3</span>}</span>
+<span id="cb209-6"><a href="the-earth-engine-api.html#cb209-6" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(greenest, visParams, <span class="st">&#39;Greenest pixel composite&#39;</span>)</span></code></pre></div>
+<p>The result of this code should look something like Figure 9. Comparing Figure 9 to the median composite shown in Figure 6, observe that the greenest pixel composite is indeed much greener. However, close examination of water bodies should make a different problem apparent. Specifically, water bodies now appear cloudy. This is due to the way the <code>qualityMosaic()</code> method works: at each location, the entire time series is examined and the pixel with the maximum value in the NDVI band is set as the composite value. Because NDVI is higher over clouds than water, water areas get cloudy pixels, while vegetated areas all appear green because NDVI is highest when the vegetation in the pixel is photosynthetically active.</p>
+<center>
+<div class="figure">
+<img src="C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_09.png" width="670" alt="" />
+<p class="caption">Figure 8. Landsat 8 greenest pixel composite.</p>
+</div>
+</center>
+<p>Now you’ve seen several ways to composite and mosaic images in Earth Engine. You can make recent-value, median, or greenest-pixel composites from images filtered by time and place or all images in the collection. You’ve learned how to do computations on the imagery and extract information. The next page covers ways to get information out of Earth Engine, for example as a chart or a dataset exported to your Google Drive folder.</p>
+</div>
+</div>
+<div id="exporting-charts-and-images" class="section level2 unnumbered">
+<h2>Exporting Charts and Images</h2>
+<p>Earth Engine is a powerful analytical tool, but you may have need to export the results of your analysis in order to embed charts, images, maps, etc. into reports or publications. In this section, you will learn how to create charts and images that can be exported and viewed in other software. Recall that in the previous section, you used code like the following to add an NDVI band to every image in a collection, where the l8 variable references the <a href="https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC8_L1T_TOA">Landsat 8 TOA reflectance collection</a>:</p>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="the-earth-engine-api.html#cb210-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the Landsat 8 TOA image collection.</span></span>
+<span id="cb210-2"><a href="the-earth-engine-api.html#cb210-2" aria-hidden="true" tabindex="-1"></a>l8 <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&#39;LANDSAT/LC08/C01/T1_TOA&#39;</span>)</span>
+<span id="cb210-3"><a href="the-earth-engine-api.html#cb210-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb210-4"><a href="the-earth-engine-api.html#cb210-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Map a function over the Landsat 8 TOA collection to add an NDVI band.</span></span>
+<span id="cb210-5"><a href="the-earth-engine-api.html#cb210-5" aria-hidden="true" tabindex="-1"></a>withNDVI <span class="ot">&lt;-</span> l8<span class="sc">$</span><span class="fu">map</span>(<span class="cf">function</span>(image) {</span>
+<span id="cb210-6"><a href="the-earth-engine-api.html#cb210-6" aria-hidden="true" tabindex="-1"></a>  ndvi <span class="ot">&lt;-</span> image<span class="sc">$</span><span class="fu">normalizedDifference</span>([<span class="st">&#39;B5&#39;</span>, <span class="st">&#39;B4&#39;</span>])<span class="fu">.rename</span>(<span class="st">&#39;NDVI&#39;</span>)</span>
+<span id="cb210-7"><a href="the-earth-engine-api.html#cb210-7" aria-hidden="true" tabindex="-1"></a>  return image<span class="sc">$</span><span class="fu">addBands</span>(ndvi)</span>
+<span id="cb210-8"><a href="the-earth-engine-api.html#cb210-8" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<div id="charting" class="section level3 unnumbered">
+<h3>Charting</h3>
+<p>Suppose that what you want is actually a chart of NDVI over time at a given location. To make such a chart, the first step is to choose a location of interest. Create a point by getting the point drawing tool () and make a single point geometry in your area of interest. (If you already have imports, hover on <strong>Geometry Imports</strong> and click <strong>+ new layer</strong> first). Locate the point in an area of agriculture, deciduous forest, annual grassland or some other land cover with an annual cycle). Name the import <code>roi</code>. (See this page for information about creating geometries programmatically).</p>
+<p>Now let’s use the <code>roi</code> point to make a chart of NDVI over time in the pixel under that point. The way to make charts in Earth Engine is with the <code>ui.Chart</code> package. (Learn more about making charts in Earth Engine). Specifically, to make a chart over time, you can use the <code>ui.Chart.image.series()</code> method:</p>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="the-earth-engine-api.html#cb211-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a chart.</span></span>
+<span id="cb211-2"><a href="the-earth-engine-api.html#cb211-2" aria-hidden="true" tabindex="-1"></a>chart <span class="ot">&lt;-</span> ui<span class="sc">$</span><span class="fu">Chart.image.series</span>({</span>
+<span id="cb211-3"><a href="the-earth-engine-api.html#cb211-3" aria-hidden="true" tabindex="-1"></a>  imageCollection <span class="ot">&lt;-</span> withNDVI<span class="sc">$</span><span class="fu">select</span>(<span class="st">&#39;NDVI&#39;</span>)</span>
+<span id="cb211-4"><a href="the-earth-engine-api.html#cb211-4" aria-hidden="true" tabindex="-1"></a>  region <span class="ot">&lt;-</span> roi,</span>
+<span id="cb211-5"><a href="the-earth-engine-api.html#cb211-5" aria-hidden="true" tabindex="-1"></a>  reducer <span class="ot">&lt;-</span> ee<span class="sc">$</span>Reducer<span class="sc">$</span><span class="fu">first</span>(),</span>
+<span id="cb211-6"><a href="the-earth-engine-api.html#cb211-6" aria-hidden="true" tabindex="-1"></a>  scale <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb211-7"><a href="the-earth-engine-api.html#cb211-7" aria-hidden="true" tabindex="-1"></a>})<span class="sc">$</span><span class="fu">setOptions</span>({title <span class="ot">=</span> <span class="st">&#39;NDVI over time&#39;</span>})</span>
+<span id="cb211-8"><a href="the-earth-engine-api.html#cb211-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb211-9"><a href="the-earth-engine-api.html#cb211-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the chart in the console.</span></span>
+<span id="cb211-10"><a href="the-earth-engine-api.html#cb211-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(chart)</span></code></pre></div>
+<p>For the <code>roi</code> geometry, we chose a point in an agricultural area, resulting in a chart that looks something like Figure 10. Note that the parameters to the chart constructor include a reducer and scale like <code>reduceRegion()</code>. Since the point we are providing as a region can only intersect one pixel, it suffices to use the ‘first’ reducer. If you have a larger region, you should use a ‘mean’ or other reducer that specifies how to aggregate pixels. Also note that to visualize a chart, all you have to do is print it.</p>
+<center>
+<div class="figure">
+<img src="C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_10.png" width="670" alt="" />
+<p class="caption">Figure 8. Chart of Landsat NDVI over time at a point geometry.</p>
+</div>
+</center>
+</div>
+<div id="digression-simple-cloud-masking-for-landsat" class="section level3 unnumbered">
+<h3>Digression: Simple Cloud Masking for Landsat</h3>
+<p>Something you may have noticed about this chart is that the time series of NDVI values at the point looks a little noisy. This is likely due to clouds. To ameliorate this effect, Earth Engine includes a cloud-masking algorithm for Landsat sensors with a thermal band: <code>ee$Algorithms$Landsat$simpleCloudScore()</code>. It takes a Landsat TOA reflectance image as input and adds a band named cloud which is an index of cloudiness in the pixel from zero to 100, from least to most cloudy, respectively. By modifying the function you mapped over the collection, you can use an arbitrary threshold (20) on the cloud index to clean up the chart a bit:</p>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="the-earth-engine-api.html#cb212-1" aria-hidden="true" tabindex="-1"></a>cloudlessNDVI <span class="ot">&lt;-</span> l8<span class="sc">$</span><span class="fu">map</span>(<span class="cf">function</span>(image) {</span>
+<span id="cb212-2"><a href="the-earth-engine-api.html#cb212-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get a cloud score in [0, 100].</span></span>
+<span id="cb212-3"><a href="the-earth-engine-api.html#cb212-3" aria-hidden="true" tabindex="-1"></a>  cloud <span class="ot">&lt;-</span> ee<span class="sc">$</span>Algorithms4Landsat<span class="sc">$</span><span class="fu">simpleCloudScore</span>(image)<span class="sc">$</span><span class="fu">select</span>(<span class="st">&#39;cloud&#39;</span>)</span>
+<span id="cb212-4"><a href="the-earth-engine-api.html#cb212-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb212-5"><a href="the-earth-engine-api.html#cb212-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a mask of cloudy pixels from an arbitrary threshold.</span></span>
+<span id="cb212-6"><a href="the-earth-engine-api.html#cb212-6" aria-hidden="true" tabindex="-1"></a>  mask <span class="ot">&lt;-</span> cloud<span class="sc">$</span><span class="fu">lte</span>(<span class="dv">20</span>)</span>
+<span id="cb212-7"><a href="the-earth-engine-api.html#cb212-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb212-8"><a href="the-earth-engine-api.html#cb212-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Compute NDVI.</span></span>
+<span id="cb212-9"><a href="the-earth-engine-api.html#cb212-9" aria-hidden="true" tabindex="-1"></a>  ndvi <span class="ot">&lt;-</span> image<span class="sc">$</span><span class="fu">normalizedDifference</span>([<span class="st">&#39;B5&#39;</span>, <span class="st">&#39;B4&#39;</span>])<span class="sc">$</span><span class="fu">rename</span>(<span class="st">&#39;NDVI&#39;</span>)</span>
+<span id="cb212-10"><a href="the-earth-engine-api.html#cb212-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb212-11"><a href="the-earth-engine-api.html#cb212-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Return the masked image with an NDVI band.</span></span>
+<span id="cb212-12"><a href="the-earth-engine-api.html#cb212-12" aria-hidden="true" tabindex="-1"></a>  return image<span class="sc">$</span><span class="fu">addBands</span>(ndvi)<span class="sc">$</span><span class="fu">updateMask</span>(mask)</span>
+<span id="cb212-13"><a href="the-earth-engine-api.html#cb212-13" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb212-14"><a href="the-earth-engine-api.html#cb212-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb212-15"><a href="the-earth-engine-api.html#cb212-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ui<span class="sc">$</span>Chart<span class="sc">$</span>image<span class="sc">$</span><span class="fu">series</span>({</span>
+<span id="cb212-16"><a href="the-earth-engine-api.html#cb212-16" aria-hidden="true" tabindex="-1"></a>  imageCollection <span class="ot">&lt;-</span> <span class="fu">cloudlessNDVI.select</span>(<span class="st">&#39;NDVI&#39;</span>)</span>
+<span id="cb212-17"><a href="the-earth-engine-api.html#cb212-17" aria-hidden="true" tabindex="-1"></a>  region <span class="ot">&lt;-</span> roi,</span>
+<span id="cb212-18"><a href="the-earth-engine-api.html#cb212-18" aria-hidden="true" tabindex="-1"></a>  reducer <span class="ot">&lt;-</span> ee<span class="sc">$</span>Reducer<span class="sc">$</span><span class="fu">first</span>(),</span>
+<span id="cb212-19"><a href="the-earth-engine-api.html#cb212-19" aria-hidden="true" tabindex="-1"></a>  scale <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb212-20"><a href="the-earth-engine-api.html#cb212-20" aria-hidden="true" tabindex="-1"></a>})<span class="sc">$</span><span class="fu">setOptions</span>({title <span class="ot">&lt;-</span> <span class="st">&#39;Cloud-masked NDVI over time&#39;</span>}))</span></code></pre></div>
+<p>The cloud-masked result is illustrated in Figure 11. Note that the time series looks a little smoother, but may still contain pixels affected by clouds. Adjust the threshold on the cloud index and observe the charted time series to learn how this threshold can affect your results.</p>
+<center>
+<div class="figure">
+<img src="C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_11.png" width="670" alt="" />
+<p class="caption">Figure 8. Chart of cloud-masked NDVI over time at a point geometry.</p>
+</div>
+</center>
+</div>
+<div id="exporting-images" class="section level3 unnumbered">
+<h3>Exporting Images</h3>
+<p>You have seen a way to export a chart of data computed by Earth Engine, but what about a whole image? Suppose, for example that you have built a greenest-pixel composite as discussed in the previous section:</p>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="the-earth-engine-api.html#cb213-1" aria-hidden="true" tabindex="-1"></a>greenest <span class="ot">&lt;-</span> cloudlessNDVI<span class="sc">$</span><span class="fu">qualityMosaic</span>(<span class="st">&#39;NDVI&#39;</span>)</span></code></pre></div>
+<p>The only difference in this code from what you did previously is that now we’re using the cloud masked collection. You can export a subset (defined by a region) of this using the <code>Export</code> package. (Learn more about exporting raster and vector data from Earth Engine.) For example, to export an image that can be easily embedded in other docs, let’s create a visualization image, as you’ve done previously, an Export it to your Google Drive folder:</p>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="the-earth-engine-api.html#cb214-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a 3-band, 8-bit, color-IR composite to export.</span></span>
+<span id="cb214-2"><a href="the-earth-engine-api.html#cb214-2" aria-hidden="true" tabindex="-1"></a>visualization <span class="ot">&lt;-</span> greenest<span class="sc">$</span><span class="fu">visualize</span>({</span>
+<span id="cb214-3"><a href="the-earth-engine-api.html#cb214-3" aria-hidden="true" tabindex="-1"></a>  bands <span class="ot">&lt;-</span> [<span class="st">&#39;B5&#39;</span>, <span class="st">&#39;B4&#39;</span>, <span class="st">&#39;B3&#39;</span>],</span>
+<span id="cb214-4"><a href="the-earth-engine-api.html#cb214-4" aria-hidden="true" tabindex="-1"></a>  max <span class="ot">&lt;-</span> <span class="fl">0.4</span></span>
+<span id="cb214-5"><a href="the-earth-engine-api.html#cb214-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb214-6"><a href="the-earth-engine-api.html#cb214-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb214-7"><a href="the-earth-engine-api.html#cb214-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a task that you can launch from the Tasks tab.</span></span>
+<span id="cb214-8"><a href="the-earth-engine-api.html#cb214-8" aria-hidden="true" tabindex="-1"></a>Export<span class="sc">$</span>image<span class="sc">$</span><span class="fu">toDrive</span>({</span>
+<span id="cb214-9"><a href="the-earth-engine-api.html#cb214-9" aria-hidden="true" tabindex="-1"></a>  image <span class="ot">&lt;-</span> visualization,</span>
+<span id="cb214-10"><a href="the-earth-engine-api.html#cb214-10" aria-hidden="true" tabindex="-1"></a>  description <span class="ot">&lt;-</span> <span class="st">&#39;Greenest_pixel_composite&#39;</span>,</span>
+<span id="cb214-11"><a href="the-earth-engine-api.html#cb214-11" aria-hidden="true" tabindex="-1"></a>  scale <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb214-12"><a href="the-earth-engine-api.html#cb214-12" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<p>When you run this code, note that a new task is created in the <strong>Tasks</strong> tab. To launch the export configuration dialog, click the <strong>RUN</strong> button in the <strong>Tasks</strong> tab. Once you’ve configured the task, click the <strong>Run</strong> button in the dialog to start the export. But before you do that, be warned:</p>
+<p>The reason you should exercise caution when exporting without a <code>region</code> argument is that if you set a relatively small value for <code>scale</code>, and the Map is zoomed out to large area, then you will export a potentially very large image to your Drive folder. See the <code>Export.image.toDrive()</code> docs in the <strong>Docs</strong> tab for more details and a list of possible configuration parameters.</p>
+<p>That concludes this introduction to the Earth Engine API! You have now seen much of the most common Earth Engine functionality and should be able to confidently proceed to more complex analyses. Be sure to read the docs and search the <a href="https://groups.google.com/g/google-earth-engine-developers">forum</a> for answers to other questions. Happy coding!</p>
+</div>
+</div>
+</div>
+  </main>
+
+  <div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page">
+      <h2>On this page</h2>
+      <div id="book-on-this-page"></div>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          <li><a id="book-source" href="#">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="#">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5">
+  <div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+<script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+
+</html>

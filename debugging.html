@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Debugging | Earth Engine with R</title>
+
+    <meta name="author" content="rgee team" />
+  
+   
+   <meta name="generator" content="placeholder" />
+  <meta property="og:title" content="Debugging | Earth Engine with R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Debugging | Earth Engine with R" />
+  
+  
+  
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script>
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet" />
+    <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script>
+    <script src="libs/bs3compat-0.3.1/transition.js"></script>
+    <script src="libs/bs3compat-0.3.1/tabs.js"></script>
+    <script src="libs/bs3compat-0.3.1/bs3compat.js"></script>
+    <link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet" />
+    <script src="libs/bs4_book-1.0.0/bs4_book.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-141212623-1');
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script>
+
+  <!-- CSS -->
+  
+</head>
+
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book">
+    <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+      </form>
+
+      <nav aria-label="Table of contents">
+        <h2>Table of contents</h2>
+        <div id="book-toc"></div>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="#">View book source <i class="fab fa-github"></i></a></li></p>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="col-sm-12 col-md-9 col-lg-7" id="content">
+<div id="debugging" class="section level1 unnumbered">
+<h1>Debugging</h1>
+<p>Earth Engine is unlike traditional image processing, GIS or other desktop software used for geospatial data analysis. Algorithms you create in Earth Engine run in the Google cloud, distributed over many computers. Debugging can be challenging because errors can occur either in the client-side JavaScript code or the server-side execution of the coded instructions, and result from scaling problems as well as syntactic or logical errors. The bits of the program that are running somewhere in the cloud are not available to inspect, unless you ask for them. This document presents debugging strategies, tools and solutions to help you resolve common errors and debug Earth Engine scripts.</p>
+<div id="client-side-errors" class="section level2 unnumbered">
+<h2>Client-side errors</h2>
+<p>Despite syntactically correct JavaScript, there may be errors associated with the consistency or logic of the script. The following examples demonstrate errors from using a variable and method that don’t exist:</p>
+<p><img src="images/thumb_down.png" width=25px>
+  <strong>Error</strong> — This code doesn’t work!</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="debugging.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load a Sentinel-2 image.</span></span>
+<span id="cb96-2"><a href="debugging.html#cb96-2" aria-hidden="true" tabindex="-1"></a>image <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&#39;USGS/SRTMGL1_003&#39;</span>)</span>
+<span id="cb96-3"><a href="debugging.html#cb96-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-4"><a href="debugging.html#cb96-4" aria-hidden="true" tabindex="-1"></a>display <span class="ot">&lt;-</span> image<span class="sc">$</span><span class="fu">visualize</span>(<span class="fu">list</span>(<span class="at">bands =</span> bandNames, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">9000</span>))</span>
+<span id="cb96-5"><a href="debugging.html#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Error in py_resolve_dots(list(...)) : object &#39;bandNames&#39; not found</span></span>
+<span id="cb96-6"><a href="debugging.html#cb96-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-7"><a href="debugging.html#cb96-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Error: image.selfAnalyze is not a function</span></span>
+<span id="cb96-8"><a href="debugging.html#cb96-8" aria-hidden="true" tabindex="-1"></a>silly <span class="ot">&lt;-</span> image<span class="sc">$</span><span class="fu">selfAnalyze</span>()</span>
+<span id="cb96-9"><a href="debugging.html#cb96-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Error in py_get_attr_impl(x, name, silent) : AttributeError: &#39;Image&#39; object has no attribute &#39;selfAnalyze&#39;</span></span></code></pre></div>
+<p>The first error informs you that the <code>bandNames</code> variable is not defined in the scope in which it’s referenced. As a solution, set the variable, or provide a list argument for the <code>bands</code> parameter. The second error demonstrates what happens when the non-existent <code>selfAnalyze()</code> function is called. Since that isn’t a real method on images, the error tells you it’s not a function. In both cases, the error is descriptive of the problem.</p>
+</div>
+<div id="casting" class="section level2 unnumbered">
+<h2>Casting</h2>
+<p>The “<code>...is not a function</code>” error may result from Earth Engine not knowing the type of a variable. Common manifestations of this problem result from:</p>
+<ul>
+<li><p>Doing something to an object returned by <code>first()</code> (the type of the elements in a collection is unknown).</p></li>
+<li><p>Doing something to an object returned by <code>get()</code> (the type of element stored in a property is unknown).</p></li>
+<li><p>Doing something to a function argument (in the function) when the type of the argument is unknown.
+For an example of the former:</p></li>
+</ul>
+<p><img src="images/thumb_down.png" width=25px>
+  <strong>Error</strong> — This code doesn’t work!</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="debugging.html#cb97-1" aria-hidden="true" tabindex="-1"></a>collection <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&#39;MODIS/051/MOD44B&#39;</span>)</span>
+<span id="cb97-2"><a href="debugging.html#cb97-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-3"><a href="debugging.html#cb97-3" aria-hidden="true" tabindex="-1"></a>date <span class="ot">&lt;-</span> collection<span class="sc">$</span><span class="fu">first</span>()<span class="sc">$</span><span class="fu">date</span>()</span>
+<span id="cb97-4"><a href="debugging.html#cb97-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Error: collection$first(...).date is not a function</span></span></code></pre></div>
+<p>The solution in all cases is to cast the object of unknown type with the constructor of the known type. Continuing the previous example, the solution is to cast to <code>ee$Image</code>:</p>
+<p><img src="images/thumb_up.png" width=25px>
+  <strong>Good</strong> — Use a cast!</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="debugging.html#cb98-1" aria-hidden="true" tabindex="-1"></a>date <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(collection<span class="sc">$</span><span class="fu">first</span>())<span class="sc">$</span><span class="fu">date</span>()</span></code></pre></div>
+<p>(It’s worth noting that you can safely call any method on <code>Element</code> here because that’s what Earth Engine thinks it is).</p>
+</div>
+<div id="avoid-mixing-client-and-server-functions" class="section level2 unnumbered">
+<h2>Avoid mixing client and server functions</h2>
+<p>The following example is less obvious:</p>
+<p><img src="images/thumb_down.png" width=25px>
+  <strong>Error</strong> — this code doesn’t do what you want</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="debugging.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Don&#39;t mix EE objects and JavaScript objects:</span></span>
+<span id="cb99-2"><a href="debugging.html#cb99-2" aria-hidden="true" tabindex="-1"></a>image <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&#39;USGS/SRTMGL1_003&#39;</span>)</span>
+<span id="cb99-3"><a href="debugging.html#cb99-3" aria-hidden="true" tabindex="-1"></a>nonsense <span class="ot">&lt;-</span> image <span class="sc">+</span> <span class="dv">2</span></span>
+<span id="cb99-4"><a href="debugging.html#cb99-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-5"><a href="debugging.html#cb99-5" aria-hidden="true" tabindex="-1"></a><span class="co"># You can print this, but it&#39;s not what you were hoping for.</span></span>
+<span id="cb99-6"><a href="debugging.html#cb99-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(nonsense)</span>
+<span id="cb99-7"><a href="debugging.html#cb99-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-8"><a href="debugging.html#cb99-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Error: g.eeObject.name is not a function</span></span>
+<span id="cb99-9"><a href="debugging.html#cb99-9" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(nonsense)</span></code></pre></div>
+<p>Supposing the author of this code intended to add <code>2</code> to every pixel in the image, this is not the right way to do it. Specifically, this code wrongly mixes a server-side object (<code>image</code>) with a client-side JavaScript operator (<code>+</code>). The results may be surprising. In the first case, printing of <code>nonsense</code>, JavaScript will perform the requested operation (<code>+</code>) by converting both <code>image</code> and <code>2</code> to strings, then concatenating them. The resultant string is unintended. In the second case, adding nonsense to the map, the cryptic <code>g.eeObject.name</code> is not a function error is displayed because the object being added to the map, <code>nonsense</code>, is a string, not an EE object. To avoid possibly unintended results and uninformative errors, don’t mix server objects and functions with JavaScript objects, primitives or functions. The solution is this example is to use a server function:</p>
+<p><img src="images/thumb_up.png" width=25px>
+  <strong>Good</strong> — use a server function!</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="debugging.html#cb100-1" aria-hidden="true" tabindex="-1"></a>Map<span class="sc">$</span><span class="fu">addLayer</span>(image<span class="sc">$</span><span class="fu">add</span>(<span class="dv">2</span>))</span></code></pre></div>
+<p>For more detailed explanation of client vs. server in Earth Engine, see <a href="">this page</a> and/or <a href="">this tutorial</a>.</p>
+</div>
+<div id="server-side-errors" class="section level2 unnumbered">
+<h2>Server-side errors</h2>
+<p>Despite logical consistency in the client JavaScript, there may be bugs which only become apparent at run time on the server. The following example demonstrates what happens when trying to get a band that doesn’t exist:</p>
+<p><img src="images/thumb_down.png" width=25px>
+  <strong>Error</strong> — this code doesn’t work!</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="debugging.html#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load a Sentinel-2 image.</span></span>
+<span id="cb101-2"><a href="debugging.html#cb101-2" aria-hidden="true" tabindex="-1"></a>s2image <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&#39;COPERNICUS/S2/20160625T100617_20160625T170310_T33UVR&#39;</span>)</span>
+<span id="cb101-3"><a href="debugging.html#cb101-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb101-4"><a href="debugging.html#cb101-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ee_print</span>(s2image<span class="sc">$</span><span class="fu">select</span>(<span class="st">&#39;nonBand&#39;</span>))</span>
+<span id="cb101-5"><a href="debugging.html#cb101-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Error in py_call_impl(callable, dots$args, dots$keywords) : EEException: Image.select: Pattern &#39;nonBand&#39; did not match any bands.</span></span></code></pre></div>
+<p>In this example, the error informs you that there is no band named <code>nonBand</code>. The possibly obvious solution is to specify a band name that does exist. You can discover the band names by printing the image and inspecting it in the console, or by printing the list of band names returned by <code>image.bandNames()</code>.</p>
+</div>
+<div id="immutability" class="section level2 unnumbered">
+<h2>Immutability</h2>
+<p>Server-side objects you create in Earth Engine are <a href="https://en.wikipedia.org/wiki/Immutable_object">immutable</a>. (Any ee$Object is a server side Object). That means that if you want to make a change to the object, you have to save the changed state into a new variable. For example, this won’t work to set a property on the Sentinel-2 image:</p>
+<p><img src="images/thumb_down.png" width=25px>
+  <strong>Error</strong> — this code doesn’t do what you want!</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="debugging.html#cb102-1" aria-hidden="true" tabindex="-1"></a>s2image <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Image</span>(<span class="st">&#39;COPERNICUS/S2/20160625T100617_20160625T170310_T33UVR&#39;</span>)</span>
+<span id="cb102-2"><a href="debugging.html#cb102-2" aria-hidden="true" tabindex="-1"></a>s2image<span class="sc">$</span><span class="fu">set</span>(<span class="st">&#39;myProperty&#39;</span>, <span class="st">&#39;This image is not assigned to a variable&#39;</span>);</span>
+<span id="cb102-3"><a href="debugging.html#cb102-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-4"><a href="debugging.html#cb102-4" aria-hidden="true" tabindex="-1"></a><span class="co"># This will not result in an error, but will not find &#39;myProperty&#39;.</span></span>
+<span id="cb102-5"><a href="debugging.html#cb102-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(s2image<span class="sc">$</span><span class="fu">get</span>(<span class="st">&#39;myProperty&#39;</span>)<span class="sc">$</span><span class="fu">getInfo</span>()) <span class="co"># NULL</span></span></code></pre></div>
+<p>In this example, <code>s2image$set()</code> returns a copy of the image with the new property, but the image stored in the s2image variable is unchanged. You need to save the image returned by <code>s2image$set()</code> in a new variable. For example:</p>
+<p><img src="images/thumb_up.png" width=25px>
+  <strong>Good</strong> — capture the result in a variable!</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="debugging.html#cb103-1" aria-hidden="true" tabindex="-1"></a>s2image <span class="ot">=</span> s2image<span class="sc">$</span><span class="fu">set</span>(<span class="st">&#39;myProperty&#39;</span>, <span class="st">&#39;OK&#39;</span>)</span>
+<span id="cb103-2"><a href="debugging.html#cb103-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(s2image<span class="sc">$</span><span class="fu">get</span>(<span class="st">&#39;myProperty&#39;</span>)<span class="sc">$</span><span class="fu">getInfo</span>()) <span class="co"># OK</span></span></code></pre></div>
+</div>
+<div id="mapped-functions" class="section level2 unnumbered">
+<h2>Mapped functions</h2>
+<p>Another context in which client and server functions don’t mix is in mapped functions. Specifically, the operations specified by the mapped function run in the cloud, so client functions such as <code>print()</code>, <code>getInfo()</code> or any method on <code>Map</code>, or <code>Export</code> won’t work in mapped functions. For example:</p>
+<p><img src="images/thumb_down.png" width=25px>
+  <strong>Error</strong> — this code doesn’t work!</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="debugging.html#cb104-1" aria-hidden="true" tabindex="-1"></a>collection <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&#39;MODIS/051/MOD44B&#39;</span>)</span>
+<span id="cb104-2"><a href="debugging.html#cb104-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-3"><a href="debugging.html#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Error: A mapped function&#39;s arguments cannot be used in client-side operations</span></span>
+<span id="cb104-4"><a href="debugging.html#cb104-4" aria-hidden="true" tabindex="-1"></a>badMap3 <span class="ot">&lt;-</span> collection<span class="sc">$</span><span class="fu">map</span>(<span class="cf">function</span>(image) {</span>
+<span id="cb104-5"><a href="debugging.html#cb104-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(image<span class="sc">$</span><span class="fu">getInfo</span>())</span>
+<span id="cb104-6"><a href="debugging.html#cb104-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(image)</span>
+<span id="cb104-7"><a href="debugging.html#cb104-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<p>This somewhat cryptic error results from the process Earth Engine uses to turn this code into a set of instructions that can be run on Google servers. Specifically, it means that Earth Engine can’t find a server-side function called <code>print()</code>, because there isn’t one. More generally, client-side functions and control structures cannot be used to operate on the argument image passed to the mapped function. To avoid this error, avoid the use of client-side functions in mapped functions. See <a href="">this page</a> to learn more about the distinction between client and server functions.</p>
+<p>Mapped functions have additional requirements, all of which must be met to avoid errors. For example, mapped functions must return something. Although the Code Editor detects this problem and issues the error, it is specific to mapped functions that run on the server:</p>
+<p><img src="images/thumb_down.png" width=25px>
+  <strong>Error</strong> — this code doesn’t work!</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="debugging.html#cb105-1" aria-hidden="true" tabindex="-1"></a>collection <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&#39;MODIS/051/MOD44B&#39;</span>)</span>
+<span id="cb105-2"><a href="debugging.html#cb105-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-3"><a href="debugging.html#cb105-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Error: User-defined methods must return a value.</span></span>
+<span id="cb105-4"><a href="debugging.html#cb105-4" aria-hidden="true" tabindex="-1"></a>badMap1 <span class="ot">&lt;-</span> collection<span class="sc">$</span><span class="fu">map</span>(<span class="cf">function</span>(image) {</span>
+<span id="cb105-5"><a href="debugging.html#cb105-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Do nothing.</span></span>
+<span id="cb105-6"><a href="debugging.html#cb105-6" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<p>The possibly obvious solution is to return something. But it can’t return just any type of thing. Specifically, functions mapped over an <code>ImageCollection</code> or <code>FeatureCollection</code> must return an <code>Image</code> or <code>Feature</code>. For example, you can’t return a date from a function mapped over an <code>ImageCollection</code>:</p>
+<p><img src="images/thumb_down.png" width=25px>
+  <strong>Error</strong> — this code doesn’t work!</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="debugging.html#cb106-1" aria-hidden="true" tabindex="-1"></a>collection <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&#39;MODIS/006/MOD44B&#39;</span>)</span>
+<span id="cb106-2"><a href="debugging.html#cb106-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-3"><a href="debugging.html#cb106-3" aria-hidden="true" tabindex="-1"></a>badMap2 <span class="ot">&lt;-</span> collection<span class="sc">$</span><span class="fu">map</span>(<span class="cf">function</span>(image) {</span>
+<span id="cb106-4"><a href="debugging.html#cb106-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(image<span class="sc">$</span><span class="fu">date</span>())</span>
+<span id="cb106-5"><a href="debugging.html#cb106-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb106-6"><a href="debugging.html#cb106-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-7"><a href="debugging.html#cb106-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(badMap2<span class="sc">$</span><span class="fu">getInfo</span>())</span>
+<span id="cb106-8"><a href="debugging.html#cb106-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Error: Collection.map: A mapped algorithm must return a Feature or Image.</span></span></code></pre></div>
+<p>To avoid this, return the input image with a new property set. Then, if you need a list of the dates of the images in the collection, you can use <code>aggregate_array()</code>:</p>
+<p><img src="images/thumb_up.png" width=25px>
+  <strong>Good</strong> — set a property!</p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="debugging.html#cb107-1" aria-hidden="true" tabindex="-1"></a>collection <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&#39;MODIS/006/MOD44B&#39;</span>)</span>
+<span id="cb107-2"><a href="debugging.html#cb107-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-3"><a href="debugging.html#cb107-3" aria-hidden="true" tabindex="-1"></a>okMap2 <span class="ot">&lt;-</span> collection<span class="sc">$</span><span class="fu">map</span>(<span class="cf">function</span>(image) {</span>
+<span id="cb107-4"><a href="debugging.html#cb107-4" aria-hidden="true" tabindex="-1"></a>  image<span class="sc">$</span><span class="fu">set</span>(<span class="st">&#39;date&#39;</span>, image<span class="sc">$</span><span class="fu">date</span>())</span>
+<span id="cb107-5"><a href="debugging.html#cb107-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb107-6"><a href="debugging.html#cb107-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ee_print</span>(okMap2)</span>
+<span id="cb107-7"><a href="debugging.html#cb107-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-8"><a href="debugging.html#cb107-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Get a list of the dates.</span></span>
+<span id="cb107-9"><a href="debugging.html#cb107-9" aria-hidden="true" tabindex="-1"></a>datesList <span class="ot">&lt;-</span> okMap2<span class="sc">$</span><span class="fu">aggregate_array</span>(<span class="st">&#39;date&#39;</span>)</span>
+<span id="cb107-10"><a href="debugging.html#cb107-10" aria-hidden="true" tabindex="-1"></a>datesList<span class="sc">$</span><span class="fu">getInfo</span>()</span></code></pre></div>
+
+</div>
+</div>
+
+
+
+  </main>
+
+  <div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page">
+      <h2>On this page</h2>
+      <div id="book-on-this-page"></div>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          <li><a id="book-source" href="#">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="#">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5">
+  <div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+<script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+
+</html>
