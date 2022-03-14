@@ -34,7 +34,7 @@ of the examples are directly adapted from the original  [Earth Engine documentat
 - Asking questions about, making suggestions, or even better, proposing a PR on Github.
 
 <br>
-This book was written by [Junior Calvo](https://github.com/junior0428), [Fernando Herrera](https://github.com/ferherreraq), [Karen Gonzales](https://github.com/andrea29-star),  [Antony Barja](https://github.com/ambarja) and [Cesar Aybar](https://github.com/csaybar). We gratefully acknowledge financial support from the 
+This book was written by [Junior Calvo](https://github.com/junior0428), [Fernando Herrera](https://github.com/ferherreraq), [Karen Gonzales](https://github.com/andrea29-star),  [Joselyn Inga](https://github.com/joandrea) and [Cesar Aybar](https://github.com/csaybar). We gratefully acknowledge financial support from the 
 
 <a href="https://www.r-consortium.org/">
 <img src="https://www.r-consortium.org/wp-content/uploads/sites/13/2016/09/RConsortium_Horizontal_Pantone.png" alt="Markdownify" width="200">

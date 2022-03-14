@@ -87,7 +87,6 @@ library(remotes)
 install_github("r-spatial/rgee")
 ```
 
-
 However, certain issues may arise when users try to set up a Python environment. In a 
 nutshell, `rgee` Python requirements are:
 
@@ -95,19 +94,69 @@ nutshell, `rgee` Python requirements are:
  2. Install in that PYENV: [numpy](https://pypi.org/project/numpy/) and [earthengine-api](https://pypi.org/project/earthengine-api/)
 
 The [**`ee_install`**](https://r-spatial.github.io/rgee/reference/ee_install.html) built-in function is 
-best way to set up the previous Python prerequisite. In short, it performs the following tasks: (1) create a Python environment, (2) Set an environment variable named "EARTHENGINE PYTHON" that saves your Python interpreter path in your global [.Renviron](https://cran.r-project.org/web/packages/startup/vignettes/startup-intro.html) (it will let rgee where to search the next time you try to initialize Earth Engine), and (3) install the requirements in the previously created environment. Users who want to utilize their own Python environment may alternatively run:
+best way to set up the previous Python prerequisite. In short, it performs the following tasks: (1) create a Python environment, (2) Set an environment variable named "EARTHENGINE PYTHON" that saves your Python interpreter path in your global [.Renviron](https://cran.r-project.org/web/packages/startup/vignettes/startup-intro.html) (it will let rgee where to search the next time you try to initialize Earth Engine), and (3) install the package requirements in the previously created environment. Users who want to utilize their own Python environment may alternatively run:
 
 ```{r}
-# IMPORTANT: Change 'py_path' argument for your own Python PATH
+# IMPORTANT: Change 'py_path' argument according to your own Python PATH
+## For Anaconda users - Windows OS
+## Anaconda users must need to run “where anaconda” in console.
+win_py_path = paste0(
+    "C:/Users/UNICORN/AppData/Local/Programs/Python/",
+    "Python37/python.exe"
+)
 ee_install_set_pyenv(
-  py_path = "/home/pc-user01/.virtualenvs/rgee/bin/python",
+  py_path = win_py_path,
+  py_env = NULL # Change it for your own Python ENV
+)
+
+## For Anaconda users - MacOS users
+## Anaconda users must need to run “where anaconda” in console.
+ee_install_set_pyenv(
+  py_path = "/Users/UNICORN/opt/anaconda3/bin/python",
+  py_env = NULL # Change it for your own Python ENV
+)
+
+## For Miniconda users - Windows OS
+win_py_path = paste0(
+    "C:/Users/UNICORN/AppData/Local/r-miniconda/envs/rgee/",
+    "python.exe"
+)
+ee_install_set_pyenv(
+  py_path = win_py_path,
   py_env = "rgee" # Change it for your own Python ENV
+)
+
+## For Miniconda users - Linux/MacOS users
+unix_py_path = paste0(
+    "/home/UNICORN/.local/share/r-miniconda/envs/",
+    "rgee/bin/python3"
+)
+ee_install_set_pyenv(
+  py_path = unix_py_path,
+  py_env = "rgee" # Change it for your own Python ENV
+)
+
+## For virtualenv users - Linux/MacOS users
+ee_install_set_pyenv(
+  py_path = "/home/UNICORN/.virtualenvs/rgee/bin/python",
+  py_env = "rgee" # Change it for your own Python ENV
+)
+
+## For Python root user - Linux/MacOS users
+ee_install_set_pyenv(
+  py_path = "/usr/bin/python3",
+  py_env = NULL, 
+  Renviron = "global" # Save ENV variables in the global .Renv file
+)
+
+ee_install_set_pyenv(
+  py_path = "/usr/bin/python3",
+  py_env = NULL, 
+  Renviron = "local" # Save ENV variables in a local .Renv file
 )
 ```
 
-**After executing the code above, it is critical that you restart your R session (people who use Windows may need to terminate Rstudio instead)**. Note that the PYENV you set must have the Earth Engine Python API and numpy installed. The use of **miniconda/anaconda is mandatory for Windows users,** Linux and MacOS users could also use virtualenv. See [reticulate](https://rstudio.github.io/reticulate/articles/python_packages.html) documentation for more details.
-
-Another option, accessible exclusively on MacOS and Linux, is to simply modify the Python PATH variable:
+Note that the PYENV you set must have the Earth Engine Python API and numpy installed. The use of **miniconda/anaconda is mandatory for Windows users**, Linux and MacOS users could also use virtualenv. See [reticulate](https://rstudio.github.io/reticulate/articles/python_packages.html) documentation for more details. Another option, accessible exclusively on MacOS and Linux, is to simply modify the Python PATH variable:
 
 ``` r
 rgee::ee_install_set_pyenv(
@@ -117,7 +166,6 @@ rgee::ee_install_set_pyenv(
 ```
 
 However, [**rgee::ee_install_upgrade**](https://r-spatial.github.io/rgee/reference/ee_install_upgrade.html) and [**reticulate::py_install**](https://rstudio.github.io/reticulate/reference/py_install.html) will not work until you set a Python ENV. Your R session may need to be terminated after the installation process.
-
 
 ## rgee Initialization {-}
 
@@ -148,6 +196,564 @@ ee_Initialize(drive = TRUE, gcs = TRUE)
 
 After verifying your Google account and granting permission, you will be led to an authentication token. This token should be copied and pasted into your R terminal. Please consider that the Google Cloud Storage credential must be associated to a services account key. For further details, see this rgee [vignette](https://r-spatial.github.io/rgee/articles/rgee05.html). The verification process is only necessary once; after that, rgee keeps the credentials in your system so you do not have to do it again.
 
+# sync GCS and rgee {-}
+
+
+
+This tutorial explains how to integrate rgee and Google Cloud Storage (GCS) step by step. In rgee, GCS is used as an **intermediary container** for massive downloading/uploading of files which is more flexible than Google Drive. At today's date (December 2021), GCS is free for [uses of less than 0.5 GB](https://cloud.google.com/artifact-registry/pricing).
+
+<center>
+<img src="images/gcs_sync/r5_01.png" width=80%>
+</center>
+
+## 1. **Create a Service Account Key** {-}
+
+The bulk of GCS & rgee sync issues is related to the creation of a [service accounts key (SaK)](https://cloud.google.com/iam/docs/creating-managing-service-account-keys) with not enough privileges for
+writing/reading in GCS buckets. In order to create, configure and locally store your SaK, perform as follow:
+
+
+### **Create a Google Cloud Platform (GCP) account** {-}
+
+Go to https://cloud.google.com/, and create an account. You will have to add your address and a credit card.
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_02.png" width=80%>
+</center>
+<br>
+
+### **Create a new project** {-}
+
+Go to console.
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_03.png" width=80%>
+</center>
+<br>
+
+If it is your first time using GCP, you are assigned a project named **_My first project_**. If you want to create a new project (**OPTIONAL**). First, click on 'My first project' in the top blue bar, just to the right of 'Google Cloud Platform', and then '**NEW PROJECT**'. 
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_04.png" width=80%>
+</center>
+<br>
+
+Create a project with the desired name.
+
+<center>
+<img src="images/gcs_sync/r5_05.png" width=90%>
+</center>
+
+### **Activate GCS API** {-}
+
+By default, the GCS API is activated. Make sure of it by typing "Cloud Storage API" in the search browser.
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_06.png" width=80%>
+</center>
+<br>
+
+Click on 'Enable APIs and Services' (if the API is turned off). A green checkmark as the image below means
+that the API is activated!
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_07.png">
+</center>
+<br>
+
+
+### **Set up a service account** {-}
+
+Now we are going to create a [**service account**](https://cloud.google.com/iam/docs/service-accounts). A service account is used to 'sign in' applications that require one or many GCP services. In our case, **rgee** (the app) needs an account with **GCS admin privileges**. To create a service account, search for ‘Cloud Storage’ in the browser, and click on ‘Cloud Storage’ product.
+
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_08.png" width=80%>
+</center>
+<br>
+
+
+Click on 'settings'.
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_09.png"  width=90%>
+</center>
+<br>
+
+
+Click on 'INTEROPERABILITY', and then click on 'CREATE A KEY FOR A SERVICE ACCOUNT'.
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_10.png"  width=90%>
+</center>
+<br>
+
+Click on 'CREATE NEW ACCOUNT'.
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_11.png"  width=85%>
+</center>
+<br>
+
+
+Set a name (1), and define **Storage Admin** (**DON'T FORGET THIS STEP!!**) in role (3). 
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_12.png"  width=80%>
+</center>
+<br>
+
+### **Create and download a SaK as a json file.** {-}
+ 
+Once create the service account, we have to download the **S**ervice **a**ccount **K**ey to use GCS outside the Google Cloud Platform console. A SaK is just a JSON file with your public/private RSA keys. First, click the small edit icon on the bottom right (three horizontal lines). Then, go to API & Services and click on **credentials**.
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_13.png"  width=90%>
+</center>
+
+<br>
+
+On the next page, click on the service account name.
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_14.png"  width=90%>
+</center>
+
+click on 'KEYS', 'ADD KEY', and 'Create new key'.
+<center>
+<img src="images/gcs_sync/r5_15.png"  width=90%>
+</center>
+
+<br>
+Then, select JSON format, and click 'create'.
+<br>
+
+<center>
+<img src="images/gcs_sync/r5_16.png"  width=90%>
+</center>
+<br>
+
+This should prompt a save file window. Save the file to your hard drive. You can change the name to something more memorable if you like (**but keep the “.json” extension**). Also, please take note of where you stored it. Now we are done in the Google Cloud Console and can finally start working in RStudio.
+
+## **2. Copy the SaK in your system** {-}
+
+From rgee v.1.2.9000 we added [ee_utils_sak_copy](https://r-spatial.github.io/rgee/reference/ee_utils_sak_copy.html) and [ee_utils_sak_validate](https://r-spatial.github.io/rgee/reference/ee_utils_sak_validate.html) to help you to validate and store your SaK. Please run as follow to properly set your SaK in your system.
+
+```{r}
+# remotes::install_github("r-spatial/rgee") Install rgee v.1.3
+library(rgee)
+ee_Initialize("csaybar")
+SaK_file <- "/home/csaybar/Downloads/SaK_rgee.json" # PUT HERE THE FULLNAME OF YOUR SAK.
+# Assign the SaK to a EE user.
+ee_utils_sak_copy(
+  sakfile =  SaK_file,
+  users = c("csaybar", "ryali93") # Unlike GD, we can use the same SaK for multiple users.
+)
+# Validate your SaK
+ee_utils_sak_validate()
+```
+
+`ee_utils_sak_validate` evaluate if **rgee** with your SaK can: (1) create buckets, (2) write objects, (3) read objects, and (4) connect GEE and GCS. If it does not retrieve an error, `ee_Initialize(..., gcs = TRUE)` will work like a charm!. The next step is create your own **GCS bucket**. Consider that the bucket name you set must be **globally unique**. In other words, two buckets can not exist with the same name in Google Cloud Storage. 
+
+```{r}
+library(rgee)
+library(jsonlite)
+library(googleCloudStorageR)
+ee_Initialize("csaybar", gcs = TRUE)
+# Create your own container
+project_id <- ee_get_earthengine_path() %>% 
+  list.files(., "\\.json$", full.names = TRUE) %>% 
+  jsonlite::read_json() %>% 
+  '$'(project_id) # Get the Project ID
+googleCloudStorageR::gcs_create_bucket("CHOOSE_A_BUCKET_NAME", projectId = project_id)
+```
+
+## **3. ERROR: Cannot insert legacy ACL for an object when uniform bucket-level access is enabled** {-}
+
+This is a [common issue](https://github.com/cloudyr/googleCloudStorageR/issues/111) related to the control access of buckets. GCS offers two systems for granting users permission to access your buckets and objects: [IAM](https://cloud.google.com/storage/docs/access-control/iam) (recommended, used in all Google Cloud services) and [Access Control Lists (ACL)](https://cloud.google.com/storage/docs/access-control/lists) (legacy access control system, only available in GCS).
+
+If you use the Google Cloud Platform console to create a bucket, it will use **Uniform access** (**IAM is used alone to manage permissions**) by default.
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_17.png"  width=90%>
+</center>
+<center>
+<img src="images/gcs_sync/r5_18.png"  width=95%>
+</center>
+<br>
+
+
+On the contrary if you use [`googleCloudStorageR::gcs_create_bucket`](https://code.markedmondson.me/googleCloudStorageR/reference/gcs_create_bucket.html), it will use fine-grained access (**IAM and ACLs to manage permissions**).
+
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_19.png"  width=95%>
+</center>
+<br>
+
+Why is this important?. It is important, because if you create a bucket using the first option an error message will arise: **"Cannot insert legacy ACL for an object when uniform bucket-level access is enabled. Read more at https://cloud.google.com/storage/docs/uniform-bucket-level-access"**.
+
+```{r}
+demo_data <- data.frame(a = 1:10, b = 1:10)
+# Bad --------------------------------------------------
+googleCloudStorageR::gcs_upload(
+  file = demo_data,
+  name = "demo_data.csv",
+  bucket = "demo_0002" # Bucket with uniform control access
+)
+#  Error: Insert legacy ACL for an object when uniform bucket-level access
+#  is enabled. Read more at https://cloud.google.com/storage/docs/uniform-bucket-level-access
+# Good -------------------------------------------------
+googleCloudStorageR::gcs_upload(
+  file = demo_data,
+  name = "demo_data.csv",
+  bucket = "demo_0002", # Bucket with uniform control access
+  predefinedAcl = "bucketLevel"
+)
+```
+
+It happens due that `googleCloudStorageaR` by default expects buckets created with fine-grained access (ACL support, see [cloudyr/googleCloudStorageR#111](https://github.com/cloudyr/googleCloudStorageR/issues/111)). 
+To avoid this issue, from rgee  v.1.3 we opt to change the default predefinedAcl argument from 'private' to 'bucketLevel'. This simple change should avoid users dealing with access control issues. However, if for some reason a user needs to change the access control policy (maybe to reduce the data exposure), from rgee v.1.2.0 all the rgee GCS functions ([sf_as_ee](https://r-spatial.github.io/rgee/reference/sf_as_ee.html), [local_to_gcs](https://r-spatial.github.io/rgee/reference/local_to_gcs.html), [raster_as_ee](https://r-spatial.github.io/rgee/reference/raster_as_ee.html), and [stars_as_ee](https://r-spatial.github.io/rgee/reference/stars_as_ee.html)) support the `predefinedAcl` argument too (Thanks to @[jsocolar](https://github.com/jsocolar)).
+
+## **4. ERROR in Earth Engine servers: Unable to write to bucket demo_0001 (permission denied).** {-}
+
+This error arises when GEE tries to send an exported task results but your **EE USER** does not have enough privileges to write/read the bucket. **Why does this occur if I have successfully configured my SaK in my local system?**. Well, the SaK ensures a smooth connection between your local environment and GCS, but **not between GEE and GCS**.
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_20.png">
+</center>
+<br>
+
+For instance, imagine that you have access to 2 Google user accounts, one personal and one for your work (in this example, we will call them David and Cesar). Both accounts have access to GEE. David creates a SaK and sends it to Cesar. As a result of this action, both Cesar and David can work together in the same bucket, downloading and creating GCS objects (Local <-> GCS). If David tries to use `ee_as_raster(..., via='gcs')` (from GEE -> GCS -> Local), GEE will recognize that the owner of the bucket is David so it will allow the procedure (GEE -> GCS) and thanks to the SaK there will be no problem to send the information to his local environment (GCS -> Local). However, if Cesar tries to do the same, it will get an error when passing the information from GEE -> GCS because **GEE does not know that Cesar has David SaK in their local system**.
+
+```{r}
+library(rgee)
+ee_Initialize(gcs = TRUE)
+# Define an image.
+img <- ee$Image("LANDSAT/LC08/C01/T1_SR/LC08_038029_20180810")$
+  select(c("B4", "B3", "B2"))$
+  divide(10000)
+# Define an area of interest.
+geometry <- ee$Geometry$Rectangle(
+  coords = c(-110.8, 44.6, -110.6, 44.7),
+  proj = "EPSG:4326",
+  geodesic = FALSE
+)
+img_03 <- ee_as_raster(
+  image = img,
+  region = geometry,
+  container = "demo_0001",
+  via = "gcs",
+  scale = 1000
+)
+# ERROR in Earth Engine servers: Unable to write to bucket demo_0001 (permission denied).
+```
+
+This error is quite easy to fix. Just go to the bucket in your Google Cloud Platform console.
+
+<br>
+<center>
+<img src="images/gcs_sync/r5_21.png"  width=90%>
+</center>
+
+Click on 'PERMISSIONS', and click on 'ADD'.
+
+<center>
+<img src="images/gcs_sync/r5_22.png"  width=90%>
+</center>
+
+Finally, add the Google user account of the **EE USER**. **Do not forget to add 'STORAGE ADMIN' in the role!**
+
+<center>
+<img src="images/gcs_sync/r5_23.png"  width=95%>
+</center>
+<br>
+
+## **5. Conclusion** {-}
+
+Setting up a SaK for GCS can be quite frustrating but it is definitely worth it!. If you are still having problems setting up your SaK, feel free to clearly detail your problem in [rgee issues](https://github.com/r-spatial/rgee/issues).
+
+
+# Integrate Rmarkdown and rgee {-}
+
+## 1. The problem {-}
+
+GEE offers on-the-fly computation for rendering EE spatial objects:
+
+```{r}
+library(rgee)
+library(rgeeExtra)
+ee_Initialize()
+img <- ee$Image$Dataset$CGIAR_SRTM90_V4
+Map$addLayer(log1p(img), list(min = 0, max = 7))
+```
+
+<br>
+<center>
+<img src="images/rgee_plusrmarkdown/r6_01.png"  width=95%>
+</center>
+<br>
+
+However, this interactive map service **is temporary**, disappearing after a short period of time (~ 4 hours). This makes `Map$addLayer` unusable for report generation. In this vignette, we will learn to create a **permanent interactive map**.
+
+## 2. A tentative workaround {-}
+
+Instead of using GEE API for creating interactive maps, we will use [**titiler**](https://github.com/developmentseed/titiler). titiler creates web map tiles dynamically based on COG (STAC) resources. Since an exported EE task to retrieve images can return a COG, we just have to move these results to a **storage web service with [HTTP GET range requests](https://www.cogeo.org/)**.
+
+<br>
+<center>
+<img src="images/rgee_plusrmarkdown/r6_02.png"  width=95%>
+</center>
+<br>
+
+
+Fortunately, [GCS counts with this feature](https://cloud.google.com/storage/docs/json_api/v1/objects/get), so if we manage to move our results to GCS, the work would be already done :)
+
+```
+GET /OBJECT_NAME HTTP/1.1
+Host: BUCKET_NAME.storage.googleapis.com
+Content-Length: 0
+Authorization: AUTHENTICATION_STRING
+Range: bytes=BYTE_RANGE
+If-Match: ENTITY_TAG
+If-Modified-Since: DATE
+If-None-Match: ENTITY_TAG
+If-Unmodified-Since: DATE
+```
+
+## 3. Show me the code {-}
+
+First, load `rgee` and `googleCloudStorageR` and initialize the EE API. You must have correctly configured a service account key, if not check our tutorial "[**how to integrate Google Cloud Storage and rgee**](https://r-spatial.github.io/rgee/articles/rgee05.html)".
+
+```{r}
+library(rgee)
+library(googleCloudStorageR)
+# Init the EE API
+ee_Initialize("csaybar", gcs = TRUE)
+# Validate your SaK
+# ee_utils_sak_validate(bucket = "rgee_examples")
+```
+
+
+Define your study area.
+
+```{r}
+# Define an study area
+EE_geom <- ee$Geometry$Point(c(-70.06240, -6.52077))$buffer(5000)
+```
+
+
+Select an `ee$Image`, for instance, a Landsat-8 image.
+
+```{r}
+l8img <- ee$ImageCollection$Dataset$LANDSAT_LC08_C02_T2_L2 %>% 
+  ee$ImageCollection$filterDate('2021-06-01', '2021-12-01') %>% 
+  ee$ImageCollection$filterBounds(EE_geom) %>% 
+  ee$ImageCollection$first()
+```
+
+Move `l8img` from EE to GCS.
+
+```{r}
+gcs_l8_name  <- "l8demo2" # name of the image in GCS.
+BUCKET_NAME <- "rgee_examples" # set here your bucket name
+task <- ee_image_to_gcs(
+  image = l8img$select(sprintf("SR_B%s",1:5)),
+  region = EE_geom,
+  fileNamePrefix = gcs_l8_name,
+  timePrefix = FALSE,
+  bucket = BUCKET_NAME,
+  scale = 10,
+  formatOptions = list(cloudOptimized = TRUE) # Return a COG rather than a TIFF file.
+)
+task$start()
+ee_monitoring()
+```
+
+Titiler needs resources downloadable for anyone. Therefore, **we recommend you to work with GCS buckets with fine-grained access**. In this way, you can decide individually which objects to make public. On the other hand, if you decide to work with buckets with uniform access, you will have to expose the entire bucket!. The code below makes a specific object in your bucket **public to internet**.
+
+
+```{r}
+# Make PUBLIC the GCS object 
+googleCloudStorageR::gcs_update_object_acl(
+  object_name = paste0(gcs_l8_name, ".tif"),
+  bucket = BUCKET_NAME,
+  entity_type = "allUsers"
+)
+```
+
+Finally, use `Map$addLayer` to display the COG resource. By default, `Map$addLayer` use the open endpoint: https://api.cogeo.xyz/docs. 
+
+
+```{r echo=FALSE}
+library(rgee)
+gcs_l8_name  <- "l8demo2" # name of the image in GCS.
+BUCKET_NAME <- "rgee_examples" # set here your bucket name
+```
+
+
+```{r}
+img_id <- sprintf("https://storage.googleapis.com/%s/%s.tif", BUCKET_NAME, gcs_l8_name)
+visParams <- list(bands=c("SR_B4","SR_B3","SR_B2"), min = 8000, max = 20000, nodata = 0)
+Map$centerObject(img_id)
+Map$addLayer(
+  eeObject = img_id, 
+  visParams = visParams,
+  name = "My_first_COG",
+  titiler_server = "https://api.cogeo.xyz/"
+)
+```
+
+If you prefer to use [titiler syntax](https://api.cogeo.xyz/docs), set the parameter 
+`titiler_viz_convert` as FALSE.
+
+
+```{r}
+visParams <- list(expression = "B4,B3,B2", rescale = "8000, 20000", resampling_method = "cubic")
+Map$addLayer(
+  eeObject = img_id, 
+  visParams = visParams,
+  name = "My_first_COG",
+  titiler_server = "https://api.cogeo.xyz/",
+  titiler_viz_convert = FALSE
+)
+```
+
+
+<br>
+<center>
+<img src="images/rgee_plusrmarkdown/r6_03.png"  width=95%>
+</center>
+<br>
+
+
+# Deploy rgee Shiny apps {-}
+
+Google Earth Engine (GEE) allows users to create apps by three different approaches: **user tokens**, [service accounts](https://developers.google.com/earth-engine/guides/service_account) and [client-side authentication](https://github.com/google/earthengine-api/tree/master/demos/client-auth). In this tutorial, we will get focus on the first option.
+
+## **What is an EE user token (EEtk)?** {-}
+
+An EEtk is a 100-character text string (OAuth2 credential) stored on your local system that is used to identify and authenticate users (See Figure below). In other words, it will permit to connect the EE Web REST API with their local system.
+
+<br>
+
+<center>
+<img src="images/rgee_shinyapps/r4_01.png" width="95%"/>
+</center>
+
+<br>
+
+In **rgee** the authentication procedure is triggered internally by [**ee_Initialize**](https://r-spatial.github.io/rgee/reference/ee_Initialize.html). This [function](https://github.com/google/earthengine-api/blob/b4c068924b1c7574ee717761cb9fe0499a3b932b/python/ee/data.py#L210%60) will search for the '**_credentials_**' file  (it stores the EEtk) on the path: **\~/.config/earthengine/**. 
+
+<br>
+
+```{r}
+library(rgee)
+sprintf("%s/credentials", dirname(rgee::ee_get_earthengine_path()))
+```
+
+<br>
+
+If the file exists, then an [Oauth2 Credential](https://google-auth.readthedocs.io/en/stable/reference/google.oauth2.credentials.html) object is created using a [refresh token](https://developers.google.com/identity/protocols/oauth2) grant. This *refresh token* must come from a Google account registered in GEE if not a *Bad Request error* will be invoked. Once the Oauth2 Credential is successfully loaded, it is dynamically passed to all EE methods (See [Initialize](https://github.com/google/earthengine-api/blob/b4c068924b1c7574ee717761cb9fe0499a3b932b/python/ee/__init__.py#L125)) in order to realize independent calls to the Web REST API. As you realize, the **_credentials_** file is crucial to interact with the EE API and if it does not exist on your system, it will simply not be possible to use rgee.
+
+
+<center>
+<br>
+**Please never show or share your token with anyone, it will give full access to all your Earth Engine resources.**
+</center>
+
+## **Deploying a simple rgee shiny app on shinyapps.io**  {-}
+
+Deploying a rgee application can be a bit tricky, as you must perform the following task:
+
+1. Install R packages.
+2. Install Python and third-party packages.
+3. **Set the _credentials_ file in the path _~/.config/earthengine/_**.
+
+The first step is automatically accomplished for [**shinyapps.io**](https://www.shinyapps.io/). On the other hand, the second and third steps need to configure manually the virtual machine. To make the process straightforward we create [shiny_rgee](https://github.com/csaybar/shiny_rgee_template) template.
+
+<br>
+<center>
+<img src="images/rgee_shinyapps/r4_02.png" width="95%"/>
+</center>
+<br>
+
+To use shiny_rgee template, first download it by running on terminal:
+
+```
+git clone https://github.com/csaybar/shiny_rgee_template.git
+```
+
+Load the rgeeApp.Rproj and modify the .Renviron file according to their personal token user information. It is available in your shinyapps profile https://www.shinyapps.io/admin/#/tokens.
+
+<br>
+<center>
+<img src="https://user-images.githubusercontent.com/16768318/146477123-6bec91ed-d5bb-42e6-aa6d-5f6b08d08d7f.png" width="95%"/>
+</center>
+
+<br>
+
+[**.Renviron**](https://github.com/csaybar/shiny_rgee_template/blob/main/.Renviron)
+
+```
+    SHINY_ACC_NAME="your_account_name"
+    TOKEN="a_token_you_got_from_shinyapps.io"
+    SECRET="a_secret_you_recieved_fromshinyapps.io"
+    MASTERNAME="name_of_the_shiny_app"
+```
+<br>
+
+Finally run the [**deploy.R**](https://github.com/csaybar/shiny_rgee_template/blob/main/deploy.R) file.
+
+```{r}
+library(reticulate)
+library(rsconnect)
+library(rgee)
+# 1. Create the credentials file
+ee_Initialize()
+# 2. Copy credentials file to the project folder
+file_credentials <- sprintf("%s/credentials", dirname(rgee::ee_get_earthengine_path()))
+file.copy(file_credentials, to = ".")
+# 3. Set ShinyApps account info
+# FIRST MODIFY LOCAL .Renviron!!
+error_on_missing_name <- function(name){
+  var <- Sys.getenv(name, unset=NA)
+  if(is.na(var)){
+    stop(paste0("cannot find ",name),call. = FALSE)
+  }
+  gsub("\"", '',var)
+}
+setAccountInfo(name   = error_on_missing_name("SHINY_ACC_NAME"),
+               token  = error_on_missing_name("TOKEN"),
+               secret = error_on_missing_name("SECRET"))
+# 4. Run the application
+deployApp(
+  appFiles = c("app.R", "utils.R", "credentials"),
+  appTitle = "rgee_app_demo",
+  lint = FALSE
+)
+# 5. Delete EE credentials file
+file.remove("credentials")
+```
+
+<br>
+
+After a couple of minutes, the app will be available on shinyapps.io. 
+See our live demo in **https://cesar-aybar.shinyapps.io/rgee_app_demo/**.
 
 # Comparing rgee vs Python and Javascript {-}
 
