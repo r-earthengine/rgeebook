@@ -13,14 +13,14 @@ source("common.R")
 
 These tutorials are an introduction to using the Earth Engine R API for advanced geospatial analysis. The tutorials assume no programming background, although they do assume a willingness to learn some R programming. Use the links below to get started on the tutorials or use the menus on the left to jump to a section of interest.
 
-  - [Introduction to R for Earth Engine]()
-  - [Introduction to the Earth Engine R API]()
-  - [Introduction to Global Forest Change datasets]()
-  - [Introduction to the JRC Global Surface Water dataset]()
+- [Introduction to R for Earth Engine](https://r-earthengine.com/rgeebook/introduction-to-r-for-earth-engine.html)
+- [Introduction to the Earth Engine R API](https://r-earthengine.com/rgeebook/the-earth-engine-api.html)
+- [Introduction to Global Forest Change datasets](https://r-earthengine.com/rgeebook/global-forest-change.html)
+- [Introduction to the JRC Global Surface Water dataset](https://r-earthengine.com/rgeebook/global-surface-water.html)
   
 ## Video tutorials {-}
 
-Visit the [Video Tutorials]() page to view lectures and hands-on trainings presented at Earth Engine User Summits and [Earth Outreach digital events]().
+Visit the [Video Tutorials](https://r-earthengine.com/rgeebook/video-tutorials-1.html) page to view lectures and hands-on trainings presented at Earth Engine User Summits and [Earth Outreach digital events](https://earthoutreachonair.withgoogle.com/).
 
 # Introduction to R for Earth Engine {-}
 
@@ -382,7 +382,7 @@ You may need to do sequential operation, where the result of each iteration is u
 
 A good demonstration of `iterate()` is for creation of Fibonacci number sequence. Here, each number in the series is the sum of previous 2 numbers. The `iterate()` function takes 2 arguments, a function (algorithm) and a starting value. The function itself gets passed on 2 values, the current value in the iteration, and the result of the previous iteration. The following example demonstrates how to implement a fibonacci sequence in Earth Engine.
 
-```{r, eval=FALSE}
+```{r}
 algorithm <- function(current, previous) {
   previous <- ee$List(previous)
   var n1 <- ee$Number(previous$get(-1))
@@ -402,15 +402,22 @@ Now that you have a good understanding of javascript concepts, you can see the A
 
 # The Earth Engine API {-}
 
-To start your journey in mastering R, the following six chapters will help you learn the foundational components of R. I expect that you've already seen many of these pieces before, but you probably have not studied them deeply. To help check your existing knowledge, each chapter starts with a quiz; if you get all the questions right, feel free to skip to the next chapter!
+Welcome to the introductory tutorial for the Google Earth Engine R API. This tutorial provides examples of how to use Earth Engine to analyze geospatial raster and vector data. By the end of the tutorial, you will have seen most of the basic functionality of the Earth Engine API.
+
+### Prerequisites {-}
+
+- [Signup for Earth Engine](https://signup.earthengine.google.com/). Once you have been accepted, you will receive an email with additional information.
+- If you are unfamiliar with R, check out the [R for Earth Engine tutorial](https://r-earthengine.com/rgeebook/introduction-to-r-for-earth-engine.html) before proceeding.
+
+Once you're familiar with R and the Rstudio, visit the next section to learn about visualizing images and image bands
 
 ## Visualizing Images and Image Bands {-}
 
 Now that you're ready to begin writing in R of the Earth Engine , start by copying the following code into the Code Editor:
 
-```{r, eval=FALSE}
+```{r}
 ## Instantiate an image with the Image constructor.
-image <- ee$Image('CGIAR/SRTM90_V4')
+image <- ee$Image("CGIAR/SRTM90_V4")
 
 ## Zoom to a location.
 Map$setCenter(-112.8598, 36.2841, 9) ## Center on the Grand Canyon.
@@ -419,190 +426,241 @@ Map$setCenter(-112.8598, 36.2841, 9) ## Center on the Grand Canyon.
 Map$addLayer(image)
 ```
 
-Click the Run button at the top of the Code Editor and observe that a very gray image appears on the map. Don't worry, you'll make it look better soon.
+Click the **Run** button at the top of the Rstudio and observe that a very gray image appears on the map. Don't worry, you'll make it look better soon.
 
-## Image Constructor {-}
+#### Image Constructor {-}
 
-The first new thing in this example is the image constructor `ee$Image()`. The argument provided to the constructor is the string ID of an image in the Earth Engine data catalog. (See the Docs tab, at the left of the Code Editor, to see a full list of possible arguments to the image constructor. The Docs tab represents the most up to date information about what Earth Engine can do.)
+The first new thing in this example is the image constructor `ee$Image()`. The argument provided to the constructor is the string ID of an image in the Earth Engine data catalog.
 
-To discover an image ID, search in the Earth Engine data catalog using the search tool at the top of the Code Editor. For example, type 'elevation' into the search field and note that a list of rasters is returned. Click the 'SRTM Digital Elevation Data Version 4' entry to see more information about that dataset. On the right side of the dataset description is an Image ID field. Observe that the image ID in the example is copied from the image ID shown in the dataset description.
+To discover an image ID, search in the [Earth Engine Data Catalog](https://developers.google.com/earth-engine/datasets/) using the search tool. For example, type 'elevation' into the search field and note that a list of rasters is returned. Click the 'SRTM Digital Elevation Data Version 4' entry to see more information about that dataset. On the right side of the dataset description is an **Image ID** field. Observe that the image ID in the example is copied from the image ID shown in the dataset description.
 
-An alternative to copying and pasting image IDs is to use the Import button on the dataset description or the import link at the right side of the search results. If you click the import link or button, a variable is automatically created in a special section, named 'Imports', at the top of your script. You can rename the variable by clicking on its name in the imports section.
+#### Configuring the Map {-}
 
-## Configuring the Map {-}
+The second new part of this example is the `Map$setCenter()` call. This method on the `Map` object, which represents the Map display in the Rstudio, centers the map at the given longitude, latitude (in decimal degrees) and zoom level where 1 is zoomed out so that the map shows the entire Earth's surface. Larger numbers zoom in from there. 
 
-The second new part of this example is the `Map$setCenter()` call. This method on the `Map` object, which represents the Map display in the Code Editor, centers the map at the given longitude, latitude (in decimal degrees) and zoom level where 1 is zoomed out so that the map shows the entire Earth's surface. Larger numbers zoom in from there. Discover all the methods on the `Map` object by checking the Map section in the Docs tab on the left side of the Code Editor.
+#### Adding a layer to the Map {-}
 
-## Adding a layer to the Map {-}
-
-The last line in the example says: use the `Map` object's `addLayer()` method to add an image to the map display in the Code Editor.
+The last line in the example says: use the `Map` object's `addLayer()` method to add an image to the map display in the Rstudio.
 
 Congratulations! You've created your first Earth Engine script. In the next section, you'll learn how to make that image look a little better.
 
-## Digression: Images in Earth Engine {-}
+### Digression: Images in Earth Engine {-}
 
-Images in Earth Engine (see this page for more details) are made up of one or more bands. Each band in an image has its own name, pixel values, pixel resolution, and projection. As you'll soon discover, the SRTM image has one band: 'elevation'.
+Images in Earth Engine (see [this page](https://r-earthengine.com/rgeebook/image.html) for more details) are made up of one or more bands. Each band in an image has its own name, pixel values, pixel resolution, and projection. As you'll soon discover, the SRTM image has one band: 'elevation'.
 
 When you add an image to a map using `Map$addLayer()`, Earth Engine needs to determine how to map the values in the image band(s) to colors on the display. If a single-band image is added to a map, by default Earth Engine displays the band in grayscale, where the minimum value is assigned to black, and the maximum value is assigned to white. If you don't specify what the minimum and maximum should be, Earth Engine will use default values. For example, the image you just added to the map is displayed as a grayscale image stretched to the full range of the data, or signed 16-bit integer [-32768, 32767]. (`float` bands are stretched to [0, 1] and `byte` bands are stretched to [0, 255] by default).
 
 You can discover the data type of the image by printing it and inspecting the image object in the **Console** tab. For example, paste the following after the previous code:
 
-```{r, eval=FALSE}
-print('SRTM image', image)
+```{r}
+cat("SRTM image", unlist(image$getInfo()))
 ```
 
-When you click run, note that an object appears in the console. To investigate the object properties, expand it by clicking on the zippy () to the left of the object or property. Expand the image object, the 'bands' property, the 'elevation' band at index '0' and the 'data_type' property of the 'elevation' band to discover that it is a `signed int16` data type.
+When you click run, note that an object appears in the console. 
 
-## Customizing layer visualization {-}
+### Customizing layer visualization {-}
 
-To change the way the data are stretched, you can provide another parameter to the `Map$addLayer()` call. Specifically, the second parameter, `visParams`, lets you specify the minimum and maximum values to display. To discover what values to use, activate the Inspector tab and click around on the map to get an idea of the range of pixel values. Alternatively, use the Layer manager to interactively stretch the data, then observe the minimum and maximum corresponding to percentiles or standard deviation stretches. Suppose that through such experimentation, you determine that the data should be stretched to [0, 3000]. To display the image using this range, use:
+To change the way the data are stretched, you can provide another parameter to the `Map$addLayer()` call. Specifically, the second parameter, `visParams`, lets you specify the minimum and maximum values to display.  Suppose that through such experimentation, you determine that the data should be stretched to [0, 3000]. To display the image using this range, use:
 
-```{r, eval=FALSE}
-Map$addLayer(image, list(min = 0, max = 3000), 'custom visualization')
+```{r}
+Map$addLayer(
+  image,
+  list(min = 0, max = 3000),
+  "custom visualization"
+)
 ```
 
-Note that the visParams parameter is an object, with properties specifying the min and the max. Note that the third parameter for `Map$addLayer()` is the name of the layer that is displayed in the Layer manager. The result should look something like Figure 1. Hover the mouse over the **Layers** box on the right to see the effect of renaming that layer.
+Note that the `visParams` parameter is an object, with properties specifying the `min` and the `max`. Note that the third parameter for `Map$addLayer()` is the name of the layer that is displayed in the Layer manager. The result should look something like Figure. Hover the mouse over the **Layers** box on the left to see the effect of renaming that layer.
 
 <center>
-![Figure 8. Elevation image as grayscale, stretched to (0, 3000)](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_01.png){width=670px}
+<img src="./images/chapter_03/figure_api_01.png" width=95%>
+</center>
 
-<left>
+Elevation image as grayscale, stretched to [0, 3000].
 
 To display a single band using a color palette, add a `palette` property to the `visParams` object:
 
-```{r, eval=FALSE}
-Map$addLayer(image, list(min = 0, max = 3000, palette = c('blue', 'green', 'red')), 
-             'custom palette')
+```{r}
+Map$addLayer(
+  image,
+  list(min = 0, max = 3000, palette = c("blue", "green", "red")),
+  "custom palette"
+)
 ```
 
 The result should look something like Figure .
 
 <center>
-![Figure 8. Elevation image as a color ramp from blue to red, stretched to (0, 3000).](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_02.png){width=670px}
-
+<img src="./images/chapter_03/figure_api_02.png" width=95%>
 </center>
 
-## Digression: Palettes {-}
+Elevation image as a color ramp from blue to red, stretched to [0, 3000].
+
+### Digression: Palettes {-}
 
 Palettes let you set the color scheme for single-band images. A palette is a comma delimited list of color strings which are linearly interpolated between the maximum and minimum values in the visualization parameters (or defaults according to the band type, as described previously). For example, pixels less than or equal to the minimum will be displayed with the first color in the list; pixels greater than or equal to the maximum will be displayed with the last color in the list. Intermediate colors are linearly stretched to intermediate pixel values.
 
-The colors are defined using the web standard CSS color value scheme (see this external reference to learn more). Colors can be specified by name or as hexadecimal strings indicating the combination of red, green and blue. The lowest value in any of the three positions is 00 (representing the decimal number 0), while the highest is FF (representing the decimal number 255). The string '000000' represents the color black, 'FFFFFF' is white, 'FF0000' is red, '00FF00' is green, and '0000FF' is blue. See the Color palettes section for more detail. Other stretches are possible by using Styled Layer Descriptors, as described in this section.
+The colors are defined using the web standard CSS color value scheme (see [this external reference](https://en.wikipedia.org/wiki/Web_colors) to learn more). Colors can be specified by name or as hexadecimal strings indicating the combination of red, green and blue. The lowest value in any of the three positions is 00 (representing the decimal number 0), while the highest is FF (representing the decimal number 255). The string '000000' represents the color black, 'FFFFFF' is white, 'FF0000' is red, '00FF00' is green, and '0000FF' is blue. See the [Color palettes section](https://r-earthengine.com/rgeebook/image.html) for more detail. Other stretches are possible by using Styled Layer Descriptors, as described in [Styled Layer Descriptors section](https://r-earthengine.com/rgeebook/image.html).
 
 Later in this tutorial, you'll learn how to display multi-band imagery. But first, visit the next page to learn about performing computations with images.
 
 
 ## Computations using Images {-}
 
-Now that you know how to load and display an image, it's time to apply a computation to it. For example, you can compute the slope of terrain, by passing the SRTM elevation image to the `slope` method of the `ee.Terrain` package.
+Now that you know how to load and display an image, it's time to apply a computation to it. For example, you can compute the slope of terrain, by passing the SRTM elevation image to the `slope` method of the `ee$Terrain` package.
 
-```{r, eval=FALSE}
+```{r}
 ## Load the SRTM image.
-srtm <- ee$Image('CGIAR/SRTM90_V4')
+srtm <- ee$Image("CGIAR/SRTM90_V4")
 
 ## Apply an algorithm to an image.
 slope <- ee$Terrain$slope(srtm)
 
 ## Display the result.
 Map$setCenter(-112.8598, 36.2841, 9) ## Center on the Grand Canyon.
-Map$addLayer(slope, list(min = 0, max = 60), 'slope')
+Map$addLayer(
+  slope,
+  list(min = 0, max = 60),
+  "slope"
+)
 ```
 
-Note that in the code `ee.Terrain.slope(srtm)`, the srtm image is provided as an argument to the slope algorithm. The result should look something like Figure 3.
+Note that in the code `ee$Terrain$slope(srtm)`, the `srtm` image is provided as an argument to the slope algorithm. The result should look something like Figure.
 
 <center>
-![Figure 8. Slope image.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_03.png){width=670px}
-
+<img src="./images/chapter_03/figure_api_03.png" width=95%>
 </center>
 
-## Image math {-}
+Slope image.
+
+### Image math {-}
 
 There are also methods in the `ee$Image` class that can be invoked on an image object. For example, suppose you'd like to do some math using image bands (sometimes called *band math* or *map algebra*). For example, you may be interested in trigonometric operations on an aspect image. To accomplish that, first convert an aspect image to radians, then call `sin()` on it. Reusing our `srtm` image.
 
-```{r, eval=FALSE}
+```{r}
 ## Get the aspect (in degrees).
 aspect <- ee$Terrain$aspect(srtm)
 
 ## Convert to radians, compute the sin of the aspect.
-sinImage <- aspect$divide(180)$multiply(Math$PI)$sin()
+sinImage <- aspect$divide(180)$multiply(pi)$sin()
 
 ## Display the result.
-Map$addLayer(sinImage, list(min = -1, max = 1), 'sin')
+Map$addLayer(
+  sinImage,
+  list(min = -1, max = 1),
+  "sin"
+)
 ```
 
-The result should look something like Figure . It's worth taking a closer look at the `aspect$divide(180)$multiply(Math$PI)$sin()` code. By chaining multiple methods like this, the code says, 'divide the aspect by 180, multiply the result of that by π, and finally take the sin'. You can perform complex mathematical operations on images by combining methods in this manner. See the `Image` [docs](https:#developers.google.com/earth-engine/apidocs/ee-image) for a complete list of mathematical operations, `add()`, `subtract()`, `multiply()`, etc.
+The result should look something like Figure . It's worth taking a closer look at the `aspect$divide(180)$multiply(pi)$sin()` code. By chaining multiple methods like this, the code says, 'divide the aspect by 180, multiply the result of that by π, and finally take the sin'. You can perform complex mathematical operations on images by combining methods in this manner. 
 
 <center>
-![Figure 8. Slope image.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_04.png){width=670px}
+<img src="./images/chapter_03/figure_api_04.png" width=95%>
+</center>
 
-## Image statistics {-}
+Sin of terrain aspect.
 
-Another useful class of operations on images involves computing pixel statistics in image regions, or raster-vector overlays. To compute statistics in Earth Engine, use a reducer as represented by classes in the `ee$Reducer` [package](https:#developers.google.com/earth-engine/guides/reducers_intro).For example, suppose you're interested in the mean of elevation in some region. You can define a region by drawing a polygon using the [geometry drawing tools](https:#developers.google.com/earth-engine/guides/playground#geometry-tools) . To interactively draw a region, get the polygon drawing tool, then digitize a polygon over your area of interest and click **Exit** when you're done. Note that the resultant `ee$Geometry` object is automatically named geometry and added as an import at the top of your script. Rename that variable to 'polygon' by clicking on the variable name in the imports and typing the new name.
+### Image statistics {-}
+
+Another useful class of operations on images involves computing pixel statistics in image regions, or raster-vector overlays. To compute statistics in Earth Engine, use a reducer as represented by classes in the `ee$Reducer` [package](https:#developers.google.com/earth-engine/guides/reducers_intro).For example, suppose you're interested in the mean of elevation in some region. 
 
 Next, get the mean pixel value in the polygon using the following code:
 
-```{r, eval=FALSE}
+```{r}
+polygon <- ee$Geometry$Polygon(
+  list(
+    c(3.807648573314655, 51.280649018952),
+    c(3.807648573314655, 50.42759747456426),
+    c(5.653351698314655, 50.42759747456426),
+    c(5.653351698314655, 51.280649018952)
+  ), NULL, FALSE
+)
+
 ## Compute the mean elevation in the polygon.
 meanDict <- srtm$reduceRegion(
-  reducer <- ee$Reducer$mean(),
-  geometry <- polygon,
-  scale <- 90
+  reducer = ee$Reducer$mean(),
+  geometry = polygon,
+  scale = 90
 )
 
 ## Get the mean from the dictionary and print it.
-mean <- meanDict$get('elevation')
-print('Mean elevation', mean)
+mean <- meanDict$get("elevation")
+cat("Mean elevation: ", mean$getInfo())
 ```
 
-There are several things to note here. First, observe that `reduceRegion()` is a method available for `Image` objects [learn more about reducing regions here](https:#developers.google.com/earth-engine/guides/reducers_reduce_region). Second, the method arguments are provided in a R object that is passed as a single argument. (Specifically, the keys of the object are the names of the method parameters. The values are the arguments to the method). Third, the `reducer` parameter specifies the type of statistic to compute and the `geometry` parameter specifies the region in which to compute the statistic. The `scale` parameter is the pixel size in meters to use. To avoid ambiguity, you should always specify scale when doing reductions as Earth Engine may not be able to automatically determine the appropriate scale from the inputs. (Learn more about scale in Earth Engine)(https:#developers.google.com/earth-engine/guides/scale).
+There are several things to note here. First, observe that `reduceRegion()` is a method available for `Image` objects [learn more about reducing regions here](https://r-earthengine.com/rgeebook/reducer.html). Second, the method arguments are provided in a R object that is passed as a single argument. (Specifically, the keys of the object are the names of the method parameters. The values are the arguments to the method). Third, the `reducer` parameter specifies the type of statistic to compute and the `geometry` parameter specifies the region in which to compute the statistic. The `scale` parameter is the pixel size in meters to use. To avoid ambiguity, you should always specify scale when doing reductions as Earth Engine may not be able to automatically determine the appropriate scale from the inputs. ([Learn more about scale in Earth Engine](https://r-earthengine.com/rgeebook/scale.html)).
 
 Lastly, the return value of `reduceRegion()` is a dictionary in which keys are band names and values are the pixel statistics for the bands. The `get()` method on a dictionary returns the value corresponding to the key provided as an argument. In this case, the `srtm` image has one band, 'elevation', so the example code gets that statistic from the dictionary and prints it.
 
 When you run this code, if you get an error that looks like:
 
-**IMAGE**
+<center>
+<img src="./images/chapter_03/figure_api_05.png" width=70%>
+</center>
 
-Fear not! There are several things you can do to resolve the error. The `reduceRegion()` method has a check to make sure you consider whether you really want to include so many pixels in your computation. This is intended to prevent you from accidentally doing something silly, like trying compute the mean of every one-meter pixel in the world (don't do that). To resolve the error, either set the `bestEffort` parameter to `true` by adding `bestEffort: true` to the dictionary of parameters, or set the `maxPixels` parameter to a value higher than the default of 10 million pixels, or both. If `bestEffort` is true, Earth Engine will automatically recompute the scale such that `maxPixels` is not exceeded.
+Fear not! There are several things you can do to resolve the error. The `reduceRegion()` method has a check to make sure you consider whether you really want to include so many pixels in your computation. This is intended to prevent you from accidentally doing something silly, like trying compute the mean of every one-meter pixel in the world (don't do that). To resolve the error, either set the `bestEffort` parameter to `TRUE` by adding `bestEffort: TRUE` to the dictionary of parameters, or set the `maxPixels` parameter to a value higher than the default of 10 million pixels, or both. If `bestEffort` is TRUE, Earth Engine will automatically recompute the scale such that `maxPixels` is not exceeded.
 
-## Digression: Scale in Earth Engine {-}
+```{r}
+polygon <- ee$Geometry$Polygon(
+  list(c(-5, 40), c(65, 40), c(65, 60), c(-5, 60), c(-5, 60))
+)
+
+## Compute the mean elevation in the polygon.
+meanDict <- srtm$reduceRegion(
+  reducer = ee$Reducer$mean(),
+  geometry = polygon,
+  bestEffort = TRUE,
+  scale = 90
+)
+
+## Get the mean from the dictionary and print it.
+mean <- meanDict$get("elevation")
+cat("Mean elevation", mean$getInfo())
+```
+
+
+### Digression: Scale in Earth Engine {-}
 
 In the previous example, scale is set to approximately the native resolution of the SRTM image. You can discover the native resolution of an image with:
 
-```{r, eval=FALSE}
+```{r}
 scale <- srtm$projection()$nominalScale()
-print('SRTM scale in meters', scale)
+cat("SRTM scale in meters", scale$getInfo())
 ```
 
-If you specify a scale smaller than the native resolution, Earth Engine will happily resample the input image using nearest neighbor, then include all those smaller pixels in the computation. If you set the scale to be larger, Earth Engine will use input pixels from an aggregated version of the input (i.e. get pixels from a higher level of the image pyramid). Learn more about how Earth Engine handles scale in this [doc](https:#developers.google.com/earth-engine/guides/scale).
+If you specify a scale smaller than the native resolution, Earth Engine will happily resample the input image using nearest neighbor, then include all those smaller pixels in the computation. If you set the scale to be larger, Earth Engine will use input pixels from an aggregated version of the input (i.e. get pixels from a higher level of the image pyramid). Learn more about how Earth Engine handles scale in [this doc](https://r-earthengine.com/rgeebook/scale.html).
 
-So far, you've been working with a single image with a single band. In the next page, you'll learn about multi-band images and image collections.
+So far, you've been working with a single image with a single band. In the next section, you'll learn about multi-band images and image collections.
 
 ## Image Collections {-}
 
-An image collection refers to a set of Earth Engine images. For example, the collection of all Landsat 8 images is an `ee$ImageCollection`. Like the SRTM image you have been working with, image collections also have an ID. As with single images, you can discover the ID of an image collection by searching the [Earth Engine data catalog](https://developers.google.com/earth-engine/datasets) from the Code Editor and looking at the details page of the dataset. For example, search for 'landsat 8 toa' and click on the first result, which should correspond to the [USGS Landsat 8 Collection 1 Tier 1 TOA Reflectance](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C01_T1_TOA) dataset. Either import that dataset using the **Import** button and rename it to `l8`, or copy the ID into the image collection constructor:
+An image collection refers to a set of Earth Engine images. For example, the collection of all Landsat 8 images is an `ee$ImageCollection`. Like the SRTM image you have been working with, image collections also have an ID. As with single images, you can discover the ID of an image collection by searching the [Earth Engine data catalog](https://developers.google.com/earth-engine/datasets) and looking at the details page of the dataset. For example, search for 'landsat 8 toa' and click on the first result, which should correspond to the [USGS Landsat 8 Collection 1 Tier 1 TOA Reflectance](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C01_T1_TOA) dataset. Copy the ID into the image collection constructor:
 
-```{r, eval=FALSE}
-l8 <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+```{r}
+l8 <- ee$ImageCollection("LANDSAT/LC08/C01/T1_TOA")
 ```
 
 ### Filtering image collections {-}
 
-It's worth noting that this collection represents every Landsat 8 scene collected, all over the Earth. Often it is useful to extract a single image, or subset of images, on which to test algorithms. The way to limit the collection by time or space is by filtering it. For example, to filter the collection to images that cover a particular location, first define your area of interest with a point (or line or polygon) using the geometry drawing tools. Pan to your area of interest, hover on the **Geometry Imports** (if you already have one or more geometries defined) and click **+new layer** (if you don't have any imports, go to the next step). Get the point drawing tool (**FIGURE**) and make a point in your area of interest. Name the import `point`. Now, filter the `l8` collection to get only the images that intersect the point, then add a second filter to limit the collection to only the images that were acquired in 2015:
+It's worth noting that this collection represents every Landsat 8 scene collected, all over the Earth. Often it is useful to extract a single image, or subset of images, on which to test algorithms. The way to limit the collection by time or space is by filtering it. For example, to filter the collection to images that cover a particular location, first define your area of interest with a point (or line or polygon). Then, filter the `l8` collection to get only the images that intersect the point, then add a second filter to limit the collection to only the images that were acquired in 2015:
 
-```{r, eval=FALSE}
+```{r}
+point <- ee$Geometry$Point(-77.67416408465883, -9.157901605369615)
+
 spatialFiltered <- l8$filterBounds(point)
-print('spatialFiltered', spatialFiltered)
+ee_get_date_ic(spatialFiltered)
 
-temporalFiltered <- spatialFiltered$filterDate('2015-01-01', '2015-12-31')
-print('temporalFiltered', temporalFiltered)
+temporalFiltered <- spatialFiltered$filterDate("2015-01-01", "2015-12-31")
+ee_get_date_ic(temporalFiltered)
 ```
 
-Here, `filterBounds()` and `filterDate()` are shortcut methods for the more general `filter()` method on image collections, which takes an `ee.Filter()` as its argument. Explore the **Docs** tab of the Code Editor to learn more about these methods. The argument to `filterBounds()` is the point you digitized and the arguments to `filterDate()` are two dates, expressed as strings.
+Here, `filterBounds()` and `filterDate()` are shortcut methods for the more general `filter()` method on image collections, which takes an `ee.Filter()` as its argument. The argument to `filterBounds()` is the point you definied and the arguments to `filterDate()` are two dates, expressed as strings.
 
-Note that you can `print()` the filtered collections. You can't print more than 5000 things at once, so you couldn't, for example, print the entire `l8` collection. After executing the `print()` method, you can inspect the printed collections in the console. Note that when you expand the `ImageCollection` using the zippy (**IMAGE**) then expand the list of `features`, you will see a list of images, each of which also can be expanded and inspected. This is one way to discover the ID of an individual image. Another, more programmatic way to get individual images for analysis is to sort the collection in order to get the most recent, oldest, or optimal image relative to some metadata property. For example, by inspecting the image objects in the printed image collections, you may have observed a metadata property called `CLOUD_COVER`. You can use that property to get the least cloudy image in 2015 in your area of interest:
+Note that you can see the filtered collections with `ee_get_date_ic()`. You can't print more than 5000 things at once, so you couldn't, for example, print the entire `l8` collection. This is one way to discover the ID of an individual image. Another, more programmatic way to get individual images for analysis is to sort the collection in order to get the most recent, oldest, or optimal image relative to some metadata property. You can use `CLOUD_COVER` property to get the least cloudy image in 2015 in your area of interest:
 
-```{r, eval=FALSE}
+```{r}
 # This will sort from least to most cloudy.
-sorted <- temporalFiltered$sort('CLOUD_COVER')
+sorted <- temporalFiltered$sort("CLOUD_COVER")
 
 # Get the first (least cloudy) image.
 scene <- sorted$first()
@@ -614,29 +672,40 @@ You're now ready to display the image!
 
 When a multi-band image is added to a map, Earth Engine chooses the first three bands of the image and displays them as red, green, and blue by default, stretching them according to the data type, as described previously. Usually, this won't do. For example, if you add the Landsat image (`scene` in the previous example) to the map, the result is unsatisfactory:
 
-```{r, eval=FALSE}
-Map$centerObject(scene, 9)
-Map$addLayer(scene, {}, 'default RGB')
+```{r}
+Map$centerObject(scene, 8)
+Map$addLayer(
+  scene,
+  {},
+  "default RGB"
+)
 ```
-
-Note that first, the map is centered on the image at zoom scale 9. Then the image is displayed with an empty object (`{}`) for the `visParams` parameter (see the `Map.addLayer()` docs for details). As a result, the image is displayed with the default visualization: first three bands map to R, G, B, respectively, and stretched to [0, 1] since the bands are `float` data type. This means that the coastal aerosol band ('B1') is rendered in red, the blue band ('B2') is rendered in green, and the green band ('B3') is rendered in blue. To render the image as a true-color composite, you need to tell Earth Engine to use the Landsat 8 bands 'B4', 'B3', and 'B2' for R, G, and B, respectively. Specify which `bands` to use with the bands property of the `visParams` object. Learn more about Landsat bands at [this reference](https://www.usgs.gov/faqs/what-are-band-designations-landsat-satellites).
-
-You also need to provide `min` and `max` values suitable for displaying reflectance from typical Earth surface targets. Although lists can be used to specify different values for each band, here it's sufficient to specify 0.3 as max and use the default value of zero for the min parameter. Combining the visualization parameters into one object and displaying:
-
-You also need to provide min and max values suitable for displaying reflectance from typical Earth surface targets. Although lists can be used to specify different values for each band, here it's sufficient to specify `0.3` as `max` and use the default value of zero for the `min` parameter. Combining the visualization parameters into one object and displaying:
-
-```{r, eval=FALSE}
-visParams <- {bands = ['B4', 'B3', 'B2'], max = 0.3}
-Map$addLayer(scene, visParams, 'true-color composite')
-```
-
-The result should look something like Figure 5. Note that this code assigns the object of visualization parameters to a variable for possible future use. As you'll soon discover, that object will be useful when you visualize image collections!
 
 <center>
-![Figure 8. Landsat 8 TOA reflectance image as a true-color composite, stretched to (0, 0.3).](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_05.png){width=670px}
-
-
+<img src="./images/chapter_03/figure_api_06.png" width=95%>
 </center>
+
+Note that first, the map is centered on the image at zoom scale 8. Then the image is displayed with an empty object (`{}`) for the `visParams` parameter. As a result, the image is displayed with the default visualization: first three bands map to R, G, B, respectively, and stretched to [0, 1] since the bands are `float` data type. This means that the coastal aerosol band ('B1') is rendered in red, the blue band ('B2') is rendered in green, and the green band ('B3') is rendered in blue. To render the image as a true-color composite, you need to tell Earth Engine to use the Landsat 8 bands 'B4', 'B3', and 'B2' for R, G, and B, respectively. Specify which `bands` to use with the bands property of the `visParams` object. Learn more about Landsat bands at [this reference](https://www.usgs.gov/faqs/what-are-band-designations-landsat-satellites).
+
+You also need to provide `min` and `max` values suitable for displaying reflectance from typical Earth surface targets. Although lists can be used to specify different values for each band, here it's sufficient to specify `0.3` as `max` and use the default value of zero for the `min` parameter. Combining the visualization parameters into one object and displaying:
+
+
+```{r}
+visParams <- list(bands = c("B4", "B3", "B2"), max = 0.3)
+Map$addLayer(
+  scene,
+  visParams, 
+  "true-color composite"
+)
+
+```
+
+The result should look something like Figure. Note that this code assigns the object of visualization parameters to a variable for possible future use. As you'll soon discover, that object will be useful when you visualize image collections!
+
+<center>
+<img src="./images/chapter_03/figure_api_07.png" width=95%>
+</center>
+Landsat 8 TOA reflectance image as a true-color composite, stretched to [0, 0.3].
 
 Try playing with visualizing different bands. Another favorite combination is 'B5', 'B4', and 'B3' which is called a false-color composite. Some other interesting false-color composites are described [here](https://www.usgs.gov/media/images/common-landsat-band-rgb-composites).
 
@@ -644,29 +713,45 @@ Since Earth Engine is designed to do large-scale analyses, you are not limited t
 
 ### Displaying image collections {-}
 
-Adding an image collection to a map is similar to adding an image to a map. For example, using 2016 images in the `l8` collection and the `visParams` object defined previously,
+Adding an image collection to a map is similar to adding an image to a map, you have use `Map$addLayers`. For example, using MODIS images collection in the `dataset` collection and the `visParams` object defined previously,
 
-```{r, eval=FALSE}
-l8 = ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
-landsat2016 = l8$filterDate('2016-01-01', '2016-12-31')
-Map$addLayer(landsat2016, visParams, 'l8 collection')
+```{r}
+dataset <- ee$ImageCollection("MODIS/MCD43A4_006_EVI")$
+  filter(ee$Filter$date("2018-04-01", "2018-05-01"))
+
+colorized <- dataset$select("EVI")
+colorizedVis <- list(
+  min = 0.0,
+  max = 1.0,
+  palette = c(
+    "FFFFFF", "CE7E45", "DF923D", "F1B555", "FCD163", "99B718", "74A901",
+    "66A000", "529400", "3E8601", "207401", "056201", "004C00", "023B01",
+    "012E01", "011D01", "011301"
+  )
+)
+Map$setCenter(-7.03125, 31.0529339857, 2)
+Map$addLayers(eeObject = colorized, visParams = colorizedVis, name = "Colorized")
 ```
 
-Note that now you can zoom out and see a continuous mosaic where Landsat imagery is collected (i.e. over land). Also note that when you use the **Inspector** tab and click on the image, you'll see a list of pixel values (or a chart) in the **Pixels** section and a list of image objects in the **Objects** section of the inspector.
+<center>
+<img src="./images/chapter_03/figure_api_08.png" width=95%>
+</center>
 
-If you zoomed out enough, you probably noticed some clouds in the mosaic. When you add an `ImageCollection` to the map, it is displayed as a recent-value composite, meaning that only the most recent pixels are displayed (like calling `mosaic()` on the collection). That is why you can see discontinuities between [paths](https://landsat.gsfc.nasa.gov/article/the-worldwide-reference-system/) which were acquired at different times. It's also why many areas may appear cloudy. In the next page, learn how to change the way the images are composited to get rid of those pesky clouds!.
+MODIS Combined 16-Day EVI
+
+Note that now you can zoom out and see a continuous mosaic where MODIS imagery is collected (i.e. over land).
+
 
 ## Compositing, Masking, and Mosaicking {-}
 
-With the [Landsat 8 TOA reflectance collection](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC8_L1T_TOA) loaded into a variable called l8, you saw that the following code results in a recent-value composite:
+With the [Landsat 8 TOA reflectance collection](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC8_L1T_TOA) loaded into a variable called l8, you saw that the following code:
 
 ```{r}
-l8 <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
-landsat2016 <- l8$filterDate('2016-01-01', '2016-12-31')
-Map$addLayer(landsat2016, visParams, 'l8 collection')
+l8 <- ee$ImageCollection("LANDSAT/LC08/C01/T1_TOA")
+landsat2016 <- l8$filterDate("2016-01-01", "2016-12-31")
 ```
 
-One of the problems with this composite is that it's full of clouds. Instead of just taking the last pixel in the collection (when you add a collection to the map, Earth Engine implicitly calls `mosaic()` on it), you can *reduce* the `ImageCollection` (Learn more about reducing image collections).
+One of the problems with this composite is that it's full of clouds.
 
 ### Compositing with Reducers {-}
 
@@ -676,70 +761,79 @@ Merely adding the collection to the map results in selecting the most recent pix
 
 ```{r}
 # Get the median over time, in each band, in each pixel.
-median <- l8$filterDate('2016-01-01', '2016-12-31')$median()
+median <- l8$filterDate("2016-01-01", "2016-12-31")$median()
 
 # Make a handy variable of visualization parameters.
-visParams <- list(bands = ('B4', 'B3', 'B2'), max = 0.3)
+visParams <- list(bands = c("B4", "B3", "B2"), max = 0.3)
 
 # Display the median composite.
-Map$addLayer(median, visParams, 'median')
-
+Map$addLayer(median, visParams, "median")
 ```
 
-The new thing in this code is the `median()` method applied to an image collection. Like the filtering methods, this is a shortcut for the more general `reduce()` method on image collections which takes an `ee.Reducer()` as an argument. See the `ee.Reducer` package in the **Docs** tab of the Code Editor to see a list of all the Earth Engine reducers. When considering a reducer for an image collection, note that the output is an image, so reducers with non-numeric outputs, for example `histogram` or `toList` reducers, won't work with an image collection.
+The new thing in this code is the `median()` method applied to an image collection. Like the filtering methods, this is a shortcut for the more general `reduce()` method on image collections which takes an `ee$Reducer()` as an argument. When considering a reducer for an image collection, note that the output is an image, so reducers with non-numeric outputs, for example `histogram` or `toList` reducers, won't work with an image collection.
 
 <center>
-![Figure 8. Landsat 8 median composite.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_06.png){width=670px}
-
+<img src="./images/chapter_03/figure_api_09.png" width=95%>
 </center>
 
-When you zoom out on the median composite, you should see something like Figure 6. This should look considerably better than the recent value composite you made previously. At this point, it's worth stepping back and considering what's been done to make that median composite. Earth Engine has loaded the entire Landsat 8 collection over the continental US, and has calculated the median for every pixel. That's a lot of data! Of course, you could compute annual medians, by first filtering the collection, [as you've done previously](https://developers.google.com/earth-engine/tutorials/tutorial_api_04#filtering-image-collections). The point is that if you had to download all that imagery and make this composite, it would be a big project. With Earth Engine, you get a result in seconds!
+Landsat 8 median composite.
 
-Learn more about compositing and mosaicking here.
+When you zoom out on the median composite, you should see something like next figure. This should look considerably better than the composite you made previously. At this point, it's worth stepping back and considering what's been done to make that median composite. Earth Engine has loaded the entire Landsat 8 collection over the continental south american, and has calculated the median for every pixel. That's a lot of data! Of course, you could compute annual medians, by first filtering the collection, [as you've done previously](https://developers.google.com/earth-engine/tutorials/tutorial_api_04#filtering-image-collections). The point is that if you had to download all that imagery and make this composite, it would be a big project. With Earth Engine, you get a result in seconds!
+
+Learn more about compositing and mosaicking [here](https://r-earthengine.com/rgeebook/imagecollection.html).
 
 ### Masking {-}
 
-Although the median composite is an improvement over the recent-value composite, you may want to mask parts of the image. Masking pixels in an image makes those pixels transparent and excludes them from analysis. Each pixel in each band of an image has a mask. Those with a mask value of 0 or below will be transparent. Those with a mask of any value above 0 will be rendered. The mask of an image is set using a call like `image1.mask(image2)`. This call takes the values of `image2` and makes them the mask of `image1`. Any pixels in image2 that have the value 0 will be made transparent in `image1`.
+Although the median composite is an improvement over the recent-value composite, you may want to mask parts of the image. Masking pixels in an image makes those pixels transparent and excludes them from analysis. Each pixel in each band of an image has a mask. Those with a mask value of 0 or below will be transparent. Those with a mask of any value above 0 will be rendered. The mask of an image is set using a call like `image1$mask(image2)`. This call takes the values of `image2` and makes them the mask of `image1`. Any pixels in image2 that have the value 0 will be made transparent in `image1`.
 
-For example, suppose you would like to mask all the water pixels in the median composite. A water mask can be created using the dataset described by [Hansen et al. (2013)](https://www.science.org/doi/10.1126/science.1244693) which is in the Earth Engine data catalog. (Learn more about the Hansen et al. dataset in this tutorial.) In this dataset, water has a value of 2, land has the value 1, and 'no data' has the value 0. Use a bit of logic to create a mask image that has zeros where there's no land:
+For example, suppose you would like to mask all the water pixels in the median composite. A water mask can be created using the dataset described by [Hansen et al. (2013)](https://doi.org/10.1126/science.1244693) which is in the Earth Engine data catalog. (Learn more about the Hansen et al. dataset in [this tutorial](https://r-earthengine.com/rgeebook/global-forest-change.html)). In this dataset, water has a value of 2, land has the value 1, and 'no data' has the value 0. Use a bit of logic to create a mask image that has zeros where there's no land:
 
 ```{r}
 # Load or import the Hansen et al. forest change dataset.
-hansenImage <- ee$Image('UMD/hansen/global_forest_change_2015')
+hansenImage <- ee$Image("UMD/hansen/global_forest_change_2020_v1_8")
 
 # Select the land/water mask.
-datamask <- hansenImage$select('datamask')
+datamask <- hansenImage$select("datamask")
 
 # Create a binary mask.
 mask <- datamask$eq(1)
 
 # Update the composite mask with the water mask.
 maskedComposite <- median$updateMask(mask)
-Map$addLayer(maskedComposite, visParams, 'masked')
+Map$addLayer(maskedComposite, visParams, "masked")
 ```
+
+<center>
+<img src="./images/chapter_03/figure_api_10.png" width=95%>
+</center>
 
 There are a couple new things in this code that are worth mentioning in detail. First, the `select()` function is useful for extracting the bands of interest from an image. Here, we select only the band we care about: `datamask`. The next new thing is the logical operator `eq()` which stands for "equals." We use `eq(1)` to create a binary image in which all the pixels that do not have the value of 1 in the `datamask` band (those that are water or no data) get a value of 0 in the resulting image.
 
-As a result of this masking, all the pixels in the median composite that are over land (according to the [Hansen et al. dataset](https://developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2015_v1_3)) are visible, but those over water (or nodata) are transparent and will be excluded from any analysis you do on the `maskedComposite` image.
+As a result of this masking, all the pixels in the median composite that are over land (according to the [Hansen et al. dataset]()) are visible, but those over water (or nodata) are transparent and will be excluded from any analysis you do on the `maskedComposite` image.
 
 ### Mosaicking {-}
 
 By combining the concepts of image collections, logical operators, masking and compositing, you can achieve interesting cartographic results. For example, suppose you want an image in which land pixels are displayed in true-color and all the other pixels are displayed in blue, you can do something like:
 
 ```{r}
-water <- mask$not()
+# Make a water image out of the mask.
+water <- mask$Not()
 
 # Mask water with itself to mask all the zeros (non-water).
 water <- water$mask(water)
 
 # Make an image collection of visualization images.
-mosaic <- ee$ImageCollection([
-  median$visualize(visParams),
-  water$visualize({palette = '000044'}),
-])$mosaic()
+mosaic <- ee$ImageCollection(list(
+  median$visualize(bands = c("B4", "B3", "B2"), max = 0.3),
+  water$visualize(palette = "000044")
+))$mosaic()
 
 # Display the mosaic.
-Map$addLayer(mosaic, {}, 'custom mosaic')
+Map$addLayer(
+  mosaic,
+  {},
+  "custom mosaic"
+)
 ```
 
 There's a lot going on in that code, so let's dissect it. First, we use the `not()` logical operator to invert the mask we made earlier. Specifically, `not()` turns all the zeros into ones and all the non-zeros into zeros. It's not completely correct to call that variable `water` because it includes some nodata pixels as well, but it's OK in the present cartographic context. The next thing is to mask the "water" with itself. This results in an image in which all the water pixels are 1's and everything else is masked. The final step is to combine the images with `mosaic()`. Since `mosaic()` works on an image collection, we pass a list of images that we want to combine into the image collection constructor, then call `mosaic()` as the final step. The order of the images in that list is important. Specifically, the output image will contain the last unmasked pixel from the stack of images in the input collection. In this case, that works because the water layer is the last (top) image in the collection, and only contains un-masked pixels where water occurs.
@@ -747,8 +841,7 @@ There's a lot going on in that code, so let's dissect it. First, we use the `not
 Note that the images in the collection are visualization images. When you call `[visualize()]`(https://developers.google.com/earth-engine/apidocs/ee-image-visualize) on an image, it gets turned into a 3-band, 8-bit image according to the visualization parameters you pass in. The default visualization parameters work fine for 3-band, 8-bit images, so you don't need visualization parameters when you add the image to the map. The result should look like Figure 7.
 
 <center>
-![Figure 8. Custom mosaic that makes water areas a uniform color.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_07.png){width=670px}
-
+<img src="./images/chapter_03/figure_api_11.png" width=95%>
 </center>
 
 At this point, you've seen ways to visualize image collections as recent-value composites, methods for compositing image collections using reducers, and methods for making custom composites by masking and mosaicking a collection of images. In the next page, learn how to add a vegetation index to every image in a collection and use the index to make a "greenest pixel" composite.
@@ -760,18 +853,18 @@ Previously, you learned how to get individual Landsat scenes by doing something 
 ```{r}
 # Define a point of interest. Use the UI Drawing Tools to import a point
 # geometry and name it "point" or set the point coordinates with the
-# ee.Geometry.Point() function as demonstrated here.
-point <- ee$Geometry$Point([-122.292, 37.9018])
+# ee$Geometry$Point() function as demonstrated here.
+point <- ee$Geometry$Point(c(-122.292, 37.9018))
 
 # Import the Landsat 8 TOA image collection.
-l8 <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+l8 <- ee$ImageCollection("LANDSAT/LC08/C01/T1_TOA")
 
 # Get the least cloudy image in 2015.
 image <- ee$Image(
-  l8$filterBounds(point)
-    .filterDate('2015-01-01', '2015-12-31')
-    .sort('CLOUD_COVER')
-    .first()
+  l8$filterBounds(point)$
+    filterDate("2015-01-01", "2015-12-31")$
+    sort("CLOUD_COVER")$
+    first()
 )
 ```
 
@@ -779,27 +872,32 @@ Suppose now that you want to compute a Normalized Difference Vegetation Index (N
 
 ```{r}
 # Compute the Normalized Difference Vegetation Index (NDVI).
-nir <- image$select('B5')
-red <- image$select('B4')
-ndvi <- nir$subtract(red)$divide(nir$add(red))$rename('NDVI')
+nir <- image$select("B5")
+red <- image$select("B4")
+ndvi <- nir$subtract(red)$divide(nir$add(red))$rename("NDVI")
 
 # Display the result.
 Map$centerObject(image, 9)
-ndviParams = {min = -1, max = 1, palette = ['blue', 'white', 'green']}
-Map$addLayer(ndvi, ndviParams, 'NDVI image')
+ndviParams <- list(
+  min = -1,
+  max = 1,
+  palette = c("blue", "white", "green")
+)
+Map$addLayer(ndvi, ndviParams, "NDVI image")
 ```
 
-The result should look something like Figure 8. Note that we use the `select()` function you learned about in the previous section on masking to get the NIR and red bands, then compute NDVI using image mathematical operators that that you have also seen before in the section on `Image` math. Finally, display the image with a palette. Here we used color names instead of hex strings in the palette. (See [this external reference about CSS color](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for details.)
+The result should look something like figure. Note that we use the `select()` function you learned about in the previous section on masking to get the NIR and red bands, then compute NDVI using image mathematical operators that that you have also seen before in the section on `Image` math. Finally, display the image with a palette. Here we used color names instead of hex strings in the palette. (See [this external reference about CSS color](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) for details.)
 
 <center>
-![Figure 8. NDVI for a single Landsat scene. Blue is low and green is high NDVI.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_08.png){width=670px}
-
+<img src="./images/chapter_03/figure_api_12.png" width=95%>
 </center>
 
-The normalized difference operation is so ubiquitous in remote sensing, there is a [shortcut function](https://developers.google.com/earth-engine/apidocs/ee-image-normalizeddifference) on an ee.Image that is useful for simplifying the code in the previous example:
+NDVI for a single Landsat scene. Blue is low and green is high NDVI.
+
+The normalized difference operation is so ubiquitous in remote sensing, there is a [shortcut function](https://developers.google.com/earth-engine/apidocs/ee-image-normalizeddifference) on an `ee$Image` that is useful for simplifying the code in the previous example:
 
 ```{r}
-ndvi <- image$normalizedDifference(['B5', 'B4'])$rename('NDVI')
+ndvi <- image$normalizedDifference(c("B5", "B4"))$rename("NDVI")
 ```
 
 ### Mapping a Function over a Collection {-}
@@ -808,12 +906,12 @@ Suppose now that you want to add NDVI to every image in an image collection. The
 
 ```{r}
 addNDVI <- function(image) {
-  ndvi <- image$normalizedDifference(['B5', 'B4']).rename('NDVI')
-  return image$addBands(ndvi)
+  ndvi <- image$normalizedDifference(c("B5", "B4"))$rename("NDVI")
+  return(image$addBands(ndvi))
 }
 
 # Test the addNDVI function on a single image.
-ndvi <- addNDVI(image)$select('NDVI')
+ndvi <- addNDVI(image)$select("NDVI")
 ```
 
 This code might not be as efficient for computing NDVI for a single image, but this function can be used as an argument to `map()` in order to add an NDVI band to every image in the collection. It's often useful to first test a function on a single image, to make sure the function is behaving as you expect. Once you've tested the function on an individual image and have determined that it does what you want, you can map it over the collection:
@@ -822,138 +920,31 @@ This code might not be as efficient for computing NDVI for a single image, but t
 withNDVI <- l8$map(addNDVI)
 ```
 
-To verify that this is indeed putting an NDVI band in every image in this collection, you can add the `withNDVI` collection to the map and query a random location with the **Inspector** tab. You should notice that each image in the collection now has a band called `NDVI`.
-
 ### Make a greenest pixel composite {-}
 
-Now that you've made an image collection in which each image has an NDVI band, we can explore a new way to make composites: `qualityMosaic()`. You may have noticed discontinuities between Landsat paths, even in the median pixel composite. Part of the reason for that may be due to differences in [phenology](https://en.wikipedia.org/wiki/Phenology) as a result of images in adjacent paths being collected at different times (specifically, 8 days apart). One way to minimize this is to try to set pixel values in the composite from roughly the same phenological stage, for example the time of maximum greenness of plants (when the leaves are on and photosynthetically active). If we let max greenness be defined by the maximum NDVI, we can use [`qualityMosaic()`](https://developers.google.com/earth-engine/apidocs/ee-imagecollection-qualitymosaic) to make a composite in which each pixel contains the maximum NDVI pixel from the collection. Now you can make use of the added NDVI band in your `withNDVI` collection:
+Now that you've made an image collection in which each image has an NDVI band, we can explore a new way to make composites: `qualityMosaic()`. You may have noticed discontinuities between Landsat paths, even in the median pixel composite. Part of the reason for that may be due to differences in [phenology](https://en.wikipedia.org/wiki/Phenology) as a result of images in adjacent paths being collected at different times (specifically, 8 days apart). One way to minimize this is to try to set pixel values in the composite from roughly the same phenological stage, for example the time of maximum greenness of plants (when the leaves are on and photosynthetically active). If we let max greenness be defined by the maximum NDVI, we can use `qualityMosaic()` to make a composite in which each pixel contains the maximum NDVI pixel from the collection. Now you can make use of the added NDVI band in your `withNDVI` collection:
 
 ```{r}
 # Make a "greenest" pixel composite.
-greenest <- withNDVI$qualityMosaic('NDVI')
+greenest <- withNDVI$qualityMosaic("NDVI")
 
 # Display the result.
-visParams <- {bands = ['B4', 'B3', 'B2'], max = 0.3}
-Map$addLayer(greenest, visParams, 'Greenest pixel composite')
+visParams <- list(bands = c("B4", "B3", "B2"), max = 0.3)
+Map$addLayer(
+  greenest,
+  visParams,
+  "Greenest pixel composite"
+)
 ```
 
 The result of this code should look something like Figure 9. Comparing Figure 9 to the median composite shown in Figure 6, observe that the greenest pixel composite is indeed much greener. However, close examination of water bodies should make a different problem apparent. Specifically, water bodies now appear cloudy. This is due to the way the `qualityMosaic()` method works: at each location, the entire time series is examined and the pixel with the maximum value in the NDVI band is set as the composite value. Because NDVI is higher over clouds than water, water areas get cloudy pixels, while vegetated areas all appear green because NDVI is highest when the vegetation in the pixel is photosynthetically active.
 
 <center>
-![Figure 8. Landsat 8 greenest pixel composite.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_09.png){width=670px}
-
+<img src="./images/chapter_03/figure_api_13.png" width=95%>
 </center>
 
-Now you've seen several ways to composite and mosaic images in Earth Engine. You can make recent-value, median, or greenest-pixel composites from images filtered by time and place or all images in the collection. You've learned how to do computations on the imagery and extract information. The next page covers ways to get information out of Earth Engine, for example as a chart or a dataset exported to your Google Drive folder.
 
-## Exporting Charts and Images {-}
-
-Earth Engine is a powerful analytical tool, but you may have need to export the results of your analysis in order to embed charts, images, maps, etc. into reports or publications. In this section, you will learn how to create charts and images that can be exported and viewed in other software. Recall that in the previous section, you used code like the following to add an NDVI band to every image in a collection, where the l8 variable references the [Landsat 8 TOA reflectance collection](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC8_L1T_TOA):
-
-```{r}
-# Import the Landsat 8 TOA image collection.
-l8 <- ee$ImageCollection('LANDSAT/LC08/C01/T1_TOA')
-
-# Map a function over the Landsat 8 TOA collection to add an NDVI band.
-withNDVI <- l8$map(function(image) {
-  ndvi <- image$normalizedDifference(['B5', 'B4']).rename('NDVI')
-  return image$addBands(ndvi)
-})
-```
-
-### Charting {-}
-
-Suppose that what you want is actually a chart of NDVI over time at a given location. To make such a chart, the first step is to choose a location of interest. Create a point by getting the point drawing tool () and make a single point geometry in your area of interest. (If you already have imports, hover on **Geometry Imports** and click **+ new layer** first). Locate the point in an area of agriculture, deciduous forest, annual grassland or some other land cover with an annual cycle). Name the import `roi`. (See this page for information about creating geometries programmatically).
-
-Now let's use the `roi` point to make a chart of NDVI over time in the pixel under that point. The way to make charts in Earth Engine is with the `ui.Chart` package. (Learn more about making charts in Earth Engine). Specifically, to make a chart over time, you can use the `ui.Chart.image.series()` method:
-
-```{r}
-# Create a chart.
-chart <- ui$Chart.image.series({
-  imageCollection <- withNDVI$select('NDVI')
-  region <- roi,
-  reducer <- ee$Reducer$first(),
-  scale <- 30
-})$setOptions({title = 'NDVI over time'})
-
-# Display the chart in the console.
-print(chart)
-```
-
-For the `roi` geometry, we chose a point in an agricultural area, resulting in a chart that looks something like Figure 10. Note that the parameters to the chart constructor include a reducer and scale like `reduceRegion()`. Since the point we are providing as a region can only intersect one pixel, it suffices to use the 'first' reducer. If you have a larger region, you should use a 'mean' or other reducer that specifies how to aggregate pixels. Also note that to visualize a chart, all you have to do is print it.
-
-<center>
-![Figure 8. Chart of Landsat NDVI over time at a point geometry.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_10.png){width=670px}
-
-</center>
-
-### Digression: Simple Cloud Masking for Landsat {-}
-
-Something you may have noticed about this chart is that the time series of NDVI values at the point looks a little noisy. This is likely due to clouds. To ameliorate this effect, Earth Engine includes a cloud-masking algorithm for Landsat sensors with a thermal band: `ee$Algorithms$Landsat$simpleCloudScore()`. It takes a Landsat TOA reflectance image as input and adds a band named cloud which is an index of cloudiness in the pixel from zero to 100, from least to most cloudy, respectively. By modifying the function you mapped over the collection, you can use an arbitrary threshold (20) on the cloud index to clean up the chart a bit:
-
-```{r}
-cloudlessNDVI <- l8$map(function(image) {
-  # Get a cloud score in [0, 100].
-  cloud <- ee$Algorithms4Landsat$simpleCloudScore(image)$select('cloud')
-
-  # Create a mask of cloudy pixels from an arbitrary threshold.
-  mask <- cloud$lte(20)
-
-  # Compute NDVI.
-  ndvi <- image$normalizedDifference(['B5', 'B4'])$rename('NDVI')
-
-  # Return the masked image with an NDVI band.
-  return image$addBands(ndvi)$updateMask(mask)
-})
-
-print(ui$Chart$image$series({
-  imageCollection <- cloudlessNDVI.select('NDVI')
-  region <- roi,
-  reducer <- ee$Reducer$first(),
-  scale <- 30
-})$setOptions({title <- 'Cloud-masked NDVI over time'}))
-```
-
-The cloud-masked result is illustrated in Figure 11. Note that the time series looks a little smoother, but may still contain pixels affected by clouds. Adjust the threshold on the cloud index and observe the charted time series to learn how this threshold can affect your results.
-
-<center>
-![Figure 8. Chart of cloud-masked NDVI over time at a point geometry.](C:/Users/USUARIO/OneDrive/Escritorio/rgeebook/rgeebook/images/chapter_09/image_11.png){width=670px}
-
-</center>
-
-### Exporting Images {-}
-
-You have seen a way to export a chart of data computed by Earth Engine, but what about a whole image? Suppose, for example that you have built a greenest-pixel composite as discussed in the previous section:
-
-```{r}
-greenest <- cloudlessNDVI$qualityMosaic('NDVI')
-```
-
-The only difference in this code from what you did previously is that now we're using the cloud masked collection. You can export a subset (defined by a region) of this using the `Export` package. (Learn more about exporting raster and vector data from Earth Engine.) For example, to export an image that can be easily embedded in other docs, let's create a visualization image, as you've done previously, an Export it to your Google Drive folder:
-
-```{r}
-# Create a 3-band, 8-bit, color-IR composite to export.
-visualization <- greenest$visualize({
-  bands <- ['B5', 'B4', 'B3'],
-  max <- 0.4
-})
-
-# Create a task that you can launch from the Tasks tab.
-Export$image$toDrive({
-  image <- visualization,
-  description <- 'Greenest_pixel_composite',
-  scale <- 30
-})
-```
-
-When you run this code, note that a new task is created in the **Tasks** tab. To launch the export configuration dialog, click the **RUN** button in the **Tasks** tab. Once you've configured the task, click the **Run** button in the dialog to start the export. But before you do that, be warned:
-
-
-The reason you should exercise caution when exporting without a `region` argument is that if you set a relatively small value for `scale`, and the Map is zoomed out to large area, then you will export a potentially very large image to your Drive folder. See the `Export.image.toDrive()` docs in the **Docs** tab for more details and a list of possible configuration parameters.
-
-That concludes this introduction to the Earth Engine API! You have now seen much of the most common Earth Engine functionality and should be able to confidently proceed to more complex analyses. Be sure to read the docs and search the [forum](https://groups.google.com/g/google-earth-engine-developers) for answers to other questions. Happy coding!
-
-
+Now you've seen several ways to composite and mosaic images in Earth Engine. You can make recent-value, median, or greenest-pixel composites from images filtered by time and place or all images in the collection. You've learned how to do computations on the imagery and extract information. 
 
 # Global Forest Change {-}
 
