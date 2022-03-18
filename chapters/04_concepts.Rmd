@@ -11,10 +11,10 @@ source("common.R")
 
 Earth Engine is not like any GIS you have ever used before! Because Earth Engine is a cloud-based platform, it is incredibly powerful. It is also strange and wondrous. The purpose of the docs in the How Earth Engine works section is to demystify some potentially surprising behavior you may encounter when running scripts in the Rstuio. This includes:
 
-  - Distinguishing between R objects in the client and Earth Engine objects on the server. See [Client vs. Server]().
-  - The lazy computation model. See [Deferred Execution]().
-  - How Earth Engine handles scale (pixel resolution). See [Scale]().
-  - How Earth Engine handles map projections. See [Projections]().
+  - Distinguishing between R objects in the client and Earth Engine objects on the server. See [Client vs. Server](https://r-earthengine.com/rgeebook/client-vs-server.html).
+  - The lazy computation model. See [Deferred Execution](https://r-earthengine.com/rgeebook/deferred-exacution.html).
+  - How Earth Engine handles scale (pixel resolution). See [Scale](https://r-earthengine.com/rgeebook/scale.html).
+  - How Earth Engine handles map projections. See [Projections](https://r-earthengine.com/rgeebook/projections.html).
 
 # Client vs Server {-}
 
@@ -82,7 +82,6 @@ print(serverList);
 
 The server-side mapping example is a little silly because you could make the same list simply with `ee$List$sequence(1, 8)`, but it illustrates some important concepts. The first concept is `map()` which simply applies the same function to everything in the list. Because this function is executed on the server, client-side functions such as `print()` won't work in a mapped function. For that reason, the `i + 1` code has to be replaced with the equivalent server-side code: `ee$Number(n)$add(1)`. Importantly, `n` is an object that only exists on the server. Because the function doesn't know the type of its argument, it needs to be cast to an `ee.Number`.
 
-(See [the section on Client and Server functions]() for a description of which functions run on the client.)
 
 It's also worth noting that occasionally client-side functionality is convenient. For example, the previous for loop could be used to build a list and wrap it with a server-side object:
 
@@ -129,9 +128,9 @@ The previous sections describe several reasons why it is inefficient or illogica
 
 # Deferred exacution {-}
 
-The [Client vs. Server]() doc describes how objects referenced in your script can be either client-side or server-side. The complete script contains not only the objects you want to use, but also a set of instructions that tell Earth Engine what to do with them. This doc describes how those instructions are sent to Google for processing and how the results are sent back to your web browser (the client) for display.
+The [Client vs. Server](https://r-earthengine.com/rgeebook/client-vs-server.html) doc describes how objects referenced in your script can be either client-side or server-side. The complete script contains not only the objects you want to use, but also a set of instructions that tell Earth Engine what to do with them. This doc describes how those instructions are sent to Google for processing and how the results are sent back to your web browser (the client) for display.
 
-When you write a script in Earth Engine (R), that code does NOT run directly on Earth Engine servers at Google. Instead, the [client library]() encodes the script into a set of [JSON]() objects, sends the objects to Google and waits for a response. Each object represents a set of operations required to get a particular output, an image to display in the client, for example. Consider the following R code, run in the Rstudio:
+When you write a script in Earth Engine (R), that code does NOT run directly on Earth Engine servers at Google. Instead, the [client library](https://github.com/r-spatial/rgee) encodes the script into a set of [JSON](http://www.json.org/) objects, sends the objects to Google and waits for a response. Each object represents a set of operations required to get a particular output, an image to display in the client, for example. Consider the following R code, run in the Rstudio:
 
 ```{js}
 var image = ee.Image('CGIAR/SRTM90_V4');
@@ -166,7 +165,7 @@ ee.Image({
     
 ```
 
-The second print statement will send the request to Google and output the [POST]() response from Google servers. To see the response in all its JSON glory, click the `JSON` link on the right side of the console, next to the printed object:
+The second print statement will send the request to Google and output the [POST](https://en.wikipedia.org/wiki/POST_(HTTP)) response from Google servers. To see the response in all its JSON glory, click the `JSON` link on the right side of the console, next to the printed object:
 
 ```{js}
 {
@@ -197,7 +196,7 @@ The second print statement will send the request to Google and output the [POST]
 
 Nothing is sent to Google for processing until there is a request for it. In this example, `print()` is sufficient to request the result of the computation. (In R, it's necessary to call `getInfo()` on the object being printed; otherwise the request JSON is printed). No processing is done on the server until that result is explicitly requested.
 
-Another example of requesting something is displaying it on the map with `Map$addLayer()`. When this request is sent to Google, only the tiles necessary to display the result in the Rstudio are returned. Specifically, the position of the map and the zoom level determine which data get processed and turned into images that can be displayed on the map. If you pan or zoom, note that other tiles are computed lazily. This on-demand system allows for parallelization and efficient processing, but also means that the image displayed on the map is produced from different inputs depending on the zoom level and location of the map bounds as visible in the Rstudio. Learn more about how inputs to a computation are determined from the request in the [Scale]() doc.
+Another example of requesting something is displaying it on the map with `Map$addLayer()`. When this request is sent to Google, only the tiles necessary to display the result in the Rstudio are returned. Specifically, the position of the map and the zoom level determine which data get processed and turned into images that can be displayed on the map. If you pan or zoom, note that other tiles are computed lazily. This on-demand system allows for parallelization and efficient processing, but also means that the image displayed on the map is produced from different inputs depending on the zoom level and location of the map bounds as visible in the Rstudio. Learn more about how inputs to a computation are determined from the request in the [Scale](https://r-earthengine.com/rgeebook/scale.html) doc.
 
 # Scale {-}
 
@@ -216,11 +215,11 @@ Understanding how Earth Engine handles scale is crucial to interpreting scientif
 <img src="./images/chapter_04/figure_SC_01.png" width=80%>
 </center>
 
-Figure 1. A graphic representation of an image dataset in Earth Engine. Dashed lines represent the pyramiding policy for aggregating 2x2 blocks of 4 pixels. Earth Engine uses the scale specified by the output to determine the appropriate level of the image pyramid to use as input.
+Figure: A graphic representation of an image dataset in Earth Engine. Dashed lines represent the pyramiding policy for aggregating 2x2 blocks of 4 pixels. Earth Engine uses the scale specified by the output to determine the appropriate level of the image pyramid to use as input.
 
 ## Image Pyramids {-}
 
-Image assets in Earth Engine exist at multiple scales, in [image pyramids](). The pyramiding policy (represented by dashed lines in Figure 1) determines how each pixel at a given level of the pyramid is computed from the aggregation of a 2x2 block of pixels at the next lower level. For continuous valued images, the pixel values of upper levels of the pyramid are the mean of pixels at the next lower level. For discrete valued images, pixel values of upper levels of the pyramid are a sample (usually the top left pixel) of pixels at the next lower level.
+Image assets in Earth Engine exist at multiple scales, in [image pyramids](https://en.wikipedia.org/wiki/Pyramid_(image_processing)). The pyramiding policy (represented by dashed lines in Figure 1) determines how each pixel at a given level of the pyramid is computed from the aggregation of a 2x2 block of pixels at the next lower level. For continuous valued images, the pixel values of upper levels of the pyramid are the mean of pixels at the next lower level. For discrete valued images, pixel values of upper levels of the pyramid are a sample (usually the top left pixel) of pixels at the next lower level.
 
 The lowest level of the image pyramid represents image data at native resolution, when it is ingested into Earth Engine. During ingestion, the data are aggregated (according to the pyramiding policy) to create higher pyramid levels. The data are aggregated until the entire image fits within a 256x256 pixel tile. When you use an image in your code, Earth Engine chooses a level of the pyramid with the closest scale less than or equal to the scale specified by your analysis and resamples (using nearest neighbor by default) as necessary.
 
@@ -268,7 +267,7 @@ Map$addLayer(image, list(bands = c("B4", "B3", "B2"), max = 12000), "image")
 <img src="./images/chapter_04/figure_code_01.png" width=95%>
 </center>
 
-The map starts zoomed all the way in, such that the native resolution pixels are clearly visible. Zooming out far enough will not display the same pixels, but will instead display higher levels of the image pyramid. It is also worth noting that the Rstudio map uses the [maps mercator (EPSG:3857)]() projection, so the appropriate level of the image pyramid also needs to be reprojected prior to display. Learn more about how Earth Engine handles projections from the [projections doc]().
+The map starts zoomed all the way in, such that the native resolution pixels are clearly visible. Zooming out far enough will not display the same pixels, but will instead display higher levels of the image pyramid. It is also worth noting that the Rstudio map uses the [maps mercator (EPSG:3857)](http://epsg.io/3857) projection, so the appropriate level of the image pyramid also needs to be reprojected prior to display. Learn more about how Earth Engine handles projections from the [projections doc](https://r-earthengine.com/rgeebook/projections.html).
 
 # Projections {-}
 
@@ -281,7 +280,7 @@ library(rgeeExtra)
 ee_Initialize()
 ```
 
-Earth Engine is designed so that you rarely have to worry about map projections when doing computations. As with scale, the projection in which computations take place is determined on a "pull" basis. Specifically, inputs are requested in the output projection. The output may be determined from a function parameter (e.g. `crs`), the `Map` in the Rstudio (which has a [maps mercator (EPSG:3857)]() projection), or with a `reproject()` call. When you display images in the Rstudio, inputs are requested in [maps mercator](). Consider the following simple operation on a MODIS image, which has a [sinusoidal]() projection:
+Earth Engine is designed so that you rarely have to worry about map projections when doing computations. As with scale, the projection in which computations take place is determined on a "pull" basis. Specifically, inputs are requested in the output projection. The output may be determined from a function parameter (e.g. `crs`), the `Map` in the Rstudio (which has a [maps mercator (EPSG:3857)](http://epsg.io/3857) projection), or with a `reproject()` call. When you display images in the Rstudio, inputs are requested in [maps mercator](http://epsg.io/3857). Consider the following simple operation on a MODIS image, which has a [sinusoidal](http://spatialreference.org/ref/sr-org/6974/) projection:
 
 ```{r}
 # The input image has a SR-ORG:6974 (sinusoidal) projection.
@@ -297,7 +296,7 @@ Map$addLayer(rescaled, visParams, "Rescaled")
 <img src="./images/chapter_04/figure_PRJ_code_01.png" width=95%>
 </center>
 
-The order of operations for this code sample is diagrammed in Figure 1. Note that the projection of the input is determined by the output, specifically the [maps mercator]() projection of the map display in the Rstudio. This projection propagates back through the sequence of operations such that the inputs are requested in maps mercator, at a scale determined by the zoom level of the map.
+The order of operations for this code sample is diagrammed in Figure 1. Note that the projection of the input is determined by the output, specifically the [maps mercator](http://epsg.io/3857) projection of the map display in the Rstudio. This projection propagates back through the sequence of operations such that the inputs are requested in maps mercator, at a scale determined by the zoom level of the map.
 
 <center>
 <img src="./images/chapter_04/figure_PRJ_01.png" width=60%>
@@ -316,11 +315,11 @@ print(image$projection()$getInfo())
 cat("Scale in meters:", image$projection()$nominalScale()$getInfo())
 ```
 
-Note that by calling `nominalScale()` on the `ee$Projection` returned by `projection()`, you can determine the native resolution of the image. The native resolution is the nominal pixel scale in meters of the lowest level of the [image pyramid](). Because each band of an image can have a different scale and/or projection, if you call `projection()` on an image with at least one band that doesn't have the same projection as the others, you may see an error like:
+Note that by calling `nominalScale()` on the `ee$Projection` returned by `projection()`, you can determine the native resolution of the image. The native resolution is the nominal pixel scale in meters of the lowest level of the [image pyramid](https://r-earthengine.com/rgeebook/scale.html). Because each band of an image can have a different scale and/or projection, if you call `projection()` on an image with at least one band that doesn't have the same projection as the others, you may see an error like:
 
 ## The default projection {-}
 
-Unless you need your computation to occur in a specific projection, there is generally no need to specify a projection. Only for output that's ambiguous will Earth Engine require you to specify a projection and/or scale. Ambiguity can result from reducing an `ImageCollection` containing images with different projections (i.e. [creating a composite]()). An image which is a composite or mosaic of input images with different projections will have the default projection, which is [WGS84]() with 1-degree scale. For example:
+Unless you need your computation to occur in a specific projection, there is generally no need to specify a projection. Only for output that's ambiguous will Earth Engine require you to specify a projection and/or scale. Ambiguity can result from reducing an `ImageCollection` containing images with different projections (i.e. [creating a composite]()). An image which is a composite or mosaic of input images with different projections will have the default projection, which is [WGS84](https://epsg.io/4326) with 1-degree scale. For example:
 
 ```{r}
 collection <- ee$ImageCollection("LANDSAT/LC08/C01/T1")
@@ -333,7 +332,7 @@ If you try to use an image like this in a computation, you may see an error like
 
 Generally, an aggregation at 1-degree scale is not desired or intended, so Earth Engine gives this friendly reminder to provide a complete specification for the output.
 
-Users often find this behavior confusing and worry about the "lost" projection information, but the pixels aren't actually computed until they're needed ([learn more]()), and at that point, there's always an output projection that accompanies the request that specified how to compute the composite.
+Users often find this behavior confusing and worry about the "lost" projection information, but the pixels aren't actually computed until they're needed ([learn more](https://r-earthengine.com/rgeebook/deferred-exacution.html)), and at that point, there's always an output projection that accompanies the request that specified how to compute the composite.
 
 In the vast majority of use cases, having no projection is not a problem and is actually a valuable optimization, as it allows previewing the results at any zoom level without having to wait for the full resolution computation to complete. But it does mean that the output can appear different at different zoom levels.
 
@@ -351,12 +350,12 @@ output <- collection$reduce(...)$reproject(proj)
 
 A few cases that require a fixed projection include:
 
-  - Computing gradients (e.g. `ee$Terrain$gradient` or `ee$Terrain$slope`).
-  - `reduceResolution`, for when you want to aggregate higher resolution pixels into lower resolution. ([Learn more about reducing resolution]()).
+- Computing gradients (e.g. `ee$Terrain$gradient` or `ee$Terrain$slope`).
+- `reduceResolution`, for when you want to aggregate higher resolution pixels into lower resolution.
 
 There are several reasons you should avoid using `reproject()` unless you absolutely need to. Suppose, for example, you reproject something and add it to the map. If the scale you specified in the `reproject()` call is much smaller than the zoom level of the map, Earth Engine will request all the inputs at very small scale, over a very wide spatial extent. This can result in much too much data being requested at once and lead to an error.
 
-If the eventual output is in a different projection from that specified in the `reproject()` call, that will result in another reprojection. This is another reason to be cautious about using `reproject()` in your code. Consider the following example, which forces the MODIS image to first be reprojected to [WGS84](), then reprojected to [maps mercator]() for display in the Rstudio map:
+If the eventual output is in a different projection from that specified in the `reproject()` call, that will result in another reprojection. This is another reason to be cautious about using `reproject()` in your code. Consider the following example, which forces the MODIS image to first be reprojected to [WGS84](https://epsg.io/4326), then reprojected to [maps mercator](http://epsg.io/3857) for display in the Rstudio map:
 
 ```{r}
 # The input image has a SR-ORG:6974 (sinusoidal) projection.
@@ -375,10 +374,10 @@ Map$addLayer(reprojected, visParams, "Reprojected")
 <img src="./images/chapter_04/figure_PRJ_code_02.png" width=95%>
 </center>
 
-Figure 2 diagrams the flow of operations corresponding to this simple reprojection example. Note that the first reprojection is explicit, as specified in the `reproject()` call. The second reprojection is implicit, performed by Earth Engine automatically in order to display the result on the map. Also observe that the information about what projection to use propagates back from the request to the input.
+Figure diagrams the flow of operations corresponding to this simple reprojection example. Note that the first reprojection is explicit, as specified in the `reproject()` call. The second reprojection is implicit, performed by Earth Engine automatically in order to display the result on the map. Also observe that the information about what projection to use propagates back from the request to the input.
 
 <center>
 <img src="./images/chapter_04/figure_PRJ_02.png" width=60%>
 </center>
 
-Figure 2. Flow chart of operations corresponding to the reprojection of a MODIS image in the Rstudio map. Curved lines indicate the flow of information to the reprojections: specifically, the output projection and scale.
+Figure: Flow chart of operations corresponding to the reprojection of a MODIS image in the Rstudio map. Curved lines indicate the flow of information to the reprojections: specifically, the output projection and scale.
