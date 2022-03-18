@@ -476,7 +476,7 @@ Note that the `visParams` parameter is an object, with properties specifying the
 <img src="./images/chapter_03/figure_api_01.png" width=95%>
 </center>
 
-Elevation image as grayscale, stretched to [0, 3000].
+Figure: Elevation image as grayscale, stretched to [0, 3000].
 
 To display a single band using a color palette, add a `palette` property to the `visParams` object:
 
@@ -494,7 +494,7 @@ The result should look something like Figure .
 <img src="./images/chapter_03/figure_api_02.png" width=95%>
 </center>
 
-Elevation image as a color ramp from blue to red, stretched to [0, 3000].
+Figure: Elevation image as a color ramp from blue to red, stretched to [0, 3000].
 
 ### Digression: Palettes {-}
 
@@ -531,7 +531,7 @@ Note that in the code `ee$Terrain$slope(srtm)`, the `srtm` image is provided as 
 <img src="./images/chapter_03/figure_api_03.png" width=95%>
 </center>
 
-Slope image.
+Figure: Slope image.
 
 ### Image math {-}
 
@@ -558,7 +558,7 @@ The result should look something like Figure . It's worth taking a closer look a
 <img src="./images/chapter_03/figure_api_04.png" width=95%>
 </center>
 
-Sin of terrain aspect.
+Figure: Sin of terrain aspect.
 
 ### Image statistics {-}
 
@@ -705,7 +705,8 @@ The result should look something like Figure. Note that this code assigns the ob
 <center>
 <img src="./images/chapter_03/figure_api_07.png" width=95%>
 </center>
-Landsat 8 TOA reflectance image as a true-color composite, stretched to [0, 0.3].
+
+Figure: Landsat 8 TOA reflectance image as a true-color composite, stretched to [0, 0.3].
 
 Try playing with visualizing different bands. Another favorite combination is 'B5', 'B4', and 'B3' which is called a false-color composite. Some other interesting false-color composites are described [here](https://www.usgs.gov/media/images/common-landsat-band-rgb-composites).
 
@@ -737,7 +738,7 @@ Map$addLayers(eeObject = colorized, visParams = colorizedVis, name = "Colorized"
 <img src="./images/chapter_03/figure_api_08.png" width=95%>
 </center>
 
-MODIS Combined 16-Day EVI
+Figure: MODIS Combined 16-Day EVI
 
 Note that now you can zoom out and see a continuous mosaic where MODIS imagery is collected (i.e. over land).
 
@@ -776,7 +777,7 @@ The new thing in this code is the `median()` method applied to an image collecti
 <img src="./images/chapter_03/figure_api_09.png" width=95%>
 </center>
 
-Landsat 8 median composite.
+Figure: Landsat 8 median composite.
 
 When you zoom out on the median composite, you should see something like next figure. This should look considerably better than the composite you made previously. At this point, it's worth stepping back and considering what's been done to make that median composite. Earth Engine has loaded the entire Landsat 8 collection over the continental south american, and has calculated the median for every pixel. That's a lot of data! Of course, you could compute annual medians, by first filtering the collection, [as you've done previously](https://developers.google.com/earth-engine/tutorials/tutorial_api_04#filtering-image-collections). The point is that if you had to download all that imagery and make this composite, it would be a big project. With Earth Engine, you get a result in seconds!
 
@@ -892,7 +893,7 @@ The result should look something like figure. Note that we use the `select()` fu
 <img src="./images/chapter_03/figure_api_12.png" width=95%>
 </center>
 
-NDVI for a single Landsat scene. Blue is low and green is high NDVI.
+Figure: NDVI for a single Landsat scene. Blue is low and green is high NDVI.
 
 The normalized difference operation is so ubiquitous in remote sensing, there is a [shortcut function](https://developers.google.com/earth-engine/apidocs/ee-image-normalizeddifference) on an `ee$Image` that is useful for simplifying the code in the previous example:
 
@@ -976,7 +977,7 @@ ee_Initialize()
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_GFC_04.png"  width=40%>
   </center>
 
-Figure 1. Forest change estimated by Hansen et al. (2013). Global Change, 2000 - 2012 (left); Change in Riau, Indonesia, 2000 - 2012 (right)
+Figure: Forest change estimated by Hansen et al. (2013). Global Change, 2000 - 2012 (left); Change in Riau, Indonesia, 2000 - 2012 (right)
 
 Welcome to the Google Earth Engine tutorial for using [Hansen et al. (2013)](http:#www.sciencemag.org/content/342/6160/850) global forest cover and change data and Forest Monitoring for Action (FORMA, [Hammer et al. 2009](https:#www.cgdev.org/sites/default/files/1423248_file_Hammer_Kraft_Wheeler_FORMA_FINAL.pdf)) data from [Global Forest Watch](http://www.globalforestwatch.org/). This tutorial provides examples of how to use Earth Engine to visualize these data, how to compute forest change over time and other statistics within a region of interest and how to download both the data and results of analyses.
 
@@ -1013,7 +1014,7 @@ Click on the **Run** button at the top of the Rstudio and you should see somethi
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_01.png"  width=100%>
 </center>
 
-Default visualization of Hansen et al. (2013) forest change data.
+Figure: Default visualization of Hansen et al. (2013) forest change data.
 
 Don't worry, you'll make it look better soon. ([Learn more about default image visualizations in Earth Engine](https://r-earthengine.com/rgeebook/image.html)). By the end of this section, you'll have an image that looks something like Figure 2, where green represents where the study detected forest in the year 2000, red is estimated forest loss over the study period, blue is forest gain during that period, magenta is areas where forest has been both lost and gained, and non-forest areas are masked.
 
@@ -1021,7 +1022,7 @@ Don't worry, you'll make it look better soon. ([Learn more about default image v
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_12.png"  width=100%>
 </center>
 
-Custom visualization of Hansen et al. (2013) forest change data.
+Figure: Custom visualization of Hansen et al. (2013) forest change data.
 
 Recall that when a multi-band image is added to a map, the first three bands of the image are chosen as red, green, and blue, respectively, and stretched according to the data type of each band. The reason the image looks red is that the first three bands are treecover2000, loss, and gain. The treecover2000 band is expressed as a percent and has values much higher than loss (green) and gain (blue) which are binary ({0, 1}). The image therefore displays as overwhelmingly red.
 
@@ -1095,7 +1096,7 @@ This results in an image that should look something like Figure 3.
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_02.png"  width=100%>
 </center>
 
-Grayscale image of year 2000 tree cover in the South America.
+Figure: Grayscale image of year 2000 tree cover in the South America.
 
 Here's an image that uses 3 bands, Landsat bands 5, 4, and 3 for 2015. This band combination shows healthy vegetation as green and soil as mauve::
 
@@ -1110,7 +1111,7 @@ The result should look something like Figure 4.
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_03.png"  width=100%>
 </center>
 
-Landsat 7, year 2015 false color composite of the South America.
+Figure: Landsat 7, year 2015 false color composite of the South America.
 
 One nice visualization of the Global Forest Change dataset shows forest extent in 2000 as green, forest loss as red, and forest gain as blue. Specifically, make loss the first band (red), treecover2000 the second band (green), and gain the third band (blue):
 
@@ -1124,7 +1125,7 @@ The loss and gain band values are binary, so they will be barely visible on the 
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_04.png"  width=100%>
 </center>
 
-Year 2000 tree cover in the South America (green).
+Figure: Year 2000 tree cover in the South America (green).
 
 We'd like forest loss to show up as bright red and forest gain to show up as bright blue. To fix this, we can use the visualization parameter max to set the range to which the image data are stretched. Note that the max visualization parameter takes a list of values, corresponding to maxima for each band:
 
@@ -1141,7 +1142,7 @@ The result should look something like Figure 6.
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_05.png"  width=100%>
 </center>
 
-South America forest loss (red), year 2000 forest cover (green) and gain (blue).
+Figure: South America forest loss (red), year 2000 forest cover (green) and gain (blue).
 
 This results in an image that is green where there's forest, red where there's forest loss, blue where there's forest gain, and magenta where there's both gain and loss. A closer inspection, however, reveals that it's not quite right. Instead of loss being marked as red, it's orange. This is because the bright red pixels mix with the underlying green pixels, producing orange pixels. Similarly the pixels where there's forest, loss, and gain are pink - a combination of green, bright red and bright blue. See Figure 7 for an illustration.
 
@@ -1149,7 +1150,7 @@ This results in an image that is green where there's forest, red where there's f
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_06.png"  width=100%>
 </center>
 
-US Pacific North West forest loss (red), year 2000 cover (green) and gain (blue).
+Figure: US Pacific North West forest loss (red), year 2000 cover (green) and gain (blue).
 
 To get the image promised at the beginning of the tutorial, you can create separate images for forest, loss, gain, and for both loss and gain. Add each of these images to the map in the order that's best for display.
 
@@ -1171,7 +1172,7 @@ The result should look something like Figure 8.
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_07.png"  width=100%>
 </center>
 
-Year 2000 forest cover in South America.
+Fgiure: Year 2000 forest cover in South America.
 
 Zooming in gives a better sense for the resolution of the imagery. Figure 9 shows an area around Mariscal Estigarribia in Paraguay.
 
@@ -1179,7 +1180,7 @@ Zooming in gives a better sense for the resolution of the imagery. Figure 9 show
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_08.png"  width=100%>
 </center>
 
-Year 2000 treecover around Mariscal Estigarribia in Paraguay.
+Figure: Year 2000 treecover around Mariscal Estigarribia in Paraguay.
 
 The image shown in Figure 3 is a bit dark. The problem is that the `treecover2000` band has a byte data type ([0, 255]), when in fact the values are precentages ([0, 100]). To brighten the image, you can set the `min` and/or `max` parameters accordingly. The palette is then stretched between those extrema.
 
@@ -1198,7 +1199,7 @@ The result should look something like Figure 9. Note that in this example, only 
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_09.png"  width=100%>
 </center>
 
-Year 2000 forest cover around Mariscal Estigarribia in Paraguay, stretched to [0, 100].
+Figure: Year 2000 forest cover around Mariscal Estigarribia in Paraguay, stretched to [0, 100].
 
 ### Masking {-}
 
@@ -1220,7 +1221,7 @@ The result should look something like figure.
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_10.png"  width=100%>
 </center>
 
-Year 2000 tree cover, stretched and masked.
+Figure: Year 2000 tree cover, stretched and masked.
 
 ### Example {-}
 
@@ -1250,7 +1251,7 @@ The result should look something like Figure 11.
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_11.png"  width=100%>
 </center>
 
-Forest loss (red), year 2000 cover (green) and gain (blue).
+Figure: Forest loss (red), year 2000 cover (green) and gain (blue).
 
 Observe that there are three `addLayer()` calls. Each `addLayer()` call adds a layer to the map. Mousing over the `Layers` button in the upper right of the map reveals these layers. Each layer can be turned off or on using the checkbox next to it, and the opacity of the layer can be affected by the slider next to the layer name.
 
@@ -1282,7 +1283,7 @@ The result, zoomed into Arkansas with satellite view, should look something like
 <img src="./images/chapter_03/figure_QFC_01.png" width=100%>
 </center>
 
-Pixels with forest loss and gain in Arkansas.
+Figure: Pixels with forest loss and gain in Arkansas.
 
 Combining this example with the result from the previous section, it's now possible to recreate the figure from the beginning of the tutorial:
 
@@ -1731,7 +1732,7 @@ Click on the Rstudio's "Run" button, and after a few seconds you should see a ma
 <img src="./images/chapter_03/figure_GSW_01.png" width=95%>
 </center>
 
-Figure 1. Default visualization of the global surface water occurrence data layer.
+Figure: Default visualization of the global surface water occurrence data layer.
 
 In most areas, the GSW dataset appears transparent, because locations where either Landsat images were not collected (i.e. ocean areas) or where water was not detected by any observations in the 32 years are [masked out](https://r-earthengine.com/rgeebook/the-earth-engine-api.html).
 
