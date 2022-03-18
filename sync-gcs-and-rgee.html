@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>sync GCS and rgee | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="sync GCS and rgee | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sync GCS and rgee | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="This tutorial explains how to integrate rgee and Google Cloud Storage (GCS) step by step. In rgee, GCS is used as an intermediary container for massive downloading/uploading of files which is more...">
+<meta property="og:description" content="This tutorial explains how to integrate rgee and Google Cloud Storage (GCS) step by step. In rgee, GCS is used as an intermediary container for massive downloading/uploading of files which is more...">
+<meta name="twitter:description" content="This tutorial explains how to integrate rgee and Google Cloud Storage (GCS) step by step. In rgee, GCS is used as an intermediary container for massive downloading/uploading of files which is more...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="active" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="sync-gcs-and-rgee" class="section level1 unnumbered">
+<h1>sync GCS and rgee<a class="anchor" aria-label="anchor" href="#sync-gcs-and-rgee"><i class="fas fa-link"></i></a>
+</h1>
+<p>This tutorial explains how to integrate rgee and Google Cloud Storage (GCS) step by step. In rgee, GCS is used as an <strong>intermediary container</strong> for massive downloading/uploading of files which is more flexible than Google Drive. At today’s date (December 2021), GCS is free for <a href="https://cloud.google.com/artifact-registry/pricing">uses of less than 0.5 GB</a>.</p>
+<center>
+<img src="images/gcs_sync/r5_01.png" width="80%">
+</center>
+<div id="create-a-service-account-key" class="section level2 unnumbered">
+<h2>1. <strong>Create a Service Account Key</strong><a class="anchor" aria-label="anchor" href="#create-a-service-account-key"><i class="fas fa-link"></i></a>
+</h2>
+<p>The bulk of GCS &amp; rgee sync issues is related to the creation of a <a href="https://cloud.google.com/iam/docs/creating-managing-service-account-keys">service accounts key (SaK)</a> with not enough privileges for
+writing/reading in GCS buckets. In order to create, configure and locally store your SaK, perform as follow:</p>
+<div id="create-a-google-cloud-platform-gcp-account" class="section level3 unnumbered">
+<h3>
+<strong>Create a Google Cloud Platform (GCP) account</strong><a class="anchor" aria-label="anchor" href="#create-a-google-cloud-platform-gcp-account"><i class="fas fa-link"></i></a>
+</h3>
+<p>Go to <a href="https://cloud.google.com/" class="uri">https://cloud.google.com/</a>, and create an account. You will have to add your address and a credit card.</p>
+<br><center>
+<img src="images/gcs_sync/r5_02.png" width="80%">
+</center>
+<p><br></p>
+</div>
+<div id="create-a-new-project" class="section level3 unnumbered">
+<h3>
+<strong>Create a new project</strong><a class="anchor" aria-label="anchor" href="#create-a-new-project"><i class="fas fa-link"></i></a>
+</h3>
+<p>Go to console.</p>
+<br><center>
+<img src="images/gcs_sync/r5_03.png" width="80%">
+</center>
+<p><br></p>
+<p>If it is your first time using GCP, you are assigned a project named <strong><em>My first project</em></strong>. If you want to create a new project (<strong>OPTIONAL</strong>). First, click on ‘My first project’ in the top blue bar, just to the right of ‘Google Cloud Platform’, and then ‘<strong>NEW PROJECT</strong>’.</p>
+<br><center>
+<img src="images/gcs_sync/r5_04.png" width="80%">
+</center>
+<p><br></p>
+<p>Create a project with the desired name.</p>
+<center>
+<img src="images/gcs_sync/r5_05.png" width="90%">
+</center>
+</div>
+<div id="activate-gcs-api" class="section level3 unnumbered">
+<h3>
+<strong>Activate GCS API</strong><a class="anchor" aria-label="anchor" href="#activate-gcs-api"><i class="fas fa-link"></i></a>
+</h3>
+<p>By default, the GCS API is activated. Make sure of it by typing “Cloud Storage API” in the search browser.</p>
+<br><center>
+<img src="images/gcs_sync/r5_06.png" width="80%">
+</center>
+<p><br></p>
+<p>Click on ‘Enable APIs and Services’ (if the API is turned off). A green checkmark as the image below means
+that the API is activated!</p>
+<br><center>
+<img src="images/gcs_sync/r5_07.png">
+</center>
+<p><br></p>
+</div>
+<div id="set-up-a-service-account" class="section level3 unnumbered">
+<h3>
+<strong>Set up a service account</strong><a class="anchor" aria-label="anchor" href="#set-up-a-service-account"><i class="fas fa-link"></i></a>
+</h3>
+<p>Now we are going to create a <a href="https://cloud.google.com/iam/docs/service-accounts"><strong>service account</strong></a>. A service account is used to ‘sign in’ applications that require one or many GCP services. In our case, <strong>rgee</strong> (the app) needs an account with <strong>GCS admin privileges</strong>. To create a service account, search for ‘Cloud Storage’ in the browser, and click on ‘Cloud Storage’ product.</p>
+<br><center>
+<img src="images/gcs_sync/r5_08.png" width="80%">
+</center>
+<p><br></p>
+<p>Click on ‘settings’.</p>
+<br><center>
+<img src="images/gcs_sync/r5_09.png" width="90%">
+</center>
+<p><br></p>
+<p>Click on ‘INTEROPERABILITY’, and then click on ‘CREATE A KEY FOR A SERVICE ACCOUNT’.</p>
+<br><center>
+<img src="images/gcs_sync/r5_10.png" width="90%">
+</center>
+<p><br></p>
+<p>Click on ‘CREATE NEW ACCOUNT’.</p>
+<br><center>
+<img src="images/gcs_sync/r5_11.png" width="85%">
+</center>
+<p><br></p>
+<p>Set a name (1), and define <strong>Storage Admin</strong> (<strong>DON’T FORGET THIS STEP!!</strong>) in role (3).</p>
+<br><center>
+<img src="images/gcs_sync/r5_12.png" width="80%">
+</center>
+<p><br></p>
+</div>
+<div id="create-and-download-a-sak-as-a-json-file." class="section level3 unnumbered">
+<h3>
+<strong>Create and download a SaK as a json file.</strong><a class="anchor" aria-label="anchor" href="#create-and-download-a-sak-as-a-json-file."><i class="fas fa-link"></i></a>
+</h3>
+<p>Once create the service account, we have to download the <strong>S</strong>ervice <strong>a</strong>ccount <strong>K</strong>ey to use GCS outside the Google Cloud Platform console. A SaK is just a JSON file with your public/private RSA keys. First, click the small edit icon on the bottom right (three horizontal lines). Then, go to API &amp; Services and click on <strong>credentials</strong>.</p>
+<br><center>
+<img src="images/gcs_sync/r5_13.png" width="90%">
+</center>
+<p><br></p>
+<p>On the next page, click on the service account name.</p>
+<br><center>
+<img src="images/gcs_sync/r5_14.png" width="90%">
+</center>
+click on ‘KEYS’, ‘ADD KEY’, and ‘Create new key’.
+<center>
+<img src="images/gcs_sync/r5_15.png" width="90%">
+</center>
+<p><br>
+Then, select JSON format, and click ‘create’.
+<br></p>
+<center>
+<img src="images/gcs_sync/r5_16.png" width="90%">
+</center>
+<p><br></p>
+<p>This should prompt a save file window. Save the file to your hard drive. You can change the name to something more memorable if you like (<strong>but keep the “.json” extension</strong>). Also, please take note of where you stored it. Now we are done in the Google Cloud Console and can finally start working in RStudio.</p>
+</div>
+</div>
+<div id="copy-the-sak-in-your-system" class="section level2 unnumbered">
+<h2>
+<strong>2. Copy the SaK in your system</strong><a class="anchor" aria-label="anchor" href="#copy-the-sak-in-your-system"><i class="fas fa-link"></i></a>
+</h2>
+<p>From rgee v.1.2.9000 we added <a href="https://r-spatial.github.io/rgee/reference/ee_utils_sak_copy.html">ee_utils_sak_copy</a> and <a href="https://r-spatial.github.io/rgee/reference/ee_utils_sak_validate.html">ee_utils_sak_validate</a> to help you to validate and store your SaK. Please run as follow to properly set your SaK in your system.</p>
+<div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># remotes::install_github("r-spatial/rgee") Install rgee v.1.3</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="st">"csaybar"</span><span class="op">)</span>
+<span class="va">SaK_file</span> <span class="op">&lt;-</span> <span class="st">"/home/csaybar/Downloads/SaK_rgee.json"</span> <span class="co"># PUT HERE THE FULLNAME OF YOUR SAK.</span>
+<span class="co"># Assign the SaK to a EE user.</span>
+<span class="fu">ee_utils_sak_copy</span><span class="op">(</span>
+  sakfile <span class="op">=</span>  <span class="va">SaK_file</span>,
+  users <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"csaybar"</span>, <span class="st">"ryali93"</span><span class="op">)</span> <span class="co"># Unlike GD, we can use the same SaK for multiple users.</span>
+<span class="op">)</span>
+<span class="co"># Validate your SaK</span>
+<span class="fu">ee_utils_sak_validate</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><code>ee_utils_sak_validate</code> evaluate if <strong>rgee</strong> with your SaK can: (1) create buckets, (2) write objects, (3) read objects, and (4) connect GEE and GCS. If it does not retrieve an error, <code>ee_Initialize(..., gcs = TRUE)</code> will work like a charm!. The next step is create your own <strong>GCS bucket</strong>. Consider that the bucket name you set must be <strong>globally unique</strong>. In other words, two buckets can not exist with the same name in Google Cloud Storage.</p>
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://arxiv.org/abs/1403.2805">jsonlite</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudStorageR/">googleCloudStorageR</a></span><span class="op">)</span>
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="st">"csaybar"</span>, gcs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co"># Create your own container</span>
+<span class="va">project_id</span> <span class="op">&lt;-</span> <span class="fu">ee_get_earthengine_path</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span><span class="va">.</span>, <span class="st">"\\.json$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/read_json.html">read_json</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="st">'$'</span><span class="op">(</span><span class="va">project_id</span><span class="op">)</span> <span class="co"># Get the Project ID</span>
+<span class="fu">googleCloudStorageR</span><span class="fu">::</span><span class="fu">gcs_create_bucket</span><span class="op">(</span><span class="st">"CHOOSE_A_BUCKET_NAME"</span>, projectId <span class="op">=</span> <span class="va">project_id</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="error-cannot-insert-legacy-acl-for-an-object-when-uniform-bucket-level-access-is-enabled" class="section level2 unnumbered">
+<h2>
+<strong>3. ERROR: Cannot insert legacy ACL for an object when uniform bucket-level access is enabled</strong><a class="anchor" aria-label="anchor" href="#error-cannot-insert-legacy-acl-for-an-object-when-uniform-bucket-level-access-is-enabled"><i class="fas fa-link"></i></a>
+</h2>
+<p>This is a <a href="https://github.com/cloudyr/googleCloudStorageR/issues/111">common issue</a> related to the control access of buckets. GCS offers two systems for granting users permission to access your buckets and objects: <a href="https://cloud.google.com/storage/docs/access-control/iam">IAM</a> (recommended, used in all Google Cloud services) and <a href="https://cloud.google.com/storage/docs/access-control/lists">Access Control Lists (ACL)</a> (legacy access control system, only available in GCS).</p>
+<p>If you use the Google Cloud Platform console to create a bucket, it will use <strong>Uniform access</strong> (<strong>IAM is used alone to manage permissions</strong>) by default.</p>
+<br><center>
+<img src="images/gcs_sync/r5_17.png" width="90%">
+</center>
+<center>
+<img src="images/gcs_sync/r5_18.png" width="95%">
+</center>
+<p><br></p>
+<p>On the contrary if you use <a href="https://code.markedmondson.me/googleCloudStorageR/reference/gcs_create_bucket.html"><code>googleCloudStorageR::gcs_create_bucket</code></a>, it will use fine-grained access (<strong>IAM and ACLs to manage permissions</strong>).</p>
+<br><center>
+<img src="images/gcs_sync/r5_19.png" width="95%">
+</center>
+<p><br></p>
+<p>Why is this important?. It is important, because if you create a bucket using the first option an error message will arise: <strong>“Cannot insert legacy ACL for an object when uniform bucket-level access is enabled. Read more at <a href="https://cloud.google.com/storage/docs/uniform-bucket-level-access" class="uri">https://cloud.google.com/storage/docs/uniform-bucket-level-access</a>”</strong>.</p>
+<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">demo_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, b <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>
+<span class="co"># Bad --------------------------------------------------</span>
+<span class="fu">googleCloudStorageR</span><span class="fu">::</span><span class="fu">gcs_upload</span><span class="op">(</span>
+  file <span class="op">=</span> <span class="va">demo_data</span>,
+  name <span class="op">=</span> <span class="st">"demo_data.csv"</span>,
+  bucket <span class="op">=</span> <span class="st">"demo_0002"</span> <span class="co"># Bucket with uniform control access</span>
+<span class="op">)</span>
+<span class="co">#  Error: Insert legacy ACL for an object when uniform bucket-level access</span>
+<span class="co">#  is enabled. Read more at https://cloud.google.com/storage/docs/uniform-bucket-level-access</span>
+<span class="co"># Good -------------------------------------------------</span>
+<span class="fu">googleCloudStorageR</span><span class="fu">::</span><span class="fu">gcs_upload</span><span class="op">(</span>
+  file <span class="op">=</span> <span class="va">demo_data</span>,
+  name <span class="op">=</span> <span class="st">"demo_data.csv"</span>,
+  bucket <span class="op">=</span> <span class="st">"demo_0002"</span>, <span class="co"># Bucket with uniform control access</span>
+  predefinedAcl <span class="op">=</span> <span class="st">"bucketLevel"</span>
+<span class="op">)</span></code></pre></div>
+<p>It happens due that <code>googleCloudStorageaR</code> by default expects buckets created with fine-grained access (ACL support, see <a href="https://github.com/cloudyr/googleCloudStorageR/issues/111">cloudyr/googleCloudStorageR#111</a>).
+To avoid this issue, from rgee v.1.3 we opt to change the default predefinedAcl argument from ‘private’ to ‘bucketLevel’. This simple change should avoid users dealing with access control issues. However, if for some reason a user needs to change the access control policy (maybe to reduce the data exposure), from rgee v.1.2.0 all the rgee GCS functions (<a href="https://r-spatial.github.io/rgee/reference/sf_as_ee.html">sf_as_ee</a>, <a href="https://r-spatial.github.io/rgee/reference/local_to_gcs.html">local_to_gcs</a>, <a href="https://r-spatial.github.io/rgee/reference/raster_as_ee.html">raster_as_ee</a>, and <a href="https://r-spatial.github.io/rgee/reference/stars_as_ee.html">stars_as_ee</a>) support the <code>predefinedAcl</code> argument too (Thanks to @<a href="https://github.com/jsocolar">jsocolar</a>).</p>
+</div>
+<div id="error-in-earth-engine-servers-unable-to-write-to-bucket-demo_0001-permission-denied." class="section level2 unnumbered">
+<h2>
+<strong>4. ERROR in Earth Engine servers: Unable to write to bucket demo_0001 (permission denied).</strong><a class="anchor" aria-label="anchor" href="#error-in-earth-engine-servers-unable-to-write-to-bucket-demo_0001-permission-denied."><i class="fas fa-link"></i></a>
+</h2>
+<p>This error arises when GEE tries to send an exported task results but your <strong>EE USER</strong> does not have enough privileges to write/read the bucket. <strong>Why does this occur if I have successfully configured my SaK in my local system?</strong>. Well, the SaK ensures a smooth connection between your local environment and GCS, but <strong>not between GEE and GCS</strong>.</p>
+<br><center>
+<img src="images/gcs_sync/r5_20.png">
+</center>
+<p><br></p>
+<p>For instance, imagine that you have access to 2 Google user accounts, one personal and one for your work (in this example, we will call them David and Cesar). Both accounts have access to GEE. David creates a SaK and sends it to Cesar. As a result of this action, both Cesar and David can work together in the same bucket, downloading and creating GCS objects (Local &lt;-&gt; GCS). If David tries to use <code>ee_as_raster(..., via='gcs')</code> (from GEE -&gt; GCS -&gt; Local), GEE will recognize that the owner of the bucket is David so it will allow the procedure (GEE -&gt; GCS) and thanks to the SaK there will be no problem to send the information to his local environment (GCS -&gt; Local). However, if Cesar tries to do the same, it will get an error when passing the information from GEE -&gt; GCS because <strong>GEE does not know that Cesar has David SaK in their local system</strong>.</p>
+<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="fu">ee_Initialize</span><span class="op">(</span>gcs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co"># Define an image.</span>
+<span class="va">img</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_SR/LC08_038029_20180810"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B4"</span>, <span class="st">"B3"</span>, <span class="st">"B2"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">divide</span><span class="op">(</span><span class="fl">10000</span><span class="op">)</span>
+<span class="co"># Define an area of interest.</span>
+<span class="va">geometry</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Rectangle</span><span class="op">(</span>
+  coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">110.8</span>, <span class="fl">44.6</span>, <span class="op">-</span><span class="fl">110.6</span>, <span class="fl">44.7</span><span class="op">)</span>,
+  proj <span class="op">=</span> <span class="st">"EPSG:4326"</span>,
+  geodesic <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span>
+<span class="va">img_03</span> <span class="op">&lt;-</span> <span class="fu">ee_as_raster</span><span class="op">(</span>
+  image <span class="op">=</span> <span class="va">img</span>,
+  region <span class="op">=</span> <span class="va">geometry</span>,
+  container <span class="op">=</span> <span class="st">"demo_0001"</span>,
+  via <span class="op">=</span> <span class="st">"gcs"</span>,
+  scale <span class="op">=</span> <span class="fl">1000</span>
+<span class="op">)</span>
+<span class="co"># ERROR in Earth Engine servers: Unable to write to bucket demo_0001 (permission denied).</span></code></pre></div>
+<p>This error is quite easy to fix. Just go to the bucket in your Google Cloud Platform console.</p>
+<br><center>
+<img src="images/gcs_sync/r5_21.png" width="90%">
+</center>
+<p>Click on ‘PERMISSIONS’, and click on ‘ADD’.</p>
+<center>
+<img src="images/gcs_sync/r5_22.png" width="90%">
+</center>
+<p>Finally, add the Google user account of the <strong>EE USER</strong>. <strong>Do not forget to add ‘STORAGE ADMIN’ in the role!</strong></p>
+<center>
+<img src="images/gcs_sync/r5_23.png" width="95%">
+</center>
+<p><br></p>
+</div>
+<div id="conclusion" class="section level2 unnumbered">
+<h2>
+<strong>5. Conclusion</strong><a class="anchor" aria-label="anchor" href="#conclusion"><i class="fas fa-link"></i></a>
+</h2>
+<p>Setting up a SaK for GCS can be quite frustrating but it is definitely worth it!. If you are still having problems setting up your SaK, feel free to clearly detail your problem in <a href="https://github.com/r-spatial/rgee/issues">rgee issues</a>.</p>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="r-and-python-requirements.html">R and Python requirements</a></div>
+<div class="next"><a href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#sync-gcs-and-rgee">sync GCS and rgee</a></li>
+<li>
+<a class="nav-link" href="#create-a-service-account-key">1. Create a Service Account Key</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#create-a-google-cloud-platform-gcp-account">Create a Google Cloud Platform (GCP) account</a></li>
+<li><a class="nav-link" href="#create-a-new-project">Create a new project</a></li>
+<li><a class="nav-link" href="#activate-gcs-api">Activate GCS API</a></li>
+<li><a class="nav-link" href="#set-up-a-service-account">Set up a service account</a></li>
+<li><a class="nav-link" href="#create-and-download-a-sak-as-a-json-file.">Create and download a SaK as a json file.</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#copy-the-sak-in-your-system">2. Copy the SaK in your system</a></li>
+<li><a class="nav-link" href="#error-cannot-insert-legacy-acl-for-an-object-when-uniform-bucket-level-access-is-enabled">3. ERROR: Cannot insert legacy ACL for an object when uniform bucket-level access is enabled</a></li>
+<li><a class="nav-link" href="#error-in-earth-engine-servers-unable-to-write-to-bucket-demo_0001-permission-denied.">4. ERROR in Earth Engine servers: Unable to write to bucket demo_0001 (permission denied).</a></li>
+<li><a class="nav-link" href="#conclusion">5. Conclusion</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/02_dev_env.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/02_dev_env.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

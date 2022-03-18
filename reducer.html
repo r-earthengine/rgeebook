@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Reducer | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Reducer | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Reducer | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Reducer Overview Reducers are the way to aggregate data over time, space, bands, arrays and other data...">
+<meta property="og:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Reducer Overview Reducers are the way to aggregate data over time, space, bands, arrays and other data...">
+<meta name="twitter:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Reducer Overview Reducers are the way to aggregate data over time, space, bands, arrays and other data...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="active" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="reducer" class="section level1 unnumbered">
+<h1>Reducer<a class="anchor" aria-label="anchor" href="#reducer"><i class="fas fa-link"></i></a>
+</h1>
+<p>This section requires the next libraries:</p>
+<div class="sourceCode" id="cb427"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rgeeExtra</span><span class="op">)</span>
+
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div id="reducer-overview" class="section level2 unnumbered">
+<h2>Reducer Overview<a class="anchor" aria-label="anchor" href="#reducer-overview"><i class="fas fa-link"></i></a>
+</h2>
+<p>Reducers are the way to aggregate data over time, space, bands, arrays and other data structures in Earth Engine. The <code>ee$Reducer</code> class specifies how data is aggregated. The reducers in this class can specify a simple statistic to use for the aggregation (e.g. minimum, maximum, mean, median, standard deviation, etc.), or a more complex summary of the input data (e.g. histogram, linear regression, list). Reductions may occur over time ( <code>imageCollection$reduce()</code> )ç, space ( <code>image$reduceRegion()</code> , <code>image$reduceNeighborhood()</code> ), bands ( <code>image$reduce()</code> ), or the attribute space of a <code>FeatureCollection</code> ( <code>featureCollection$reduceColumns()</code> or <code>FeatureCollection</code> methods that start with <code>aggregate_</code>).</p>
+<div id="reducers-have-inputs-and-outputs" class="section level3 unnumbered">
+<h3>Reducers have inputs and outputs<a class="anchor" aria-label="anchor" href="#reducers-have-inputs-and-outputs"><i class="fas fa-link"></i></a>
+</h3>
+<p>Reducers take an input dataset and produce a single output. When a single input reducer is applied to a multi-band image, Earth Engine automatically replicates the reducer and applies it separately to each band. As a result, the output image has the same number of bands as the input image; each band in the output is the reduction of pixels from the corresponding band in the input data. Some reducers take tuples of input datasets. These reducers will not be automatically replicated for each band. For example, <code>ee$Reducer$LinearRegression()</code> takes multiple predictor datasets (representing independent variables in the regression) in a particular order (see <a href="">Regression reducers</a>).</p>
+<p>Some reducers produce multiple outputs, for example <code>ee$Reducer$minMax()</code>, <code>ee$Reducer$histogram()</code> or <code>ee$Reducer$toList()</code>. For example:</p>
+<div class="sourceCode" id="cb428"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load and filter the Sentinel-2 image collection.</span>
+<span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"COPERNICUS/S2"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterDate</span><span class="op">(</span><span class="st">"2016-01-01"</span>, <span class="st">"2016-12-31"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterBounds</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">81.31</span>, <span class="fl">29.90</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Reduce the collection$</span>
+<span class="va">extrema</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">reduce</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">minMax</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>This will produce an output with twice the number of bands of the inputs, where band names in the output have ‘_min’ or ‘_max’ appended to the band name.</p>
+<p>The output type should match the computation. For example, a reducer applied to an ImageCollection has an Image output. Because the output is interpreted as a pixel value, you must use reducers with a numeric output to reduce an ImageCollection (reducers like toList() or histogram() won’t work).</p>
+</div>
+<div id="reducers-use-weighted-inputs" class="section level3 unnumbered">
+<h3>Reducers use weighted inputs<a class="anchor" aria-label="anchor" href="#reducers-use-weighted-inputs"><i class="fas fa-link"></i></a>
+</h3>
+<p>By default, reductions over pixel values are weighted by their mask, though this behavior can be changed (see the <a href="">Weighting section</a>). Pixels with mask equal to 0 will not be used in the reduction.</p>
+</div>
+<div id="combining-reducers" class="section level3 unnumbered">
+<h3>Combining reducers<a class="anchor" aria-label="anchor" href="#combining-reducers"><i class="fas fa-link"></i></a>
+</h3>
+<p>If your intent is to apply multiple reducers to the same inputs, it’s good practice to <code>combine()</code> the reducers for efficiency. Specifically, calling <code>combine()</code> on a reducer with <code>sharedInputs</code> set to <code>true</code> will result in only a single pass over the data. For example, to compute the mean and standard deviation of pixels in an image, you could use something like this:</p>
+<div class="sourceCode" id="cb429"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load a Landsat 8 image.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1/LC08_044034_20140318"</span><span class="op">)</span>
+
+<span class="co"># Combine the mean and standard deviation reducers.</span>
+<span class="va">reducers</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">combine</span><span class="op">(</span>
+  <span class="va">reducer2</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">stdDev</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">sharedInputs</span><span class="op">&lt;-</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
+
+<span class="co"># Use the combined reducer to get the mean and SD of the image.</span>
+<span class="va">stats</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">reducers</span>,
+  <span class="va">bestEffort</span><span class="op">&lt;-</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
+
+<span class="co"># Display the dictionary of band means and SDs.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">stats</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>In the output, note that the names of the reducers have been appended to the names of the inputs to distinguish the reducer outputs. This behavior also applies to image outputs, which will have the name of the reducer appended to output band names.</p>
+</div>
+</div>
+<div id="imagecollection-reductions" class="section level2 unnumbered">
+<h2>ImageCollection Reductions<a class="anchor" aria-label="anchor" href="#imagecollection-reductions"><i class="fas fa-link"></i></a>
+</h2>
+<p>Consider the example of needing to take the median over a time series of images represented by an <code>ImageCollection</code>. To reduce an <code>ImageCollection</code>, use <code>imageCollection$reduce()</code>. This reduces the collection of images to an individual image as illustrated in Figure 1. Specifically, the output is computed pixel-wise, such that each pixel in the output is composed of the median value of all the images in the collection at that location. To get other statistics, such as mean, sum, variance, an arbitrary percentile, etc., the appropriate reducer should be selected and applied. (See the <code>Docs</code> tab in the <a href="">Rstudio</a> for a list of all the reducers currently available). For basic statistics like min, max, mean, etc., <code>ImageCollection</code> has shortcut methods like <code><a href="https://rdrr.io/r/base/Extremes.html">min()</a></code>, <code><a href="https://rdrr.io/r/base/Extremes.html">max()</a></code>, <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code>, etc. They function in exactly the same way as calling <code>reduce()</code>, except the resultant band names will not have the name of the reducer appended.</p>
+<center>
+<img src="images/chapter_05/figure_red_01.png" width="40%">
+</center>
+<p>Figure 1. Illustration of an ee.Reducer applied to an ImageCollection.</p>
+<p>For an example of reducing an <code>ImageCollection</code>, consider a collection of Landsat 5 images, filtered by path and row. The following code uses <code>reduce()</code> to reduce the collection to one <code>Image</code> (here a median reducer is used simply for illustrative purposes):</p>
+<div class="sourceCode" id="cb430"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load an image collection, filtered so it's not too much data.</span>
+<span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"LANDSAT/LT05/C01/T1"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterDate</span><span class="op">(</span><span class="st">"2008-01-01"</span>, <span class="st">"2008-12-31"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">"WRS_PATH"</span>, <span class="fl">44</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">"WRS_ROW"</span>, <span class="fl">34</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Compute the median in each band, each pixel.</span>
+<span class="co"># Band names are B1_median, B2_median, etc.</span>
+<span class="va">median</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">reduce</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">median</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># The output is an Image.  Add it to the map.</span>
+<span class="va">vis_param</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="va">bands</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B4_median"</span>, <span class="st">"B3_median"</span>, <span class="st">"B2_median"</span><span class="op">)</span>,
+  <span class="va">gamma</span><span class="op">&lt;-</span> <span class="fl">1.6</span>
+<span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">122.3355</span>, <span class="fl">37.7924</span>, <span class="fl">9</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">median</span>, <span class="va">vis_param</span><span class="op">)</span></code></pre></div>
+<p>This returns a multi-band <code>Image</code>, each pixel of which is the median of all unmasked pixels in the <code>ImageCollection</code> at that pixel location. Specifically, the reducer has been repeated for each band of the input imagery, meaning that the median is computed independently in each band. Note that the band names have the name of the reducer appended: <code>‘B1_median’</code>, <code>‘B2_median’</code>, etc. The output should look something like Figure 2.</p>
+<p>For more information about reducing image collections, see the <a href="">reducing section of the <code>ImageCollection</code> docs</a>. In particular, note that images produced by reducing an <code>ImageCollection</code> <a href="">have no projection</a>. This means that you should explicitly set the scale on any computations involving computed images output by an <code>ImageCollection</code> reduction.</p>
+<div class="inline-table"><table class="table table-sm">
+<colgroup><col width="100%"></colgroup>
+<thead><tr class="header">
+<th align="left"><img src="images/chapter_05/figure_red_02.png" width="95%"></th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="left">Figure 2. A false color composite of the median of Landsat 5 scenes in 2008.</td>
+</tr></tbody>
+</table></div>
+</div>
+<div id="image-reductions" class="section level2 unnumbered">
+<h2>Image Reductions<a class="anchor" aria-label="anchor" href="#image-reductions"><i class="fas fa-link"></i></a>
+</h2>
+<p>To reduce an <code>Image</code>, use <code>image$reduce()</code>. Reducing an image functions in an analogous way to <code>imageCollection$reduce()</code>, except the bands of the image are input to the reducer rather than the images in the collection. The output is also an image with number of bands equal to number of reducer outputs. For example:</p>
+<div class="sourceCode" id="cb431"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load an image and select some bands of interest.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1/LC08_044034_20140318"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B4"</span>, <span class="st">"B3"</span>, <span class="st">"B2"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Reduce the image to get a one-band maximum value image.</span>
+<span class="va">maxValue</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">reduce</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">max</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Display the result.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">centerObject</span><span class="op">(</span><span class="va">image</span>, <span class="fl">10</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">maxValue</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">max</span><span class="op">&lt;-</span> <span class="fl">13000</span><span class="op">)</span>, <span class="st">"Maximum value image"</span><span class="op">)</span></code></pre></div>
+
+<img src="images/chapter_05/figure_red_code_01.png" width="95%">
+</div>
+<div id="statistics-of-an-image-region" class="section level2 unnumbered">
+<h2>Statistics of an Image Region<a class="anchor" aria-label="anchor" href="#statistics-of-an-image-region"><i class="fas fa-link"></i></a>
+</h2>
+<div id="reduceregion" class="section level3 unnumbered">
+<h3>reduceRegion<a class="anchor" aria-label="anchor" href="#reduceregion"><i class="fas fa-link"></i></a>
+</h3>
+<p>To get statistics of pixel values in a region of an <code>ee$Image</code>, use <code>image$reduceRegion()</code>. This reduces all the pixels in the region(s) to a statistic or other compact representation of the pixel data in the region (e.g. histogram). The region is represented as a <code>Geometry</code>, which might be a polygon, containing many pixels, or it might be a single point, in which case there will only be one pixel in the region. In either case, as illustrated in Figure 3, the output is a statistic derived from the pixels in the region.</p>
+<center>
+<img src="images/chapter_05/figure_red_03.png" width="70%">
+</center>
+<p>Figure 3. An illustration of an <code>ee$Reducer</code> applied to an image and a region.</p>
+<p>For an example of getting pixel statistics in a region of an image using <code>reduceRegion()</code>, consider finding the mean spectral values of a 5-year Landsat composite within the boundaries of the Sierra Nevada Coniferous Forest (illustrated by Figure 4):</p>
+<div class="sourceCode" id="cb432"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load input imagery: Landsat 7 5-year composite.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LE7_TOA_5YEAR/2008_2012"</span><span class="op">)</span>
+
+<span class="co"># Load an input region: Sierra Nevada.</span>
+<span class="va">region</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">"EPA/Ecoregions/2013/L3"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">"us_l3name"</span>, <span class="st">"Sierra Nevada"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">first</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Reduce the region. The region parameter is the Feature geometry.</span>
+<span class="va">meanDictionary</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">geometry</span><span class="op">&lt;-</span> <span class="va">region</span><span class="op">$</span><span class="fu">geometry</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">scale</span><span class="op">&lt;-</span> <span class="fl">30</span>,
+  <span class="va">maxPixels</span><span class="op">&lt;-</span> <span class="fl">1e9</span>
+<span class="op">)</span>
+
+<span class="co"># The result is a Dictionary.  Print it.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">meanDictionary</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>To force the computation, it suffices to print the result, which the Rstudio will display as a Dictionary in the console. The output should look something like:</p>
+<pre translate="no" dir="ltr">
+B1: 25.406029716816853
+B2: 23.971497014238988
+B3: 22.91059593763103
+B4: 54.83164133293403
+B5: 38.07655472573677
+B6_VCID_2: 198.93216428012906
+B7: 24.063261634961563</pre>
+<center>
+<img src="images/chapter_05/figure_red_04.jpg" width="80%">
+</center>
+<p>Figure 4. False color composite of the Landsat image data for California and Nevada. The region over which to reduce is shown in white.</p>
+<p>Note that in this example the reduction is specified by providing the <code>reducer</code> (<code>ee$Reducer$mean()</code>), the <code>geometry</code> (<code>region$geometry()</code>), the <code>scale</code> (30 meters) and <code>maxPixels</code> for the maximum number of pixels to input to the reducer. A scale should always be specified in <code>reduceRegion()</code> calls. This is because in complex processing flows, which may involve data from different sources with different scales, the scale of the output will not be unambiguously determined from the inputs. In that case, the scale defaults to 1 degree, which generally produces unsatisfactory results. See <a href="">this page</a> for more information about how Earth Engine handles scale.</p>
+<p>There are two ways to set the scale: by specifying the <code>scale</code> parameter, or by specifying a CRS and CRS transform. (See <a href="">the glossary</a> for more information about CRS’s and CRS transforms). For example, the <code>meanDictionary</code> reduction (above) is equivalent to the following:</p>
+<div class="sourceCode" id="cb433"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># As an alternative to specifying scale, specify a CRS and a CRS transform.</span>
+<span class="co"># Make this array by constructing a 4326 projection at 30 meters,</span>
+<span class="co"># then copying the bounds of the composite, from composite.projection().</span>
+<span class="va">affine</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.00026949458523585647</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">180</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">0.00026949458523585647</span>, <span class="fl">86.0000269494563</span><span class="op">)</span>
+
+<span class="co"># Perform the reduction, print the result.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">geometry</span><span class="op">&lt;-</span> <span class="va">region</span><span class="op">$</span><span class="fu">geometry</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">crs</span><span class="op">&lt;-</span> <span class="st">"EPSG:4326"</span>,
+  <span class="va">crsTransform</span><span class="op">&lt;-</span> <span class="va">affine</span>,
+  <span class="va">maxPixels</span><span class="op">&lt;-</span> <span class="fl">1e9</span>
+<span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>In general, specifying the scale is sufficient and results in more readable code. Earth Engine determines which pixels to input to the reducer by first rasterizing the region. If a scale is specified without a CRS, the region is rasterized in the image’s native projection scaled to the specified resolution. If both a CRS and scale are specified, the region is rasterized based on them.</p>
+</div>
+<div id="pixels-in-the-region" class="section level3 unnumbered">
+<h3>Pixels in the region<a class="anchor" aria-label="anchor" href="#pixels-in-the-region"><i class="fas fa-link"></i></a>
+</h3>
+<p>Pixels are determined to be in the region (and weighted) according to the following rules, applied in the specified scale and projection:</p>
+<ul>
+<li>Unweighted reducers (e.g. <code>ee$Reducer$count()</code> or <code>ee$Reducer$mean()$unweighted()</code>): pixels are included if their centroid is in the region and the image’s mask is non-zero.</li>
+<li>Weighted reducers (e.g. <code>ee$Reducer$mean()</code>): pixels are included if at least (approximately) 0.5% of the pixel is in the region and the image’s mask is non-zero; their weight is the minimum of the image’s mask and the (approximate) fraction of the pixel covered by the region.</li>
+</ul>
+<p>The <code>maxPixels</code> parameter is needed to get the computation to succeed. If this parameter is left out of the example, an error is returned.</p>
+<p>There are multiple options to get past these errors: increase <code>maxPixels</code>, as in the example, increase the <code>scale</code>, or set <code>bestEffort</code> to true, which automatically computes a new (larger) scale such that <code>maxPixels</code> is not exceeded. If you do not specify <code>maxPixels</code>, the default value is used.</p>
+</div>
+</div>
+<div id="statistics-of-image-regions" class="section level2 unnumbered">
+<h2>Statistics of Image Regions<a class="anchor" aria-label="anchor" href="#statistics-of-image-regions"><i class="fas fa-link"></i></a>
+</h2>
+<p>To get image statistics in multiple regions stored in a <code>FeatureCollection</code>, you can use <code>image.reduceRegions()</code> to reduce multiple regions at once. The input to <code>reduceRegions()</code> is an <code>Image</code> and a <code>FeatureCollection</code>. The output is another <code>FeatureCollection</code> with the <code>reduceRegions()</code> output set as properties on each <code>Feature</code>. In this example, means of the Landsat 7 annual composite bands in each feature geometry will be added as properties to the input features:</p>
+<div class="sourceCode" id="cb434"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load input imagery: Landsat 7 5-year composite.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LE7_TOA_5YEAR/2008_2012"</span><span class="op">)</span>
+
+<span class="co"># Load a FeatureCollection of counties in Maine.</span>
+<span class="va">maineCounties</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">"TIGER/2016/Counties"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">"STATEFP"</span>, <span class="st">"23"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Add reducer output to the Features in the collection.</span>
+<span class="va">maineMeansFeatures</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">reduceRegions</span><span class="op">(</span>
+  <span class="va">collection</span><span class="op">&lt;-</span> <span class="va">maineCounties</span>,
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">scale</span><span class="op">&lt;-</span> <span class="fl">30</span>
+<span class="op">)</span>
+
+<span class="co"># Print the first feature, to illustrate the result.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="va">maineMeansFeatures</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">select</span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">bandNames</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Observe that new properties, keyed by band name, have been added to the <code>FeatureCollection</code> to store the mean of the composite in each <code>Feature</code> geometry.</p>
+</div>
+<div id="statistics-of-image-neighborhoods" class="section level2 unnumbered">
+<h2>Statistics of Image Neighborhoods<a class="anchor" aria-label="anchor" href="#statistics-of-image-neighborhoods"><i class="fas fa-link"></i></a>
+</h2>
+<p>Rather than specifying a region over which to perform a reduction, it is also possible to specify a neighborhood in which to apply a reducer. To reduce image neighborhoods, use <code>image$reduceNeighborhood()</code>. In this case, the reduction will occur in a sliding window over the input image, with the window size and shape specified by an <code>ee.Kernel</code>. The output of <code>reduceNeighborhood()</code> will be another image, with each pixel value representing the output of the reduction in a neighborhood around that pixel in the input image. Figure 5 illustrates this type of reduction.</p>
+<center>
+<img src="images/chapter_05/figure_red_05.png" width="60%">
+</center>
+<p>Figure 5. Illustration of <code>reduceNeighborhood()</code>, where the reducer is applied in a kernel.</p>
+<p>For example, consider using National Agriculture Imagery Program (NAIP) imagery to quantify landscape differences resulting from logging in the California redwood forests. Specifically, use standard deviation (SD) in a neighborhood to represent the difference in texture between the logged area (SW of the image in Figure 2) and the protected area (NE of the image in Figure 2). For example, to get texture of a NAIP Normalized Difference Vegetation Index (NDVI) image, use <code>reduceNeighborhood()</code> to compute SD in a neighborhood defined by a kernel:</p>
+<div class="sourceCode" id="cb435"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define a region in the redwood forest.</span>
+<span class="va">redwoods</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Rectangle</span><span class="op">(</span><span class="op">-</span><span class="fl">124.0665</span>, <span class="fl">41.0739</span>, <span class="op">-</span><span class="fl">123.934</span>, <span class="fl">41.2029</span><span class="op">)</span>
+
+<span class="co"># Load input NAIP imagery and build a mosaic.</span>
+<span class="va">naipCollection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"USDA/NAIP/DOQQ"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterBounds</span><span class="op">(</span><span class="va">redwoods</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterDate</span><span class="op">(</span><span class="st">"2012-01-01"</span>, <span class="st">"2012-12-31"</span><span class="op">)</span>
+
+<span class="va">naip</span> <span class="op">&lt;-</span> <span class="va">naipCollection</span><span class="op">$</span><span class="fu">mosaic</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Compute NDVI from the NAIP imagery.</span>
+<span class="va">naipNDVI</span> <span class="op">&lt;-</span> <span class="va">naip</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"N"</span>, <span class="st">"R"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Compute standard deviation (SD) as texture of the NDVI.</span>
+<span class="va">texture</span> <span class="op">&lt;-</span> <span class="va">naipNDVI</span><span class="op">$</span><span class="fu">reduceNeighborhood</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">stdDev</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">kernel</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Kernel</span><span class="op">$</span><span class="fu">circle</span><span class="op">(</span><span class="fl">7</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Display the results.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">centerObject</span><span class="op">(</span><span class="va">redwoods</span>, <span class="fl">12</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">naip</span>,
+  <span class="op">{</span><span class="op">}</span>,
+  <span class="st">"NAIP input imagery"</span>
+<span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">naipNDVI</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">min</span><span class="op">&lt;-</span> <span class="op">-</span><span class="fl">1</span>, <span class="va">max</span><span class="op">&lt;-</span> <span class="fl">1</span>, <span class="va">palette</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"FF0000"</span>, <span class="st">"00FF00"</span><span class="op">)</span><span class="op">)</span>,
+  <span class="st">"NDVI"</span>
+<span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">texture</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">min</span><span class="op">&lt;-</span> <span class="fl">0</span>, <span class="va">max</span><span class="op">&lt;-</span> <span class="fl">0.3</span><span class="op">)</span>,
+  <span class="st">"SD of NDVI"</span>
+<span class="op">)</span></code></pre></div>
+<p>Any pixel with a non-zero kernel value is included in the computation. The kernel weights are used by default, though you can change that behavior with the inputWeight argument. The input image and reduceNeighborhood() output are compared in Figure 6.</p>
+<div class="inline-table"><table class="table table-sm">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th align="center">Figure 6a. NAIP imagery of the Northern California coast.</th>
+<th align="center">Figure 6b. <code>reduceNeighborhood()</code> output using a standard deviation reducer.</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="center"><img src="../images/chapter_05/figure_red_06a.png" width="300"></td>
+<td align="center"><img src="../images/chapter_05/figure_red_06b.png" width="300"></td>
+</tr></tbody>
+</table></div>
+</div>
+<div id="statistics-of-featurecollection-columns" class="section level2 unnumbered">
+<h2>Statistics of FeatureCollection Columns<a class="anchor" aria-label="anchor" href="#statistics-of-featurecollection-columns"><i class="fas fa-link"></i></a>
+</h2>
+<p>To reduce properties of features in a <code>FeatureCollection</code>, use <code>featureCollection$reduceColumns()</code>. Consider the following toy example:</p>
+<div class="sourceCode" id="cb436"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Make a toy FeatureCollection.</span>
+<span class="va">aFeatureCollection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">foo</span><span class="op">&lt;-</span> <span class="fl">1</span>, <span class="va">weight</span><span class="op">&lt;-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">foo</span><span class="op">&lt;-</span> <span class="fl">2</span>, <span class="va">weight</span><span class="op">&lt;-</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">foo</span><span class="op">&lt;-</span> <span class="fl">3</span>, <span class="va">weight</span><span class="op">&lt;-</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Compute a weighted mean and display it.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">aFeatureCollection</span><span class="op">$</span><span class="fu">reduceColumns</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">selectors</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"foo"</span><span class="op">)</span>,
+  <span class="va">weightSelectors</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"weight"</span><span class="op">)</span>
+<span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Note that the inputs are weighted according to the specified weight property.</p>
+<p>As a more complex example, consider a <code>FeatureCollection</code> of US census blocks with census data as attributes. The variables of interest are total population and total housing units. You can get their sum(s) by supplying a summing reducer argument to <code>reduceColumns()</code> and printing the result:</p>
+<div class="sourceCode" id="cb437"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load US cenus data as a FeatureCollection.</span>
+<span class="va">census</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">"TIGER/2010/Blocks"</span><span class="op">)</span>
+
+<span class="co"># Filter the collection to include only Benton County, OR.</span>
+<span class="va">benton</span> <span class="op">&lt;-</span> <span class="va">census</span><span class="op">$</span><span class="fu">filter</span><span class="op">(</span>
+  <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">And</span><span class="op">(</span>
+    <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">"statefp10"</span>, <span class="st">"41"</span><span class="op">)</span>,
+    <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">"countyfp10"</span>, <span class="st">"003"</span><span class="op">)</span>
+  <span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Display Benton County cenus blocks.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">123.27</span>, <span class="fl">44.57</span>, <span class="fl">13</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">benton</span><span class="op">)</span>
+
+<span class="co"># Compute sums of the specified properties.</span>
+<span class="va">properties</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"pop10"</span>, <span class="st">"housing10"</span><span class="op">)</span>
+
+<span class="va">sums</span> <span class="op">&lt;-</span> <span class="va">benton</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">notNull</span><span class="op">(</span><span class="va">properties</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">reduceColumns</span><span class="op">(</span>
+    <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">`repeat`</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>,
+    <span class="va">selectors</span><span class="op">&lt;-</span> <span class="va">properties</span>
+<span class="op">)</span>
+
+<span class="co"># Print the resultant Dictionary.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">sums</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>The output is a Dictionary representing the aggregated property according to the specified reducer.</p>
+<center>
+<img src="images/chapter_05/figure_red_code_02.png" width="95%">
+</center>
+<p>Note that the above example uses the <code>notNull()</code> filter to include only features with non-null entries for selected properties in the collection being reduced. It is good practice to check for null entries to catch unexpected missing data and avoid errors resulting from calculations that include null values.</p>
+<p>Also note that unlike <code>imageCollection$reduce()</code>, in which reducers are automatically repeated for each band, reducers on a <code>FeatureCollection</code> must be explicitly repeated using <code>repeat()</code>. Specifically, repeat the reducer m times for m inputs.</p>
+</div>
+<div id="raster-to-vector-conversion" class="section level2 unnumbered">
+<h2>Raster to Vector Conversion<a class="anchor" aria-label="anchor" href="#raster-to-vector-conversion"><i class="fas fa-link"></i></a>
+</h2>
+<p>To convert from an <code>Image</code> (raster) to a <code>FeatureCollection</code> (vector) data type, use <code>image$reduceToVectors()</code>. This is the primary mechanism for vectorization in Earth Engine, and can be useful for generating regions for input to other types of reducer. The <code>reduceToVectors()</code> method creates polygon edges (optionally centroids or bounding boxes instead) at the boundary of homogeneous groups of connected pixels.</p>
+<p>For example, consider a 2012 nightlights image of Japan. Let the nightlights digital number serve as a proxy for development intensity. Define zones using arbitrary thresholds on the nightlights, combine the zones into a single-band image, vectorize the zones using <code>reduceToVectors()</code>:</p>
+<div class="sourceCode" id="cb438"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load a Japan boundary from the Large Scale International Boundary dataset.</span>
+<span class="va">japan</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">"USDOS/LSIB_SIMPLE/2017"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">"country_na"</span>, <span class="st">"Japan"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Load a 2012 nightlights image, clipped to the Japan border.</span>
+<span class="va">nl2012</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"NOAA/DMSP-OLS/NIGHTTIME_LIGHTS/F182012"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">select</span><span class="op">(</span><span class="st">"stable_lights"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">clipToCollection</span><span class="op">(</span><span class="va">japan</span><span class="op">)</span>
+
+<span class="co"># Define arbitrary thresholds on the 6-bit nightlights image.</span>
+<span class="va">zones</span> <span class="op">&lt;-</span> <span class="va">nl2012</span><span class="op">$</span><span class="fu">gt</span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="va">nl2012</span><span class="op">$</span><span class="fu">gt</span><span class="op">(</span><span class="fl">55</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="va">nl2012</span><span class="op">$</span><span class="fu">gt</span><span class="op">(</span><span class="fl">62</span><span class="op">)</span><span class="op">)</span>
+<span class="va">zones</span> <span class="op">&lt;-</span> <span class="va">zones</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">zones</span><span class="op">$</span><span class="fu">neq</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Convert the zones of the thresholded nightlights to vectors.</span>
+<span class="va">vectors</span> <span class="op">&lt;-</span> <span class="va">zones</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">nl2012</span><span class="op">)</span><span class="op">$</span><span class="fu">reduceToVectors</span><span class="op">(</span>
+  <span class="va">geometry</span><span class="op">&lt;-</span> <span class="va">japan</span>,
+  <span class="va">crs</span><span class="op">&lt;-</span> <span class="va">nl2012</span><span class="op">$</span><span class="fu">projection</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">scale</span><span class="op">&lt;-</span> <span class="fl">1000</span>,
+  <span class="va">geometryType</span><span class="op">&lt;-</span> <span class="st">"polygon"</span>,
+  <span class="va">eightConnected</span><span class="op">&lt;-</span> <span class="cn">FALSE</span>,
+  <span class="va">labelProperty</span><span class="op">&lt;-</span> <span class="st">"zone"</span>,
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Make a display image for the vectors, add it to the map.</span>
+<span class="va">display</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="fu">paint</span><span class="op">(</span><span class="va">vectors</span>, <span class="st">"000000"</span>, <span class="fl">3</span><span class="op">)</span>
+
+<span class="co"># Display the thresholds.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="fl">139.6225</span>, <span class="fl">35.712</span>, <span class="fl">9</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">zones</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">min</span><span class="op">&lt;-</span> <span class="fl">1</span>, <span class="va">max</span><span class="op">&lt;-</span> <span class="fl">3</span>, <span class="va">palette</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"0000FF"</span>, <span class="st">"00FF00"</span>, <span class="st">"FF0000"</span><span class="op">)</span><span class="op">)</span>,
+  <span class="st">"raster"</span>
+<span class="op">)</span> <span class="op">+</span>
+  <span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+    <span class="va">display</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">palette</span><span class="op">&lt;-</span> <span class="st">"000000"</span><span class="op">)</span>,
+    <span class="st">"vectors"</span>
+  <span class="op">)</span></code></pre></div>
+<p>Note that the first band in the input is used to identify homogeneous regions and the remaining bands are reduced according to the provided reducer, the output of which is added as a property to the resultant vectors. The <code>geometry</code> parameter specifies the extent over which the vectors should be created. In general, it is good practice to specify a minimal zone over which to create vectors. It is also good practice to specify the <code>scale</code> and <code>crs</code> to avoid ambiguity. The output type is <code>‘polygon’</code> where the polygons are formed from homogeneous zones of four-connected neighbors (i.e. <code>eightConnected</code> is false). The last two parameters, <code>labelProperty</code> and <code>reducer</code>, specify that the output polygons should receive a property with the zone label and the mean of the nightlights band(s), respectively.</p>
+<p>The mapped result should look something like the Tokyo area shown in Figure 1. Inspection of the output polygons indicates that each polygon has a property storing the label of the zone ({1, 2, 3}) and the mean of the nightlights band, since the mean reducer is specified.</p>
+<center>
+<img src="images/chapter_05/figure_red_07.png" width="95%">
+</center>
+<p>Figure 7. Zones of nightlights in the Tokyo, Japan area. Vector boundaries are displayed in black.</p>
+</div>
+<div id="vector-to-raster-conversion" class="section level2 unnumbered">
+<h2>Vector to Raster Conversion<a class="anchor" aria-label="anchor" href="#vector-to-raster-conversion"><i class="fas fa-link"></i></a>
+</h2>
+<p>Vector to raster conversion in Earth Engine is handled by the <code>featureCollection$reduceToImage()</code> method. This method assigns pixels under each feature the value of the specified property. This example uses the counties data to create an image representing the land area of each county:</p>
+<div class="sourceCode" id="cb439"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load a collection of US counties.</span>
+<span class="va">counties</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">"TIGER/2018/Counties"</span><span class="op">)</span>
+
+<span class="co"># Make an image out of the land area attribute.</span>
+<span class="va">landAreaImg</span> <span class="op">&lt;-</span> <span class="va">counties</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">notNull</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"ALAND"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">reduceToImage</span><span class="op">(</span>
+  <span class="va">properties</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"ALAND"</span><span class="op">)</span>,
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Display the county land area image.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">99.976</span>, <span class="fl">40.38</span>, <span class="fl">5</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">landAreaImg</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="va">min</span><span class="op">&lt;-</span> <span class="fl">3e8</span>,
+  <span class="va">max</span><span class="op">&lt;-</span> <span class="fl">1.5e10</span>,
+  <span class="va">palette</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"FCFDBF"</span>, <span class="st">"FDAE78"</span>, <span class="st">"EE605E"</span>, <span class="st">"B63679"</span>, <span class="st">"711F81"</span>, <span class="st">"2C105C"</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Specify a reducer to indicate how to aggregate properties of overlapping features. In the previous example, since there is no overlap, an <code>ee$Reducer$first()</code> is sufficient. As in <a href="">this example</a>, pre-filter the data to eliminate nulls that can not be turned into an image. The output should look something like Figure 8, which maps a color gradient to county size. Like all image-outputting reducers in Earth Engine, the scale is dynamically set by the output. In this case, the scale corresponds to the zoom level in the Rstudio.</p>
+<center>
+<img src="images/chapter_05/figure_red_08.png" width="90%">
+</center>
+<p>Figure 8. The result of <code>reduceToImage()</code> using the ‘ALAND’ (land area) property of the ‘TIGER/2018/Counties’ <code>FeatureCollection</code>.</p>
+</div>
+<div id="grouped-reductions-and-zonal-statistics" class="section level2 unnumbered">
+<h2>Grouped Reductions and Zonal Statistics<a class="anchor" aria-label="anchor" href="#grouped-reductions-and-zonal-statistics"><i class="fas fa-link"></i></a>
+</h2>
+<p>You can get statistics in each zone of an <code>Image</code> or <code>FeatureCollection</code> by using <code>reducer$group()</code> to group the output of a reducer by the value of a specified input. For example, to compute the total population and number of housing units in each state, this example groups the output of a reduction of a census block <code>FeatureCollection</code> as follows:</p>
+<div class="sourceCode" id="cb440"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load a collection of US census blocks.</span>
+<span class="va">blocks</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">"TIGER/2010/Blocks"</span><span class="op">)</span>
+
+<span class="co"># Compute sums of the specified properties, grouped by state code.</span>
+<span class="va">sums</span> <span class="op">&lt;-</span> <span class="va">blocks</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">And</span><span class="op">(</span>
+  <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">neq</span><span class="op">(</span><span class="st">"pop10"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">neq</span><span class="op">(</span><span class="st">"housing10"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">reduceColumns</span><span class="op">(</span>
+  <span class="va">selectors</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"pop10"</span>, <span class="st">"housing10"</span>, <span class="st">"statefp10"</span><span class="op">)</span>,
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">`repeat`</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">$</span><span class="fu">group</span><span class="op">(</span>
+    <span class="va">groupField</span><span class="op">&lt;-</span> <span class="fl">2</span>,
+    <span class="va">groupName</span><span class="op">&lt;-</span> <span class="st">"state-code"</span>
+  <span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Print the resultant Dictionary.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">sums</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>The <code>groupField</code> argument is the index of the input in the selectors array that contains the codes by which to group, the <code>groupName</code> argument specifies the name of the property to store the value of the grouping variable. Since the reducer is not automatically repeated for each input, the <code>repeat(2)</code> call is needed.</p>
+<p>To group output of <code>image$reduceRegions()</code> you can specify a grouping band that defines groups by integer pixel values. This type of computation is sometimes called “zonal statistics” where the zones are specified as the grouping band and the statistic is determined by the reducer. In the following example, change in nightlights in the United States is grouped by land cover category:</p>
+<div class="sourceCode" id="cb441"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load a region representing the United States</span>
+<span class="va">region</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">"USDOS/LSIB_SIMPLE/2017"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">"country_na"</span>, <span class="st">"United States"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Load MODIS land cover categories in 2001.</span>
+<span class="va">landcover</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"MODIS/051/MCD12Q1/2001_01_01"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">select</span><span class="op">(</span><span class="st">"Land_Cover_Type_1"</span><span class="op">)</span>
+
+<span class="co"># Load nightlights image inputs.</span>
+<span class="va">nl2001</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"NOAA/DMSP-OLS/NIGHTTIME_LIGHTS/F152001"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">select</span><span class="op">(</span><span class="st">"stable_lights"</span><span class="op">)</span>
+<span class="va">nl2012</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"NOAA/DMSP-OLS/NIGHTTIME_LIGHTS/F182012"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">select</span><span class="op">(</span><span class="st">"stable_lights"</span><span class="op">)</span>
+
+<span class="co"># Compute the nightlights decadal difference, add land cover codes.</span>
+<span class="va">nlDiff</span> <span class="op">&lt;-</span> <span class="va">nl2012</span><span class="op">$</span><span class="fu">subtract</span><span class="op">(</span><span class="va">nl2001</span><span class="op">)</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">landcover</span><span class="op">)</span>
+
+<span class="co"># Grouped a mean 'reducer': change of nightlights by land cover category.</span>
+<span class="va">means</span> <span class="op">&lt;-</span> <span class="va">nlDiff</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">group</span><span class="op">(</span>
+    <span class="va">groupField</span><span class="op">&lt;-</span> <span class="fl">1</span>,
+    <span class="va">groupName</span><span class="op">&lt;-</span> <span class="st">"code"</span>
+  <span class="op">)</span>,
+  <span class="va">geometry</span><span class="op">&lt;-</span> <span class="va">region</span><span class="op">$</span><span class="fu">geometry</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">scale</span><span class="op">&lt;-</span> <span class="fl">1000</span>,
+  <span class="va">maxPixels</span><span class="op">&lt;-</span> <span class="fl">1e8</span>
+<span class="op">)</span>
+
+<span class="co"># Print the resultant Dictionary.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">means</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Note that in this example, the <code>groupField</code> is the index of the band containing the zones by which to group the output. The first band is index 0, the second is index 1, etc.</p>
+</div>
+<div id="weighted-reductions" class="section level2 unnumbered">
+<h2>Weighted Reductions<a class="anchor" aria-label="anchor" href="#weighted-reductions"><i class="fas fa-link"></i></a>
+</h2>
+<p>By default, reducers applied to imagery weight the inputs according to the mask value. This is relevant in the context of fractional pixels created through operations such as <code><a href="https://rdrr.io/r/graphics/clip.html">clip()</a></code>. Adjust this behavior by calling <code>unweighted()</code> on the reducer. Using an unweighted reducer forces all pixels in the region to have the same weight. The following example illustrates how pixel weighting can affect the reducer output:</p>
+<div class="sourceCode" id="cb442"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load a Landsat 8 input image.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1/LC08_044034_20140318"</span><span class="op">)</span>
+
+<span class="co"># Creat an arbitrary region.</span>
+<span class="va">geometry</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Rectangle</span><span class="op">(</span><span class="op">-</span><span class="fl">122.496</span>, <span class="fl">37.532</span>, <span class="op">-</span><span class="fl">121.554</span>, <span class="fl">37.538</span><span class="op">)</span>
+
+<span class="co"># Make an NDWI image$  It will have one band named 'nd'.</span>
+<span class="va">ndwi</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B3"</span>, <span class="st">"B5"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Compute the weighted mean of the NDWI image clipped to the region.</span>
+<span class="va">weighted</span> <span class="op">&lt;-</span> <span class="va">ndwi</span><span class="op">$</span><span class="fu">clip</span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">reduceRegion</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">geometry</span><span class="op">&lt;-</span> <span class="va">geometry</span>,
+  <span class="va">scale</span><span class="op">&lt;-</span> <span class="fl">30</span>
+<span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"nd"</span><span class="op">)</span>
+
+<span class="co"># Compute the UN-weighted mean of the NDWI image clipped to the region.</span>
+<span class="va">unweighted</span> <span class="op">&lt;-</span> <span class="va">ndwi</span><span class="op">$</span><span class="fu">clip</span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">reduceRegion</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">unweighted</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">geometry</span><span class="op">&lt;-</span> <span class="va">geometry</span>,
+  <span class="va">scale</span><span class="op">&lt;-</span> <span class="fl">30</span>
+<span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"nd"</span><span class="op">)</span>
+
+<span class="co"># Observe the difference between weighted and unweighted reductions.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"weighted:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">weighted</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"unweighted"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">unweighted</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>The difference in results is due to pixels at the edge of the region receiving a weight of one as a result of calling <code>unweighted()</code> on the reducer.</p>
+<p>In order to obtain an explicitly weighted output, it is preferable to set the weights explicitly with <code>splitWeights()</code> called on the reducer. A reducer modified by <code>splitWeights()</code> takes two inputs, where the second input is the weight. The following example illustrates <code>splitWeights()</code> by computing the weighted mean Normalized Difference Vegetation Index (NDVI) in a region, with the weights given by cloud score (the cloudier, the lower the weight):</p>
+<div class="sourceCode" id="cb443"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load an input Landsat 8 image.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA/LC08_186059_20130419"</span><span class="op">)</span>
+
+<span class="co"># Compute cloud score and reverse it such that the highest</span>
+<span class="co"># weight (100) is for the least cloudy pixels.</span>
+<span class="va">cloudWeight</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">$</span><span class="fu">subtract</span><span class="op">(</span>
+  <span class="va">ee</span><span class="op">$</span><span class="va">Algorithms</span><span class="op">$</span><span class="va">Landsat</span><span class="op">$</span><span class="fu">simpleCloudScore</span><span class="op">(</span><span class="va">image</span><span class="op">)</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"cloud"</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Compute NDVI and add the cloud weight band.</span>
+<span class="va">ndvi</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">cloudWeight</span><span class="op">)</span>
+
+<span class="co"># Define an arbitrary region in a cloudy area.</span>
+<span class="va">region</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Rectangle</span><span class="op">(</span><span class="fl">9.9069</span>, <span class="fl">0.5981</span>, <span class="fl">10.5</span>, <span class="fl">0.9757</span><span class="op">)</span>
+
+<span class="co"># Use a mean reducer.</span>
+<span class="va">reducer</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Compute the unweighted mean.</span>
+<span class="va">unweighted</span> <span class="op">&lt;-</span> <span class="va">ndvi</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"nd"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span><span class="va">reducer</span>, <span class="va">region</span>, <span class="fl">30</span><span class="op">)</span>
+
+<span class="co"># compute mean weighted by cloudiness.</span>
+<span class="va">weighted</span> <span class="op">&lt;-</span> <span class="va">ndvi</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span><span class="va">reducer</span><span class="op">$</span><span class="fu">splitWeights</span><span class="op">(</span><span class="op">)</span>, <span class="va">region</span>, <span class="fl">30</span><span class="op">)</span>
+
+<span class="co"># Observe the difference as a result of weighting by cloudiness.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"unweighted:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">unweighted</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"weighted:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">weighted</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Observe that <code>cloudWeight</code> needs to be added as a band prior to calling <code>reduceRegion()</code>. The result indicates that the estimated mean NDVI is higher as a result of decreasing the weight of cloudy pixels.</p>
+</div>
+<div id="linear-regression" class="section level2 unnumbered">
+<h2>Linear Regression<a class="anchor" aria-label="anchor" href="#linear-regression"><i class="fas fa-link"></i></a>
+</h2>
+<p>Earth Engine has several methods for performing linear regression using reducers:
+- <code>ee$Reducer$linearFit()</code>
+- <code>ee$Reducer$linearRegression()</code>
+- <code>ee$Reducer$robustLinearRegression()</code>
+- <code>ee$Reducer$ridgeRegression()</code></p>
+<p>The simplest linear regression reducer is <code>linearFit()</code> which computes the least squares estimate of a linear function of one variable with a constant term. For a more flexible approach to linear modelling, use one of the linear regression reducers which allow for a variable number of independent and dependent variables. <code>linearRegression()</code> implements ordinary least squares regression(OLS). <code>robustLinearRegression()</code> uses a cost function based on regression residuals to iteratively de-weight outliers in the data (<a href="http:#epubs.siam.org/doi/abs/10.1137/0611032">O’Leary, 1990</a>). <code>ridgeRegression()</code> does linear regression with L2 regularization.</p>
+<p>Regression analysis with these methods is suitable for reducing <code>ee$ImageCollection</code>, <code>ee$Image</code>, <code>ee$FeatureCollection</code>, and <code>ee$List</code> objects. The following examples demonstrate an application for each. Note that <code>linearRegression()</code>, <code>robustLinearRegression()</code>, and <code>ridgeRegression()</code> all have the same input and output structures, but <code>linearFit()</code> expects a two-band input (X followed by Y) and <code>ridgeRegression()</code> has an additional parameter (<code>lambda</code>, optional) and output (<code>pValue</code>).</p>
+<div id="eeimagecollection" class="section level3 unnumbered">
+<h3>ee$ImageCollection<a class="anchor" aria-label="anchor" href="#eeimagecollection"><i class="fas fa-link"></i></a>
+</h3>
+<div id="linearfit" class="section level4 unnumbered">
+<h4>linearFit()<a class="anchor" aria-label="anchor" href="#linearfit"><i class="fas fa-link"></i></a>
+</h4>
+<p>The data should be set up as a two-band input image, where the first band is the independent variable and the second band is the dependent variable. The following example shows estimation of the linear trend of future precipitation (after 2006 in the <a href="">NEX-DCP30 data</a>) projected by climate models. The dependent variable is projected precipitation and the independent variable is time, added prior to calling <code>linearFit()</code>:</p>
+<div class="sourceCode" id="cb444"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># This function adds a time band to the image.</span>
+<span class="va">createTimeBand</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">image</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">metadata</span><span class="op">(</span><span class="st">"system:time_start"</span><span class="op">)</span><span class="op">$</span><span class="fu">divide</span><span class="op">(</span><span class="fl">1e18</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># createTimeBand&lt;- function(image) .</span>
+<span class="co">#   # Scale milliseconds by a large constant to avoid very small slope.</span>
+<span class="co">#   # in the linear regression output.</span>
+<span class="co">#   image$addBands(image$metadata('system:time_start')$divide(1e18).</span>
+
+<span class="co"># Load the input image 'collection': projected climate data.</span>
+<span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"NASA/NEX-DCP30_ENSEMBLE_STATS"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">"scenario"</span>, <span class="st">"rcp85"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterDate</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">"2006-01-01"</span><span class="op">)</span>, <span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">"2050-01-01"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">map</span><span class="op">(</span><span class="va">createTimeBand</span><span class="op">)</span>
+
+<span class="co"># Reduce the collection with the linear fit reducer.</span>
+<span class="co"># Independent variable are followed by dependent variables.</span>
+<span class="va">linearFit</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"system:time_start"</span>, <span class="st">"pr_mean"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">reduce</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">linearFit</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Display the results.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">100.11</span>, <span class="fl">40.38</span>, <span class="fl">5</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">eeObject</span><span class="op">&lt;-</span> <span class="va">linearFit</span>,
+  <span class="va">visParams</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">min</span><span class="op">&lt;-</span> <span class="fl">0</span>, <span class="va">max</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.9</span>, <span class="fl">8e-5</span>, <span class="fl">1</span><span class="op">)</span>, <span class="va">bands</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"scale"</span>, <span class="st">"offset"</span>, <span class="st">"scale"</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">name</span><span class="op">&lt;-</span> <span class="st">"fit"</span>
+<span class="op">)</span></code></pre></div>
+<p>Observe that the output contains two bands, the ‘offset’ (intercept) and the ‘scale’ (‘scale’ in this context refers to the slope of the line and is not to be confused with the scale parameter input to many reducers, which is the spatial scale). The result, with areas of increasing trend in blue, decreasing trend in red and no trend in green should look something like Figure 9.</p>
+<center>
+<img src="images/chapter_05/figure_red_09.png" width="95%">
+</center>
+<p>Figure 9. The output of <code>linearFit()</code> applied to projected precipitation. Areas projected to be increased precipitation are shown in blue and decreased precipitation in red.</p>
+</div>
+<div id="linearregression" class="section level4 unnumbered">
+<h4>linearRegression()<a class="anchor" aria-label="anchor" href="#linearregression"><i class="fas fa-link"></i></a>
+</h4>
+<p>For example, suppose there are two dependent variables: precipitation and maximum temperature, and two independent variables: a constant and time. The collection is identical to the previous example, but the constant band must be manually added prior to the reduction. The first two bands of the input are the ‘X’ (independent) variables and the next two bands are the ‘Y’ (dependent) variables. In this example, first get the regression coefficients, then flatten the array image to extract the bands of interest:</p>
+<div class="sourceCode" id="cb445"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># This function adds a time band to the image.</span>
+<span class="va">createTimeBand</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="co"># Scale milliseconds by a large constant.</span>
+  <span class="va">image</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">metadata</span><span class="op">(</span><span class="st">"system:time_start"</span><span class="op">)</span><span class="op">$</span><span class="fu">divide</span><span class="op">(</span><span class="fl">1e18</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># This function adds a constant band to the image.</span>
+<span class="va">createConstantBand</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">image</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># Load the input image collection: projected climate data.</span>
+<span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"NASA/NEX-DCP30_ENSEMBLE_STATS"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterDate</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">"2006-01-01"</span><span class="op">)</span>, <span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">"2099-01-01"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">"scenario"</span>, <span class="st">"rcp85"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="co"># Map the functions over the collection, to get constant and time bands.</span>
+  <span class="fu">map</span><span class="op">(</span><span class="va">createTimeBand</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">map</span><span class="op">(</span><span class="va">createConstantBand</span><span class="op">)</span><span class="op">$</span>
+  <span class="co"># Select the predictors and the responses.</span>
+  <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"constant"</span>, <span class="st">"system:time_start"</span>, <span class="st">"pr_mean"</span>, <span class="st">"tasmax_mean"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Compute ordinary least squares regression coefficients.</span>
+<span class="va">linearRegression</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">reduce</span><span class="op">(</span>
+  <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">linearRegression</span><span class="op">(</span>
+    <span class="va">numX</span><span class="op">&lt;-</span> <span class="fl">2</span>,
+    <span class="va">numY</span><span class="op">&lt;-</span> <span class="fl">2</span>
+  <span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Compute robust linear regression coefficients.</span>
+<span class="va">robustLinearRegression</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">reduce</span><span class="op">(</span>
+  <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">robustLinearRegression</span><span class="op">(</span>
+    <span class="va">numX</span><span class="op">&lt;-</span> <span class="fl">2</span>,
+    <span class="va">numY</span><span class="op">&lt;-</span> <span class="fl">2</span>
+  <span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># The results are array images that must be flattened for display.</span>
+<span class="co"># These lists label the information along each axis of the arrays.</span>
+<span class="va">bandNames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"constant"</span>, <span class="st">"time"</span><span class="op">)</span>, <span class="co"># 0-axis variation.</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"precip"</span>, <span class="st">"temp"</span><span class="op">)</span>
+<span class="op">)</span> <span class="co"># 1-axis variation.</span>
+
+<span class="co"># Flatten the array images to get multi-band images according to the labels.</span>
+<span class="va">lrImage</span> <span class="op">&lt;-</span> <span class="va">linearRegression</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"coefficients"</span><span class="op">)</span><span class="op">$</span><span class="fu">arrayFlatten</span><span class="op">(</span><span class="va">bandNames</span><span class="op">)</span>
+<span class="va">rlrImage</span> <span class="op">&lt;-</span> <span class="va">robustLinearRegression</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"coefficients"</span><span class="op">)</span><span class="op">$</span><span class="fu">arrayFlatten</span><span class="op">(</span><span class="va">bandNames</span><span class="op">)</span>
+
+<span class="co"># Display the OLS results.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">100.11</span>, <span class="fl">40.38</span>, <span class="fl">5</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">lrImage</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">min</span><span class="op">&lt;-</span> <span class="fl">0</span>, <span class="va">max</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.9</span>, <span class="fl">8e-5</span>, <span class="fl">1</span><span class="op">)</span>, <span class="va">bands</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"time_precip"</span>, <span class="st">"constant_precip"</span>, <span class="st">"time_precip"</span><span class="op">)</span><span class="op">)</span>, <span class="st">"OLS"</span>
+<span class="op">)</span>
+
+<span class="co"># Compare the results at a specific point:</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"OLS estimates:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">lrImage</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">geometry</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">96.0</span>, <span class="fl">41.0</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">scale</span><span class="op">&lt;-</span> <span class="fl">1000</span>
+<span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Robust estimates:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">rlrImage</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">geometry</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">96.0</span>, <span class="fl">41.0</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">scale</span><span class="op">&lt;-</span> <span class="fl">1000</span>
+<span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_05/figure_red_09b.png" width="95%">
+</center>
+<p>Inspect the results to discover that <code>linearRegression()</code> output is equivalent to the coefficients estimated by the <code>linearFit()</code> reducer, though the <code>linearRegression()</code> output also has coefficients for the other dependent variable, <code>tasmax_mean</code>. Robust linear regression coefficients are different from the OLS estimates. The example compares the coefficients from the different regression methods at a specific point.</p>
+</div>
+<div id="eeimage" class="section level4 unnumbered">
+<h4>ee$Image<a class="anchor" aria-label="anchor" href="#eeimage"><i class="fas fa-link"></i></a>
+</h4>
+<p>In the context of an <code>ee$Image</code> object, regression reducers can be used with <code>reduceRegion</code> or <code>reduceRegions</code> to perform linear regression on the pixels in the region(s). The following examples demonstrate how to calculate regression coefficients between Landsat bands in an arbitrary polygon.</p>
+</div>
+<div id="linearfit-1" class="section level4 unnumbered">
+<h4>linearFit()<a class="anchor" aria-label="anchor" href="#linearfit-1"><i class="fas fa-link"></i></a>
+</h4>
+<p>The guide section describing <a href="">array data charts</a> shows a scatter plot of the correlation between Landsat 8 SWIR1 and SWIR2 bands. Here, the linear regression coefficients for this relationship are calculated. A dictionary containing the properties <code>'offset'</code> (y-intercept) and <code>'scale'</code> (slope) are returned.</p>
+<div class="sourceCode" id="cb446"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define a rectangle geometry around San Francisco.</span>
+<span class="va">sanFrancisco</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Rectangle</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">122.45</span>, <span class="fl">37.74</span>, <span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Import a Landsat 8 TOA image for this region.</span>
+<span class="va">img</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318"</span><span class="op">)</span>
+
+<span class="co"># Subset the SWIR1 and SWIR2 bands. In the regression reducer, independent</span>
+<span class="co"># variables come first followed by the dependent variables. In this case,</span>
+<span class="co"># B5 (SWIR1) is the independent variable and B6 (SWIR2) is the dependent</span>
+<span class="co"># variable.</span>
+<span class="va">imgRegress</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B6"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Calculate regression coefficients for the set of pixels intersecting the</span>
+<span class="co"># above defined region using reduceRegion with ee.Reducer.linearFit().</span>
+<span class="va">linearFit</span> <span class="op">&lt;-</span> <span class="va">imgRegress</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">linearFit</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">geometry</span><span class="op">&lt;-</span> <span class="va">sanFrancisco</span>,
+  <span class="va">scale</span><span class="op">&lt;-</span> <span class="fl">30</span>
+<span class="op">)</span>
+
+<span class="co"># Inspect the results.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"OLS estimates:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">linearFit</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"y-intercept:"</span>, <span class="va">linearFit</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"offset"</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Slope:"</span>, <span class="va">linearFit</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"scale"</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="linearregression-1" class="section level4 unnumbered">
+<h4>linearRegression()<a class="anchor" aria-label="anchor" href="#linearregression-1"><i class="fas fa-link"></i></a>
+</h4>
+<p>The same analysis from the previous <code>linearFit</code> section is applied here, except this time the <code>ee$Reducer$linearRegression</code> function is used. Note that a regression image is constructed from three separate images: a constant image and images representing SWIR1 and SWIR2 bands from the same Landsat 8 image. Keep in mind that you can combine any set of bands to construct an input image for region reduction by <code>ee$Reducer$linearRegression</code>, they do not have to belong to the same source image.</p>
+<div class="sourceCode" id="cb447"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define a rectangle geometry around San Francisco.</span>
+<span class="va">sanFrancisco</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Rectangle</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">122.45</span>, <span class="fl">37.74</span>, <span class="op">-</span><span class="fl">122.4</span>, <span class="fl">37.8</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Import a Landsat 8 TOA image for this region.</span>
+<span class="va">img</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318"</span><span class="op">)</span>
+
+<span class="co"># Create a new image that is the concatenation of three images: a constant,</span>
+<span class="co"># the SWIR1 band, and the SWIR2 band.</span>
+<span class="va">constant</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+<span class="va">x</span><span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"B5"</span><span class="op">)</span>
+<span class="va">y</span><span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"B6"</span><span class="op">)</span>
+<span class="va">imgRegress</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Image</span><span class="op">$</span><span class="fu">cat</span><span class="op">(</span><span class="va">constant</span>, <span class="va">xVar</span>, <span class="va">yVar</span><span class="op">)</span>
+
+<span class="co"># Calculate regression coefficients for the set of pixels intersecting the</span>
+<span class="co"># above defined region using reduceRegion. The numX parameter is set as 2</span>
+<span class="co"># because the constant and the SWIR1 bands are independent variables and they</span>
+<span class="co"># are the first two bands in the stack numY is set as 1 because there is only</span>
+<span class="co"># one dependent variable (SWIR2) and it follows as band three in the stack.</span>
+<span class="va">linearRegression</span> <span class="op">&lt;-</span> <span class="va">imgRegress</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">linearRegression</span><span class="op">(</span>
+    <span class="va">numX</span><span class="op">&lt;-</span> <span class="fl">2</span>,
+    <span class="va">numY</span><span class="op">&lt;-</span> <span class="fl">1</span>
+  <span class="op">)</span>,
+  <span class="va">geometry</span><span class="op">&lt;-</span> <span class="va">sanFrancisco</span>,
+  <span class="va">scale</span><span class="op">&lt;-</span> <span class="fl">30</span>
+<span class="op">)</span>
+
+<span class="co"># Convert the coefficients array to a list.</span>
+<span class="va">coefList</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Array</span><span class="op">(</span><span class="va">linearRegression</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"coefficients"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">toList</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Extract the y-intercept and slope.</span>
+<span class="va">b0</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="va">coefList</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span> <span class="co"># y-intercept</span>
+<span class="va">b1</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="va">coefList</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span> <span class="co"># slope</span>
+
+<span class="co"># Extract the residuals.</span>
+<span class="va">residuals</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Array</span><span class="op">(</span><span class="va">linearRegression</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"residuals"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">toList</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>
+
+<span class="co"># Inspect the results.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"OLS estimates"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">linearRegression</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"y-intercept:"</span>, <span class="va">b0</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Slope:"</span>, <span class="va">b1</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Residuals:"</span>, <span class="va">residuals</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>A dictionary containing properties <code>'coefficients'</code> and <code>'residuals'</code> are returned. The <code>'coefficients'</code> property is an array with dimensions (numX, numY); each column contains the coefficients for the corresponding dependent variable. In this case, the array has two rows and one column; row one, column one is the y-intercept and row two, column one is the slope. The <code>'residuals'</code> property is the vector of the root mean square of the residuals of each dependent variable. Extract the coefficients by casting the result as an array and then slicing out the desired elements or converting the array to a list and selecting coefficients by index position.</p>
+</div>
+<div id="eefeaturecollection" class="section level4 unnumbered">
+<h4>ee$FeatureCollection<a class="anchor" aria-label="anchor" href="#eefeaturecollection"><i class="fas fa-link"></i></a>
+</h4>
+<p>Suppose you want to know the linear relationship between Sentinel-2 and Landsat 8 SWIR1 reflectance. In this example, a random sample of pixels formatted as a feature collection of points are used to calculate the relationship. A scatter plot of the pixel pairs along with the least squares line of best fit are generated (Figure 10).</p>
+<div class="sourceCode" id="cb448"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Import a Sentinel-2 TOA image.</span>
+<span class="va">s2ImgSwir1</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"COPERNICUS/S2/20191022T185429_20191022T185427_T10SEH"</span><span class="op">)</span>
+
+<span class="co"># Import a Landsat 8 TOA image from 12 days earlier than the S2 image.</span>
+<span class="va">l8ImgSwir1</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA/LC08_044033_20191010"</span><span class="op">)</span>
+
+<span class="co"># Get the intersection between the two images - the area of interest (aoi).</span>
+<span class="va">aoi</span> <span class="op">&lt;-</span> <span class="va">s2ImgSwir1</span><span class="op">$</span><span class="fu">geometry</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">intersection</span><span class="op">(</span><span class="va">l8ImgSwir1</span><span class="op">$</span><span class="fu">geometry</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Get a set of 1000 random points from within the aoi. A feature collection</span>
+<span class="co"># is returned.</span>
+<span class="va">sample</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">FeatureCollection</span><span class="op">$</span><span class="fu">randomPoints</span><span class="op">(</span>
+  <span class="va">region</span><span class="op">&lt;-</span> <span class="va">aoi</span>,
+  <span class="va">points</span><span class="op">&lt;-</span> <span class="fl">1000</span>
+<span class="op">)</span>
+
+<span class="co"># Combine the SWIR1 bands from each image into a single image.</span>
+<span class="va">swir1Bands</span> <span class="op">&lt;-</span> <span class="va">s2ImgSwir1</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"B11"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">addBands</span><span class="op">(</span><span class="va">l8ImgSwir1</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"B6"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">rename</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"s2_swir1"</span>, <span class="st">"l8_swir1"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Sample the SWIR1 bands using the sample point feature collection.</span>
+<span class="va">imgSamp</span> <span class="op">&lt;-</span> <span class="va">swir1Bands</span><span class="op">$</span><span class="fu">sampleRegions</span><span class="op">(</span>
+  <span class="va">collection</span><span class="op">&lt;-</span> <span class="va">sample</span>,
+  <span class="va">scale</span><span class="op">&lt;-</span> <span class="fl">30</span>
+<span class="op">)</span><span class="op">$</span>
+  <span class="co"># Add a constant property to each feature to be used as an independent variable.</span>
+  <span class="fu">map</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">feature</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">feature</span><span class="op">$</span><span class="fu">set</span><span class="op">(</span><span class="st">"constant"</span>, <span class="fl">1</span><span class="op">)</span>
+<span class="op">}</span><span class="op">)</span>
+
+<span class="co"># Compute linear regression coefficients. numX is 2 because</span>
+<span class="co"># there are two independent variables: 'constant' and 's2_swir1'. numY is 1</span>
+<span class="co"># because there is a single dependent variable: 'l8_swir1'. Cast the resulting</span>
+<span class="co"># object to an ee.Dictionary for easy access to the properties.</span>
+<span class="va">linearRegression</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Dictionary</span><span class="op">(</span><span class="va">imgSamp</span><span class="op">$</span><span class="fu">reduceColumns</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">linearRegression</span><span class="op">(</span>
+    <span class="va">numX</span><span class="op">&lt;-</span> <span class="fl">2</span>,
+    <span class="va">numY</span><span class="op">&lt;-</span> <span class="fl">1</span>
+  <span class="op">)</span>,
+  <span class="va">selectors</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"constant"</span>, <span class="st">"s2_swir1"</span>, <span class="st">"l8_swir1"</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Convert the coefficients array to a list.</span>
+<span class="va">coefList</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Array</span><span class="op">(</span><span class="va">linearRegression</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"coefficients"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">toList</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Extract the y-intercept and slope.</span>
+<span class="va">yInt</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="va">coefList</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span> <span class="co"># y-intercept</span>
+<span class="va">slope</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="va">coefList</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span> <span class="co"># slope</span>
+
+<span class="co"># Gather the SWIR1 values from the point sample into a list of lists.</span>
+<span class="va">props</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"s2_swir1"</span>, <span class="st">"l8_swir1"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">regressionVarsList</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="va">imgSamp</span><span class="op">$</span><span class="fu">reduceColumns</span><span class="op">(</span>
+  <span class="va">reducer</span><span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">toList</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">`repeat`</span><span class="op">(</span><span class="va">props</span><span class="op">$</span><span class="fu">size</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">selectors</span><span class="op">&lt;-</span> <span class="va">props</span>
+<span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"list"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_05/figure_red_10.png" width="95%">
+</center>
+<p>Figure 10. Scatter plot and least squares linear regression line for a sample of pixels representing Sentinel-2 and Landsat 8 SWIR1 TOA reflectance.</p>
+</div>
+<div id="eelist" class="section level4 unnumbered">
+<h4>ee$List<a class="anchor" aria-label="anchor" href="#eelist"><i class="fas fa-link"></i></a>
+</h4>
+<p><code>Columns</code> of 2-D <code>ee$List</code> objects can be inputs to regression reducers. The following examples provide simple proofs; the independent variable is a copy of the dependent variable producing a y-intercept equal to 0 and a slope equal to 1.</p>
+</div>
+<div id="linearfit-2" class="section level4 unnumbered">
+<h4>linearFit()<a class="anchor" aria-label="anchor" href="#linearfit-2"><i class="fas fa-link"></i></a>
+</h4>
+<div class="sourceCode" id="cb449"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define a list of lists, where columns represent variables. The first column</span>
+<span class="co"># is the independent variable and the second is the dependent variable.</span>
+<span class="va">listsVarColumns</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Compute the least squares estimate of a linear function. Note that an</span>
+<span class="co"># object is returned cast it as an ee.Dictionary to make accessing the</span>
+<span class="co"># coefficients easier.</span>
+<span class="va">linearFit</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Dictionary</span><span class="op">(</span><span class="va">listsVarColumns</span><span class="op">$</span><span class="fu">reduce</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">linearFit</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Inspect the result.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">linearFit</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"y-intercept:"</span>, <span class="va">linearFit</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"offset"</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Slope:"</span>, <span class="va">linearFit</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"scale"</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><code>Transpose the list if variables are represented by rows</code> by converting to an <code>ee$Array</code>, transposing it, then converting back to an <code>ee$List</code>.</p>
+<div class="sourceCode" id="cb450"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># If variables in the list are arranged as rows, you'll need to transpose it.</span>
+<span class="co"># Define a list of lists where rows represent variables. The first row is the</span>
+<span class="co"># independent variable and the second is the dependent variable.</span>
+<span class="va">listsVarRows</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Cast the ee.List as an ee.Array, transpose it, and cast back to ee.List.</span>
+<span class="va">listsVarColumns</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Array</span><span class="op">(</span><span class="va">listsVarRows</span><span class="op">)</span><span class="op">$</span><span class="fu">transpose</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">toList</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Compute the least squares estimate of a linear function. Note that an</span>
+<span class="co"># object is returned; cast it as an ee.Dictionary to make accessing the</span>
+<span class="co"># coefficients easier.</span>
+<span class="va">linearFit</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Dictionary</span><span class="op">(</span><span class="va">listsVarColumns</span><span class="op">$</span><span class="fu">reduce</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">linearFit</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Inspect the result.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">linearFit</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"y-intercept:"</span>, <span class="va">linearFit</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"offset"</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Slope:"</span>, <span class="va">linearFit</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"scale"</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="linearregression-2" class="section level4 unnumbered">
+<h4>linearRegression()<a class="anchor" aria-label="anchor" href="#linearregression-2"><i class="fas fa-link"></i></a>
+</h4>
+<p>Application of <code>ee$Reducer$linearRegression()</code> is similar to the above <a href="">linearFit()</a> example, except that a constant independent variable is included.</p>
+<div class="sourceCode" id="cb451"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define a list of lists where columns represent variables. The first column</span>
+<span class="co"># represents a constant term, the second an independent variable, and the third</span>
+<span class="co"># a dependent variable.</span>
+<span class="va">listsVarColumns</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Compute ordinary least squares regression coefficients. numX is 2 because</span>
+<span class="co"># there is one constant term and an additional independent variable. numY is 1</span>
+<span class="co"># because there is only a single dependent variable. Cast the resulting</span>
+<span class="co"># object to an ee.Dictionary for easy access to the properties.</span>
+<span class="va">linearRegression</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Dictionary</span><span class="op">(</span>
+  <span class="va">listsVarColumns</span><span class="op">$</span><span class="fu">reduce</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">linearRegression</span><span class="op">(</span>
+    <span class="va">numX</span><span class="op">&lt;-</span> <span class="fl">2</span>,
+    <span class="va">numY</span><span class="op">&lt;-</span> <span class="fl">1</span>
+  <span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Convert the coefficients array to a list.</span>
+<span class="va">coefList</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Array</span><span class="op">(</span><span class="va">linearRegression</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">'coefficients'</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">toList</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Extract the y-intercept and slope.</span>
+<span class="va">b0</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="va">coefList</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span> <span class="co"># y-intercept</span>
+<span class="va">b1</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="va">coefList</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span> <span class="co"># slope</span>
+
+<span class="co"># Extract the residuals.</span>
+<span class="va">residuals</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Array</span><span class="op">(</span><span class="va">linearRegression</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">'residuals'</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">toList</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>
+
+<span class="co"># Inspect the results.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'OLS estimates'</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">linearRegression</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'y-intercept:'</span>, <span class="va">b0</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'Slope:'</span>, <span class="va">b1</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'Residuals:'</span>, <span class="va">residuals</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></div>
+<div class="next"><a href="join.html">Join</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#reducer">Reducer</a></li>
+<li>
+<a class="nav-link" href="#reducer-overview">Reducer Overview</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#reducers-have-inputs-and-outputs">Reducers have inputs and outputs</a></li>
+<li><a class="nav-link" href="#reducers-use-weighted-inputs">Reducers use weighted inputs</a></li>
+<li><a class="nav-link" href="#combining-reducers">Combining reducers</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#imagecollection-reductions">ImageCollection Reductions</a></li>
+<li><a class="nav-link" href="#image-reductions">Image Reductions</a></li>
+<li>
+<a class="nav-link" href="#statistics-of-an-image-region">Statistics of an Image Region</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#reduceregion">reduceRegion</a></li>
+<li><a class="nav-link" href="#pixels-in-the-region">Pixels in the region</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#statistics-of-image-regions">Statistics of Image Regions</a></li>
+<li><a class="nav-link" href="#statistics-of-image-neighborhoods">Statistics of Image Neighborhoods</a></li>
+<li><a class="nav-link" href="#statistics-of-featurecollection-columns">Statistics of FeatureCollection Columns</a></li>
+<li><a class="nav-link" href="#raster-to-vector-conversion">Raster to Vector Conversion</a></li>
+<li><a class="nav-link" href="#vector-to-raster-conversion">Vector to Raster Conversion</a></li>
+<li><a class="nav-link" href="#grouped-reductions-and-zonal-statistics">Grouped Reductions and Zonal Statistics</a></li>
+<li><a class="nav-link" href="#weighted-reductions">Weighted Reductions</a></li>
+<li>
+<a class="nav-link" href="#linear-regression">Linear Regression</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#eeimagecollection">ee$ImageCollection</a></li></ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/05_object_methods.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/05_object_methods.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

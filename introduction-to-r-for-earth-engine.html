@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Introduction to R for Earth Engine | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Introduction to R for Earth Engine | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Introduction to R for Earth Engine | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="This tutorial covers just enough R to get you started writing Earth Engine scripts. For more thorough R tutorials, see these Mozilla developer resources. For an introduction to programming, with...">
+<meta property="og:description" content="This tutorial covers just enough R to get you started writing Earth Engine scripts. For more thorough R tutorials, see these Mozilla developer resources. For an introduction to programming, with...">
+<meta name="twitter:description" content="This tutorial covers just enough R to get you started writing Earth Engine scripts. For more thorough R tutorials, see these Mozilla developer resources. For an introduction to programming, with...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="active" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="introduction-to-r-for-earth-engine" class="section level1 unnumbered">
+<h1>Introduction to R for Earth Engine<a class="anchor" aria-label="anchor" href="#introduction-to-r-for-earth-engine"><i class="fas fa-link"></i></a>
+</h1>
+<p>This tutorial covers just enough R to get you started writing Earth Engine scripts. For more thorough R tutorials, see these Mozilla developer resources. For an introduction to programming, with examples in R, see Eloquent R. For suggestions on R coding style, see the Google R Style Guide. In this tutorial, you’re going to write R in the Earth Engine Rstudio. Before getting started, use the Rstudio guide to get familiar with the Rstudio environment.</p>
+<div id="hello-word" class="section level2 unnumbered">
+<h2>Hello Word<a class="anchor" aria-label="anchor" href="#hello-word"><i class="fas fa-link"></i></a>
+</h2>
+<p>Time to write your first code in R for Earth Engine! In your Rstudio, copy the following into the Code Editor:</p>
+<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">'Hello World!'</span><span class="op">)</span></code></pre></div>
+<p>Click Run and observe that ‘Hello world!’ is printed to the Console tab. The line above is R statement. Earth Engine programs are made up of a set of statements like this one. You can prevent code from running without deleting it by commenting it. One of the ways to comment out code is by putting two forward numerals <code>##</code> before the code that you don’t want to run. For example:</p>
+<div class="sourceCode" id="cb179"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># print('Hello World!')</span></code></pre></div>
+<p>It’s good practice to put lots of comments in your code, to describe what you’re trying to do. It’s also good to delete commented code that doesn’t do anything anymore. Both these practices will improve code readability.</p>
+</div>
+<div id="basic-javascript-data-type" class="section level2 unnumbered">
+<h2>Basic JavaScript data type<a class="anchor" aria-label="anchor" href="#basic-javascript-data-type"><i class="fas fa-link"></i></a>
+</h2>
+<div id="strings" class="section level3 unnumbered">
+<h3>Strings<a class="anchor" aria-label="anchor" href="#strings"><i class="fas fa-link"></i></a>
+</h3>
+<p>Using variables to store objects and primitives helps code readability. For example, a variable that stores a string object is defined by single ’ or double " quotes (but don’t mix them), with single quotes preferred. Make a new string and store it in a variable called greetString:</p>
+<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Use single (or double) quotes to make a string.</span>
+<span class="va">greetString</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">String</span><span class="op">(</span><span class="st">'Ahoy there!'</span><span class="op">)</span>
+<span class="co"># Use parentheses to pass arguments to functions.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">greetString</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="numbers" class="section level3 unnumbered">
+<h3>Numbers<a class="anchor" aria-label="anchor" href="#numbers"><i class="fas fa-link"></i></a>
+</h3>
+<p>Note that variables are defined with the keyword <code>var</code>. Variables can also store numbers:</p>
+<div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Designate a number in Google Earth Engine.</span>
+<span class="va">number</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Number</span><span class="op">(</span><span class="fl">42</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"The answer is: "</span>, <span class="va">ee</span><span class="op">$</span><span class="fu">Number</span><span class="op">(</span><span class="va">number</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>In this example, observe that when <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> is given two arguments separated by commas, each argument is printed on a different line.</p>
+</div>
+<div id="list" class="section level3 unnumbered">
+<h3>List<a class="anchor" aria-label="anchor" href="#list"><i class="fas fa-link"></i></a>
+</h3>
+<p>Define lists with square brackets <code>ee$List</code>. A list of numbers, for example:</p>
+<div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Use square ee$List to make a list.</span>
+<span class="va">listOfNumbers</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>
+<span class="va">listOfNumbers</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"List of numbers:"</span>, <span class="va">listOfNumbers</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Lists can also store strings or other objects. For example:</p>
+<div class="sourceCode" id="cb183"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Make a list of strings.</span>
+<span class="va">listOfStrings</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">listOfStrings</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"List of strings:"</span>, <span class="va">listOfStrings</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="dictionary" class="section level3 unnumbered">
+<h3>Dictionary<a class="anchor" aria-label="anchor" href="#dictionary"><i class="fas fa-link"></i></a>
+</h3>
+<p>Objects in R are dictionaries of <code>key: value</code> pairs. Make an object (or dictionary) using curly brackets {}, for example:</p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="introduction-to-r-for-earth-engine.html#cb184-1"></a><span class="co"># Use curly brackets {} to make a dictionary of key:value pairs.</span></span>
+<span id="cb184-2"><a href="introduction-to-r-for-earth-engine.html#cb184-2"></a>object &lt;-<span class="st"> </span>{</span>
+<span id="cb184-3"><a href="introduction-to-r-for-earth-engine.html#cb184-3"></a>  foo &lt;-<span class="st"> 'bar'</span>,</span>
+<span id="cb184-4"><a href="introduction-to-r-for-earth-engine.html#cb184-4"></a>  baz &lt;-<span class="st"> </span><span class="dv">13</span>,</span>
+<span id="cb184-5"><a href="introduction-to-r-for-earth-engine.html#cb184-5"></a>  stuff &lt;-<span class="st"> </span>[<span class="st">'this'</span>, <span class="st">'that'</span>, <span class="st">'the other thing'</span>]</span>
+<span id="cb184-6"><a href="introduction-to-r-for-earth-engine.html#cb184-6"></a>}</span>
+<span id="cb184-7"><a href="introduction-to-r-for-earth-engine.html#cb184-7"></a><span class="kw">print</span>(<span class="st">'Dictionary:'</span>, object)</span>
+<span id="cb184-8"><a href="introduction-to-r-for-earth-engine.html#cb184-8"></a><span class="co"># Access dictionary items using square brackets.</span></span>
+<span id="cb184-9"><a href="introduction-to-r-for-earth-engine.html#cb184-9"></a><span class="kw">print</span>(<span class="st">'Print foo:'</span>, object[<span class="st">'foo'</span>])</span>
+<span id="cb184-10"><a href="introduction-to-r-for-earth-engine.html#cb184-10"></a><span class="co"># Access dictionary items using dot notation.</span></span>
+<span id="cb184-11"><a href="introduction-to-r-for-earth-engine.html#cb184-11"></a><span class="kw">print</span>(<span class="st">'Print stuff:'</span>, object.stuff)</span></code></pre></div>
+<p>Note that you can get a value from a dictionary by supplying the key. This example shows you how to do that for R objects. Later you’ll learn how to do it for dictionaries that are on the Earth Engine server.</p>
+</div>
+<div id="functions" class="section level3 unnumbered">
+<h3>Functions<a class="anchor" aria-label="anchor" href="#functions"><i class="fas fa-link"></i></a>
+</h3>
+<p>Functions are another way to improve code readability and reusability by grouping sets of operations. Define a function with the <code>function</code> keyword. Function names start with a letter and have a pair of parentheses at the end. Functions often take parameters which tell the function what to do. These parameters go inside the parentheses <code>()</code>. The set of statements making up the function go inside curly brackets. The <code>return</code> keyword indicates what the function output is. There are several ways to declare a function, but here we’ll use something like this:</p>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="introduction-to-r-for-earth-engine.html#cb185-1"></a>myFunction &lt;-<span class="st"> </span><span class="cf">function</span>(parameter1, parameter2, parameter3) {</span>
+<span id="cb185-2"><a href="introduction-to-r-for-earth-engine.html#cb185-2"></a>  statement</span>
+<span id="cb185-3"><a href="introduction-to-r-for-earth-engine.html#cb185-3"></a>  statement</span>
+<span id="cb185-4"><a href="introduction-to-r-for-earth-engine.html#cb185-4"></a>  statement</span>
+<span id="cb185-5"><a href="introduction-to-r-for-earth-engine.html#cb185-5"></a>  return statement</span>
+<span id="cb185-6"><a href="introduction-to-r-for-earth-engine.html#cb185-6"></a>}</span></code></pre></div>
+<p>Let’s consider the lines one by one. The first line creates a new function and assigns it to the variable myFunction. This variable could have been named anything. It defines how to call the function later. The terms in the parentheses after the function name (i.e. parameter1, parameter2, parameter3) are the parameter names and could have been named anything as well, though it’s good practice to give them unique names that are different from the code outside the function. Whatever you name them, these are the names that function will use to refer to the values that are passed into the function when it is called. The value of a parameter once it’s been passed into a function is called an argument. Although functions can use variables declared outside the function (global variables), function arguments are not visible outside the function. Functions can take as many parameters as you need, even zero. Here’s a simple example of a function that just returns its argument:</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="introduction-to-r-for-earth-engine.html#cb186-1"></a><span class="co"># The reflect function takes a single parameter: element.</span></span>
+<span id="cb186-2"><a href="introduction-to-r-for-earth-engine.html#cb186-2"></a>reflect &lt;-<span class="st"> </span><span class="cf">function</span>(element) {</span>
+<span id="cb186-3"><a href="introduction-to-r-for-earth-engine.html#cb186-3"></a><span class="co">#Return the argument.</span></span>
+<span id="cb186-4"><a href="introduction-to-r-for-earth-engine.html#cb186-4"></a>  return element</span>
+<span id="cb186-5"><a href="introduction-to-r-for-earth-engine.html#cb186-5"></a>}</span>
+<span id="cb186-6"><a href="introduction-to-r-for-earth-engine.html#cb186-6"></a><span class="kw">print</span>(<span class="st">'A good day to you!'</span>, <span class="kw">reflect</span>(<span class="st">'Back at you!'</span>))</span></code></pre></div>
+<p>This is an example of a user-defined function. There are also lots of built-in Earth Engine functions. Explore the Code Editor Docs tab to learn about these built-in functions. Here’s a very simple example of an Earth Engine function:</p>
+<div class="sourceCode" id="cb187"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">aString</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Algorithms</span><span class="op">$</span><span class="fu">String</span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+<div id="earth-engine-objects" class="section level2 unnumbered">
+<h2>Earth Engine Objects<a class="anchor" aria-label="anchor" href="#earth-engine-objects"><i class="fas fa-link"></i></a>
+</h2>
+<p>Now that you’re comfortable with R, learn how to put objects in R and primitives into Earth Engine containers for sending to the server and processing at Google.</p>
+<div id="strings-1" class="section level3 unnumbered">
+<h3>Strings<a class="anchor" aria-label="anchor" href="#strings-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>For example, define a string, then put it into the <code>ee$String()</code> container to be sent to Earth Engine:</p>
+<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define a string, then put it into an EE container.</span>
+<span class="va">aString</span> <span class="op">&lt;-</span> <span class="st">"To the cloud!"</span>
+<span class="va">eeString</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">String</span><span class="op">(</span><span class="va">aString</span><span class="op">)</span>
+<span class="va">eeString</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Where to?"</span>, <span class="va">eeString</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Think of <code>ee$Thing</code> as a container for a thing that exists on the server. In this example, the string is defined first, then put into the container. You can also define the container and its contents all at once. For example:</p>
+<div class="sourceCode" id="cb189"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define a string that exists on the server.</span>
+<span class="va">serverString</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">String</span><span class="op">(</span><span class="st">"This is on the server."</span><span class="op">)</span>
+<span class="va">serverString</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"String on the server:"</span>, <span class="va">serverString</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Although the first argument to <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> is just a string on the client, the second argument is actually sent to the server to be evaluated, then sent back.</p>
+</div>
+<div id="numbers-1" class="section level3 unnumbered">
+<h3>Numbers<a class="anchor" aria-label="anchor" href="#numbers-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use <code>ee$Number()</code> to create number objects on the server. For example, use the <code>Math$E</code> R method to create a constant value on the server:</p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="introduction-to-r-for-earth-engine.html#cb190-1"></a><span class="co"># Define a number that exists on the server.</span></span>
+<span id="cb190-2"><a href="introduction-to-r-for-earth-engine.html#cb190-2"></a>serverNumber &lt;-<span class="st"> </span>ee<span class="op">$</span><span class="kw">Number</span>(<span class="kw">exp</span>(<span class="dv">1</span>))</span>
+<span id="cb190-3"><a href="introduction-to-r-for-earth-engine.html#cb190-3"></a>serverNumber<span class="op">$</span><span class="kw">getInfo</span>()</span>
+<span id="cb190-4"><a href="introduction-to-r-for-earth-engine.html#cb190-4"></a><span class="kw">cat</span>(<span class="st">"e ="</span>, serverNumber<span class="op">$</span><span class="kw">getInfo</span>())<span class="er">)</span></span></code></pre></div>
+<p>The <code>ee$String()</code> and <code>ee$Number()</code> methods are constructors. A constructor takes its argument (and possibly other parameters), puts it in a container, and returns the container and its contents as an Earth Engine object that you can manipulate in your code. Any constructor starting with <code>ee</code> returns an Earth Engine object.</p>
+</div>
+<div id="methods-on-earth-engine-objects" class="section level3 unnumbered">
+<h3>Methods on Earth Engine objects<a class="anchor" aria-label="anchor" href="#methods-on-earth-engine-objects"><i class="fas fa-link"></i></a>
+</h3>
+<p>Note that once you’ve created an Earth Engine object, you have to use Earth Engine methods to process it. In this example, you can’t use R’s <code>Math$log()</code> to process that Earth Engine object. You have to use the equivalent method defined for an <code>ee$Number</code>:</p>
+<div class="sourceCode" id="cb191"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Use a built-in function to perform an operation on the number.</span>
+<span class="va">logE</span> <span class="op">&lt;-</span> <span class="va">serverNumber</span><span class="op">$</span><span class="fu">log</span><span class="op">(</span><span class="op">)</span>
+<span class="va">logE</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"log(e)="</span>, <span class="va">logE</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>In this example, <code><a href="https://rdrr.io/r/base/Log.html">log()</a></code> is a method for a <code>ee$Number</code> object. (Use the Docs tab at the left side of the code editor to see a list of all the methods for every Earth Engine object type, for example ee.Number &gt; log()). Note that the methods of Earth Engine objects return other Earth Engine objects.</p>
+</div>
+<div id="list-1" class="section level3 unnumbered">
+<h3>List<a class="anchor" aria-label="anchor" href="#list-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>To make a JavaScript list into an <code>ee$List</code> object on the server, you can put a JavaScript literal into a container as with numbers and strings. Earth Engine also provides server-side convenience methods for making sequences of numbers. For example:</p>
+<div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Make a sequence the hard way.</span>
+<span class="va">eeList</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>
+<span class="co"># Make a sequence the easy way!</span>
+<span class="va">sequence</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">List</span><span class="op">$</span><span class="fu">sequence</span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>
+<span class="va">sequence</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Sequence:"</span>, <span class="va">sequence</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Since the <code>ee$List</code> objects only exist on the server, use Earth Engine provided functions to interact with them. For example, to get something out of the list, use the <code><a href="https://rdrr.io/r/base/get.html">get()</a></code> method of the <code>ee$List</code> object:</p>
+<div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Use a method on an ee.List to extract a value.</span>
+<span class="va">value</span> <span class="op">&lt;-</span> <span class="va">sequence</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
+<span class="va">value</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">'Value at index 2:'</span>, <span class="va">value</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="casting-1" class="section level3 unnumbered">
+<h3>Casting<a class="anchor" aria-label="anchor" href="#casting-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Sometimes, Earth Engine doesn’t know the type of an object that gets returned from a method. You, as the programmer, know that the <code>value</code> variable in the previous example is a number object. But if you try to use the <code>add()</code> method of an <code>ee.Number</code>, you’ll get an error like:</p>
+<p>This is common with the <code><a href="https://rdrr.io/r/base/get.html">get()</a></code> function, which could return all sorts of Earth Engine objects. To correct it, use the <code>ee.Number</code> constructor to cast the result:</p>
+<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Cast the return value of get() to a number.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">'No error:'</span>, <span class="va">ee</span><span class="op">$</span><span class="fu">Number</span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="dictionaries" class="section level3 unnumbered">
+<h3>Dictionaries<a class="anchor" aria-label="anchor" href="#dictionaries"><i class="fas fa-link"></i></a>
+</h3>
+<p>You can construct an Earth Engine <code>Dictionary</code> from a R object, as with strings, numbers and lists. At construction time, you can use R functionality to initialize the Earth Engine object. In this case an <code>ee.Dictionary</code> is constructed directly from a R literal object:</p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="introduction-to-r-for-earth-engine.html#cb195-1"></a><span class="co"># Make a Dictionary on the server.</span></span>
+<span id="cb195-2"><a href="introduction-to-r-for-earth-engine.html#cb195-2"></a>dictionary &lt;-<span class="st"> </span>ee<span class="op">$</span><span class="kw">Dictionary</span>({</span>
+<span id="cb195-3"><a href="introduction-to-r-for-earth-engine.html#cb195-3"></a>  e &lt;-<span class="st"> </span>Math.E,</span>
+<span id="cb195-4"><a href="introduction-to-r-for-earth-engine.html#cb195-4"></a>  pi &lt;-<span class="st"> </span>Math.PI,</span>
+<span id="cb195-5"><a href="introduction-to-r-for-earth-engine.html#cb195-5"></a>  phi &lt;-<span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">Math.sqrt</span>(<span class="dv">5</span>)) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb195-6"><a href="introduction-to-r-for-earth-engine.html#cb195-6"></a>})</span>
+<span id="cb195-7"><a href="introduction-to-r-for-earth-engine.html#cb195-7"></a></span>
+<span id="cb195-8"><a href="introduction-to-r-for-earth-engine.html#cb195-8"></a><span class="co"># Get some values from the dictionary.</span></span>
+<span id="cb195-9"><a href="introduction-to-r-for-earth-engine.html#cb195-9"></a><span class="kw">print</span>(<span class="st">'Euler:'</span>, <span class="kw">dictionary.get</span>(<span class="st">'e'</span>))</span>
+<span id="cb195-10"><a href="introduction-to-r-for-earth-engine.html#cb195-10"></a><span class="kw">print</span>(<span class="st">'Pi:'</span>, <span class="kw">dictionary.get</span>(<span class="st">'pi'</span>))</span>
+<span id="cb195-11"><a href="introduction-to-r-for-earth-engine.html#cb195-11"></a><span class="kw">print</span>(<span class="st">'Golden ratio:'</span>, <span class="kw">dictionary.get</span>(<span class="st">'phi'</span>))</span>
+<span id="cb195-12"><a href="introduction-to-r-for-earth-engine.html#cb195-12"></a></span>
+<span id="cb195-13"><a href="introduction-to-r-for-earth-engine.html#cb195-13"></a><span class="co"># Get all the keys:</span></span>
+<span id="cb195-14"><a href="introduction-to-r-for-earth-engine.html#cb195-14"></a><span class="kw">print</span>(<span class="st">'Keys: '</span>, dictionary<span class="op">$</span><span class="kw">keys</span>())</span></code></pre></div>
+<p>In this example, observe that once you have an <code>ee.Dictionary</code>, you must use methods on the <code>ee.Dictionary</code> to get values (unlike the JavaScript dictionary in the previous lesson). Specifically, <code>get(key)</code> returns the value associated with <code>key</code>. Since the type of object returned by <code><a href="https://rdrr.io/r/base/get.html">get()</a></code> could be be anything, if you’re going to do anything to the object other then print it, you need to cast it to the right type. Also note that the <code>keys()</code> method returns an <code>ee.List</code>.</p>
+</div>
+<div id="dates" class="section level3 unnumbered">
+<h3>Dates<a class="anchor" aria-label="anchor" href="#dates"><i class="fas fa-link"></i></a>
+</h3>
+<p>Date objects are the way Earth Engine represents time. As in the previous examples, it is important to distinguish between a R Date object and an Earth Engine <code>ee$Date</code> object. Construct an <code>ee$Date</code> from a string, from a R <code>Date</code>, or using static methods provided by the <code>ee$Date</code> class. (See the Date section in the Docs tab for details). This example illustrates the construction of dates from strings or a JavaScript date representing milliseconds since midnight on January 1, 1970:</p>
+<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define a date in Earth Engine.</span>
+<span class="va">date</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">'2015-12-31'</span><span class="op">)</span>
+<span class="va">date</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="fu">eedate_to_rdate</span><span class="op">(</span><span class="va">date</span>, timestamp <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">rdate_to_eedate</span><span class="op">(</span><span class="va">date</span>, timestamp <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="co"># Get the current time using the R Date$now() method.</span>
+<span class="va">now</span> <span class="op">&lt;-</span> <span class="va">Date</span><span class="op">$</span><span class="fu">now</span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">'Milliseconds since January 1, 1970'</span>, <span class="va">now</span><span class="op">)</span>
+
+<span class="co"># Initialize an ee$Date object.</span>
+<span class="va">eeNow</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="va">now</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">'Now:'</span>, <span class="va">eeNow</span><span class="op">)</span></code></pre></div>
+<p>Dates are useful for filtering collections, specifically as arguments to the <code>filterDate()</code> method. See this section of the Get Started page for more information about sorting collections.</p>
+</div>
+<div id="digression-passing-parameters-by-name" class="section level3 unnumbered">
+<h3>Digression: passing parameters by name<a class="anchor" aria-label="anchor" href="#digression-passing-parameters-by-name"><i class="fas fa-link"></i></a>
+</h3>
+<p>Arguments to Earth Engine methods can be passed in order, for example to create an <code>ee$Date</code> from year, month and day, you can pass parameters of the <code>fromYMD()</code> static method in the order year, month, day:</p>
+<div class="sourceCode" id="cb197"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">aDate</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Date</span><span class="op">$</span><span class="fu">fromYMD</span><span class="op">(</span><span class="fl">2017</span>, <span class="fl">1</span>, <span class="fl">13</span><span class="op">)</span>
+<span class="va">aDate</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="fu">eedate_to_rdate</span><span class="op">(</span><span class="va">date</span>, timestamp <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">rdate_to_eedate</span><span class="op">(</span><span class="va">date</span>, timestamp <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p>Alternatively, you can pass the parameters by name, in any order. While it might be more code, it can improve readability and reusability. To pass parameters by name, pass in a R object in which the keys of the object are the names of the method parameters and the values are the arguments to the method. For example:</p>
+<div class="sourceCode" id="cb198"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">theDate</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Date</span><span class="op">$</span><span class="fu">fromYMD</span><span class="op">(</span>
+  day <span class="op">=</span> <span class="fl">13</span>,
+  month <span class="op">=</span> <span class="fl">1</span>,
+  year <span class="op">=</span> <span class="fl">2017</span>
+<span class="op">)</span>
+<span class="va">theDate</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="fu">eedate_to_rdate</span><span class="op">(</span><span class="va">theDate</span>, timestamp <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">rdate_to_eedate</span><span class="op">(</span><span class="va">theDate</span>, timestamp <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p>Note that the names of the object properties (the keys) match the names specified in the <code>ee.Date.fromYMD()</code> docs. Also note that the object that is passed as an argument can be saved in a variable for reuse, as illustrated by the R object example.</p>
+<p>You now have enough of an introduction to R to start using Earth Engine! See the Client vs. Server page for a more detailed explanation of R vs. Earth Engine objects.</p>
+<p>In the next section, learn more about Functional programming concepts to effectively use for-loops, if/else conditions and iterations in Earth Engine.</p>
+</div>
+</div>
+<div id="functional-programming-concepts" class="section level2 unnumbered">
+<h2>Functional Programming Concepts<a class="anchor" aria-label="anchor" href="#functional-programming-concepts"><i class="fas fa-link"></i></a>
+</h2>
+<div id="introduction-to-functional-programming" class="section level3 unnumbered">
+<h3>Introduction to functional programming<a class="anchor" aria-label="anchor" href="#introduction-to-functional-programming"><i class="fas fa-link"></i></a>
+</h3>
+<p>Earth Engine uses a parallel processing system to carry out computation across a large number of machines. To enable such processing, Earth Engine takes advantage of standard techniques commonly used by functional languages, such as referential transparency and lazy evaluation, for significant optimization and efficiency gains.</p>
+<p>The main concept that sets functional programming apart from procedural programming is <em>the absence of side effects</em>. What it means is that the functions that you write doesn’t rely on or update data that is outside of the function. As you will see in the examples below, it is possible to re-structure your problem so that it can be solved using functions without side-effects - which are much better suited to be executed in parallel.</p>
+<div id="for-loops" class="section level4 unnumbered">
+<h4>For Loops<a class="anchor" aria-label="anchor" href="#for-loops"><i class="fas fa-link"></i></a>
+</h4>
+<p>The use of for-loops is discouraged in Earth Engine. The same results can be achieved using a <code>map()</code> operation where you specify a function that can be independently applied to each element. This allows the system to distribute the processing to different machines.</p>
+<p>The example below illustrates how you would take a list of numbers and create another list with the squares of each number using <code>map()</code>:</p>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="introduction-to-r-for-earth-engine.html#cb199-1"></a><span class="co"># This generates a list of numbers from 1 to 10.</span></span>
+<span id="cb199-2"><a href="introduction-to-r-for-earth-engine.html#cb199-2"></a>myList &lt;-<span class="st"> </span>ee<span class="op">$</span>List<span class="op">$</span><span class="kw">sequence</span>(<span class="dv">1</span>, <span class="dv">10</span>)</span>
+<span id="cb199-3"><a href="introduction-to-r-for-earth-engine.html#cb199-3"></a></span>
+<span id="cb199-4"><a href="introduction-to-r-for-earth-engine.html#cb199-4"></a><span class="co"># The map() operation takes a function that works on each element independently</span></span>
+<span id="cb199-5"><a href="introduction-to-r-for-earth-engine.html#cb199-5"></a><span class="co"># and returns a value. You define a function that can be applied to the input.</span></span>
+<span id="cb199-6"><a href="introduction-to-r-for-earth-engine.html#cb199-6"></a>computeSquares &lt;-<span class="st"> </span><span class="cf">function</span>(number) {</span>
+<span id="cb199-7"><a href="introduction-to-r-for-earth-engine.html#cb199-7"></a><span class="co">#We define the operation using the EE API.</span></span>
+<span id="cb199-8"><a href="introduction-to-r-for-earth-engine.html#cb199-8"></a>  return ee<span class="op">$</span><span class="kw">Number</span>(number)<span class="op">$</span><span class="kw">pow</span>(<span class="dv">2</span>)</span>
+<span id="cb199-9"><a href="introduction-to-r-for-earth-engine.html#cb199-9"></a>}</span>
+<span id="cb199-10"><a href="introduction-to-r-for-earth-engine.html#cb199-10"></a></span>
+<span id="cb199-11"><a href="introduction-to-r-for-earth-engine.html#cb199-11"></a><span class="co"># Apply your function to each item in the list by using the map() function.</span></span>
+<span id="cb199-12"><a href="introduction-to-r-for-earth-engine.html#cb199-12"></a>squares &lt;-<span class="st"> </span>myList<span class="op">$</span><span class="kw">map</span>(computeSquares)</span>
+<span id="cb199-13"><a href="introduction-to-r-for-earth-engine.html#cb199-13"></a><span class="kw">print</span>(squares)  <span class="co"># [1, 4, 9, 16, 25, 36, 49, 64, 81]</span></span></code></pre></div>
+</div>
+<div id="ifelse-conditions" class="section level4 unnumbered">
+<h4>If/Else Conditions<a class="anchor" aria-label="anchor" href="#ifelse-conditions"><i class="fas fa-link"></i></a>
+</h4>
+<p>Another common problem faced by new users who are used to procedural programming paradigm is the proper use of if/else conditional operators in Earth Engine. While, the API does provide a <code>ee.Algorithms.If()</code> algorithm, the use of it is strongly discouraged in favor of a more functional approach using <code>map()</code> and filters. Earth Engine uses deferred execution, which means that the evaluation of an expression is delayed until its realized value is actually required. In some cases, this type of execution model will evaluate both the true and false alternatives of an <code>ee.Algorithms.If()</code> statement. This can lead to extra computation and memory usage, depending on the expressions and the resources required to execute them.</p>
+<p>Say you want to solve a variant of the above example, where the task is to compute squares of only odd numbers. A functional approach to solving this without if/else conditions, is demonstrated below:</p>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="introduction-to-r-for-earth-engine.html#cb200-1"></a><span class="co"># The following function determines if a number is even or odd.  The mod(2)</span></span>
+<span id="cb200-2"><a href="introduction-to-r-for-earth-engine.html#cb200-2"></a><span class="co"># function returns 0 if the number is even and 1 if it is odd (the remainder</span></span>
+<span id="cb200-3"><a href="introduction-to-r-for-earth-engine.html#cb200-3"></a><span class="co"># after dividing by 2).  The input is multipled by this remainder so even</span></span>
+<span id="cb200-4"><a href="introduction-to-r-for-earth-engine.html#cb200-4"></a><span class="co"># numbers get set to 0 and odd numbers are left unchanged.</span></span>
+<span id="cb200-5"><a href="introduction-to-r-for-earth-engine.html#cb200-5"></a>getOddNumbers &lt;-<span class="st"> </span><span class="cf">function</span>(number) {</span>
+<span id="cb200-6"><a href="introduction-to-r-for-earth-engine.html#cb200-6"></a>  number &lt;-<span class="st"> </span>ee<span class="op">$</span><span class="kw">Number</span>(number)   <span class="co"># Cast the input to a Number so we can use mod.</span></span>
+<span id="cb200-7"><a href="introduction-to-r-for-earth-engine.html#cb200-7"></a>  remainder &lt;-<span class="st"> </span>number<span class="op">$</span><span class="kw">mod</span>(<span class="dv">2</span>)</span>
+<span id="cb200-8"><a href="introduction-to-r-for-earth-engine.html#cb200-8"></a>  return number<span class="op">$</span><span class="kw">multiply</span>(remainder)</span>
+<span id="cb200-9"><a href="introduction-to-r-for-earth-engine.html#cb200-9"></a>}</span>
+<span id="cb200-10"><a href="introduction-to-r-for-earth-engine.html#cb200-10"></a></span>
+<span id="cb200-11"><a href="introduction-to-r-for-earth-engine.html#cb200-11"></a>newList &lt;-<span class="st"> </span>myList<span class="op">$</span><span class="kw">map</span>(getOddNumbers)</span>
+<span id="cb200-12"><a href="introduction-to-r-for-earth-engine.html#cb200-12"></a></span>
+<span id="cb200-13"><a href="introduction-to-r-for-earth-engine.html#cb200-13"></a><span class="co"># Remove the 0 values.</span></span>
+<span id="cb200-14"><a href="introduction-to-r-for-earth-engine.html#cb200-14"></a>oddNumbers &lt;-<span class="st"> </span>newList<span class="op">$</span><span class="kw">removeAll</span>([<span class="dv">0</span>])</span>
+<span id="cb200-15"><a href="introduction-to-r-for-earth-engine.html#cb200-15"></a></span>
+<span id="cb200-16"><a href="introduction-to-r-for-earth-engine.html#cb200-16"></a>squares &lt;-<span class="st"> </span>oddNumbers<span class="op">$</span><span class="kw">map</span>(computeSquares)</span>
+<span id="cb200-17"><a href="introduction-to-r-for-earth-engine.html#cb200-17"></a><span class="kw">print</span>(squares)  <span class="co"># [1, 9, 25, 49, 81]</span></span></code></pre></div>
+<p>This paradigm is especially applicable when working with collections. If you wanted to apply a different algorithm to the collection based on some conditions, the preferred way is to first filter the collection based on the condition, and then <code>map()</code> a different function to each of the subsets. This allows the system to parallelize the operation. For example:</p>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="introduction-to-r-for-earth-engine.html#cb201-1"></a>collection &lt;-<span class="st"> </span>ee<span class="op">$</span><span class="kw">ImageCollection</span>(<span class="st">'LANDSAT/LC08/C01/T1_TOA'</span>)</span>
+<span id="cb201-2"><a href="introduction-to-r-for-earth-engine.html#cb201-2"></a></span>
+<span id="cb201-3"><a href="introduction-to-r-for-earth-engine.html#cb201-3"></a><span class="co"># Divide the collection into 2 subsets and apply a different algorithm on them.</span></span>
+<span id="cb201-4"><a href="introduction-to-r-for-earth-engine.html#cb201-4"></a>subset1 &lt;-<span class="st"> </span>collection<span class="op">$</span><span class="kw">filter</span>(ee<span class="op">$</span>Filter<span class="op">$</span><span class="kw">lt</span>(<span class="st">'SUN_ELEVATION'</span>, <span class="dv">40</span>))</span>
+<span id="cb201-5"><a href="introduction-to-r-for-earth-engine.html#cb201-5"></a>subset2 &lt;-<span class="st"> </span>collection<span class="op">$</span><span class="kw">filter</span>(ee<span class="op">$</span>Filter<span class="op">$</span><span class="kw">gte</span>(<span class="st">'SUN_ELEVATION'</span>, <span class="dv">40</span>))</span>
+<span id="cb201-6"><a href="introduction-to-r-for-earth-engine.html#cb201-6"></a></span>
+<span id="cb201-7"><a href="introduction-to-r-for-earth-engine.html#cb201-7"></a>processed1 &lt;-<span class="st"> </span>subset1<span class="op">$</span><span class="kw">map</span>(<span class="cf">function</span>(image) {</span>
+<span id="cb201-8"><a href="introduction-to-r-for-earth-engine.html#cb201-8"></a>  return image<span class="op">$</span><span class="kw">multiply</span>(<span class="dv">2</span>)</span>
+<span id="cb201-9"><a href="introduction-to-r-for-earth-engine.html#cb201-9"></a>})</span>
+<span id="cb201-10"><a href="introduction-to-r-for-earth-engine.html#cb201-10"></a>processed2 &lt;-<span class="st"> </span>subset2</span>
+<span id="cb201-11"><a href="introduction-to-r-for-earth-engine.html#cb201-11"></a></span>
+<span id="cb201-12"><a href="introduction-to-r-for-earth-engine.html#cb201-12"></a><span class="co"># Merge the collections to get a single collection.</span></span>
+<span id="cb201-13"><a href="introduction-to-r-for-earth-engine.html#cb201-13"></a>final &lt;-<span class="st"> </span>processed1<span class="op">$</span><span class="kw">merge</span>(processed2)</span>
+<span id="cb201-14"><a href="introduction-to-r-for-earth-engine.html#cb201-14"></a><span class="kw">print</span>(<span class="st">'Original collection size'</span>, collection<span class="op">$</span><span class="kw">size</span>())</span>
+<span id="cb201-15"><a href="introduction-to-r-for-earth-engine.html#cb201-15"></a><span class="kw">print</span>(<span class="st">'Processed collection size'</span>, final<span class="op">$</span><span class="kw">size</span>())</span></code></pre></div>
+</div>
+<div id="cumulative-iteration" class="section level4 unnumbered">
+<h4>Cumulative Iteration<a class="anchor" aria-label="anchor" href="#cumulative-iteration"><i class="fas fa-link"></i></a>
+</h4>
+<p>You may need to do sequential operation, where the result of each iteration is used by the subsequent iteration. Earth Engine provides a <code>iterate()</code> method for such tasks. Remember that <code>iterate()</code> is executed in a sequential manner and hence will be slow for large operations. Use it only when you are not able to use <code>map()</code> and filters to achieve the desired output.</p>
+<p>A good demonstration of <code>iterate()</code> is for creation of Fibonacci number sequence. Here, each number in the series is the sum of previous 2 numbers. The <code>iterate()</code> function takes 2 arguments, a function (algorithm) and a starting value. The function itself gets passed on 2 values, the current value in the iteration, and the result of the previous iteration. The following example demonstrates how to implement a fibonacci sequence in Earth Engine.</p>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="introduction-to-r-for-earth-engine.html#cb202-1"></a>algorithm &lt;-<span class="st"> </span><span class="cf">function</span>(current, previous) {</span>
+<span id="cb202-2"><a href="introduction-to-r-for-earth-engine.html#cb202-2"></a>  previous &lt;-<span class="st"> </span>ee<span class="op">$</span><span class="kw">List</span>(previous)</span>
+<span id="cb202-3"><a href="introduction-to-r-for-earth-engine.html#cb202-3"></a>  var n1 &lt;-<span class="st"> </span>ee<span class="op">$</span><span class="kw">Number</span>(previous<span class="op">$</span><span class="kw">get</span>(<span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb202-4"><a href="introduction-to-r-for-earth-engine.html#cb202-4"></a>  var n2 &lt;-<span class="st"> </span>ee<span class="op">$</span><span class="kw">Number</span>(previous<span class="op">$</span><span class="kw">get</span>(<span class="op">-</span><span class="dv">2</span>))</span>
+<span id="cb202-5"><a href="introduction-to-r-for-earth-engine.html#cb202-5"></a>  return previous<span class="op">$</span><span class="kw">add</span>(n1<span class="op">$</span><span class="kw">add</span>(n2))</span>
+<span id="cb202-6"><a href="introduction-to-r-for-earth-engine.html#cb202-6"></a>}</span>
+<span id="cb202-7"><a href="introduction-to-r-for-earth-engine.html#cb202-7"></a></span>
+<span id="cb202-8"><a href="introduction-to-r-for-earth-engine.html#cb202-8"></a><span class="co"># Compute 10 iterations.</span></span>
+<span id="cb202-9"><a href="introduction-to-r-for-earth-engine.html#cb202-9"></a>numIteration &lt;-<span class="st"> </span>ee<span class="op">$</span>List<span class="op">$</span><span class="cf">repeat</span>(<span class="dv">1</span>, <span class="dv">10</span>)</span>
+<span id="cb202-10"><a href="introduction-to-r-for-earth-engine.html#cb202-10"></a>start &lt;-<span class="st"> </span>[<span class="dv">0</span>, <span class="dv">1</span>]</span>
+<span id="cb202-11"><a href="introduction-to-r-for-earth-engine.html#cb202-11"></a>sequence &lt;-<span class="st"> </span>numIteration<span class="op">$</span><span class="kw">iterate</span>(algorithm, start)</span>
+<span id="cb202-12"><a href="introduction-to-r-for-earth-engine.html#cb202-12"></a><span class="kw">print</span>(sequence)  <span class="co"># [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]</span></span></code></pre></div>
+<p>Now that you have a good understanding of javascript concepts, you can see the API Tutorial for an introduction to the geospatial functionality of the Earth Engine API.</p>
+</div>
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="overview-1.html">Overview</a></div>
+<div class="next"><a href="the-earth-engine-api.html">The Earth Engine API</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#introduction-to-r-for-earth-engine">Introduction to R for Earth Engine</a></li>
+<li><a class="nav-link" href="#hello-word">Hello Word</a></li>
+<li>
+<a class="nav-link" href="#basic-javascript-data-type">Basic JavaScript data type</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#strings">Strings</a></li>
+<li><a class="nav-link" href="#numbers">Numbers</a></li>
+<li><a class="nav-link" href="#list">List</a></li>
+<li><a class="nav-link" href="#dictionary">Dictionary</a></li>
+<li><a class="nav-link" href="#functions">Functions</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#earth-engine-objects">Earth Engine Objects</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#strings-1">Strings</a></li>
+<li><a class="nav-link" href="#numbers-1">Numbers</a></li>
+<li><a class="nav-link" href="#methods-on-earth-engine-objects">Methods on Earth Engine objects</a></li>
+<li><a class="nav-link" href="#list-1">List</a></li>
+<li><a class="nav-link" href="#casting-1">Casting</a></li>
+<li><a class="nav-link" href="#dictionaries">Dictionaries</a></li>
+<li><a class="nav-link" href="#dates">Dates</a></li>
+<li><a class="nav-link" href="#digression-passing-parameters-by-name">Digression: passing parameters by name</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#functional-programming-concepts">Functional Programming Concepts</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#introduction-to-functional-programming">Introduction to functional programming</a></li></ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/03_api_tutorials.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/03_api_tutorials.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

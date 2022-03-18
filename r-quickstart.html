@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>R Quickstart | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="R Quickstart | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="R Quickstart | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Get Started with Earth Engine This Get Started guide is intended as a quick way to start programming with...">
+<meta property="og:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Get Started with Earth Engine This Get Started guide is intended as a quick way to start programming with...">
+<meta name="twitter:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Get Started with Earth Engine This Get Started guide is intended as a quick way to start programming with...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="active" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="r-quickstart" class="section level1 unnumbered">
+<h1>R Quickstart<a class="anchor" aria-label="anchor" href="#r-quickstart"><i class="fas fa-link"></i></a>
+</h1>
+<p>This section requires the next libraries:</p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rgeeExtra</span><span class="op">)</span>
+
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div id="get-started-with-earth-engine" class="section level2 unnumbered">
+<h2>Get Started with Earth Engine<a class="anchor" aria-label="anchor" href="#get-started-with-earth-engine"><i class="fas fa-link"></i></a>
+</h2>
+<p>This Get Started guide is intended as a quick way to start programming with the Earth Engine R API. For an introductory look at R and more in-depth exercises with the Earth Engine API, see the <a href="">tutorials</a>. For recommended R coding style, see the <a href="">R Style Guide</a>.</p>
+<p>Google Earth Engine allows users to run algorithms on georeferenced imagery and vectors stored on Google’s infrastructure. The Google Earth Engine API provides a library of functions which may be applied to data for display and analysis. Earth Engine’s <a href="https://developers.google.com/earth-engine/datasets">public data catalog</a> contains a large amount of publicly available imagery and vector datasets. Private assets can also be created in users’ personal folders.</p>
+</div>
+<div id="how-to-use-these-docs" class="section level2 unnumbered">
+<h2>How to use these docs<a class="anchor" aria-label="anchor" href="#how-to-use-these-docs"><i class="fas fa-link"></i></a>
+</h2>
+<p>The Earth Engine documentation is designed for people familiar with geospatial data analysis. The docs are primarily structured by data type. For example, the left side navigation contains links to sections or pages about important data types such as <a href="">Image</a>, <a href="">ImageCollection</a>, <a href="">Feature</a>, <a href="">FeatureCollection</a>, <a href="">Geometry</a>, <a href="">Reducer</a>, <a href="">Join</a> and <a href="">Array</a>. This guide only describes only enough about these types to get you started. There are also sections for <a href="">machine learning</a>, specialized or sensor specific algorithms (e.g. <a href="">Landsat algorithms</a>), <a href="">public facing apps</a> with shinyapps.io and important details about <a href="">Earth Engine internal workings</a>. Before diving in to any of that, start here!</p>
+</div>
+<div id="earth-engine-data-structures" class="section level2 unnumbered">
+<h2>Earth Engine data structures<a class="anchor" aria-label="anchor" href="#earth-engine-data-structures"><i class="fas fa-link"></i></a>
+</h2>
+<p>The two most fundamental geographic data structures in Earth Engine are <a href="">Image</a> and <a href="">Feature</a> corresponding to raster and vector data types, respectively. Images are composed of bands and a list of properties. Features are composed of a <a href="">Geometry</a> and a list of properties. A stack of images (e.g. an image time series) is handled by an <a href="">ImageCollection</a>. A collection of features is handled by a <a href="">FeatureCollection</a>. Other fundamental data structures in Earth Engine include <code>List</code>, <code>Array</code>, <code>Date</code>, <code>Number</code> and <code>String</code> (learn more about basic data types from <a href="">this tutorial</a>. It is important to remember that these are all server-side objects and are not manipulated the same way as client-side R objects are (<a href="">learn more</a>).</p>
+</div>
+<div id="earth-engine-algorithms" class="section level2 unnumbered">
+<h2>Earth Engine algorithms<a class="anchor" aria-label="anchor" href="#earth-engine-algorithms"><i class="fas fa-link"></i></a>
+</h2>
+<p>There are several ways to run operations in the API:</p>
+<ul>
+<li>Calling methods that are attached to objects.</li>
+<li>Calling algorithms.</li>
+<li>Calling rgee specific functions.</li>
+<li>Defining new functions.</li>
+</ul>
+<p>Use the <a href="%60"><code>rgee Rstudio addins</code></a> for get access to the documentation. For example, the <code>Image</code> class has an <code>add()</code> method:</p>
+<div id="using-rgee" class="section level3 unnumbered">
+<h3>Using rgee<a class="anchor" aria-label="anchor" href="#using-rgee"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">image3</span> <span class="op">&lt;-</span> <span class="va">image1</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="va">image2</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="using-rgeeextra" class="section level3 unnumbered">
+<h3>Using rgeeExtra<a class="anchor" aria-label="anchor" href="#using-rgeeextra"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">image3</span> <span class="op">&lt;-</span> <span class="va">image1</span> <span class="op">+</span> <span class="va">image2</span></code></pre></div>
+<p>This method adds the bands of <code>image2</code> to the bands of <code>image1</code>. The <code>ee$Algorithms</code> category contains a list of currently supported algorithms for specialized or domain specific processing. For example, to create topographic layers from an input Digital Elevation Model (DEM):</p>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">terrainImage</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Algorithms</span><span class="op">$</span><span class="fu">Terrain</span><span class="op">(</span><span class="va">dem</span><span class="op">)</span></code></pre></div>
+<p>rgee specific functions include the <code>Map</code> and <code>ee$batch$Export</code> methods, which control how layers are added to the map panel or exported to Google Drive, respectively. Functions can also be created in R using</p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">myFunction</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">args</span><span class="op">)</span> <span class="op">{</span>
+  <span class="co"># do something</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">something</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<p>As illustrated in the <a href="">Mapping section</a>, user defined functions are useful for creating custom functionality or modifying the elements of a collection using:</p>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">collection2</span> <span class="op">&lt;-</span> <span class="va">collection1</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">aFunction</span><span class="op">)</span></code></pre></div>
+<p>The following sections illustrate these concepts for various simple use cases.</p>
+<p><em>Notation used in the guides:</em></p>
+<p>Static methods called on an Earth Engine class (for example <code>ee$Image</code>) are written as <code>Image$staticMethod()</code>. Methods called on an instance of a class are written as <code>image$instanceMethod()</code>. The lowercase image means that a variable named image refers to an instance of the <code>ee$Image</code> class.</p>
+</div>
+</div>
+<div id="hello-world---r" class="section level2 unnumbered">
+<h2>‘Hello World’ - R<a class="anchor" aria-label="anchor" href="#hello-world---r"><i class="fas fa-link"></i></a>
+</h2>
+<p>Printing out information to the console is a basic task for getting information about an object, displaying the numeric result of a computation, displaying object metadata or helping with debugging. The iconic ‘Hello World!’ example in R is:</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">'Hello world!'</span><span class="op">)</span></code></pre></div>
+<p>Copy this line into the RStudio Code Editor and click Run. Note that the output is displayed in the Console tab. For a more remote sensing relevant example, the following prints the metadata of a Landsat 8 image:</p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">img</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LC08/C01/T1/LC08_044034_20140318'</span><span class="op">)</span>
+<span class="fu">ee_print</span><span class="op">(</span><span class="va">img</span><span class="op">)</span></code></pre></div>
+<p>Carefully inspect the output in the console to see metadata available for Landsat images.</p>
+</div>
+<div id="adding-data-to-the-map" class="section level2 unnumbered">
+<h2>Adding data to the map<a class="anchor" aria-label="anchor" href="#adding-data-to-the-map"><i class="fas fa-link"></i></a>
+</h2>
+<p>In addition to printing information to the console, adding data to the Map is the way to visualize geographic data. Use <code>Map$addLayer()</code> to do that. In the following example, an Image is instantiated (how to find these images is covered later) using <code>ee$Image()</code>, added to the map with <code>Map$addLayer()</code> and the map is centered over the image:</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Load an image.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LC08/C01/T1/LC08_044034_20140318'</span><span class="op">)</span>
+
+<span class="co">## Center the map on the image.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">centerObject</span><span class="op">(</span><span class="va">image</span>, <span class="fl">9</span><span class="op">)</span>
+
+<span class="co">## Display the image.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">image</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_01/figure_map_01.png">
+</center>
+<p><br>
+The second parameter of <code>Map$centerObject()</code> is a zoom level, where higher numbers indicate larger scale (more zoomed in). The parameters for the <code>Map</code> functions are described in depth in rgee documentation: <code><a href="https://rdrr.io/r/base/funprog.html">help(Map)</a></code> or <code>help(R6Map)</code>. If the appearance of the image is unsatisfactory, configure the display parameters with an additional argument to <code>Map$addLayer()</code>. For example:</p>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Load the image from the archive.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LC08/C01/T1/LC08_044034_20140318'</span><span class="op">)</span>
+
+<span class="co">## Define visualization parameters in an object literal.</span>
+<span class="va">vizParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'B5'</span>, <span class="st">'B4'</span>, <span class="st">'B3'</span><span class="op">)</span>,
+  min <span class="op">=</span> <span class="fl">5000</span>, 
+  max <span class="op">=</span> <span class="fl">15000</span>, 
+  gamma <span class="op">=</span> <span class="fl">1.3</span>
+<span class="op">)</span>
+
+<span class="co">## Center the map on the image and display.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">centerObject</span><span class="op">(</span><span class="va">image</span>, <span class="fl">9</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">image</span>, <span class="va">vizParams</span>, <span class="st">'Landsat 8 false color'</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_01/figure_map_02.png">
+</center>
+<p><br></p>
+<p>Observe that the visualization parameters are defined by an object literal, which includes a list of bands to display, a minimum and maximum digital number and a gamma value. (Learn more about Landsat bands <a href="">here</a>. Learn more about image visualization <a href="">here</a>).</p>
+<p>Use <code>Map$addLayer()</code> to add features and feature collections to the map. For example,</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">counties</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">'TIGER/2016/Counties'</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">counties</span>, <span class="op">{</span><span class="op">}</span>,<span class="st">'counties'</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_01/figure_map_03.png">
+</center>
+<p><br></p>
+</div>
+<div id="finding-images-image-collections-and-feature-collections" class="section level2 unnumbered">
+<h2>Finding images, image collections and feature collections<a class="anchor" aria-label="anchor" href="#finding-images-image-collections-and-feature-collections"><i class="fas fa-link"></i></a>
+</h2>
+<p>Images, image collections, and feature collections are discoverable by searching the Earth Engine Data Catalog. For example, entering ‘Landsat 8’ into the search field results in a list of raster datasets. (The complete listing of Earth Engine datasets is at the <a href="https://developers.google.com/earth-engine/datasets">Earth Engine Data Catalog</a>). In rgee we add an special attribute <code>Dataset</code> to <code>ee$Image</code>, <code>ee$ImageCollection</code>, and <code>ee$FeatureCollections</code> objects. Use <code>...$Dataset</code> to easy get access to the EE Data Catalog.</p>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ee</span><span class="op">$</span><span class="va">Image</span><span class="op">$</span><span class="va">Dataset</span><span class="op">$</span><span class="va">...</span>
+<span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="va">Dataset</span><span class="op">$</span><span class="va">...</span>
+<span class="va">ee</span><span class="op">$</span><span class="va">FeatureCollection</span><span class="op">$</span><span class="va">Dataset</span><span class="op">$</span><span class="va">...</span></code></pre></div>
+<p>Search into the Earth Engine Data Catalog</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ee</span><span class="op">$</span><span class="va">Image</span><span class="op">$</span><span class="va">Dataset</span><span class="op">$</span><span class="va">USGS_SRTMGL1_003</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ee_utils_dataset_display</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>Alternatively, copy the collection ID and paste it into your code. For example, choose the first result of the ‘Landsat 8’ search and copy the ID as follows:</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">'LANDSAT/LC08/C01/T1'</span><span class="op">)</span></code></pre></div>
+<p>Since this is a collection of many images spanning the Earth land surface, finding an individual image in the collection requires filtering in order to narrow down the search. Alternatively, the collection of images can be reduced to a single image using compositing and mosaicking techniques. More on filtering and compositing (see <a href="">Reducing</a>) in the next sections.</p>
+<p>Feature collections are also available through the Data Catalog. Their representation is smaller than image collections, but you will find international, census, watershed, and protected areas boundaries, to name a few. Learn more about importing your own vector datasets <a href="">here</a>.</p>
+</div>
+<div id="filtering-and-sorting" class="section level2 unnumbered">
+<h2>Filtering and Sorting<a class="anchor" aria-label="anchor" href="#filtering-and-sorting"><i class="fas fa-link"></i></a>
+</h2>
+<p>It is often necessary to filter a collection by space and/or time in order to limit the number of results. For example, consider the task of sorting the Landsat 8 scene collection in order to find a cloud-free scene for San Francisco. First, it is necessary to define the region of interest. A point is often useful for that. Press <code>Ctrl</code> and click near the center of your area of interest, it will atuomatically copy the coordinates, then construct a <code>ee$Point</code> using:</p>
+<center>
+<img src="images/chapter_01/figure_map_04.png">
+</center>
+<p><br></p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="st">" lon: -118.12500 | lat: 63.52866 | zoom: 1 "</span>
+<span class="va">point</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">118.12500</span>, <span class="fl">63.52866</span><span class="op">)</span></code></pre></div>
+<p>Construct start and end dates:</p>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">start</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">'2014-06-01'</span><span class="op">)</span>
+<span class="va">finish</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">'2014-10-01'</span><span class="op">)</span></code></pre></div>
+<p>Filter the Landsat 8 collection using the point and the dates, then sort using a metadata property (discovered during inspection of the Landsat 8 scene metadata):</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">filteredCollection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterDate</span><span class="op">(</span><span class="va">start</span>, <span class="va">finish</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterBounds</span><span class="op">(</span><span class="va">point</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">sort</span><span class="op">(</span><span class="st">'CLOUD_cOVER'</span><span class="op">)</span></code></pre></div>
+<p>This collection can be safely inspected using `<code>ee_print</code>. (If the collection has too many images, printing it will either be very slow, time out, or return an error). Observe that the images in the collection are a <code>List</code> stored in the ‘features’ property of the <code>ImageCollection</code>. The ID of any image in the collection can be copied into the <code>Image</code> constructor as above. Alternatively, get the first image (lowest cloud cover):</p>
+<div id="using-rgee-1" class="section level3 unnumbered">
+<h3>using rgee<a class="anchor" aria-label="anchor" href="#using-rgee-1"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">first</span> <span class="op">&lt;-</span> <span class="va">filteredCollection</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="using-rgeeextra-1" class="section level3 unnumbered">
+<h3>using rgeeExtra<a class="anchor" aria-label="anchor" href="#using-rgeeextra-1"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">first</span> <span class="op">&lt;-</span> <span class="va">filteredCollection</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></code></pre></div>
+<p>Access the complete Earth Engine filtering functionality using <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code> with an <code>ee$Filter</code> as the argument. (The <code>filterBounds()</code> and <code>filterDate()</code> methods used above are shortcuts). For example, the following creates a <code>Filter</code>, uses it to filter a <code>FeatureCollection</code> and displays the result:</p>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Load a feature collection.</span>
+<span class="va">featureCollection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">'TIGER/2016/States'</span><span class="op">)</span>
+
+<span class="co">## Filter the collection.</span>
+<span class="va">filteredFC</span> <span class="op">&lt;-</span> <span class="va">featureCollection</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">FeatureCollection</span><span class="op">$</span><span class="fu">filter</span><span class="op">(</span>
+    <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">'NAME'</span>, <span class="st">'California'</span><span class="op">)</span>
+  <span class="op">)</span>
+
+<span class="co">## Display the collection.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">filteredFC</span>, <span class="op">{</span><span class="op">}</span>, <span class="st">'California'</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_01/figure_map_05.png">
+</center>
+<p><br></p>
+</div>
+</div>
+<div id="band-math" class="section level2 unnumbered">
+<h2>Band math<a class="anchor" aria-label="anchor" href="#band-math"><i class="fas fa-link"></i></a>
+</h2>
+<p>Perform mathematical operations on images using <code>Image</code> methods. This may include band recombinations (spectral indices), image differencing or mathematical operations such as multiplication by a constant. For example, compute the difference between Normalized Difference Vegetation Index (NDVI) images 20 years apart:</p>
+<div id="using-rgee-2" class="section level3 unnumbered">
+<h3>using rgee<a class="anchor" aria-label="anchor" href="#using-rgee-2"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## This function gets NDVI from Landsat 5 imagery.</span>
+<span class="va">getNDVI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="st">'B4'</span>, <span class="st">'B3'</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co">## Load two Landsat 5 images, 20 years apart.</span>
+<span class="va">image1</span> <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LT05/C01/T1_TOA/LT05_044034_19900604'</span><span class="op">)</span>
+<span class="va">image2</span> <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LT05/C01/T1_TOA/LT05_044034_20100611'</span><span class="op">)</span>
+
+<span class="co">## Compute NDVI from the scenes.</span>
+<span class="va">ndvi1</span> <span class="op">=</span> <span class="fu">getNDVI</span><span class="op">(</span><span class="va">image1</span><span class="op">)</span>
+<span class="va">ndvi2</span> <span class="op">=</span> <span class="fu">getNDVI</span><span class="op">(</span><span class="va">image2</span><span class="op">)</span>
+
+<span class="co">## Compute the difference in NDVI.</span>
+<span class="va">ndviDifference</span> <span class="op">=</span> <span class="va">ndvi2</span><span class="op">$</span><span class="fu">subtract</span><span class="op">(</span><span class="va">ndvi1</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="using-rgeeextra-2" class="section level3 unnumbered">
+<h3>using rgeeExtra<a class="anchor" aria-label="anchor" href="#using-rgeeextra-2"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## This function gets NDVI from Landsat 5 imagery.</span>
+<span class="va">getNDVI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="op">(</span><span class="va">image</span><span class="op">[[</span><span class="st">"B4"</span><span class="op">]</span><span class="op">]</span> <span class="op">-</span> <span class="va">image</span><span class="op">[[</span><span class="st">"B3"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">image</span><span class="op">[[</span><span class="st">"B4"</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="va">image</span><span class="op">[[</span><span class="st">"B3"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co">## Load two Landsat 5 images, 20 years apart.</span>
+<span class="va">image1</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LT05/C01/T1_TOA/LT05_044034_19900604'</span><span class="op">)</span>
+<span class="va">image2</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LT05/C01/T1_TOA/LT05_044034_20100611'</span><span class="op">)</span>
+
+<span class="co">## Compute NDVI from the scenes.</span>
+<span class="va">ndvi1</span> <span class="op">&lt;-</span> <span class="fu">getNDVI</span><span class="op">(</span><span class="va">image1</span><span class="op">)</span>
+<span class="va">ndvi2</span> <span class="op">&lt;-</span> <span class="fu">getNDVI</span><span class="op">(</span><span class="va">image2</span><span class="op">)</span>
+
+<span class="co">## Compute the difference in NDVI.</span>
+<span class="va">ndviDifference</span> <span class="op">=</span> <span class="va">ndvi2</span> <span class="op">-</span> <span class="va">ndvi1</span></code></pre></div>
+<p>Notice the use of a user defined <code>function</code> in this example. More on functions in the next section.</p>
+</div>
+</div>
+<div id="mapping-what-to-do-instead-of-a-for-loop" class="section level2 unnumbered">
+<h2>Mapping (what to do instead of a for-loop)<a class="anchor" aria-label="anchor" href="#mapping-what-to-do-instead-of-a-for-loop"><i class="fas fa-link"></i></a>
+</h2>
+<p>Use <code>map()</code> to iterate over items in a collection. (For loops are NOT the right way to do that in Earth Engine and should be avoided). The <code>map()</code> function can be applied to an <code>ImageCollection</code>, a <code>FeatureCollection</code> or a <code>List</code> and accepts a function as its argument. The argument of the function is an element of the collection over which it is mapped. This is useful for modifying every element of the collection in the same way, for example adding. For example, the following code adds an NDVI band to every image in an <code>ImageCollection</code>:</p>
+<div id="using-rgee-3" class="section level3 unnumbered">
+<h3>Using rgee<a class="anchor" aria-label="anchor" href="#using-rgee-3"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## This function gets NDVI from Landsat 8 imagery.</span>
+<span class="va">addNDVI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="st">'B5'</span>, <span class="st">'B4'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co">## Load the Landsat 8 raw data, filter by location and date.</span>
+<span class="va">ee_geom</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">122.262</span>, <span class="fl">37.8719</span><span class="op">)</span>
+<span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">'LANDSAT/LC08/C01/T1'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterBounds</span><span class="op">(</span><span class="va">ee_geom</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterDate</span><span class="op">(</span><span class="st">'2014-06-01'</span>, <span class="st">'2014-10-01'</span><span class="op">)</span>
+
+<span class="co">## Map the function over the collection.</span>
+<span class="va">ndviCollection</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">addNDVI</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="using-rgeeextra-3" class="section level3 unnumbered">
+<h3>Using rgeeExtra<a class="anchor" aria-label="anchor" href="#using-rgeeextra-3"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## This function gets NDVI from Landsat 8 imagery.</span>
+<span class="va">addNDVI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">ndvi</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">image</span><span class="op">[[</span><span class="st">"B5"</span><span class="op">]</span><span class="op">]</span> <span class="op">-</span> <span class="va">image</span><span class="op">[[</span><span class="st">"B4"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">image</span><span class="op">[[</span><span class="st">"B5"</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="va">image</span><span class="op">[[</span><span class="st">"B4"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+  <span class="va">image</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">ndvi</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co">## Load the Landsat 8 raw data, filter by location and date.</span>
+<span class="va">ee_geom</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">122.262</span>, <span class="fl">37.8719</span><span class="op">)</span>
+<span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">'LANDSAT/LC08/C01/T1'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterBounds</span><span class="op">(</span><span class="va">ee_geom</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterDate</span><span class="op">(</span><span class="st">"2014-06-01"</span>, <span class="st">"2014-10-01"</span><span class="op">)</span>
+
+<span class="co">## Map the function over the collection.</span>
+<span class="va">ndviCollection</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">addNDVI</span><span class="op">)</span></code></pre></div>
+<p>Another common task is adding a new property (or ‘attribute’ or ‘field’) to features in a <code>FeatureCollection</code>. In the following example, the new property is a computation involving two existing attributes:</p>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## This function creates a new property that is the sum of two existing properties.</span>
+<span class="va">addField</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">feature</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">sum</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Number</span><span class="op">(</span><span class="va">feature</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">'property1'</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="va">feature</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">'property2'</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">feature</span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>sum <span class="op">=</span> <span class="va">sum</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co">## Create a FeatureCollection from a list of Features.</span>
+<span class="va">features</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">122.4536</span>, <span class="fl">37.7403</span><span class="op">)</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>property1 <span class="op">=</span> <span class="fl">100</span>, property2 <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">118.2294</span>, <span class="fl">34.039</span><span class="op">)</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>property1 <span class="op">=</span> <span class="fl">200</span>, property2 <span class="op">=</span> <span class="fl">200</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span>
+<span class="co">## Map the function over the collection.</span>
+<span class="va">featureCollection</span> <span class="op">&lt;-</span> <span class="va">features</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">addField</span><span class="op">)</span>
+
+<span class="co">## Print a selected property of one Feature.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">featureCollection</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">'sum'</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co">## Print the entire FeatureCollection.</span>
+<span class="fu">ee_print</span><span class="op">(</span><span class="va">featureCollection</span><span class="op">)</span></code></pre></div>
+<p>Note the cast to <code>ee$Number</code> required for the property value to be recognized as a number in order to use the <code>add()</code> method. The type of the collection can be changed by <code>map()</code>. For example:</p>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## This function returns the image centroid as a new Feature.</span>
+<span class="va">getGeom</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">geometry</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">centroid</span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>foo <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co">## Load a Landsat 8 collection.</span>
+<span class="va">ee_geom</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">122.262</span>, <span class="fl">37.8719</span><span class="op">)</span>
+<span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">'LANDSAT/LC08/C01/T1'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterBounds</span><span class="op">(</span><span class="va">ee_geom</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterDate</span><span class="op">(</span><span class="st">'2014-06-01'</span>, <span class="st">'2014-10-01'</span><span class="op">)</span>
+
+<span class="co">## Map the function over the ImageCollection.</span>
+<span class="va">featureCollection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="va">collection</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">getGeom</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co">## Print the collection.</span>
+<span class="fu">ee_print</span><span class="op">(</span><span class="va">featureCollection</span><span class="op">)</span></code></pre></div>
+<p>Note the added property (<code>foo</code>) for each feature created from the image centroid. In the final line, the cast makes the resultant collection recognizable as a <code>FeatureCollection</code>.</p>
+</div>
+</div>
+<div id="reducing" class="section level2 unnumbered">
+<h2>Reducing<a class="anchor" aria-label="anchor" href="#reducing"><i class="fas fa-link"></i></a>
+</h2>
+<p>Reducing is the way to aggregate data over time, space, bands, arrays and other data structures in Earth Engine. Various methods exist for this purpose in the API. For example, to make a composite of an <code>ImageCollection</code>, use <code>reduce()</code> to reduce the images in the collection to one Image. A simple example is creating the median composite of the five least cloudy scenes in the Landsat 8 collection defined earlier:</p>
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Load a Landsat 8 collection.</span>
+<span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">'LANDSAT/LC08/C01/T1'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="co">## Filter by date and location.</span>
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterBounds</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">122.262</span>, <span class="fl">37.8719</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterDate</span><span class="op">(</span><span class="st">'2014-01-01'</span>, <span class="st">'2014-12-31'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="co">## Sort by increasing cloudiness.</span>
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">sort</span><span class="op">(</span><span class="st">'CLOUD_COVER'</span><span class="op">)</span></code></pre></div>
+<div id="using-rgee-4" class="section level3 unnumbered">
+<h3>Using rgee<a class="anchor" aria-label="anchor" href="#using-rgee-4"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Compute the median of each pixel for each band of the 5 least cloudy scenes.</span>
+<span class="va">median</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">limit</span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">$</span><span class="fu">reduce</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">median</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="using-rgeeextra-4" class="section level3 unnumbered">
+<h3>Using rgeeExtra<a class="anchor" aria-label="anchor" href="#using-rgeeextra-4"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Compute the median of each pixel for each band of the 5 least cloudy scenes.</span>
+<span class="va">median</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">[[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">reduce</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">median</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Reducing is also the way to get statistics of an image in the regions defined by a <code>Feature</code> or <code>FeatureCollection</code>. Suppose the task is to compute the mean pixel values within an area of interest. Use <code>reduceRegion()</code> for this purpose. For example:</p>
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Load and display a Landsat TOA image.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318'</span><span class="op">)</span>
+
+<span class="co">## Create an arbitrary rectangle as a region and display it.</span>
+<span class="va">region</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Rectangle</span><span class="op">(</span><span class="op">-</span><span class="fl">122.2806</span>, <span class="fl">37.1209</span>, <span class="op">-</span><span class="fl">122.0554</span>, <span class="fl">37.2413</span><span class="op">)</span>
+
+<span class="co">## Get a dictionary of means in the region.  Keys are bandnames.</span>
+<span class="va">mean</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span>,
+  geometry <span class="op">=</span> <span class="va">region</span>,
+  scale <span class="op">=</span> <span class="fl">30</span>
+<span class="op">)</span>
+
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  eeObject <span class="op">=</span> <span class="va">image</span>,
+  visParams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B4"</span>, <span class="st">"B3"</span>, <span class="st">"B2"</span><span class="op">)</span>, max <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>, 
+  name <span class="op">=</span> <span class="st">"SF"</span>
+<span class="op">)</span> <span class="op">+</span> 
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">region</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">"red"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"ROI"</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_01/figure_map_06.png">
+</center>
+<p><br></p>
+<p>Learn more about reducers from the <a href="">Reducers doc</a>.</p>
+</div>
+</div>
+<div id="masking-1" class="section level2 unnumbered">
+<h2>Masking<a class="anchor" aria-label="anchor" href="#masking-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>Every pixel in an <code>ee$Image</code> has both a value and a mask which ranges from 0 (no data) to 1. Masked pixels (in which mask == 0) are treated as no data. Pixels with 0 &lt; mask ≤ 1 have a value, but it is weighted by the mask for numerical computations.</p>
+<p>You can make pixels transparent or exclude them from analysis using masks. Pixels are masked when the mask value is zero. Continuing the image differencing example, use a mask to display areas of increased and decreased NDVI over the difference interval:</p>
+<div id="using-rgee-5" class="section level3 unnumbered">
+<h3>Using rgee<a class="anchor" aria-label="anchor" href="#using-rgee-5"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## This function gets NDVI from Landsat 5 imagery.</span>
+<span class="va">getNDVI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">image</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'B4'</span>, <span class="st">'B3'</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co">## Load two Landsat 5 images, 20 years apart.</span>
+<span class="va">image1</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LT05/C01/T1_TOA/LT05_044034_19900604'</span><span class="op">)</span>
+<span class="va">image2</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LT05/C01/T1_TOA/LT05_044034_20100611'</span><span class="op">)</span>
+
+<span class="co">## Compute NDVI from the scenes.</span>
+<span class="va">ndvi1</span> <span class="op">&lt;-</span> <span class="fu">getNDVI</span><span class="op">(</span><span class="va">image1</span><span class="op">)</span>
+<span class="va">ndvi2</span> <span class="op">&lt;-</span> <span class="fu">getNDVI</span><span class="op">(</span><span class="va">image2</span><span class="op">)</span>
+
+<span class="co">## Compute the difference in NDVI.</span>
+<span class="va">ndviDifference</span> <span class="op">=</span> <span class="va">ndvi2</span><span class="op">$</span><span class="fu">subtract</span><span class="op">(</span><span class="va">ndvi1</span><span class="op">)</span>
+<span class="co">## Load the land mask from the SRTM DEM.</span>
+<span class="va">landMask</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'CGIAR/SRTM90_V4'</span><span class="op">)</span><span class="op">$</span><span class="fu">mask</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co">## Update the NDVI difference mask with the land mask.</span>
+<span class="va">maskedDifference</span> <span class="op">&lt;-</span> <span class="va">ndviDifference</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">landMask</span><span class="op">)</span>
+
+<span class="co">## Display the masked result.</span>
+<span class="va">vizParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  min <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>, 
+  max <span class="op">=</span> <span class="fl">0.5</span>, 
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'FF0000'</span>, <span class="st">'FFFFFF'</span>, <span class="st">'0000FF'</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">122.2531</span>, <span class="fl">37.6295</span>, <span class="fl">9</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">maskedDifference</span>, <span class="va">vizParams</span>, <span class="st">'NDVI difference'</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="using-rgeeextra-5" class="section level3 unnumbered">
+<h3>Using rgeeExtra<a class="anchor" aria-label="anchor" href="#using-rgeeextra-5"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## This function gets NDVI from Landsat 5 imagery.</span>
+<span class="va">getNDVI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="op">(</span><span class="va">image</span><span class="op">[[</span><span class="st">"B4"</span><span class="op">]</span><span class="op">]</span> <span class="op">-</span> <span class="va">image</span><span class="op">[[</span><span class="st">"B3"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">image</span><span class="op">[[</span><span class="st">"B4"</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="va">image</span><span class="op">[[</span><span class="st">"B3"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co">## Load two Landsat 5 images, 20 years apart.</span>
+<span class="va">image1</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LT05/C01/T1_TOA/LT05_044034_19900604'</span><span class="op">)</span>
+<span class="va">image2</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LT05/C01/T1_TOA/LT05_044034_20100611'</span><span class="op">)</span>
+
+<span class="co">## Compute NDVI from the scenes.</span>
+<span class="va">ndvi1</span> <span class="op">&lt;-</span> <span class="fu">getNDVI</span><span class="op">(</span><span class="va">image1</span><span class="op">)</span>
+<span class="va">ndvi2</span> <span class="op">&lt;-</span> <span class="fu">getNDVI</span><span class="op">(</span><span class="va">image2</span><span class="op">)</span>
+
+<span class="co">## Compute the difference in NDVI.</span>
+<span class="va">ndviDifference</span> <span class="op">&lt;-</span> <span class="va">ndvi2</span> <span class="op">-</span> <span class="va">ndvi1</span>
+
+<span class="co">## Load the land mask from the SRTM DEM.</span>
+<span class="va">landMask</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'CGIAR/SRTM90_V4'</span><span class="op">)</span><span class="op">$</span><span class="fu">mask</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co">## Update the NDVI difference mask with the land mask.</span>
+<span class="va">maskedDifference</span> <span class="op">&lt;-</span> <span class="va">ndviDifference</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">landMask</span><span class="op">)</span>
+
+<span class="co">## Display the masked result.</span>
+<span class="va">vizParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  min <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>, 
+  max <span class="op">=</span> <span class="fl">0.5</span>, 
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'FF0000'</span>, <span class="st">'FFFFFF'</span>, <span class="st">'0000FF'</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">122.2531</span>, <span class="fl">37.6295</span>, <span class="fl">9</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">maskedDifference</span>, <span class="va">vizParams</span>, <span class="st">'NDVI difference'</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_01/figure_map_07.png">
+</center>
+<p><br></p>
+<p>In this example, note that the mask of the NDVI difference is updated by the land mask with <code>updateMask()</code>. This sets the mask of the NDVI difference pixels to the land mask wherever the NDVI difference mask is non-zero.</p>
+<p>Masking is also useful for excluding data from the analysis. Consider the <code>reduceRegion()</code> example from the <a href="">Reducing section</a>. Suppose the task is to compute a seasonal mean NDVI for Santa Clara county, CA, excluding cloudy pixels. The following example demonstrates multiple concepts: filtering, mapping, reducing and the use of a cloud mask:</p>
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## This function gets NDVI from a Landsat 8 image.</span>
+<span class="va">addNDVI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'B5'</span>, <span class="st">'B4'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co">## This function masks cloudy pixels.</span>
+<span class="va">cloudMask</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">clouds</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Algorithms</span><span class="op">$</span><span class="va">Landsat</span><span class="op">$</span><span class="fu">simpleCloudScore</span><span class="op">(</span><span class="va">image</span><span class="op">)</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'cloud'</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">clouds</span><span class="op">$</span><span class="fu">lt</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co">## Load a Landsat collection, map the NDVI and cloud masking functions over it.</span>
+<span class="va">ee_geom</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">122.262</span>, <span class="fl">37.8719</span><span class="op">)</span>
+<span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">'LANDSAT/LC08/C01/T1_TOA'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterBounds</span><span class="op">(</span><span class="va">ee_geom</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterDate</span><span class="op">(</span><span class="st">'2014-03-01'</span>, <span class="st">'2014-05-31'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">addNDVI</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">cloudMask</span><span class="op">)</span>
+
+<span class="co">## Reduce the collection to the mean of each pixel and display.</span>
+<span class="va">meanImage</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">reduce</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">vizParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'B5_mean'</span>, <span class="st">'B4_mean'</span>, <span class="st">'B3_mean'</span><span class="op">)</span>,
+  min <span class="op">=</span> <span class="fl">0</span>, 
+  max <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>
+
+
+<span class="co">## Load a region in which to compute the mean and display it.</span>
+<span class="va">counties</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">'TIGER/2016/Counties'</span><span class="op">)</span>
+<span class="va">santaClara</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="va">counties</span><span class="op">$</span><span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">'NAME'</span>, <span class="st">'Santa Clara'</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co">## Get the mean of NDVI in the region.</span>
+<span class="va">mean</span> <span class="op">&lt;-</span> <span class="va">meanImage</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'nd_mean'</span><span class="op">)</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span>,
+  geometry <span class="op">=</span> <span class="va">santaClara</span><span class="op">$</span><span class="fu">geometry</span><span class="op">(</span><span class="op">)</span>,
+  scale <span class="op">=</span> <span class="fl">30</span>
+<span class="op">)</span>
+
+<span class="co">## Print mean NDVI for the region.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">'Santa Clara spring mean NDVI:'</span>, <span class="va">mean</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">'nd_mean'</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+
+<span class="co"># Display maps</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">meanImage</span>, <span class="va">vizParams</span>, <span class="st">'mean'</span><span class="op">)</span> <span class="op">+</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">santaClara</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_01/figure_map_08.png">
+</center>
+<p><br></p>
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="visualization.html">Visualization</a></div>
+<div class="next"><a href="coding-best-practices.html">Coding Best Practices</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#r-quickstart">R Quickstart</a></li>
+<li><a class="nav-link" href="#get-started-with-earth-engine">Get Started with Earth Engine</a></li>
+<li><a class="nav-link" href="#how-to-use-these-docs">How to use these docs</a></li>
+<li><a class="nav-link" href="#earth-engine-data-structures">Earth Engine data structures</a></li>
+<li>
+<a class="nav-link" href="#earth-engine-algorithms">Earth Engine algorithms</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#using-rgee">Using rgee</a></li>
+<li><a class="nav-link" href="#using-rgeeextra">Using rgeeExtra</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#hello-world---r">‘Hello World’ - R</a></li>
+<li><a class="nav-link" href="#adding-data-to-the-map">Adding data to the map</a></li>
+<li><a class="nav-link" href="#finding-images-image-collections-and-feature-collections">Finding images, image collections and feature collections</a></li>
+<li>
+<a class="nav-link" href="#filtering-and-sorting">Filtering and Sorting</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#using-rgee-1">using rgee</a></li>
+<li><a class="nav-link" href="#using-rgeeextra-1">using rgeeExtra</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#band-math">Band math</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#using-rgee-2">using rgee</a></li>
+<li><a class="nav-link" href="#using-rgeeextra-2">using rgeeExtra</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#mapping-what-to-do-instead-of-a-for-loop">Mapping (what to do instead of a for-loop)</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#using-rgee-3">Using rgee</a></li>
+<li><a class="nav-link" href="#using-rgeeextra-3">Using rgeeExtra</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#reducing">Reducing</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#using-rgee-4">Using rgee</a></li>
+<li><a class="nav-link" href="#using-rgeeextra-4">Using rgeeExtra</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#masking-1">Masking</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#using-rgee-5">Using rgee</a></li>
+<li><a class="nav-link" href="#using-rgeeextra-5">Using rgeeExtra</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/01_get_started.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/01_get_started.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

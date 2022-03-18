@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Comparing rgee vs Python and Javascript | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Comparing rgee vs Python and Javascript | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Comparing rgee vs Python and Javascript | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="This section requires the next libraries: library(rgee) ee_Initialize() The R, Python and JavaScript APIs access the same server-side functionality, but client-side expressions (learn more about...">
+<meta property="og:description" content="This section requires the next libraries: library(rgee) ee_Initialize() The R, Python and JavaScript APIs access the same server-side functionality, but client-side expressions (learn more about...">
+<meta name="twitter:description" content="This section requires the next libraries: library(rgee) ee_Initialize() The R, Python and JavaScript APIs access the same server-side functionality, but client-side expressions (learn more about...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="active" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="comparing-rgee-vs-python-and-javascript" class="section level1 unnumbered">
+<h1>Comparing rgee vs Python and Javascript<a class="anchor" aria-label="anchor" href="#comparing-rgee-vs-python-and-javascript"><i class="fas fa-link"></i></a>
+</h1>
+<p>This section requires the next libraries:</p>
+<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>The R, Python and JavaScript APIs access the same server-side functionality, but client-side expressions (<a href="">learn more about client vs. server</a>) can vary because of language syntax differences. The <strong><a href="https://pypi.org/project/earthengine-api/">Earth Engine Python API</a></strong> and <strong>rgee</strong> share the <strong>same modules, classes, functions, and methods</strong>. In other words, the logic of the syntax (just change <strong>.</strong> by a <strong>$</strong>) is the same and the execution time is just as fast. However, keep in mind that syntactic differences may exist in certain situations. The following table includes a list of the common syntax differences you’ll encounter when working with the R API relative to the Python and JavaScript API.</p>
+<div id="function-definition" class="section level2 unnumbered">
+<h2>Function definition<a class="anchor" aria-label="anchor" href="#function-definition"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><strong>JavaScript</strong></li>
+</ul>
+<div class="sourceCode" id="cb133"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb133-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb133-1"></a><span class="kw">function</span> <span class="at">myFun</span>(arg) <span class="op">{</span></span>
+<span id="cb133-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb133-2"></a>  <span class="cf">return</span> arg<span class="op">;</span></span>
+<span id="cb133-3"><a href="comparing-rgee-vs-python-and-javascript.html#cb133-3"></a><span class="op">}</span></span>
+<span id="cb133-4"><a href="comparing-rgee-vs-python-and-javascript.html#cb133-4"></a></span>
+<span id="cb133-5"><a href="comparing-rgee-vs-python-and-javascript.html#cb133-5"></a><span class="kw">var</span> myFun <span class="op">=</span> <span class="kw">function</span>(arg) <span class="op">{</span></span>
+<span id="cb133-6"><a href="comparing-rgee-vs-python-and-javascript.html#cb133-6"></a>  <span class="cf">return</span> arg<span class="op">;</span></span>
+<span id="cb133-7"><a href="comparing-rgee-vs-python-and-javascript.html#cb133-7"></a><span class="op">};</span></span></code></pre></div>
+<ul>
+<li><strong>Python</strong></li>
+</ul>
+<div class="sourceCode" id="cb134"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb134-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb134-1"></a><span class="kw">def</span> my_fun(arg):</span>
+<span id="cb134-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb134-2"></a>  <span class="cf">return</span> arg</span></code></pre></div>
+<ul>
+<li><strong>R</strong></li>
+</ul>
+<div class="sourceCode" id="cb135"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">my_fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">arg</span><span class="op">)</span><span class="op">{</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">arg</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+</div>
+<div id="anonymous-function-mapping" class="section level2 unnumbered">
+<h2>Anonymous function mapping<a class="anchor" aria-label="anchor" href="#anonymous-function-mapping"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><strong>JavaScript</strong></li>
+</ul>
+<div class="sourceCode" id="cb136"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb136-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb136-1"></a><span class="kw">var</span> foo <span class="op">=</span> <span class="va">col</span>.<span class="at">map</span>(<span class="kw">function</span>(arg) <span class="op">{</span></span>
+<span id="cb136-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb136-2"></a>  <span class="cf">return</span> arg<span class="op">;</span></span>
+<span id="cb136-3"><a href="comparing-rgee-vs-python-and-javascript.html#cb136-3"></a><span class="op">}</span>)<span class="op">;</span></span></code></pre></div>
+<ul>
+<li><strong>Python</strong></li>
+</ul>
+<div class="sourceCode" id="cb137"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb137-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb137-1"></a>foo <span class="op">=</span> col.<span class="bu">map</span>(<span class="kw">lambda</span> arg: arg)</span></code></pre></div>
+<ul>
+<li><strong>R</strong></li>
+</ul>
+<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">foor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">col</span>, <span class="kw">function</span><span class="op">(</span><span class="va">arg</span><span class="op">)</span> <span class="va">arg</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="variable-definition" class="section level2 unnumbered">
+<h2>Variable definition<a class="anchor" aria-label="anchor" href="#variable-definition"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><strong>JavaScript</strong></li>
+</ul>
+<div class="sourceCode" id="cb139"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb139-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb139-1"></a><span class="kw">var</span> myVar <span class="op">=</span> <span class="st">'var'</span><span class="op">;</span></span></code></pre></div>
+<ul>
+<li><strong>Python</strong></li>
+</ul>
+<div class="sourceCode" id="cb140"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb140-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb140-1"></a>my_var <span class="op">=</span> <span class="st">'var'</span></span></code></pre></div>
+<ul>
+<li><strong>R</strong></li>
+</ul>
+<div class="sourceCode" id="cb141"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">my_var</span> <span class="op">&lt;-</span> <span class="st">'var'</span></code></pre></div>
+</div>
+<div id="logical-operators" class="section level2 unnumbered">
+<h2>Logical operators<a class="anchor" aria-label="anchor" href="#logical-operators"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><strong>JavaScript</strong></li>
+</ul>
+<div class="sourceCode" id="cb142"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb142-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb142-1"></a><span class="kw">var</span> match <span class="op">=</span> <span class="va">such</span>.<span class="at">and</span>(that)<span class="op">;</span></span>
+<span id="cb142-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb142-2"></a><span class="kw">var</span> match <span class="op">=</span> <span class="va">such</span>.<span class="at">or</span>(that)<span class="op">;</span></span>
+<span id="cb142-3"><a href="comparing-rgee-vs-python-and-javascript.html#cb142-3"></a><span class="kw">var</span> match <span class="op">=</span> <span class="va">such</span>.<span class="at">not</span>(that)<span class="op">;</span></span></code></pre></div>
+<ul>
+<li><strong>Python</strong></li>
+</ul>
+<div class="sourceCode" id="cb143"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb143-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb143-1"></a>match <span class="op">=</span> such.And(that)</span>
+<span id="cb143-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb143-2"></a>match <span class="op">=</span> such.Or(that)</span>
+<span id="cb143-3"><a href="comparing-rgee-vs-python-and-javascript.html#cb143-3"></a>match <span class="op">=</span> such.Not(that)</span></code></pre></div>
+<ul>
+<li><strong>R</strong></li>
+</ul>
+<div class="sourceCode" id="cb144"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">match</span> <span class="op">&lt;-</span> <span class="va">such</span><span class="op">$</span><span class="fu">And</span><span class="op">(</span><span class="va">that</span><span class="op">)</span>
+<span class="va">match</span> <span class="op">&lt;-</span> <span class="va">such</span><span class="op">$</span><span class="fu">Or</span><span class="op">(</span><span class="va">that</span><span class="op">)</span>
+<span class="va">match</span> <span class="op">&lt;-</span> <span class="va">such</span><span class="op">$</span><span class="fu">Not</span><span class="op">(</span><span class="va">that</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="multi-line-method-chain" class="section level2 unnumbered">
+<h2>Multi-line method chain<a class="anchor" aria-label="anchor" href="#multi-line-method-chain"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><strong>JavaScript</strong></li>
+</ul>
+<div class="sourceCode" id="cb145"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb145-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb145-1"></a><span class="kw">var</span> foo <span class="op">=</span> <span class="va">my</span>.<span class="at">really</span>()</span>
+<span id="cb145-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb145-2"></a>              .<span class="at">reallyLong</span>()</span>
+<span id="cb145-3"><a href="comparing-rgee-vs-python-and-javascript.html#cb145-3"></a>              .<span class="at">methodChain</span>()<span class="op">;</span></span></code></pre></div>
+<ul>
+<li><strong>Python</strong></li>
+</ul>
+<div class="sourceCode" id="cb146"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb146-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb146-1"></a>foo <span class="op">=</span> (my.really()</span>
+<span id="cb146-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb146-2"></a>       .reallyLong()</span>
+<span id="cb146-3"><a href="comparing-rgee-vs-python-and-javascript.html#cb146-3"></a>       .methodChain())</span></code></pre></div>
+<ul>
+<li><strong>R</strong></li>
+</ul>
+<div class="sourceCode" id="cb147"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">foo</span> <span class="op">=</span> <span class="va">my</span> <span class="op">%&gt;%</span> 
+  <span class="fu">really</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">reallyLong</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">methodChain</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="dictionary-keys" class="section level2 unnumbered">
+<h2>Dictionary keys<a class="anchor" aria-label="anchor" href="#dictionary-keys"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><strong>JavaScript</strong></li>
+</ul>
+<div class="sourceCode" id="cb148"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb148-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb148-1"></a><span class="kw">var</span> dic <span class="op">=</span> <span class="op">{</span><span class="st">'key'</span><span class="op">:</span> value<span class="op">};</span></span>
+<span id="cb148-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb148-2"></a><span class="kw">var</span> dic <span class="op">=</span> <span class="op">{</span><span class="dt">key</span><span class="op">:</span> value<span class="op">};</span></span></code></pre></div>
+<ul>
+<li><strong>Python</strong></li>
+</ul>
+<div class="sourceCode" id="cb149"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb149-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb149-1"></a>dic <span class="op">=</span> {<span class="st">'key'</span>: value}</span></code></pre></div>
+<ul>
+<li><strong>R</strong></li>
+</ul>
+<div class="sourceCode" id="cb150"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">value</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="dictionary-object-access" class="section level2 unnumbered">
+<h2>Dictionary object access<a class="anchor" aria-label="anchor" href="#dictionary-object-access"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><strong>JavaScript</strong></li>
+</ul>
+<div class="sourceCode" id="cb151"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb151-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb151-1"></a><span class="kw">var</span> value <span class="op">=</span> <span class="va">dic</span>.<span class="at">key</span><span class="op">;</span></span>
+<span id="cb151-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb151-2"></a><span class="kw">var</span> value <span class="op">=</span> dic[<span class="st">'key'</span>]<span class="op">;</span></span></code></pre></div>
+<ul>
+<li><strong>Python</strong></li>
+</ul>
+<div class="sourceCode" id="cb152"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb152-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb152-1"></a>value <span class="op">=</span> dic[<span class="st">'key'</span>]</span></code></pre></div>
+<ul>
+<li><strong>R</strong></li>
+</ul>
+<div class="sourceCode" id="cb153"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">value</span> <span class="op">&lt;-</span> <span class="va">dic</span><span class="op">[[</span><span class="st">'key'</span><span class="op">]</span><span class="op">]</span></code></pre></div>
+</div>
+<div id="function-argument-definition" class="section level2 unnumbered">
+<h2>Function argument definition<a class="anchor" aria-label="anchor" href="#function-argument-definition"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><strong>JavaScript</strong></li>
+</ul>
+<div class="sourceCode" id="cb154"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb154-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb154-1"></a><span class="co">// Positional arguments.</span></span>
+<span id="cb154-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb154-2"></a><span class="kw">var</span> foo <span class="op">=</span> <span class="at">fun</span>(argX<span class="op">,</span> argY<span class="op">,</span> argZ)<span class="op">;</span></span>
+<span id="cb154-3"><a href="comparing-rgee-vs-python-and-javascript.html#cb154-3"></a><span class="co">// Keyword arguments object.</span></span>
+<span id="cb154-4"><a href="comparing-rgee-vs-python-and-javascript.html#cb154-4"></a><span class="kw">var</span> foo <span class="op">=</span> <span class="at">fun</span>(<span class="op">{</span><span class="dt">y</span><span class="op">:</span> argY<span class="op">}</span>)<span class="op">;</span></span></code></pre></div>
+<ul>
+<li><strong>Python</strong></li>
+</ul>
+<div class="sourceCode" id="cb155"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb155-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb155-1"></a><span class="co"># Positional arguments.</span></span>
+<span id="cb155-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb155-2"></a>foo <span class="op">=</span> fun(arg_x, arg_y, arg_z)</span>
+<span id="cb155-3"><a href="comparing-rgee-vs-python-and-javascript.html#cb155-3"></a><span class="co"># Keyword arguments dictionary.</span></span>
+<span id="cb155-4"><a href="comparing-rgee-vs-python-and-javascript.html#cb155-4"></a>foo <span class="op">=</span> fun(<span class="op">**</span>{<span class="st">'y'</span>: arg_y})</span>
+<span id="cb155-5"><a href="comparing-rgee-vs-python-and-javascript.html#cb155-5"></a><span class="co"># Keyword arguments.</span></span>
+<span id="cb155-6"><a href="comparing-rgee-vs-python-and-javascript.html#cb155-6"></a>foo <span class="op">=</span> fun(x<span class="op">=</span>arg_x, z<span class="op">=</span>arg_z)</span></code></pre></div>
+<ul>
+<li><strong>R</strong></li>
+</ul>
+<div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Positional arguments.</span>
+<span class="va">foo</span> <span class="op">&lt;-</span> <span class="fu">fun</span><span class="op">(</span><span class="va">arg_x</span>, <span class="va">arg_y</span>, <span class="va">arg_z</span><span class="op">)</span>
+
+<span class="co"># Keyword arguments.</span>
+<span class="va">foo</span> <span class="op">&lt;-</span> <span class="fu">fun</span><span class="op">(</span>x<span class="op">=</span><span class="va">arg_x</span>, z<span class="op">=</span><span class="va">arg_z</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="boolean" class="section level2 unnumbered">
+<h2>Boolean<a class="anchor" aria-label="anchor" href="#boolean"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><strong>JavaScript</strong></li>
+</ul>
+<div class="sourceCode" id="cb157"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb157-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb157-1"></a>    <span class="kw">var</span> t <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb157-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb157-2"></a><span class="kw">var</span> f <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span></code></pre></div>
+<ul>
+<li><strong>Python</strong></li>
+</ul>
+<div class="sourceCode" id="cb158"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb158-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb158-1"></a>t <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb158-2"><a href="comparing-rgee-vs-python-and-javascript.html#cb158-2"></a>f <span class="op">=</span> <span class="va">False</span></span></code></pre></div>
+<ul>
+<li><strong>R</strong></li>
+</ul>
+<div class="sourceCode" id="cb159"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">t</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
+<span class="va">f</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></code></pre></div>
+</div>
+<div id="boolean-1" class="section level2 unnumbered">
+<h2>Boolean<a class="anchor" aria-label="anchor" href="#boolean-1"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><strong>JavaScript</strong></li>
+</ul>
+<div class="sourceCode" id="cb160"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb160-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb160-1"></a><span class="kw">var</span> na <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span></code></pre></div>
+<ul>
+<li><strong>Python</strong></li>
+</ul>
+<div class="sourceCode" id="cb161"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb161-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb161-1"></a>na <span class="op">=</span> <span class="va">None</span></span></code></pre></div>
+<ul>
+<li><strong>R</strong></li>
+</ul>
+<div class="sourceCode" id="cb162"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">na</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></code></pre></div>
+</div>
+<div id="comment" class="section level2 unnumbered">
+<h2>Comment<a class="anchor" aria-label="anchor" href="#comment"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><strong>JavaScript</strong></li>
+</ul>
+<div class="sourceCode" id="cb163"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb163-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb163-1"></a><span class="co">//</span></span></code></pre></div>
+<ul>
+<li><strong>Python</strong></li>
+</ul>
+<div class="sourceCode" id="cb164"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb164-1"><a href="comparing-rgee-vs-python-and-javascript.html#cb164-1"></a><span class="co">#</span></span></code></pre></div>
+<ul>
+<li><strong>R</strong></li>
+</ul>
+<div class="sourceCode" id="cb165"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#</span></code></pre></div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></div>
+<div class="next"><a href="extra-considerations.html">Extra considerations</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#comparing-rgee-vs-python-and-javascript">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="nav-link" href="#function-definition">Function definition</a></li>
+<li><a class="nav-link" href="#anonymous-function-mapping">Anonymous function mapping</a></li>
+<li><a class="nav-link" href="#variable-definition">Variable definition</a></li>
+<li><a class="nav-link" href="#logical-operators">Logical operators</a></li>
+<li><a class="nav-link" href="#multi-line-method-chain">Multi-line method chain</a></li>
+<li><a class="nav-link" href="#dictionary-keys">Dictionary keys</a></li>
+<li><a class="nav-link" href="#dictionary-object-access">Dictionary object access</a></li>
+<li><a class="nav-link" href="#function-argument-definition">Function argument definition</a></li>
+<li><a class="nav-link" href="#boolean">Boolean</a></li>
+<li><a class="nav-link" href="#boolean-1">Boolean</a></li>
+<li><a class="nav-link" href="#comment">Comment</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/02_dev_env.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/02_dev_env.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

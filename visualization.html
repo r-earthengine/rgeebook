@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Visualization | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Visualization | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Visualization | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Introduction Map$addLayer(…) can be used to visualize a image. When you add a layer (ee$Image) to the map...">
+<meta property="og:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Introduction Map$addLayer(…) can be used to visualize a image. When you add a layer (ee$Image) to the map...">
+<meta name="twitter:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Introduction Map$addLayer(…) can be used to visualize a image. When you add a layer (ee$Image) to the map...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="active" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="visualization" class="section level1 unnumbered">
+<h1>Visualization<a class="anchor" aria-label="anchor" href="#visualization"><i class="fas fa-link"></i></a>
+</h1>
+<p>This section requires the next libraries:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rgeeExtra</span><span class="op">)</span>
+
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div id="introduction" class="section level2 unnumbered">
+<h2>Introduction<a class="anchor" aria-label="anchor" href="#introduction"><i class="fas fa-link"></i></a>
+</h2>
+<p><a href="https://r-spatial.github.io/rgee/reference/Map.html"><strong>Map$addLayer(…)</strong></a> can be used to visualize a image. When you add a layer (ee$Image) to the map without any other settings, rgee automatically allocates the first three bands to red (R), green (G), and blue (B), in that order. The default stretch is determined by band data type (for example, floats are stretched in [0,1], whereas 16-bit data is stretched to [0-65536]), which may or may not be appropriate. You may specify visualization settings to <code>Map$addLayer(...)</code> to create desired visualization effects. The parameters are as follows:</p>
+<center>
+<style type="text/css">
+  .tg  {border-collapse:collapse;border-spacing:0;}
+  .tg td{border-bottom-width:1px;border-color:black;border-style:solid;border-top-width:1px;border-width:0px;
+    font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}
+  .tg th{border-bottom-width:1px;border-color:black;border-style:solid;border-top-width:1px;border-width:0px;
+    font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+  .tg .tg-abx8{background-color:#c0c0c0;font-weight:bold;text-align:left;vertical-align:top}
+  .tg .tg-uqo3{background-color:#efefef;text-align:center;vertical-align:top}
+  .tg .tg-8zwo{font-style:italic;text-align:left;vertical-align:top}
+  .tg .tg-0lax{text-align:left;vertical-align:top}
+  </style>
+<table class="tg" style="undefined;table-layout: fixed; width: 646px">
+<colgroup>
+<col style="width: 79.75px">
+<col style="width: 312.75px">
+<col style="width: 253.75px">
+</colgroup>
+<thead><tr>
+<th class="tg-uqo3" colspan="3">
+<span style="font-weight:bold">Visualization parameters for</span> Map$addLayer()
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="tg-abx8">
+Parameter
+</td>
+<td class="tg-abx8">
+Description
+</td>
+<td class="tg-abx8">
+Type
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+bands
+</td>
+<td class="tg-0lax">
+Comma-delimited list of three band names to be mapper to RGB
+</td>
+<td class="tg-0lax">
+list
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+min
+</td>
+<td class="tg-0lax">
+Value(s) to map to 0
+</td>
+<td class="tg-0lax">
+number or list of three numbers, one for each band
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+max
+</td>
+<td class="tg-0lax">
+Value(s) to map to 255
+</td>
+<td class="tg-0lax">
+number or list of three numbers, one for each band
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+gain
+</td>
+<td class="tg-0lax">
+Value(s) by which to multiply each pixel value
+</td>
+<td class="tg-0lax">
+number or list of three numbers, one for each band
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+bias
+</td>
+<td class="tg-0lax">
+Value(s) to add to each DN
+</td>
+<td class="tg-0lax">
+number or list of three numbers, one for each band
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+gamma
+</td>
+<td class="tg-0lax">
+Gamma correction factor(s)
+</td>
+<td class="tg-0lax">
+<span style="font-weight:400;font-style:normal">number or list of three numbers, one for each band</span>
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+palette
+</td>
+<td class="tg-0lax">
+List of CSS-style color strings (single-band images only)
+</td>
+<td class="tg-0lax">
+comma-separated list hex strings
+</td>
+</tr>
+<tr>
+<td class="tg-8zwo">
+opacity
+</td>
+<td class="tg-0lax">
+The opacity of the layer (0.0 is fully transparent and 1.0 is fully opaque)
+</td>
+<td class="tg-0lax">
+number
+</td>
+</tr>
+</tbody>
+</table>
+</center>
+</div>
+<div id="rgb-composites" class="section level2 unnumbered">
+<h2>RGB composites<a class="anchor" aria-label="anchor" href="#rgb-composites"><i class="fas fa-link"></i></a>
+</h2>
+<p>The following example illustrates how to style a Landsat 8 image as a false-color composite:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load an image.</span>
+<span class="va">landsat</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318"</span><span class="op">)</span>
+<span class="co"># Define the visualization parameters.</span>
+<span class="va">vizParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span>, <span class="st">"B3"</span><span class="op">)</span>,
+  min <span class="op">=</span> <span class="fl">0</span>,
+  max <span class="op">=</span> <span class="fl">0.5</span>,
+  gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.95</span>, <span class="fl">1.1</span>, <span class="fl">1</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="co"># Center the map and display the image.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span>lon <span class="op">=</span> <span class="op">-</span><span class="fl">122.1899</span>, lat <span class="op">=</span> <span class="fl">37.5010</span>, zoom <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># San Francisco Bay</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">landsat</span>, <span class="va">vizParams</span>, <span class="st">"false color composite"</span><span class="op">)</span></code></pre></div>
+<p>In this example, band <code>B5</code> is assigned to red, <code>B4</code> is assigned to green, and <code>B3</code> is assigned to blue. The result should look something like the figure bellow.</p>
+<figure><center>
+<img src="https://user-images.githubusercontent.com/49989177/104054975-04bb0900-51bc-11eb-9737-6e4f12063e30.png" width="95%"><br><caption>
+<strong>Figure N°01:</strong> Landsat 8 false color composite of San Francisco bay area, California, USA.
+</caption>
+</center>
+<br></figure>
+</div>
+<div id="color-palettes" class="section level2 unnumbered">
+<h2>Color palettes<a class="anchor" aria-label="anchor" href="#color-palettes"><i class="fas fa-link"></i></a>
+</h2>
+<p>Set the <code>palette</code> argument expressed by a list of CSS-style color strings to display a single band of an image in color (See <a href="https://en.wikipedia.org/wiki/Web_colors"><strong>this reference</strong></a> for more information). The following example illustrates how to use colors from cyan (<code>‘00FFFF’</code>) to blue (<code>‘0000FF’</code>) to render a <a href="https://www.tandfonline.com/doi/abs/10.1080/01431169608948714"><strong>Normalized Difference Water Index (NDWI)</strong></a> image:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load an image.</span>
+<span class="va">landsat</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318"</span><span class="op">)</span>
+<span class="co"># Create an NDWI image.</span>
+<span class="va">ndwi</span> <span class="op">&lt;-</span> <span class="va">landsat</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B3"</span>, <span class="st">"B5"</span><span class="op">)</span><span class="op">)</span>
+<span class="co"># define visualization parameters and display image.</span>
+<span class="va">ndwiViz</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  min <span class="op">=</span> <span class="fl">0.5</span>,
+  max <span class="op">=</span> <span class="fl">1</span>,
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"00FFFF"</span>, <span class="st">"0000FF"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  eeObject <span class="op">=</span> <span class="va">ndwi</span>,
+  visParams <span class="op">=</span> <span class="va">ndwiViz</span>,
+  name <span class="op">=</span> <span class="st">"NDWI"</span>,
+  shown <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span></code></pre></div>
+<p>In this example, note that the <code>min</code> and <code>max</code> parameters indicate the range of pixel values to which the palette should be applied. Intermediate values are linearly stretched. Also note that if you define <code>shown</code> parameter as <code>FALSE</code>, this results in the visibility of the layer being off when it is added to the map. It can always be turned on again using the <strong>Layer Manager</strong> in the upper left corner of the map. The result should look something like <strong>Figure 2</strong>.</p>
+<figure><center>
+<img src="https://user-images.githubusercontent.com/49989177/104057949-f4595d00-51c0-11eb-980e-575f119b0098.png" width="95%"><br><caption>
+<strong>Figure N°02:</strong> Landsat 8 NDWI, San Francisco bay area, USA. Same area as Figure 1. Cyan are low values, blue are high values.
+</caption>
+</center>
+<br></figure>
+</div>
+<div id="masking" class="section level2 unnumbered">
+<h2>Masking<a class="anchor" aria-label="anchor" href="#masking"><i class="fas fa-link"></i></a>
+</h2>
+<p>You can use <a href="https://developers.google.com/earth-engine/apidocs/ee-image-updatemask"><strong>image$updateMask(…)</strong></a> to set the opacity of individual pixels based on where pixels in a mask image are non-zero. Pixels equal to zero in the mask are excluded from computations and the opacity is set to 0 for display. The following example uses an NDWI threshold to update the mask on the NDWI layer created previously:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Mask the non-watery parts of the image, where NDWI &lt; 0.4.</span>
+<span class="va">ndwiMasked</span> <span class="op">&lt;-</span> <span class="va">ndwi</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">ndwi</span><span class="op">$</span><span class="fu">gte</span><span class="op">(</span><span class="fl">0.4</span><span class="op">)</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">ndwiMasked</span>, <span class="va">ndwiViz</span>, <span class="st">"NDWI masked"</span><span class="op">)</span></code></pre></div>
+<figure><center>
+<img src="https://user-images.githubusercontent.com/49989177/104058569-eb1cc000-51c1-11eb-8d55-59d45e8890de.png" width="95%"><br><caption>
+<strong>Figure N°03:</strong> Landsat 8 NDWI, same area as Figure 2, was masked for values greater than 0,4.
+</caption>
+</center>
+<br></figure>
+</div>
+<div id="visualization-images" class="section level2 unnumbered">
+<h2>Visualization images<a class="anchor" aria-label="anchor" href="#visualization-images"><i class="fas fa-link"></i></a>
+</h2>
+<p>Use the <a href="https://developers.google.com/earth-engine/apidocs/ee-image-visualize"><strong>image$visualize(…)</strong></a> method to convert an image into an 8-bit RGB image for display or export. For example, to convert the false-color composite and NDWI to 3-band display images, use:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load an image.</span>
+<span class="va">landsat</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318'</span><span class="op">)</span>
+<span class="co"># Create visualization layers.</span>
+<span class="va">imageRGB</span> <span class="op">&lt;-</span> <span class="va">landsat</span><span class="op">$</span><span class="fu">visualize</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span>, <span class="st">"B3"</span><span class="op">)</span>,
+    max <span class="op">=</span> <span class="fl">0.5</span>
+  <span class="op">)</span>
+<span class="op">)</span>
+<span class="va">ndwiRGB</span> <span class="op">&lt;-</span> <span class="va">ndwiMasked</span><span class="op">$</span><span class="fu">visualize</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    min <span class="op">=</span> <span class="fl">0.5</span>,
+    max <span class="op">=</span> <span class="fl">1</span>,
+    palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'00FFFF'</span>, <span class="st">'0000FF'</span><span class="op">)</span>
+  <span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+</div>
+<div id="mosaicking" class="section level2 unnumbered">
+<h2>Mosaicking<a class="anchor" aria-label="anchor" href="#mosaicking"><i class="fas fa-link"></i></a>
+</h2>
+<p>You can use masking and <a href="https://developers.google.com/earth-engine/apidocs/ee-imagecollection-mosaic"><strong>imageCollection$mosaic(…)</strong></a> to achieve various cartographic effects. The <code>mosaic()</code> method renders layers in the output image according to their order in the input collection. The following example uses <code>mosaic()</code> to combine the masked NDWI and the false color composite and obtain a new visualization:</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Mosaic the visualization layers and display (or export).</span>
+<span class="va">mosaic</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">imageRGB</span>, <span class="va">ndwiRGB</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">mosaic</span><span class="op">(</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>eeObject <span class="op">=</span> <span class="va">mosaic</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"mosaic"</span><span class="op">)</span></code></pre></div>
+<p>In this example, observe that a list of the two visualization images is provided to the <code>ImageCollection</code> constructor. The order of the list determines the order in which the images are rendered on the map. The result should look something like <strong>Figure 3</strong>.</p>
+<figure><center>
+<img src="https://user-images.githubusercontent.com/49989177/104064431-ee1cae00-51cb-11eb-97b5-0980634c8a25.png" width="95%"><br><caption>
+<strong>Figure N°04:</strong> Mosaic of a Landsat 8 false color composite and NDWI. San Francisco bay area, USA.
+</caption>
+</center>
+<br></figure>
+</div>
+<div id="integration-with-other-r-packages" class="section level2 unnumbered">
+<h2>Integration with other R packages<a class="anchor" aria-label="anchor" href="#integration-with-other-r-packages"><i class="fas fa-link"></i></a>
+</h2>
+<p><a href="https://r-spatial.github.io/rgee/reference/Map.html"><strong>Map$addLayer(…)</strong></a> creates a leaflet object
+with the following extra attributes: tokens, name, opacity, shown, min, max, palette, and legend.
+This extra data help to the users to customize their interactive maps and/or integrate <strong>Map$addLayer</strong> with other R packages such as <strong>{mapview}</strong>, <strong>{mapedit}</strong> and <strong>{leaflet}</strong>.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load an image.</span>
+<span class="va">landsat</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318"</span><span class="op">)</span>
+<span class="co"># Define the visualization parameters.</span>
+<span class="va">vizParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span>, <span class="st">"B3"</span><span class="op">)</span>,
+  min <span class="op">=</span> <span class="fl">0</span>,
+  max <span class="op">=</span> <span class="fl">0.5</span>,
+  gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.95</span>, <span class="fl">1.1</span>, <span class="fl">1</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="co"># Center the map and display the image.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span>lon <span class="op">=</span> <span class="op">-</span><span class="fl">122.1899</span>, lat <span class="op">=</span> <span class="fl">37.5010</span>, zoom <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># San Francisco Bay</span>
+<span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">landsat</span>, <span class="va">vizParams</span>, <span class="st">"false color composite"</span><span class="op">)</span>
+<span class="va">m1</span><span class="op">$</span><span class="va">rgee</span>
+<span class="co">#&gt; $tokens</span>
+<span class="co">#&gt; [1] "https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/maps/6f68ea5563f0787171eef294011e5b1a-54a29dea5a564831913fb1c8c1653628/tiles/{z}/{x}/{y}"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $name</span>
+<span class="co">#&gt; [1] "false color composite"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $opacity</span>
+<span class="co">#&gt; [1] 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $shown</span>
+<span class="co">#&gt; [1] TRUE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $min</span>
+<span class="co">#&gt; [1] NA</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $max</span>
+<span class="co">#&gt; [1] NA</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $palette</span>
+<span class="co">#&gt; $palette[[1]]</span>
+<span class="co">#&gt; [1] NA</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $legend</span>
+<span class="co">#&gt; [1] FALSE</span></code></pre></div>
+<p><strong>{leaflet}:</strong> Is a R package binding (develop by Rstudio) for <strong>leaflet</strong> a open-source JavaScript library for mobile-friendly interactive maps.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load an image.</span>
+<span class="va">landsat</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318"</span><span class="op">)</span>
+
+<span class="co"># Define the visualization parameters.</span>
+<span class="va">vizParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span>, <span class="st">"B3"</span><span class="op">)</span>,
+  min <span class="op">=</span> <span class="fl">0</span>,
+  max <span class="op">=</span> <span class="fl">0.5</span>,
+  gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.95</span>, <span class="fl">1.1</span>, <span class="fl">1</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Center the map and display the image.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span>lon <span class="op">=</span> <span class="op">-</span><span class="fl">122.1899</span>, lat <span class="op">=</span> <span class="fl">37.5010</span>, zoom <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># San Francisco Bay</span>
+<span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">landsat</span>, <span class="va">vizParams</span>, <span class="st">"false color composite"</span><span class="op">)</span>
+
+<span class="co"># Integrate with leaflet</span>
+<span class="fu">leaflet</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">addTiles</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">setView</span><span class="op">(</span><span class="op">-</span><span class="fl">122.1899</span>, <span class="fl">37.5010</span>, <span class="fl">9</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">addTiles</span><span class="op">(</span>
+    urlTemplate <span class="op">=</span> <span class="va">m1</span><span class="op">$</span><span class="va">rgee</span><span class="op">$</span><span class="va">tokens</span>,
+    layerId <span class="op">=</span> <span class="st">"leaflet_false_color"</span>,
+    options <span class="op">=</span> <span class="fu">leaflet</span><span class="fu">::</span><span class="fu">tileOptions</span><span class="op">(</span>opacity <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+  <span class="op">)</span></code></pre></div>
+<figure><center>
+<img src="https://user-images.githubusercontent.com/49989177/104054975-04bb0900-51bc-11eb-9737-6e4f12063e30.png" width="95%"><br><caption>
+<strong>Figure N°05:</strong> Map$addLayer and {leaflet} integration
+</caption>
+</center>
+<br></figure><p><strong>{mapview}:</strong> R package develop by Tim Appelhans which provides functions to very quickly and conveniently create interactive visualisations of R spatial data. It support the most popular
+R package for spatial data ({sp}, {sf}, {stars}, and {raster}).</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load an image.</span>
+<span class="va">landsat</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318"</span><span class="op">)</span>
+
+<span class="co"># Define the visualization parameters.</span>
+<span class="va">vizParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span>, <span class="st">"B3"</span><span class="op">)</span>,
+  min <span class="op">=</span> <span class="fl">0</span>,
+  max <span class="op">=</span> <span class="fl">0.5</span>,
+  gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.95</span>, <span class="fl">1.1</span>, <span class="fl">1</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Center the map and display the image.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span>lon <span class="op">=</span> <span class="op">-</span><span class="fl">122.1899</span>, lat <span class="op">=</span> <span class="fl">37.5010</span>, zoom <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># San Francisco Bay</span>
+<span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">landsat</span>, <span class="va">vizParams</span>, <span class="st">"false color composite"</span><span class="op">)</span>
+
+<span class="co"># Integrate with mapview</span>
+<span class="va">stp</span> <span class="op">&lt;-</span> <span class="fu">st_sfc</span><span class="op">(</span><span class="fu">st_point</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">122.27234</span>, <span class="fl">37.46941</span><span class="op">)</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span>
+<span class="fu">mapview</span><span class="op">(</span><span class="va">stp</span>, <span class="va">m1</span><span class="op">)</span></code></pre></div>
+<figure><center>
+<img src="https://user-images.githubusercontent.com/16768318/104090239-c6822000-5275-11eb-95b3-03fc9a94c40e.png" width="95%"><br><caption>
+<strong>Figure N°06:</strong>Map$addLayer and {mapview} integration.
+</caption>
+</center>
+<br></figure><p><strong>{mapedit}:</strong> adds spatial data edition functionality to leaflet interactive maps (Similar to the <a href="https://developers.google.com/earth-engine/guides/playground#geometry-tools">Code Editor geometry tool</a>).</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load an image.</span>
+<span class="va">landsat</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318"</span><span class="op">)</span>
+
+<span class="co"># Define the visualization parameters.</span>
+<span class="va">vizParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span>, <span class="st">"B3"</span><span class="op">)</span>,
+  min <span class="op">=</span> <span class="fl">0</span>,
+  max <span class="op">=</span> <span class="fl">0.5</span>,
+  gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.95</span>, <span class="fl">1.1</span>, <span class="fl">1</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Center the map and display the image.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span>lon <span class="op">=</span> <span class="op">-</span><span class="fl">122.1899</span>, lat <span class="op">=</span> <span class="fl">37.5010</span>, zoom <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># San Francisco Bay</span>
+<span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">landsat</span>, <span class="va">vizParams</span>, <span class="st">"false color composite"</span><span class="op">)</span>
+
+<span class="co"># Integrate with mapedit</span>
+<span class="va">my_geom</span> <span class="op">&lt;-</span> <span class="fu">editMap</span><span class="op">(</span><span class="va">m1</span><span class="op">)</span><span class="op">$</span><span class="va">drawn</span></code></pre></div>
+<figure><center>
+<img src="https://user-images.githubusercontent.com/16768318/104090341-6b046200-5276-11eb-80ed-d65e21c4032f.png" width="95%"><br><caption>
+<strong>Figure N°07:</strong>Map$addLayer and {mapedit} integration.
+</caption>
+</center>
+<br></figure>
+</div>
+<div id="map-operators" class="section level2 unnumbered">
+<h2>Map Operators<a class="anchor" aria-label="anchor" href="#map-operators"><i class="fas fa-link"></i></a>
+</h2>
+<p>From the version 1.0.5, <strong>rgee</strong> support two map operators:</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load an image.</span>
+<span class="va">landsat</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA/LC08_044034_20140318"</span><span class="op">)</span>
+<span class="va">ndwi</span> <span class="op">&lt;-</span> <span class="va">landsat</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B3"</span>, <span class="st">"B5"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ndwiMasked</span> <span class="op">&lt;-</span> <span class="va">ndwi</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">ndwi</span><span class="op">$</span><span class="fu">gte</span><span class="op">(</span><span class="fl">0.4</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Define the visualization parameters.</span>
+<span class="va">vizParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span>, <span class="st">"B3"</span><span class="op">)</span>,
+  min <span class="op">=</span> <span class="fl">0</span>,
+  max <span class="op">=</span> <span class="fl">0.5</span>,
+  gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.95</span>, <span class="fl">1.1</span>, <span class="fl">1</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">ndwiViz</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  min <span class="op">=</span> <span class="fl">0.5</span>,
+  max <span class="op">=</span> <span class="fl">1</span>,
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"00FFFF"</span>, <span class="st">"0000FF"</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Center the map and display the image.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span>lon <span class="op">=</span> <span class="op">-</span><span class="fl">122.1899</span>, lat <span class="op">=</span> <span class="fl">37.5010</span>, zoom <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># San Francisco Bay</span>
+<span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">landsat</span>, <span class="va">vizParams</span>, <span class="st">"false color composite"</span><span class="op">)</span>
+<span class="va">m2</span> <span class="op">&lt;-</span> <span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">ndwiMasked</span>, <span class="va">ndwiViz</span>, <span class="st">"NDWI masked"</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>
+<strong>m1 <code>+</code> m2:</strong> Overlay layers.</li>
+</ul>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">m1</span> <span class="op">+</span> <span class="va">m2</span></code></pre></div>
+<figure><center>
+<img src="https://user-images.githubusercontent.com/16768318/104091090-5f676a00-527b-11eb-9d0c-8f7f5205559c.png" width="95%"><br><caption>
+<strong>Figure N°08:</strong> Overlay map example
+</caption>
+</center>
+<br></figure><ul>
+<li>
+<strong>m1<code>|</code>m2:</strong> Side by side view.</li>
+</ul>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">m1</span> <span class="op">|</span> <span class="va">m2</span></code></pre></div>
+<figure><center>
+<img src="https://user-images.githubusercontent.com/16768318/104091120-9a699d80-527b-11eb-8d4a-ee9bfd57360e.png" width="95%"><br><caption>
+<strong>Figure N°08:</strong> Side by side example
+</caption>
+</center>
+<br></figure>
+</div>
+</div>
+
+
+
+  <div class="chapter-nav">
+<div class="prev"><a href="rgeeextra.html">rgeeExtra</a></div>
+<div class="next"><a href="r-quickstart.html">R Quickstart</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#visualization">Visualization</a></li>
+<li><a class="nav-link" href="#introduction">Introduction</a></li>
+<li><a class="nav-link" href="#rgb-composites">RGB composites</a></li>
+<li><a class="nav-link" href="#color-palettes">Color palettes</a></li>
+<li><a class="nav-link" href="#masking">Masking</a></li>
+<li><a class="nav-link" href="#visualization-images">Visualization images</a></li>
+<li><a class="nav-link" href="#mosaicking">Mosaicking</a></li>
+<li><a class="nav-link" href="#integration-with-other-r-packages">Integration with other R packages</a></li>
+<li><a class="nav-link" href="#map-operators">Map Operators</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/00_R6Map.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/00_R6Map.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

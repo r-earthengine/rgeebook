@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Geometry | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Geometry | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Geometry | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Geometry Overview Earth Engine handles vector data with the Geometry type. The GeoJSON spec describes in...">
+<meta property="og:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Geometry Overview Earth Engine handles vector data with the Geometry type. The GeoJSON spec describes in...">
+<meta name="twitter:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Geometry Overview Earth Engine handles vector data with the Geometry type. The GeoJSON spec describes in...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="active" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="geometry" class="section level1 unnumbered">
+<h1>Geometry<a class="anchor" aria-label="anchor" href="#geometry"><i class="fas fa-link"></i></a>
+</h1>
+<p>This section requires the next libraries:</p>
+<div class="sourceCode" id="cb389"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rgeeExtra</span><span class="op">)</span>
+
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div id="geometry-overview" class="section level2 unnumbered">
+<h2>Geometry Overview<a class="anchor" aria-label="anchor" href="#geometry-overview"><i class="fas fa-link"></i></a>
+</h2>
+<p>Earth Engine handles vector data with the <code>Geometry</code> type. The <a href="http:#geojson.org/geojson-spec.html">GeoJSON spec</a> describes in detail the type of geometries supported by Earth Engine, including <code>Point</code> (a list of coordinates in some projection), <code>LineString</code> (a list of points), <code>LinearRing</code> (a closed <code>LineString</code>), and <code>Polygon</code> (a list of <code>LinearRings</code> where the first is a shell and subsequent rings are holes). Earth Engine also supports <code>MultiPoint</code>, <code>MultiLineString</code>, and <code>MultiPolygon</code>. The GeoJSON GeometryCollection is also supported, although it has the name <code>MultiGeometry</code> within Earth Engine.</p>
+<div id="creating-geometry-objects" class="section level3 unnumbered">
+<h3>Creating Geometry objects<a class="anchor" aria-label="anchor" href="#creating-geometry-objects"><i class="fas fa-link"></i></a>
+</h3>
+<p>To create a <code>Geometry</code> programmatically, provide the constructor with the proper list(s) of coordinates. For example:</p>
+<div class="sourceCode" id="cb390"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">point</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">lineString</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">LineString</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">35</span>, <span class="op">-</span><span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">35</span>, <span class="op">-</span><span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">35</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">35</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="va">linearRing</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">LinearRing</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">35</span>, <span class="op">-</span><span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">35</span>, <span class="op">-</span><span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">35</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">35</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">35</span>, <span class="op">-</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="va">rectangle</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Rectangle</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">40</span>, <span class="op">-</span><span class="fl">20</span>, <span class="fl">40</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">polygon</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Polygon</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">40</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">65</span>, <span class="fl">40</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">65</span>, <span class="fl">60</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">60</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>In the previous examples, note that the distinction between a <code>LineString</code> and a <code>LinearRing</code> is that the <code>LinearRing</code> is “closed” by having the same coordinate at both the start and end of the list.</p>
+<p>An individual <code>Geometry</code> may consist of multiple geometries. To break a multi-part <code>Geometry</code> into its constituent geometries, use <code>geometry$geometries()</code>. For example:</p>
+<div class="sourceCode" id="cb391"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create a multi-part feature.</span>
+<span class="va">multiPoint</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">MultiPoint</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">121.68</span>, <span class="fl">39.91</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">97.38</span>, <span class="fl">40.34</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Get the individual geometries as a list.</span>
+<span class="va">geometries</span> <span class="op">&lt;-</span> <span class="va">multiPoint</span><span class="op">$</span><span class="fu">geometries</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Get each individual geometry from the list and print it.</span>
+<span class="va">pt1</span> <span class="op">&lt;-</span> <span class="va">geometries</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>
+<span class="va">pt2</span> <span class="op">&lt;-</span> <span class="va">geometries</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'Point 1'</span>, <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">pt1</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'Point 2'</span>, <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">pt2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+<div id="geodesic-vs.-planar-geometries" class="section level2 unnumbered">
+<h2>Geodesic vs. Planar Geometries<a class="anchor" aria-label="anchor" href="#geodesic-vs.-planar-geometries"><i class="fas fa-link"></i></a>
+</h2>
+<p>A geometry created in Earth Engine is either geodesic (i.e. edges are the shortest path on the surface of a sphere) or planar (i.e. edges are the shortest path in a 2-D Cartesian plane). No one planar coordinate system is suitable for global collections of features, so Earth Engine’s geometry constructors build geodesic geometries by default. To make a planar geometry, constructors have a <code>geodesic</code> parameter that can be set to <code>FALSE</code>:</p>
+<div class="sourceCode" id="cb392"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">planarPolygon</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Geometry</span><span class="op">(</span><span class="va">polygon</span>, <span class="cn">NULL</span>, <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<p>Figure 1 shows the difference between the default geodesic polygon and the result of converting the polygon to a planar representation.</p>
+
+<img src="images/chapter_05/figure_geo_01.png" width="95%"><p>Figure 1. A geodesic polygon (red) and a planar polygon (black).</p>
+<p>You can convert between geodesic and planar geometries using the ‘ee$Geometry’ constructor.</p>
+</div>
+<div id="geometry-visualization-and-information" class="section level2 unnumbered">
+<h2>Geometry Visualization and Information<a class="anchor" aria-label="anchor" href="#geometry-visualization-and-information"><i class="fas fa-link"></i></a>
+</h2>
+<div id="visualizing-geometries" class="section level3 unnumbered">
+<h3>Visualizing geometries<a class="anchor" aria-label="anchor" href="#visualizing-geometries"><i class="fas fa-link"></i></a>
+</h3>
+<p>To visualize a geometry, add it to the map. For example:</p>
+<div class="sourceCode" id="cb393"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create a geodesic polygon.</span>
+<span class="va">polygon</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Polygon</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">40</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">65</span>, <span class="fl">40</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">65</span>, <span class="fl">60</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">60</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Create a planar polygon.</span>
+<span class="va">planarPolygon</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Geometry</span><span class="op">(</span><span class="va">polygon</span>, <span class="cn">NULL</span>, <span class="cn">FALSE</span><span class="op">)</span>
+
+<span class="co"># Display the polygons by adding them to the map.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">centerObject</span><span class="op">(</span><span class="va">polygon</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">polygon</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">color</span><span class="op">&lt;-</span> <span class="st">'FF0000'</span><span class="op">)</span>, <span class="st">'geodesic polygon'</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">planarPolygon</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">color</span><span class="op">&lt;-</span> <span class="st">'000000'</span><span class="op">)</span>, <span class="st">'planar polygon'</span><span class="op">)</span></code></pre></div>
+
+<img src="images/chapter_05/figure_code_01.png" width="95%"><p>For more on visualizing, see <a href="">Feature and FeatureCollection Visualization</a>.</p>
+</div>
+<div id="geometry-information-and-metadata" class="section level3 unnumbered">
+<h3>Geometry information and metadata<a class="anchor" aria-label="anchor" href="#geometry-information-and-metadata"><i class="fas fa-link"></i></a>
+</h3>
+<p>To view information about a geometry, print it. To access the information programmatically, Earth Engine provides several methods. For example, to get information about the polygon created previously, use:</p>
+<div class="sourceCode" id="cb394"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Polygon printout: "</span>, <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">polygon</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Print polygon area in square kilometers.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Polygon area: "</span>, <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">polygon</span><span class="op">$</span><span class="fu">area</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">divide</span><span class="op">(</span><span class="fl">1000</span> <span class="op">*</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Print polygon perimeter length in kilometers.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Polygon perimeter: "</span>, <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">polygon</span><span class="op">$</span><span class="fu">perimeter</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">divide</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Print the geometry as a GeoJSON string.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Polygon GeoJSON: "</span>, <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">polygon</span><span class="op">$</span><span class="fu">toGeoJSONString</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Print the GeoJSON 'type'.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Geometry type: "</span>, <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">polygon</span><span class="op">$</span><span class="fu">type</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Print the coordinates as lists.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Polygon coordinates: "</span>, <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">polygon</span><span class="op">$</span><span class="fu">coordinates</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Print whether the geometry is geodesic.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Geodesic: "</span>, <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">polygon</span><span class="op">$</span><span class="fu">geodesic</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Observe that the perimeter (or length) of a geometry is returned in meters and the area is returned in square meters unless a projection is specified. By default, the computation is performed on the WGS84 spheroid and the result is computed in meters or square meters.</p>
+</div>
+</div>
+<div id="geometric-operations" class="section level2 unnumbered">
+<h2>Geometric Operations<a class="anchor" aria-label="anchor" href="#geometric-operations"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb395"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create a geodesic polygon.</span>
+<span class="va">polygon</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Polygon</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">40</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">65</span>, <span class="fl">40</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">65</span>, <span class="fl">60</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">60</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Compute a buffer of the polygon.</span>
+<span class="va">buffer</span> <span class="op">&lt;-</span> <span class="va">polygon</span><span class="op">$</span><span class="fu">buffer</span><span class="op">(</span><span class="fl">1000000</span><span class="op">)</span>
+
+<span class="co"># Compute the centroid of the polygon.</span>
+<span class="va">centroid</span> <span class="op">&lt;-</span> <span class="va">polygon</span><span class="op">$</span><span class="fu">centroid</span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">buffer</span>,
+  <span class="op">{</span><span class="op">}</span>,
+  <span class="st">"buffer"</span>
+<span class="op">)</span> <span class="op">+</span>
+  <span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+    <span class="va">centroid</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">color</span><span class="op">&lt;-</span> <span class="st">"red"</span><span class="op">)</span>,
+    <span class="st">"centroid"</span>
+  <span class="op">)</span></code></pre></div>
+<p>Observe from the previous example that the buffer distance is specified in meters.</p>
+
+<img src="images/chapter_05/figure_code_02.png" width="95%"><p>Supported geometric operations also include relational computations between geometries such as intersection, union, difference, distance, contains, etc. To test some of these relations, geometries use the “even-odd” rule by default. By the even-odd rule, a point is inside the polygon if a line from that point to some point known to be outside the polygon crosses an odd number of other edges. The inside of a polygon is everything inside the shell and not inside a hole. As a simple example, a point within a circular polygon must cross exactly one edge to escape the polygon. Geometries can optionally use the “left-inside” rule, if necessary. Imagine walking the points of a ring in the order given; the inside will be on the left.</p>
+<p>To demonstrate the difference between geometries created with the “left-inside” rule (<code>evenOdd: FALSE</code>) and those created with the “even-odd” rule, the following example compares a point to two different polygons:</p>
+<div class="sourceCode" id="cb396"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create a right-inside polygon.</span>
+<span class="va">holePoly</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Polygon</span><span class="op">(</span>
+  <span class="va">coords</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">35</span>, <span class="op">-</span><span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">35</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">35</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">35</span>, <span class="op">-</span><span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">35</span>, <span class="op">-</span><span class="fl">10</span><span class="op">)</span>
+  <span class="op">)</span>,
+  <span class="va">proj</span><span class="op">&lt;-</span> <span class="st">"EPSG:4326"</span>,
+  <span class="va">geodesic</span><span class="op">&lt;-</span> <span class="cn">TRUE</span>,
+  <span class="va">maxError</span><span class="op">&lt;-</span> <span class="fl">1.</span>,
+  <span class="va">evenOdd</span><span class="op">&lt;-</span> <span class="cn">FALSE</span>
+<span class="op">)</span>
+
+
+<span class="co"># Create an even-odd version of the polygon.</span>
+<span class="va">evenOddPoly</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Geometry</span><span class="op">(</span>
+  <span class="va">geo_json</span><span class="op">&lt;-</span> <span class="va">holePoly</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">opt_proj</span><span class="op">&lt;-</span> <span class="st">"EPSG:4326"</span>,
+  <span class="va">opt_evenOdd</span><span class="op">&lt;-</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
+
+<span class="co"># Create a point to test the insideness of the polygon.</span>
+<span class="va">pt</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Check insideness with a contains operator.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">holePoly</span><span class="op">$</span><span class="fu">contains</span><span class="op">(</span><span class="va">pt</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="co"># FALSE</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">evenOddPoly</span><span class="op">$</span><span class="fu">contains</span><span class="op">(</span><span class="va">pt</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="co"># TRUE</span></code></pre></div>
+<p>The previous example demonstrates how the order of coordinates provided to the <code>Polygon</code> constructor affects the result when a left-inside polygon is constructed. Specifically, the point is outside the left-inside polygon but inside the even-odd polygon.</p>
+<p>The following example computes and visualizes derived geometries based on the relationship between two polygons:</p>
+<div class="sourceCode" id="cb397"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create two circular geometries.</span>
+<span class="va">poly1</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">50</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">buffer</span><span class="op">(</span><span class="fl">1e6</span><span class="op">)</span>
+<span class="va">poly2</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">40</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">buffer</span><span class="op">(</span><span class="fl">1e6</span><span class="op">)</span>
+
+<span class="co"># Display polygon 1 in red and polygon 2 in blue.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">45</span>, <span class="fl">30</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">poly1</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">color</span><span class="op">&lt;-</span> <span class="st">"FF0000"</span><span class="op">)</span>, <span class="st">"poly1"</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">poly2</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">color</span><span class="op">&lt;-</span> <span class="st">"0000FF"</span><span class="op">)</span>, <span class="st">"poly2"</span><span class="op">)</span></code></pre></div>
+
+<img src="images/chapter_05/figure_geo_code_01.png" width="95%"><div class="sourceCode" id="cb398"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Compute the intersection, display it in green.</span>
+<span class="va">intersection</span> <span class="op">&lt;-</span> <span class="va">poly1</span><span class="op">$</span><span class="fu">intersection</span><span class="op">(</span><span class="va">poly2</span>, <span class="va">ee</span><span class="op">$</span><span class="fu">ErrorMargin</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">intersection</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">color</span><span class="op">&lt;-</span> <span class="st">"00FF00"</span><span class="op">)</span>, <span class="st">"intersection"</span><span class="op">)</span></code></pre></div>
+
+<img src="images/chapter_05/figure_geo_code_02.png" width="95%"><div class="sourceCode" id="cb399"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Compute the union, display it in magenta.</span>
+<span class="va">union</span> <span class="op">&lt;-</span> <span class="va">poly1</span><span class="op">$</span><span class="fu">union</span><span class="op">(</span><span class="va">poly2</span>, <span class="va">ee</span><span class="op">$</span><span class="fu">ErrorMargin</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">union</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">color</span><span class="op">&lt;-</span> <span class="st">"FF00FF"</span><span class="op">)</span>, <span class="st">"union"</span><span class="op">)</span></code></pre></div>
+
+<img src="images/chapter_05/figure_geo_code_03.png" width="95%"><div class="sourceCode" id="cb400"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Compute the difference, display in yellow.</span>
+<span class="va">diff1</span> <span class="op">&lt;-</span> <span class="va">poly1</span><span class="op">$</span><span class="fu">difference</span><span class="op">(</span><span class="va">poly2</span>, <span class="va">ee</span><span class="op">$</span><span class="fu">ErrorMargin</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">diff1</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">color</span><span class="op">&lt;-</span> <span class="st">"FFFF00"</span><span class="op">)</span>, <span class="st">"diff1"</span><span class="op">)</span></code></pre></div>
+
+<img src="images/chapter_05/figure_geo_code_04.png" width="95%"><div class="sourceCode" id="cb401"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Compute symmetric difference, display in black.</span>
+<span class="va">symDiff</span> <span class="op">&lt;-</span> <span class="va">poly1</span><span class="op">$</span><span class="fu">symmetricDifference</span><span class="op">(</span><span class="va">poly2</span>, <span class="va">ee</span><span class="op">$</span><span class="fu">ErrorMargin</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">symDiff</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">color</span><span class="op">&lt;-</span> <span class="st">"000000"</span><span class="op">)</span>, <span class="st">"symmetric difference"</span><span class="op">)</span></code></pre></div>
+
+<img src="images/chapter_05/figure_geo_code_05.png" width="95%"><p>In these examples, note that that <code>maxError</code> parameter is set to one meter for the geometry operations. The <code>maxError</code> is the maximum allowable error, in meters, from transformations (such as projection or reprojection) that may alter the geometry. If one of the geometries is in a different projection from the other, Earth Engine will do the computation in a spherical coordinate system, with a projection precision given by <code>maxError</code>. You can also specify a specific projection in which to do the computation, if necessary.</p>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="imagecollection.html">ImageCollection</a></div>
+<div class="next"><a href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#geometry">Geometry</a></li>
+<li>
+<a class="nav-link" href="#geometry-overview">Geometry Overview</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#creating-geometry-objects">Creating Geometry objects</a></li></ul>
+</li>
+<li><a class="nav-link" href="#geodesic-vs.-planar-geometries">Geodesic vs. Planar Geometries</a></li>
+<li>
+<a class="nav-link" href="#geometry-visualization-and-information">Geometry Visualization and Information</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#visualizing-geometries">Visualizing geometries</a></li>
+<li><a class="nav-link" href="#geometry-information-and-metadata">Geometry information and metadata</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#geometric-operations">Geometric Operations</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/05_object_methods.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/05_object_methods.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

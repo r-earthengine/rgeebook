@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Array | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Array | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Array | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Array Overview Earth Engine represents 1-D vectors, 2-D matrices, 3-D cubes, and higher dimensional...">
+<meta property="og:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Array Overview Earth Engine represents 1-D vectors, 2-D matrices, 3-D cubes, and higher dimensional...">
+<meta name="twitter:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Array Overview Earth Engine represents 1-D vectors, 2-D matrices, 3-D cubes, and higher dimensional...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="active" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="array" class="section level1 unnumbered">
+<h1>Array<a class="anchor" aria-label="anchor" href="#array"><i class="fas fa-link"></i></a>
+</h1>
+<p>This section requires the next libraries:</p>
+<div class="sourceCode" id="cb462"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rgeeExtra</span><span class="op">)</span>
+
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div id="array-overview" class="section level2 unnumbered">
+<h2>Array Overview<a class="anchor" aria-label="anchor" href="#array-overview"><i class="fas fa-link"></i></a>
+</h2>
+<p>Earth Engine represents 1-D vectors, 2-D matrices, 3-D cubes, and higher dimensional hypercubes with the <code>ee$Array</code> type. Arrays are a flexible data structure, but in exchange for the power they offer, they do not scale as well as other data structures in Earth Engine. If the problem can be solved without using arrays, the result will be computed faster and more efficiently. But if the problem requires a higher dimension model, flexible linear algebra, or anything else arrays are uniquely suited to, you can use the <code>Array</code> class.</p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-qo8L5GmKO0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+<div id="array-dimension-shape-and-size" class="section level3 unnumbered">
+<h3>Array dimension, shape and size<a class="anchor" aria-label="anchor" href="#array-dimension-shape-and-size"><i class="fas fa-link"></i></a>
+</h3>
+<p>The dimension of an array refers to the number of axes along which the underlying data varies. For example, 0-D arrays are scalar numbers, 1-D arrays are vectors, 2-D arrays are matrices, 3-D arrays are cubes, and &gt;3-D arrays are hyper-cubes. For an N-dimensional array, there are N axes from 0 to N-1. The shape of the array is determined by the lengths of the axes. The length of an axis is the number of positions along it. The array size, or number of total elements in the array, equals the product of the axis lengths. Each value at every position on every axis must have a valid number, since sparse or ragged arrays are not currently supported. The array’s element type indicates what kind of number each element is; all elements of the array will have the same type.</p>
+</div>
+</div>
+<div id="arrays-and-array-images" class="section level2 unnumbered">
+<h2>Arrays and Array Images<a class="anchor" aria-label="anchor" href="#arrays-and-array-images"><i class="fas fa-link"></i></a>
+</h2>
+<p>Arrays in Earth Engine are constructed from lists of numbers and lists of lists. The degree of nesting determines the number of dimensions. To get started with a simple, motivated example, consider the following example of an <code>Array</code> created from Landsat 8 tasseled cap (TC) coefficients (<a href="http:#dx.doi.org/10.1080/2150704X.2014.915434">Baig et al., 2014</a>):</p>
+<div class="sourceCode" id="cb463"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create an Array of Tasseled Cap coefficients.</span>
+<span class="va">coefficients</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Array</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.3029</span>, <span class="fl">0.2786</span>, <span class="fl">0.4733</span>, <span class="fl">0.5599</span>, <span class="fl">0.508</span>, <span class="fl">0.1872</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.2941</span>, <span class="op">-</span><span class="fl">0.243</span>, <span class="op">-</span><span class="fl">0.5424</span>, <span class="fl">0.7276</span>, <span class="fl">0.0713</span>, <span class="op">-</span><span class="fl">0.1608</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1511</span>, <span class="fl">0.1973</span>, <span class="fl">0.3283</span>, <span class="fl">0.3407</span>, <span class="op">-</span><span class="fl">0.7117</span>, <span class="op">-</span><span class="fl">0.4559</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.8239</span>, <span class="fl">0.0849</span>, <span class="fl">0.4396</span>, <span class="op">-</span><span class="fl">0.058</span>, <span class="fl">0.2013</span>, <span class="op">-</span><span class="fl">0.2773</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.3294</span>, <span class="fl">0.0557</span>, <span class="fl">0.1056</span>, <span class="fl">0.1855</span>, <span class="op">-</span><span class="fl">0.4349</span>, <span class="fl">0.8085</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1079</span>, <span class="op">-</span><span class="fl">0.9023</span>, <span class="fl">0.4119</span>, <span class="fl">0.0575</span>, <span class="op">-</span><span class="fl">0.0259</span>, <span class="fl">0.0252</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Confirm that this is a 6x6, 2-D Array using <code><a href="https://rdrr.io/r/base/length.html">length()</a></code>, which will return the lengths of each axis:</p>
+<div class="sourceCode" id="cb464"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Print the dimensions.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">coefficients</span><span class="op">$</span><span class="fu">length</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="co">#    [1]: 6 6</span></code></pre></div>
+<p>The following table illustrates the arrangement of the matrix entries along the 0-axis and the 1-axis:</p>
+<div class="inline-table"><table class="table table-sm">
+<tr>
+<th>
+</th>
+<th>
+</th>
+<th colspan="6">
+1-axis -&gt;
+</th>
+</tr>
+<tr class="alt">
+<td>
+</td>
+<td>
+</td>
+<td>
+<b>0</b>
+</td>
+<td>
+<b>1</b>
+</td>
+<td>
+<b>2</b>
+</td>
+<td>
+<b>3</b>
+</td>
+<td>
+<b>4</b>
+</td>
+<td>
+<b>5</b>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>
+<b>0</b>
+</td>
+<td>
+0.3029
+</td>
+<td>
+0.2786
+</td>
+<td>
+0.4733
+</td>
+<td>
+0.5599
+</td>
+<td>
+0.508
+</td>
+<td>
+0.1872
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>
+<b>1</b>
+</td>
+<td>
+-0.2941
+</td>
+<td>
+-0.243
+</td>
+<td>
+-0.5424
+</td>
+<td>
+0.7276
+</td>
+<td>
+0.0713
+</td>
+<td>
+-0.1608
+</td>
+</tr>
+<tr>
+<td>
+<b>0-axis</b>
+</td>
+<td>
+<b>2</b>
+</td>
+<td>
+0.1511
+</td>
+<td>
+0.1973
+</td>
+<td>
+0.3283
+</td>
+<td>
+0.3407
+</td>
+<td>
+-0.7117
+</td>
+<td>
+-0.4559
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>
+<b>3</b>
+</td>
+<td>
+-0.8239
+</td>
+<td>
+0.0849
+</td>
+<td>
+0.4396
+</td>
+<td>
+-0.058
+</td>
+<td>
+0.2013
+</td>
+<td>
+-0.2773
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>
+<b>4</b>
+</td>
+<td>
+-0.3294
+</td>
+<td>
+0.0557
+</td>
+<td>
+0.1056
+</td>
+<td>
+0.1855
+</td>
+<td>
+-0.4349
+</td>
+<td>
+0.8085
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>
+<b>5</b>
+</td>
+<td>
+0.1079
+</td>
+<td>
+-0.9023
+</td>
+<td>
+0.4119
+</td>
+<td>
+0.0575
+</td>
+<td>
+-0.0259
+</td>
+<td>
+0.0252
+</td>
+</tr>
+</table></div>
+<p>The indices on the left of the table indicate positions along the 0-axis. The n-th element within each list on the 0-axis is in the n-th position along the 1-axis. For example, the entry at coordinate [3,1] of the array is 0.0849. Suppose ‘greenness’ is the TC component of interest. You can get the greenness sub-matrix using <code>slice()</code>:</p>
+<div class="sourceCode" id="cb465"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Get the 1x6 greenness slice, display it.</span>
+<span class="va">greenness</span> <span class="op">&lt;-</span> <span class="va">coefficients</span><span class="op">$</span><span class="fu">slice</span><span class="op">(</span><span class="va">axis</span><span class="op">&lt;-</span> <span class="fl">0</span>, <span class="va">start</span><span class="op">&lt;-</span> <span class="fl">1</span>, <span class="va">end</span><span class="op">&lt;-</span> <span class="fl">2</span>, <span class="va">step</span><span class="op">&lt;-</span> <span class="fl">1</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">greenness</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>The 2-D greenness matrix should look something like:</p>
+<div class="sourceCode" id="cb466"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.2941</span>,<span class="op">-</span><span class="fl">0.243</span>,<span class="op">-</span><span class="fl">0.5424</span>,<span class="fl">0.7276</span>,<span class="fl">0.0713</span>,<span class="op">-</span><span class="fl">0.1608</span><span class="op">)</span></code></pre></div>
+<p>Observe that the <code>start</code> and <code>end</code> parameters of <code>slice()</code> correspond to the 0-axis indices displayed in the table (<code>start</code> is inclusive and <code>end</code> is exclusive).</p>
+<div id="array-images" class="section level3 unnumbered">
+<h3>Array Images<a class="anchor" aria-label="anchor" href="#array-images"><i class="fas fa-link"></i></a>
+</h3>
+<p>To get a greenness image, matrix multiply the bands of a Landsat 8 image by the greenness matrix. To do that, first convert the multi-band Landsat image into an “Array Image”, where each pixel is an <code>Array</code> of band values. For example:</p>
+<div class="sourceCode" id="cb467"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load a Landsat 8 image, select the bands of interest.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'LANDSAT/LC08/C02/T1_TOA/LC08_044034_20140318'</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'B2'</span>, <span class="st">'B3'</span>, <span class="st">'B4'</span>, <span class="st">'B5'</span>, <span class="st">'B6'</span>, <span class="st">'B7'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Make an Array Image, with a 1-D Array per pixel.</span>
+<span class="va">arrayImage1D</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">toArray</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Make an Array Image with a 2-D Array per pixel, 6x1.</span>
+<span class="va">arrayImage2D</span> <span class="op">&lt;-</span> <span class="va">arrayImage1D</span><span class="op">$</span><span class="fu">toArray</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
+<p>In this example, note that <code>toArray()</code> converts <code>image</code> to an array image in which each pixel is a 1-D vector, the entries of which correspond to the 6 values at the corresponding positions in the bands of <code>image</code>. An array image of 1-D vectors created in this manner has no concept of 2-D shape. To perform 2-D only operations such as matrix multiplication, convert it into a 2-D array per-pixel image with <code>toArray(1)</code>. In each pixel of the 2-D array image, there is a 6x1 matrix of band values. To see this, consider the following toy example:</p>
+<div class="sourceCode" id="cb468"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">array1D</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Array</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="co"># 1,2,3</span>
+<span class="va">array2D</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Array</span><span class="op">$</span><span class="fu">cat</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">array1D</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span> <span class="co"># [[1],[2],[3]]</span></code></pre></div>
+<p>Observe that the <code>array1D</code> vector varies along the 0-axis. The <code>array2D</code> matrix does as well, but it’s got an extra dimension. Calling <code>toArray(1)</code> on the array image is like calling <code>cat(bandVector, 1)</code> on every pixel. Using the 2-D array image, left multiply by an image where each pixel contains a 2-D matrix of greenness coefficients:</p>
+<div class="sourceCode" id="cb469"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Do a matrix multiplication: 1x6 times 6x1.</span>
+<span class="co"># Cast the greenness Array to an Image prior to multiplication.</span>
+<span class="va">greennessArrayImage</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="va">greenness</span><span class="op">)</span><span class="op">$</span><span class="fu">matrixMultiply</span><span class="op">(</span><span class="va">arrayImage2D</span><span class="op">)</span></code></pre></div>
+<p>The result is a new array image where every pixel is the 1x1 matrix that results from matrix multiplying the 1x6 greenness matrix (left) and the 6x1 band matrix (right). For display purposes, convert to a regular, one-band image with <code>arrayGet()</code>:</p>
+<div class="sourceCode" id="cb470"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Get the result from the 1x1 array in each pixel of the 2-D array image.</span>
+<span class="va">greennessImage</span> <span class="op">&lt;-</span> <span class="va">greennessArrayImage</span><span class="op">$</span><span class="fu">arrayGet</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Display the input imagery with the greenness result.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">122.3</span>, <span class="fl">37.562</span>, <span class="fl">10</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">image</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span>, <span class="st">"B3"</span><span class="op">)</span>, min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,
+  <span class="st">"image"</span>
+<span class="op">)</span> <span class="op">|</span>
+  <span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+    <span class="va">greennessImage</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span>, max <span class="op">=</span> <span class="fl">0.13</span><span class="op">)</span>,
+    <span class="st">"greenness"</span>
+  <span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_05/figure_ar_code_01.png" width="95%">
+</center>
+<p>Here is a complete example, which uses the entire coefficients array to compute multiple tasseled cap components at once and display the result:</p>
+<div class="sourceCode" id="cb471"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define an Array of Tasseled Cap coefficients.</span>
+<span class="va">coefficients</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Array</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.3029</span>, <span class="fl">0.2786</span>, <span class="fl">0.4733</span>, <span class="fl">0.5599</span>, <span class="fl">0.508</span>, <span class="fl">0.1872</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.2941</span>, <span class="op">-</span><span class="fl">0.243</span>, <span class="op">-</span><span class="fl">0.5424</span>, <span class="fl">0.7276</span>, <span class="fl">0.0713</span>, <span class="op">-</span><span class="fl">0.1608</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1511</span>, <span class="fl">0.1973</span>, <span class="fl">0.3283</span>, <span class="fl">0.3407</span>, <span class="op">-</span><span class="fl">0.7117</span>, <span class="op">-</span><span class="fl">0.4559</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.8239</span>, <span class="fl">0.0849</span>, <span class="fl">0.4396</span>, <span class="op">-</span><span class="fl">0.058</span>, <span class="fl">0.2013</span>, <span class="op">-</span><span class="fl">0.2773</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.3294</span>, <span class="fl">0.0557</span>, <span class="fl">0.1056</span>, <span class="fl">0.1855</span>, <span class="op">-</span><span class="fl">0.4349</span>, <span class="fl">0.8085</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1079</span>, <span class="op">-</span><span class="fl">0.9023</span>, <span class="fl">0.4119</span>, <span class="fl">0.0575</span>, <span class="op">-</span><span class="fl">0.0259</span>, <span class="fl">0.0252</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Load a Landsat 8 image, select the bands of interest.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C02/T1_TOA/LC08_044034_20140318"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B2"</span>, <span class="st">"B3"</span>, <span class="st">"B4"</span>, <span class="st">"B5"</span>, <span class="st">"B6"</span>, <span class="st">"B7"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Make an Array Image, with a 1-D Array per pixel.</span>
+<span class="va">arrayImage1D</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">toArray</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Make an Array Image with a 2-D Array per pixel, 6x1.</span>
+<span class="va">arrayImage2D</span> <span class="op">&lt;-</span> <span class="va">arrayImage1D</span><span class="op">$</span><span class="fu">toArray</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+
+<span class="co"># Do a matrix multiplication: 6x6 times 6x1.</span>
+<span class="va">componentsImage</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="va">coefficients</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">matrixMultiply</span><span class="op">(</span><span class="va">arrayImage2D</span><span class="op">)</span><span class="op">$</span>
+  <span class="co"># Get rid of the extra dimensions.</span>
+  <span class="fu">arrayProject</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">arrayFlatten</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+      <span class="st">"brightness"</span>,
+      <span class="st">"greenness"</span>,
+      <span class="st">"wetness"</span>,
+      <span class="st">"fourth"</span>,
+      <span class="st">"fifth"</span>,
+      <span class="st">"sixth"</span>
+    <span class="op">)</span>
+  <span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Display the first three bands of the result and the input imagery.</span>
+<span class="va">vizParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"brightness"</span>, <span class="st">"greenness"</span>, <span class="st">"wetness"</span><span class="op">)</span>,
+  min <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span>,
+  max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">122.3</span>, <span class="fl">37.562</span>, <span class="fl">10</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">image</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span>, <span class="st">"B3"</span><span class="op">)</span>, min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,
+  <span class="st">"image"</span>
+<span class="op">)</span> <span class="op">|</span>
+  <span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+    <span class="va">componentsImage</span>,
+    <span class="va">vizParams</span>,
+    <span class="st">"components"</span>
+  <span class="op">)</span></code></pre></div>
+<p>Note that when getting bands from an array image, first get rid of the extra dimensions with project(), then convert it back to a regular image with <code>arrayFlatten()</code>. The output should look something like:</p>
+<center>
+<img src="images/chapter_05/figure_arr_01.png" width="95%">
+</center>
+<p>Figure 1. Tasseled cap components “brightness” (red), “greenness” (green), and “wetness” (blue).</p>
+</div>
+</div>
+<div id="array-transformations" class="section level2 unnumbered">
+<h2>Array Transformations<a class="anchor" aria-label="anchor" href="#array-transformations"><i class="fas fa-link"></i></a>
+</h2>
+<p>Earth Engine supports array transformations such as transpose, inverse and pseudo-inverse. As an example, consider an ordinary least squares (OLS) regression of a time series of images. In the following example, an image with bands for predictors and a response is converted to an array image, then “solved” to obtain least squares coefficients estimates three ways. First, assemble the image data and convert to arrays:</p>
+<div class="sourceCode" id="cb472"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># This function masks the input with a threshold on the simple cloud score.</span>
+<span class="va">cloudMask</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">cloudscore</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Algorithms</span><span class="op">$</span><span class="va">Landsat</span><span class="op">$</span><span class="fu">simpleCloudScore</span><span class="op">(</span><span class="va">img</span><span class="op">)</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"cloud"</span><span class="op">)</span>
+  <span class="va">img</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">cloudscore</span><span class="op">$</span><span class="fu">lt</span><span class="op">(</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># This function computes the predictors and the response from the input.</span>
+<span class="va">makeVariables</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="op">{</span>
+  <span class="co"># Compute time of the image in fractional years relative to the Epoch.</span>
+  <span class="va">year</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="va">img</span><span class="op">$</span><span class="fu">date</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">difference</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">"1970-01-01"</span><span class="op">)</span>, <span class="st">"year"</span><span class="op">)</span><span class="op">)</span>
+  <span class="co"># Compute the season in radians, one cycle per year.</span>
+  <span class="va">season</span> <span class="op">&lt;-</span> <span class="va">year</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="fu">base</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/base/Constants.html">pi</a></span><span class="op">)</span>
+  <span class="co"># Return an image of the predictors followed by the response.</span>
+  <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="op">)</span><span class="op">$</span>
+    <span class="fu">addBands</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+    <span class="fu">addBands</span><span class="op">(</span><span class="va">year</span><span class="op">$</span><span class="fu">rename</span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+    <span class="fu">addBands</span><span class="op">(</span><span class="va">season</span><span class="op">$</span><span class="fu">sin</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">rename</span><span class="op">(</span><span class="st">"sin"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+    <span class="fu">addBands</span><span class="op">(</span><span class="va">season</span><span class="op">$</span><span class="fu">cos</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">rename</span><span class="op">(</span><span class="st">"cos"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+    <span class="fu">addBands</span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">rename</span><span class="op">(</span><span class="st">"NDVI"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+    <span class="fu">toFloat</span><span class="op">(</span><span class="op">)</span>
+<span class="op">}</span>
+
+
+<span class="co"># Load a Landsat 5 image collection.</span>
+<span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"LANDSAT/LT05/C01/T1_TOA"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterDate</span><span class="op">(</span><span class="st">"2008-04-01"</span>, <span class="st">"2010-04-01"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterBounds</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">122.2627</span>, <span class="fl">37.8735</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">map</span><span class="op">(</span><span class="va">cloudMask</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B4"</span>, <span class="st">"B3"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">sort</span><span class="op">(</span><span class="st">"system:time_start"</span>, <span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="co"># Define the axes of variation in the collection array.</span>
+<span class="va">imageAxis</span> <span class="op">&lt;-</span> <span class="fl">0</span>
+<span class="va">bandAxis</span> <span class="op">&lt;-</span> <span class="fl">1</span>
+
+<span class="co"># Convert the collection to an array.</span>
+<span class="va">array</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">makeVariables</span><span class="op">)</span><span class="op">$</span><span class="fu">toArray</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Check the length of the image axis (number of images).</span>
+<span class="va">arrayLength</span> <span class="op">&lt;-</span> <span class="va">array</span><span class="op">$</span><span class="fu">arrayLength</span><span class="op">(</span><span class="va">imageAxis</span><span class="op">)</span>
+
+<span class="co"># Update the mask to ensure that the number of images is greater than or</span>
+<span class="co"># equal to the number of predictors (the linear model is solveable).</span>
+<span class="va">array</span> <span class="op">&lt;-</span> <span class="va">array</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">arrayLength</span><span class="op">$</span><span class="fu">gt</span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Get slices of the array according to positions along the band axis.</span>
+<span class="va">predictors</span> <span class="op">&lt;-</span> <span class="va">array</span><span class="op">$</span><span class="fu">arraySlice</span><span class="op">(</span><span class="va">bandAxis</span>, <span class="fl">0</span>, <span class="fl">4</span><span class="op">)</span>
+<span class="va">response</span> <span class="op">&lt;-</span> <span class="va">array</span><span class="op">$</span><span class="fu">arraySlice</span><span class="op">(</span><span class="va">bandAxis</span>, <span class="fl">4</span><span class="op">)</span></code></pre></div>
+<p>Note that <code>arraySlice()</code> returns all the images in the time series for the range of indices specified along the <code>bandAxis</code> (the 1-axis). At this point, matrix algebra can be used to solve for the OLS coefficients:</p>
+<div class="sourceCode" id="cb473"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Compute coefficients the hard way.</span>
+<span class="va">coefficients1</span> <span class="op">&lt;-</span> <span class="va">predictors</span><span class="op">$</span><span class="fu">arrayTranspose</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">matrixMultiply</span><span class="op">(</span><span class="va">predictors</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">matrixInverse</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">matrixMultiply</span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="fu">arrayTranspose</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">matrixMultiply</span><span class="op">(</span><span class="va">response</span><span class="op">)</span></code></pre></div>
+<p>Although this method works, it is inefficient and makes for difficult to read code. A better way is to use the <code>pseudoInverse()</code> method (<code>matrixPseudoInverse()</code> for an array image):</p>
+<div class="sourceCode" id="cb474"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Compute coefficients the easy way.</span>
+<span class="va">coefficients2</span> <span class="op">&lt;-</span> <span class="va">predictors</span><span class="op">$</span><span class="fu">matrixPseudoInverse</span><span class="op">(</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">matrixMultiply</span><span class="op">(</span><span class="va">response</span><span class="op">)</span></code></pre></div>
+<p>From a readability and computational efficiency perspective, the best way to get the OLS coefficients is <code><a href="https://rdrr.io/r/base/solve.html">solve()</a></code> (<code>matrixSolve()</code> for an array image). The <code><a href="https://rdrr.io/r/base/solve.html">solve()</a></code> function determines how to best solve the system from characteristics of the inputs, using the pseudo-inverse for overdetermined systems, the inverse for square matrices and special techniques for nearly singular matrices:</p>
+<div class="sourceCode" id="cb475"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Compute coefficients the easiest way.</span>
+<span class="va">coefficients3</span> <span class="op">&lt;-</span> <span class="va">predictors</span><span class="op">$</span><span class="fu">matrixSolve</span><span class="op">(</span><span class="va">response</span><span class="op">)</span></code></pre></div>
+<p>To get a multi-band image, project the array image into a lower dimensional space, then flatten it:</p>
+<div class="sourceCode" id="cb476"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Turn the results into a multi-band image.</span>
+<span class="va">coefficientsImage</span> <span class="op">&lt;-</span> <span class="va">coefficients3</span><span class="op">$</span>
+  <span class="co"># Get rid of the extra dimensions.</span>
+  <span class="fu">arrayProject</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">arrayFlatten</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"constant"</span>, <span class="st">"trend"</span>, <span class="st">"sin"</span>, <span class="st">"cos"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">coefficientsImage</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">122.2627</span>, <span class="fl">37.8735</span>, <span class="fl">10</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">coefficientsImage</span>, name <span class="op">=</span> <span class="st">"coefficientsImage"</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_05/figure_ar_code_02.png" width="95%">
+</center>
+<p>Examine the outputs of the three methods and observe that the resultant matrix of coefficients is the same regardless of the solver. That <code><a href="https://rdrr.io/r/base/solve.html">solve()</a></code> is flexible and efficient makes it a good choice for general purpose linear modeling.</p>
+</div>
+<div id="eigen-analysis" class="section level2 unnumbered">
+<h2>Eigen Analysis<a class="anchor" aria-label="anchor" href="#eigen-analysis"><i class="fas fa-link"></i></a>
+</h2>
+<p>The <a href="http:#en.wikipedia.org/wiki/Principal_component_analysis">principal components (PC) transform</a> (also known as the Karhunen-Loeve transform) is a spectral rotation that takes spectrally correlated image data and outputs uncorrelated data. The PC transform accomplishes this by diagonalizing the input band correlation matrix through Eigen-analysis. To do this in Earth Engine, use a covariance reducer on an array image and the <code><a href="https://rdrr.io/r/base/eigen.html">eigen()</a></code> command on the resultant covariance array. Consider the following function for that purpose (which is part of a <a href="">complete example</a>):</p>
+<div class="sourceCode" id="cb477"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">getPrincipalComponents</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">centered</span>, <span class="va">scale</span>, <span class="va">region</span><span class="op">)</span> <span class="op">{</span>
+  <span class="co"># Collapse the bands of the image into a 1D array per pixel.</span>
+  <span class="va">arrays</span> <span class="op">&lt;-</span> <span class="va">centered</span><span class="op">$</span><span class="fu">toArray</span><span class="op">(</span><span class="op">)</span>
+
+  <span class="co"># Compute the covariance of the bands within the region.</span>
+  <span class="va">covar</span> <span class="op">&lt;-</span> <span class="va">arrays</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+    reducer <span class="op">=</span> <span class="fu">ee.Reducer.centeredCovariance</span><span class="op">(</span><span class="op">)</span>,
+    geometry <span class="op">=</span> <span class="va">region</span>,
+    scale <span class="op">=</span> <span class="va">scale</span>,
+    maxPixels <span class="op">=</span> <span class="fl">1e9</span>
+  <span class="op">)</span>
+
+  <span class="co"># Get the 'array' covariance result and cast to an array.</span>
+  <span class="co"># This represents the band-to-band covariance within the region.</span>
+  <span class="va">covarArray</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Array</span><span class="op">(</span><span class="va">covar</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"array"</span><span class="op">)</span><span class="op">)</span>
+
+  <span class="co"># Perform an eigen analysis and slice apart the values and vectors.</span>
+  <span class="va">eigens</span> <span class="op">&lt;-</span> <span class="va">covarArray</span><span class="op">$</span><span class="fu">eigen</span><span class="op">(</span><span class="op">)</span>
+
+  <span class="co"># This is a P-length vector of Eigenvalues.</span>
+  <span class="va">eigenValues</span> <span class="op">&lt;-</span> <span class="va">eigens</span><span class="op">$</span><span class="fu">slice</span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>
+  <span class="co"># This is a PxP matrix with eigenvectors in rows.</span>
+  <span class="va">eigenVectors</span> <span class="op">&lt;-</span> <span class="va">eigens</span><span class="op">$</span><span class="fu">slice</span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>
+
+  <span class="co"># Convert the array image to 2D arrays for matrix computations.</span>
+  <span class="va">arrayImage</span> <span class="op">&lt;-</span> <span class="va">arrays</span><span class="op">$</span><span class="fu">toArray</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+
+  <span class="co"># Left multiply the image array by the matrix of eigenvectors.</span>
+  <span class="va">principalComponents</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="va">eigenVectors</span><span class="op">)</span><span class="op">$</span><span class="fu">matrixMultiply</span><span class="op">(</span><span class="va">arrayImage</span><span class="op">)</span>
+
+  <span class="co"># Turn the square roots of the Eigenvalues into a P-band image.</span>
+  <span class="va">sdImage</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="va">eigenValues</span><span class="op">$</span><span class="fu">sqrt</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+    <span class="fu">arrayProject</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+    <span class="fu">arrayFlatten</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu">getNewBandNames</span><span class="op">(</span><span class="st">"sd"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+  <span class="co"># Turn the PCs into a P-band image, normalized by SD.</span>
+  <span class="va">principalComponents</span><span class="op">$</span>
+    <span class="co"># Throw out an an unneeded dimension.</span>
+    <span class="fu">arrayProject</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+    <span class="co"># Make the one band array image a multi-band image.</span>
+    <span class="fu">arrayFlatten</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu">getNewBandNames</span><span class="op">(</span><span class="st">"pc"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+    <span class="co"># Normalize the PCs by their SDs.</span>
+    <span class="fu">divide</span><span class="op">(</span><span class="va">sdImage</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<p>The input to the function is a mean zero image, a scale and a region over which to perform the analysis. Note that the input imagery first needs to be converted to a 1-D array image and then reduced using <code>ee$Reducer$centeredCovariance()</code>. The array returned by this reduction is the symmetric variance-covariance matrix of the input. Use the <code><a href="https://rdrr.io/r/base/eigen.html">eigen()</a></code> command to get the eigenvalues and eigenvectors of the covariance matrix. The matrix returned by <code><a href="https://rdrr.io/r/base/eigen.html">eigen()</a></code> contains the eigenvalues in the 0-th position of the 1-axis. As shown in the above function, use <code>slice()</code> to separate the eigenvalues and the eigenvectors. Each element along the 0-axis of the eigenVectors matrix is an eigenvector. As in the <a href="">tasseled cap (TC) example</a>, perform the transformation by matrix multiplying the <code>arrayImage</code> by the eigenvectors. In this example, each eigenvector multiplication results in a PC.</p>
+</div>
+<div id="array-sorting-and-reducing" class="section level2 unnumbered">
+<h2>Array Sorting and Reducing<a class="anchor" aria-label="anchor" href="#array-sorting-and-reducing"><i class="fas fa-link"></i></a>
+</h2>
+<p>Array sorting is useful for obtaining custom quality mosaics which involve reducing a subset of image bands according to the values in a different band. The following example sorts by NDVI, then gets the mean of a subset of observations in the collection with the highest NDVI values:</p>
+<div class="sourceCode" id="cb478"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define an arbitrary region of interest as a point.</span>
+<span class="va">roi</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">122.26032</span>, <span class="fl">37.87187</span><span class="op">)</span>
+
+<span class="co"># Use these bands.</span>
+<span class="va">bandNames</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B2"</span>, <span class="st">"B3"</span>, <span class="st">"B4"</span>, <span class="st">"B5"</span>, <span class="st">"B6"</span>, <span class="st">"B7"</span>, <span class="st">"B10"</span>, <span class="st">"B11"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Load a Landsat 8 collection.</span>
+<span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">select</span><span class="op">(</span><span class="va">bandNames</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterBounds</span><span class="op">(</span><span class="va">roi</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterDate</span><span class="op">(</span><span class="st">"2014-06-01"</span>, <span class="st">"2014-12-31"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">map</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="va">ee</span><span class="op">$</span><span class="va">Algorithms</span><span class="op">$</span><span class="va">Landsat</span><span class="op">$</span><span class="fu">simpleCloudScore</span><span class="op">(</span><span class="va">img</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Convert the collection to an array.</span>
+<span class="va">array</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">toArray</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Label of the axes.</span>
+<span class="va">imageAxis</span> <span class="op">&lt;-</span> <span class="fl">0</span>
+<span class="va">bandAxis</span> <span class="op">&lt;-</span> <span class="fl">1</span>
+
+<span class="co"># Get the cloud slice and the bands of interest.</span>
+<span class="va">bands</span> <span class="op">&lt;-</span> <span class="va">array</span><span class="op">$</span><span class="fu">arraySlice</span><span class="op">(</span><span class="va">bandAxis</span>, <span class="fl">0</span>, <span class="va">bandNames</span><span class="op">$</span><span class="fu">length</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">clouds</span> <span class="op">&lt;-</span> <span class="va">array</span><span class="op">$</span><span class="fu">arraySlice</span><span class="op">(</span><span class="va">bandAxis</span>, <span class="va">bandNames</span><span class="op">$</span><span class="fu">length</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Sort by cloudiness.</span>
+<span class="va">sorted</span> <span class="op">&lt;-</span> <span class="va">bands</span><span class="op">$</span><span class="fu">arraySort</span><span class="op">(</span><span class="va">clouds</span><span class="op">)</span>
+
+<span class="co"># Get the least cloudy images, 20% of the total.</span>
+<span class="va">numImages</span> <span class="op">&lt;-</span> <span class="va">sorted</span><span class="op">$</span><span class="fu">arrayLength</span><span class="op">(</span><span class="va">imageAxis</span><span class="op">)</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="fl">0.2</span><span class="op">)</span><span class="op">$</span><span class="fu">int</span><span class="op">(</span><span class="op">)</span>
+<span class="va">leastCloudy</span> <span class="op">&lt;-</span> <span class="va">sorted</span><span class="op">$</span><span class="fu">arraySlice</span><span class="op">(</span><span class="va">imageAxis</span>, <span class="fl">0</span>, <span class="va">numImages</span><span class="op">)</span>
+
+<span class="co"># Get the mean of the least cloudy images by reducing along the image axis.</span>
+<span class="va">mean</span> <span class="op">&lt;-</span> <span class="va">leastCloudy</span><span class="op">$</span><span class="fu">arrayReduce</span><span class="op">(</span>
+  reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span>,
+  axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">imageAxis</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Turn the reduced array image into a multi-band image for display.</span>
+<span class="va">vizParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"bands"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span>, <span class="st">"B2"</span><span class="op">)</span>, min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>
+<span class="va">meanImage</span> <span class="op">&lt;-</span> <span class="va">mean</span><span class="op">$</span><span class="fu">arrayProject</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">bandAxis</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">arrayFlatten</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">bandNames</span><span class="op">)</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">centerObject</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="va">roi</span><span class="op">)</span>, zoom <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">meanImage</span>, <span class="va">vizParams</span>, <span class="st">"Mean Image"</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_05/figure_ar_code_03.png" width="95%">
+</center>
+<p>As in the linear modeling example, separate the bands of interest from the sort index (NDVI) using <code>arraySlice()</code> along the band axis. Then sort the bands of interest by sort index using <code>arraySort()</code>. After the pixels have been sorted by descending NDVI, use <code>arraySlice()</code> along the <code>imageAxis</code> to get 20% of the highest NDVI pixels. Lastly, apply <code>arrayReduce()</code> along the <code>imageAxis</code> with a mean reducer to get the mean of the highest NDVI pixels. The final step converts the array image back to a multi-band image for display.</p>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="join.html">Join</a></div>
+<div class="empty"></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#array">Array</a></li>
+<li>
+<a class="nav-link" href="#array-overview">Array Overview</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#array-dimension-shape-and-size">Array dimension, shape and size</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#arrays-and-array-images">Arrays and Array Images</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#array-images">Array Images</a></li></ul>
+</li>
+<li><a class="nav-link" href="#array-transformations">Array Transformations</a></li>
+<li><a class="nav-link" href="#eigen-analysis">Eigen Analysis</a></li>
+<li><a class="nav-link" href="#array-sorting-and-reducing">Array Sorting and Reducing</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/05_object_methods.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/05_object_methods.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

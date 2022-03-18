@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Client vs Server | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Client vs Server | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Client vs Server | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="It is important to distinguish Earth Engine objects from other R objects or primitives that might be in your code. You can manipulate objects on the server by manipulating client-side “proxy”...">
+<meta property="og:description" content="It is important to distinguish Earth Engine objects from other R objects or primitives that might be in your code. You can manipulate objects on the server by manipulating client-side “proxy”...">
+<meta name="twitter:description" content="It is important to distinguish Earth Engine objects from other R objects or primitives that might be in your code. You can manipulate objects on the server by manipulating client-side “proxy”...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="active" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="client-vs-server" class="section level1 unnumbered">
+<h1>Client vs Server<a class="anchor" aria-label="anchor" href="#client-vs-server"><i class="fas fa-link"></i></a>
+</h1>
+<p>It is important to distinguish Earth Engine objects from other R objects or primitives that might be in your code. You can manipulate objects on the server by manipulating client-side “proxy” objects in your script. You can recognize a proxy object as anything starting with <code>ee</code>. These Earth Engine proxy objects do not contain any actual data and are just handles for objects on the server. To start, consider a client-side R string object (which is NOT a proxy object):</p>
+<div class="sourceCode" id="cb271"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb271-1"><a href="client-vs-server.html#cb271-1"></a><span class="kw">var</span> clientString <span class="op">=</span> <span class="st">'I am a String'</span><span class="op">;</span></span>
+<span id="cb271-2"><a href="client-vs-server.html#cb271-2"></a><span class="at">print</span>(<span class="kw">typeof</span> clientString)<span class="op">;</span>  <span class="co">// string</span></span></code></pre></div>
+<p>Observe from the console output that the web browser (which is called the ‘client’ in this doc) has interpreted this code and run it, determining that the <code>clientString</code> is type <code>string</code>. Now suppose you want Earth Engine to be able to do something with this string. To do that, you need to wrap up the string in a nice container and send it to Google. That container is the proxy object. Here’s an example:</p>
+<div class="sourceCode" id="cb272"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb272-1"><a href="client-vs-server.html#cb272-1"></a><span class="kw">var</span> serverString <span class="op">=</span> <span class="va">ee</span>.<span class="at">String</span>(<span class="st">'I am not a String!'</span>)<span class="op">;</span></span>
+<span id="cb272-2"><a href="client-vs-server.html#cb272-2"></a><span class="at">print</span>(<span class="kw">typeof</span> serverString)<span class="op">;</span>  <span class="co">// object</span></span>
+<span id="cb272-3"><a href="client-vs-server.html#cb272-3"></a><span class="at">print</span>(<span class="st">'Is this an EE object?'</span><span class="op">,</span></span>
+<span id="cb272-4"><a href="client-vs-server.html#cb272-4"></a>    serverString <span class="kw">instanceof</span> <span class="va">ee</span>.<span class="at">ComputedObject</span>)<span class="op">;</span>  <span class="co">// true</span></span></code></pre></div>
+<p>Observe from the console output that the <code>ee$String</code> is an <code>object</code>, NOT a <code>string</code>. More specifically, it’s an <code>ee$computedObject</code>, which means it’s a proxy object for something on the server. Think of <code>ee$Thing</code> as the way to put a thing in a container for sending to Google. Your client doesn’t know what’s in the container, but you can find out what’s in it by printing it:</p>
+<div class="sourceCode" id="cb273"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb273-1"><a href="client-vs-server.html#cb273-1"></a><span class="at">print</span>(serverString)<span class="op">;</span>  <span class="co">// I am not a String</span></span></code></pre></div>
+<p>To see what the container itself looks like, call <code><a href="https://rdrr.io/r/base/toString.html">toString()</a></code> on the object:</p>
+<div class="sourceCode" id="cb274"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb274-1"><a href="client-vs-server.html#cb274-1"></a><span class="at">print</span>(<span class="va">serverString</span>.<span class="at">toString</span>())<span class="op">;</span>  <span class="co">// ee.String("I am not a String!")</span></span></code></pre></div>
+<p>If all you need to do is find out what’s in the container, then just <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> and inspect the result in the console. If, for some reason, you need to use R running in the client to manipulate whatever is in the container, then use <code>getInfo()</code> to get the contents of the container and assign it to a variable:</p>
+<div class="sourceCode" id="cb275"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb275-1"><a href="client-vs-server.html#cb275-1"></a><span class="kw">var</span> someString <span class="op">=</span> <span class="va">serverString</span>.<span class="at">getInfo</span>()<span class="op">;</span></span>
+<span id="cb275-2"><a href="client-vs-server.html#cb275-2"></a><span class="kw">var</span> strings <span class="op">=</span> someString <span class="op">+</span> <span class="st">'  Am I?'</span><span class="op">;</span></span>
+<span id="cb275-3"><a href="client-vs-server.html#cb275-3"></a><span class="at">print</span>(strings)<span class="op">;</span>  <span class="co">// I am not a String!  Am I?</span></span></code></pre></div>
+<p>You shouldn’t use <code>getInfo()</code> unless you absolutely need to. If you call <code>getInfo()</code> in your code, Earth Engine will open the container and tell you what’s inside, but it will block the rest of your code until that’s done. (You can optionally provide a callback function to avoid that, but the better option is to do everything on the server, if possible.)</p>
+<div id="looping" class="section level2 unnumbered">
+<h2>Looping<a class="anchor" aria-label="anchor" href="#looping"><i class="fas fa-link"></i></a>
+</h2>
+<p>Because the client doesn’t know what’s in server-side <code>ee$Thing</code> objects, R functionality such as conditionals and for-loops does not work with them. For that reason, and to avoid synchronous calls to <code>getInfo()</code>, use server functions to the extent possible. For example, consider the following two ways of creating a list:</p>
+<p><strong>Not recommended</strong> — client-side for-loop</p>
+<div class="sourceCode" id="cb276"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb276-1"><a href="client-vs-server.html#cb276-1"></a><span class="kw">var</span> clientList <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb276-2"><a href="client-vs-server.html#cb276-2"></a><span class="cf">for</span>(<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">8</span><span class="op">;</span> i<span class="op">++</span>) <span class="op">{</span></span>
+<span id="cb276-3"><a href="client-vs-server.html#cb276-3"></a>  <span class="va">clientList</span>.<span class="at">push</span>(i <span class="op">+</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb276-4"><a href="client-vs-server.html#cb276-4"></a><span class="op">}</span></span>
+<span id="cb276-5"><a href="client-vs-server.html#cb276-5"></a><span class="at">print</span>(clientList)<span class="op">;</span></span></code></pre></div>
+<p><code>Recommended</code> — server-side mapping</p>
+<div class="sourceCode" id="cb277"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb277-1"><a href="client-vs-server.html#cb277-1"></a><span class="kw">var</span> serverList <span class="op">=</span> <span class="va">ee</span>.<span class="va">List</span>.<span class="at">sequence</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">7</span>)<span class="op">;</span></span>
+<span id="cb277-2"><a href="client-vs-server.html#cb277-2"></a>serverList <span class="op">=</span> <span class="va">serverList</span>.<span class="at">map</span>(<span class="kw">function</span>(n) <span class="op">{</span></span>
+<span id="cb277-3"><a href="client-vs-server.html#cb277-3"></a>  <span class="cf">return</span> <span class="va">ee</span>.<span class="at">Number</span>(n).<span class="at">add</span>(<span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb277-4"><a href="client-vs-server.html#cb277-4"></a><span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb277-5"><a href="client-vs-server.html#cb277-5"></a><span class="at">print</span>(serverList)<span class="op">;</span></span></code></pre></div>
+<p>The server-side mapping example is a little silly because you could make the same list simply with <code>ee$List$sequence(1, 8)</code>, but it illustrates some important concepts. The first concept is <code>map()</code> which simply applies the same function to everything in the list. Because this function is executed on the server, client-side functions such as <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> won’t work in a mapped function. For that reason, the <code>i + 1</code> code has to be replaced with the equivalent server-side code: <code>ee$Number(n)$add(1)</code>. Importantly, <code>n</code> is an object that only exists on the server. Because the function doesn’t know the type of its argument, it needs to be cast to an <code>ee.Number</code>.</p>
+<p>It’s also worth noting that occasionally client-side functionality is convenient. For example, the previous for loop could be used to build a list and wrap it with a server-side object:</p>
+<div class="sourceCode" id="cb278"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb278-1"><a href="client-vs-server.html#cb278-1"></a><span class="kw">var</span> toServerList <span class="op">=</span> <span class="va">ee</span>.<span class="at">List</span>(clientList)<span class="op">;</span></span></code></pre></div>
+<p>Realize that client-side processing is done in your browser, using your machine’s CPU, so it can be less efficient than using Earth Engine to do the work on the server. Also, to avoid potentially surprising results, it is good practice to avoid mixing client and server functionality in your scripts. The Conditionals section provides an example of possibly unintended consequences.</p>
+</div>
+<div id="conditionals" class="section level2 unnumbered">
+<h2>Conditionals<a class="anchor" aria-label="anchor" href="#conditionals"><i class="fas fa-link"></i></a>
+</h2>
+<p>Server-side objects don’t necessarily work with client side functions and vice versa. For example, consider the case of a server-side Boolean variable:</p>
+<div class="sourceCode" id="cb279"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb279-1"><a href="client-vs-server.html#cb279-1"></a><span class="kw">var</span> myList <span class="op">=</span> <span class="va">ee</span>.<span class="at">List</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span>])<span class="op">;</span></span>
+<span id="cb279-2"><a href="client-vs-server.html#cb279-2"></a><span class="kw">var</span> serverBoolean <span class="op">=</span> <span class="va">myList</span>.<span class="at">contains</span>(<span class="dv">5</span>)<span class="op">;</span></span>
+<span id="cb279-3"><a href="client-vs-server.html#cb279-3"></a><span class="at">print</span>(serverBoolean)<span class="op">;</span>  <span class="co">// false</span></span></code></pre></div>
+<p>Note that the server-side Boolean results from executing a method on a server object. It appears to be a client variable when you <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> it because <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> opens the container and tells you what’s inside. However, as shown in the following example, the variable does not behave in a client-side conditional because it is a server-side object. To correctly check a server-side boolean, use a server-side function:</p>
+<p><strong>Not recommended</strong> — client-side conditional</p>
+<div class="sourceCode" id="cb280"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb280-1"><a href="client-vs-server.html#cb280-1"></a><span class="kw">var</span> clientConditional<span class="op">;</span></span>
+<span id="cb280-2"><a href="client-vs-server.html#cb280-2"></a><span class="cf">if</span> (serverBoolean) <span class="op">{</span></span>
+<span id="cb280-3"><a href="client-vs-server.html#cb280-3"></a>  clientConditional <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb280-4"><a href="client-vs-server.html#cb280-4"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb280-5"><a href="client-vs-server.html#cb280-5"></a>  clientConditional <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb280-6"><a href="client-vs-server.html#cb280-6"></a><span class="op">}</span></span>
+<span id="cb280-7"><a href="client-vs-server.html#cb280-7"></a><span class="at">print</span>(<span class="st">'Should be false:'</span><span class="op">,</span> clientConditional)<span class="op">;</span>  <span class="co">// True!</span></span></code></pre></div>
+<p><strong>Recommended</strong> — server-side conditional</p>
+<div class="sourceCode" id="cb281"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb281-1"><a href="client-vs-server.html#cb281-1"></a><span class="kw">var</span> serverConditional <span class="op">=</span> <span class="va">ee</span>.<span class="va">Algorithms</span>.<span class="at">If</span>(serverBoolean<span class="op">,</span> <span class="st">'True!'</span><span class="op">,</span> <span class="st">'False!'</span>)<span class="op">;</span></span>
+<span id="cb281-2"><a href="client-vs-server.html#cb281-2"></a><span class="at">print</span>(<span class="st">'Should be false:'</span><span class="op">,</span> serverConditional)<span class="op">;</span>  <span class="co">// False!</span></span></code></pre></div>
+</div>
+<div id="client-and-server-functions" class="section level2 unnumbered">
+<h2>Client and Server Functions<a class="anchor" aria-label="anchor" href="#client-and-server-functions"><i class="fas fa-link"></i></a>
+</h2>
+<p>The previous sections describe several reasons why it is inefficient or illogical to mix client and server objects and functions. Which objects and functions are client-side and which are server-side? In general, any thing initialized as <code>ee$Thing</code> is a server object and any method on that object, <code>ee$Thing$method()</code>, is a server function. In contrast, any class in the Rstudio API reference that doesn’t start with <code>ee</code> is client-side as well. Examples include <code><a href="https://rdrr.io/r/base/print.html">print()</a></code>, <code>Map</code>, <code>Export</code> and <code>Chart</code>. Objects and functions that appear in the <a href="">R reference</a> are client-side. Any <a href="">R literal object</a> you create is a client-side object. As noted previously, you can use client-side functionality to create an object, then wrap it by supplying the client-side object to an Earth Engine constructor, for example <code>ee$String()</code>.</p>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="how-earth-engine-works.html">How Earth Engine works</a></div>
+<div class="next"><a href="deferred-exacution.html">Deferred exacution</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#client-vs-server">Client vs Server</a></li>
+<li><a class="nav-link" href="#looping">Looping</a></li>
+<li><a class="nav-link" href="#conditionals">Conditionals</a></li>
+<li><a class="nav-link" href="#client-and-server-functions">Client and Server Functions</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/04_concepts.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/04_concepts.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Global Surface Water | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Global Surface Water | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Global Surface Water | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Introduction Welcome to the Google Earth Engine tutorial for working with the global surface water (GSW)...">
+<meta property="og:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Introduction Welcome to the Google Earth Engine tutorial for working with the global surface water (GSW)...">
+<meta name="twitter:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Introduction Welcome to the Google Earth Engine tutorial for working with the global surface water (GSW)...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="active" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="global-surface-water" class="section level1 unnumbered">
+<h1>Global Surface Water<a class="anchor" aria-label="anchor" href="#global-surface-water"><i class="fas fa-link"></i></a>
+</h1>
+<p>This section requires the next libraries:</p>
+<div class="sourceCode" id="cb252"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rgeeExtra</span><span class="op">)</span>
+
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div id="introduction-1" class="section level2 unnumbered">
+<h2>Introduction<a class="anchor" aria-label="anchor" href="#introduction-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>Welcome to the Google Earth Engine tutorial for working with the global surface water (GSW) dataset. This dataset is described in the Nature letter <a href="https://www.nature.com/articles/nature20584.epdf?author_access_token=C5JSvooRop4jWxyp_qRPLNRgN0jAjWel9jnR3ZoTv0MqBuzCNsmw_DFxRd7sX93nfPzcbm_xTiPLlZMl7XrUhadm6EiT9cGdDNgn1s6EWrPWH3IeadLUjApplBoaS6xH">High-resolution mapping of global surface water and its long-term changes</a>. This tutorial provides examples of how to use Earth Engine to visualize data layers available in the GSW dataset, and presents some typical visualizations and analyses.</p>
+<p>The tutorial is broken up into sections. Within each section, code will be built up gradually with short code snippets and explanatory text. At the end of each section, the complete working script will be presented.</p>
+<div id="references" class="section level3 unnumbered">
+<h3>References<a class="anchor" aria-label="anchor" href="#references"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>
+<p><a href="http:#rdcu.be/nDd2">High-resolution mapping of global surface water and its long-term changes</a> (online viewer)</p>
+<ul>
+<li><p><a href="http:#www.nature.com/news/get-water-governance-on-the-global-agenda-1.21104">Get water governance on the global agenda</a> (Nature editorial)</p></li>
+<li><p><a href="https:#global-surface-water.appspot.com/">Global Surface Water Explorer</a> (web application)</p></li>
+<li><p><a href="https:#storage.googleapis.com/global-surface-water/downloads_ancillary/DataUsersGuidev2.pdf">Data Users Guide</a> (v2)</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="audience" class="section level3 unnumbered">
+<h3>Audience<a class="anchor" aria-label="anchor" href="#audience"><i class="fas fa-link"></i></a>
+</h3>
+<p>This tutorial assumes you are familiar with concepts presented in the <a href="https://r-earthengine.com/rgeebook/earth-engine-in-rstudio.html">Earth Engine Rstudio</a> documentation pages and have worked through the <a href="https://r-earthengine.com/rgeebook/the-earth-engine-api.html">Earth Engine API tutorial</a>.</p>
+</div>
+<div id="license-and-attribution-1" class="section level3 unnumbered">
+<h3>License and Attribution<a class="anchor" aria-label="anchor" href="#license-and-attribution-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>The GSW data described in this tutorial were produced under the <a href="http:#www.copernicus.eu/">Copernicus Programme</a> and are provided free of charge, without restriction of use. For the full license information see the <a href="http:#www.copernicus.eu/main/data-access/">Copernicus Regulation</a>.</p>
+<p>If you are using the data as a layer in a published map, please include the following attribution text:</p>
+</div>
+<div id="get-access-to-earth-engine" class="section level3 unnumbered">
+<h3>Get access to Earth Engine<a class="anchor" aria-label="anchor" href="#get-access-to-earth-engine"><i class="fas fa-link"></i></a>
+</h3>
+<p>Access to Earth Engine is free, but requires signup. To get access, please fill out our <a href="https:#earthengine.google.com/signup">Earth Engine signup form</a> to apply for an Evaluator account. Those granted access will receive an email within a few business days with further instructions.</p>
+<p>Once you’re familiar with the Rstudio, get started on next section!</p>
+</div>
+</div>
+<div id="water-occurrence-1984-2015" class="section level2 unnumbered">
+<h2>Water Occurrence (1984-2015)<a class="anchor" aria-label="anchor" href="#water-occurrence-1984-2015"><i class="fas fa-link"></i></a>
+</h2>
+<p>The GSW dataset contains many data layers that present the surface water data in different ways. We will start by visualizing the water occurrence layer, which provides a summary of where and how often surface water occurred over the entire time-period between March 1984 and October 2015.</p>
+<p>This section of the tutorial will:</p>
+<ol style="list-style-type: decimal">
+<li>add a map layer for visualizing surface water occurrence,</li>
+<li>show how to query values of the map layer,</li>
+<li>add custom styling to improve the visualization,</li>
+<li>create a binary water mask layer using a threshold value,</li>
+<li>center the map on interesting parts of the world, and</li>
+<li>show how to refactor the script to make it more readable and maintainable.</li>
+</ol>
+<div id="creating-a-basic-visualization" class="section level3 unnumbered">
+<h3>Creating a Basic Visualization<a class="anchor" aria-label="anchor" href="#creating-a-basic-visualization"><i class="fas fa-link"></i></a>
+</h3>
+<p>Start by copying the following statements into the Code Editor:</p>
+<div class="sourceCode" id="cb253"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gsw</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'JRC/GSW1_0/GlobalSurfaceWater'</span><span class="op">)</span>
+<span class="va">occurrence</span> <span class="op">&lt;-</span> <span class="va">gsw</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'occurrence'</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">occurrence</span><span class="op">)</span></code></pre></div>
+<p>The first statement references the Earth Engine <a href="https://r-earthengine.com/rgeebook/image.html">Image object</a> for the GSW dataset, and stores it in a variable named <code>gsw</code>. The second statement selects a single layer of the GSW dataset, and stores it in a variable called <code>occurrence</code>. The third statement adds the occurrence image to the Rstudio’s interactive map.</p>
+<p>Click on the Rstudio’s “Run” button, and after a few seconds you should see a map with grey coloring along the coastlines, similar to Figure 1.</p>
+<center>
+<img src="images/chapter_03/figure_GSW_01.png" width="95%">
+</center>
+<p>Figure: Default visualization of the global surface water occurrence data layer.</p>
+<p>In most areas, the GSW dataset appears transparent, because locations where either Landsat images were not collected (i.e. ocean areas) or where water was not detected by any observations in the 32 years are <a href="https://r-earthengine.com/rgeebook/the-earth-engine-api.html">masked out</a>.</p>
+</div>
+<div id="refactoring-to-improve-your-code" class="section level3 unnumbered">
+<h3>Refactoring to Improve Your Code<a class="anchor" aria-label="anchor" href="#refactoring-to-improve-your-code"><i class="fas fa-link"></i></a>
+</h3>
+<p>Our script only contains two statements, but already we have an opportunity to refactor the code so that our final script will be easier to read and maintain over time. Currently, the <code>Map$addLayer()</code> statement passes a single argument <code>occurrence</code>, which is the Earth Engine image object that we want to display on the map. However, the <code>Map$addLayer()</code> method also allows for additional arguments to be passed to it. To quickly see what arguments are available, place your cursor after the opening parentheses and press the keyboard shortcut for “Show code suggestions” to bring up the help document for the <code>addLayer</code> method.</p>
+<p>The keyboard shortcuts show that there are five arguments that can be passed to <code>Map$addLayer</code>: <code>eeObject</code>, <code>visParams</code>, <code>name</code>, <code>shown</code>, and <code>opacity</code>. In our current script we are passing a single variable <code>occurrence</code> which is interpreted as the first argument, <code>eeObject</code>. To pass both the variable object and an additional argument that names the layer, we can refactor the code to use “named arguments” (<code>eeObject</code> and <code>name</code>) where are passed within to the method from within a <a href="http://www.w3schools.com/js/js_json_intro.asp">JSON data structure</a> as shown below:</p>
+<div class="sourceCode" id="cb254"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>eeObject <span class="op">=</span> <span class="va">occurrence</span>, name <span class="op">=</span> <span class="st">'Water Occurrence (1984-2015)'</span><span class="op">)</span></code></pre></div>
+<p>Run the code again to make sure it still works after the refactoring changes. The resulting map should remain unchanged.</p>
+<center>
+<img src="images/chapter_03/figure_GSW_01b.png" width="95%">
+</center>
+</div>
+<div id="adding-visualization-parameters" class="section level3 unnumbered">
+<h3>Adding Visualization Parameters<a class="anchor" aria-label="anchor" href="#adding-visualization-parameters"><i class="fas fa-link"></i></a>
+</h3>
+<p>Next, we will work on improving upon the default visualization parameters, which are making our water appear gray. Add a new statement that creates a variable <code>VIS_OCCURRENCE</code> and pass it as an additional argument to the addLayer method.</p>
+<div class="sourceCode" id="cb255"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">VIS_OCCURRENCE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  min <span class="op">=</span> <span class="fl">0</span>,
+  max <span class="op">=</span> <span class="fl">100</span>,
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb256"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  eeObject <span class="op">=</span> <span class="va">occurrence</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">occurrence</span><span class="op">$</span><span class="fu">divide</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span>,
+  name <span class="op">=</span> <span class="st">"Water Occurrence (1984-2015)"</span>,
+  visParams <span class="op">=</span> <span class="va">VIS_OCCURRENCE</span>
+<span class="op">)</span></code></pre></div>
+<p>The visualization parameters stored in JSON structure <code>VIS_OCCURRENCE</code> indicate that red should be used for a minimum value of 0% and blue for a maximum value of 100%. The addition of <code>$updateMask(occurrence$divide(100))</code> causes the opacity/transparency of the pixels to be set based on the occurrence value.</p>
+<p>Run the script again, and view the revised results from our styling changes.</p>
+<center>
+<img src="images/chapter_03/figure_GSW_02.png" width="95%">
+</center>
+<p>Screenshot of water occurrence for the Paraná Delta near Buenos Aires, using a transparent red color for the 0% minimum value endpoint and a solid blue color for the maximum value endpoint.</p>
+<p>The water areas are now blue! Progress!</p>
+</div>
+<div id="creating-a-threshold-layer" class="section level3 unnumbered">
+<h3>Creating a Threshold Layer<a class="anchor" aria-label="anchor" href="#creating-a-threshold-layer"><i class="fas fa-link"></i></a>
+</h3>
+<p>The water occurrence image contains information on how often water is expected using a range of values from 0 to 100%. However, it is often useful to define a binary water layer (i.e. “water” vs. “non-water”) based on a certain percentage of occurrence (i.e. a threshold value). We will use this simple binary layer as a clean background layer over which other GSW layers can be placed. Creating this threshold layer can be done using the following statements, which uses a threshold value of 90% to separate water and non-water.</p>
+<p>First we define a new visualization variable <code>VIS_WATER_MASK</code> for holding styling information for the water mask:</p>
+<div class="sourceCode" id="cb257"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">VIS_WATER_MASK</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"black"</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<p>Then we calculate a water mask layer using the greater than comparison operator <code>$gt(90)</code> and then set the previously masked areas to zero using the <code>$unmask()</code> method:</p>
+<div class="sourceCode" id="cb258"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create a water mask layer, and set the image mask so that non-water areas</span>
+<span class="co"># are opaque.</span>
+<span class="va">water_mask</span> <span class="op">&lt;-</span> <span class="va">occurrence</span><span class="op">$</span><span class="fu">gt</span><span class="op">(</span><span class="fl">90</span><span class="op">)</span><span class="op">$</span><span class="fu">unmask</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></code></pre></div>
+<p>And finally, add the layer to the map. In order to have this layer rendered under all other layers, place the following statement before any other <code>Map$addLayer</code> statements.</p>
+<div class="sourceCode" id="cb259"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  eeObject <span class="op">=</span> <span class="va">water_mask</span>,
+  visParams <span class="op">=</span> <span class="va">VIS_WATER_MASK</span>,
+  name <span class="op">=</span> <span class="st">"90% occurrence water mask"</span>
+<span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_03/figure_GSW_03.png" width="95%">
+</center>
+<p>Figure: Screenshot of a 90% water mask for the Paraná Delta near Buenos Aires.</p>
+</div>
+<div id="going-to-interesting-parts-of-the-world" class="section level3 unnumbered">
+<h3>Going to Interesting Parts of the World<a class="anchor" aria-label="anchor" href="#going-to-interesting-parts-of-the-world"><i class="fas fa-link"></i></a>
+</h3>
+<p>It is fun to explore the world by panning and zooming around, but the world is large and sometimes it helps to jump directly to a particular location. Here is a series of statements that provide a small sample of interesting locations, in terms of surface water. Just uncomment one of the statements at a time, and your script will go to that location when it is run.</p>
+<div class="sourceCode" id="cb260"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Uncomment one of the following statements to center the map.</span>
+<span class="co"># Map$setCenter(-90.162, 29.8597, 10)   # New Orleans, USA</span>
+<span class="co"># Map$setCenter(-114.9774, 31.9254, 10) # Mouth of the Colorado River, Mexico</span>
+<span class="co"># Map$setCenter(-111.1871, 37.0963, 11) # Lake Powell, USA</span>
+<span class="co"># Map$setCenter(149.412, -35.0789, 11)  # Lake George, Australia</span>
+<span class="co"># Map$setCenter(105.26, 11.2134, 9)     # Mekong River Basin, SouthEast Asia</span>
+<span class="co"># Map$setCenter(90.6743, 22.7382, 10)   # Meghna River, Bangladesh</span>
+<span class="co"># Map$setCenter(81.2714, 16.5079, 11)   # Godavari River Basin Irrigation Project, India</span>
+<span class="co"># Map$setCenter(14.7035, 52.0985, 12)   # River Oder, Germany &amp; Poland</span>
+<span class="co"># Map$setCenter(-59.1696, -33.8111, 9)  # Buenos Aires, Argentina</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">74.4557</span>, <span class="op">-</span><span class="fl">8.4289</span>, <span class="fl">11</span><span class="op">)</span> <span class="co"># Ucayali River, Peru</span></code></pre></div>
+<p>This is just a small sample of interesting locations. Feel free to add your own!</p>
+</div>
+<div id="refactoring-again" class="section level3 unnumbered">
+<h3>Refactoring, again…<a class="anchor" aria-label="anchor" href="#refactoring-again"><i class="fas fa-link"></i></a>
+</h3>
+<p>Before we move on to the next layer of the GSW dataset, we are going to do a little more code refactoring. Specifically, we will group our similar statements together, and add some comments that will break up our code into sections for assets, constants, calculations, centering the map and adding map layers.</p>
+<p>Here is the final refactored script:</p>
+<div class="sourceCode" id="cb261"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#############################################################</span>
+<span class="co"># Asset List</span>
+<span class="co">#############################################################</span>
+
+<span class="va">gsw</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"JRC/GSW1_0/GlobalSurfaceWater"</span><span class="op">)</span>
+<span class="va">occurrence</span> <span class="op">&lt;-</span> <span class="va">gsw</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"occurrence"</span><span class="op">)</span>
+
+<span class="co">#############################################################</span>
+<span class="co"># Constants</span>
+<span class="co">#############################################################</span>
+
+<span class="va">VIS_OCCURRENCE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  min <span class="op">=</span> <span class="fl">0</span>,
+  max <span class="op">=</span> <span class="fl">100</span>,
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>
+<span class="op">)</span>
+
+
+<span class="va">VIS_WATER_MASK</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"black"</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co">#############################################################</span>
+<span class="co"># Calculations</span>
+<span class="co">#############################################################</span>
+
+<span class="co"># Create a water mask layer, and set the image mask so that non-water areas</span>
+<span class="co"># are opaque.</span>
+<span class="va">water_mask</span> <span class="op">&lt;-</span> <span class="va">occurrence</span><span class="op">$</span><span class="fu">gt</span><span class="op">(</span><span class="fl">90</span><span class="op">)</span><span class="op">$</span><span class="fu">unmask</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>
+
+<span class="co">#############################################################</span>
+<span class="co"># Initialize Map Location</span>
+<span class="co">#############################################################</span>
+
+<span class="co"># Uncomment one of the following statements to center the map.</span>
+<span class="co"># Map$setCenter(-90.162, 29.8597, 10)   # New Orleans, USA</span>
+<span class="co"># Map$setCenter(-114.9774, 31.9254, 10) # Mouth of the Colorado River, Mexico</span>
+<span class="co"># Map$setCenter(-111.1871, 37.0963, 11) # Lake Powell, USA</span>
+<span class="co"># Map$setCenter(149.412, -35.0789, 11)  # Lake George, Australia</span>
+<span class="co"># Map$setCenter(105.26, 11.2134, 9)     # Mekong River Basin, SouthEast Asia</span>
+<span class="co"># Map$setCenter(90.6743, 22.7382, 10)   # Meghna River, Bangladesh</span>
+<span class="co"># Map$setCenter(81.2714, 16.5079, 11)   # Godavari River Basin Irrigation Project, India</span>
+<span class="co"># Map$setCenter(14.7035, 52.0985, 12)   # River Oder, Germany &amp; Poland</span>
+<span class="co"># Map$setCenter(-59.1696, -33.8111, 9)  # Buenos Aires, Argentina</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">74.4557</span>, <span class="op">-</span><span class="fl">8.4289</span>, <span class="fl">11</span><span class="op">)</span> <span class="co"># Ucayali River, Peru</span>
+
+<span class="co">#############################################################</span>
+<span class="co"># Map Layers</span>
+<span class="co">#############################################################</span>
+
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  eeObject <span class="op">=</span> <span class="va">water_mask</span>,
+  visParams <span class="op">=</span> <span class="va">VIS_WATER_MASK</span>,
+  name <span class="op">=</span> <span class="st">"90% occurrence water mask"</span>,
+  shown <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span> <span class="op">|</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  eeObject <span class="op">=</span> <span class="va">occurrence</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">occurrence</span><span class="op">$</span><span class="fu">divide</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span>,
+  name <span class="op">=</span> <span class="st">"Water Occurrence (1984-2015)"</span>,
+  visParams <span class="op">=</span> <span class="va">VIS_OCCURRENCE</span>
+<span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_03/figure_GSW_03b.png" width="95%">
+</center>
+<p>In the next section, you explore how water occurrence has changed over time.</p>
+</div>
+</div>
+<div id="water-occurrence-change-intensity" class="section level2 unnumbered">
+<h2>Water Occurrence Change Intensity<a class="anchor" aria-label="anchor" href="#water-occurrence-change-intensity"><i class="fas fa-link"></i></a>
+</h2>
+<p>The Water Occurrence Change Intensity data layer provides a measure of how surface water has changed between two epochs: 1984-1999 and 2000-2015. The layer averages the change across homologous pairs of months taken from the two epochs. See the <a href="https://storage.googleapis.com/global-surface-water/downloads_ancillary/DataUsersGuidev2.pdf">Data Users Guide (v2)</a> for additional details on this layer.</p>
+<p>This section of the tutorial will:</p>
+<ol style="list-style-type: decimal">
+<li>add a styled map layer for visualizing water occurrence change intensity, and</li>
+<li>summarize the change intensity in a specified region-of-interest using a histogram.</li>
+</ol>
+<div id="visualization-1" class="section level3 unnumbered">
+<h3>Visualization<a class="anchor" aria-label="anchor" href="#visualization-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Similar to the water occurrence layer, we will start by adding a basic visualization of occurrence change intensity to the map and then improve upon it. Occurrence change intensity is provided in two ways, both as absolute and normalized values. We will use the absolute values in this tutorial. Start by selecting the absolute occurrence change intensity layer from the GSW image:</p>
+<div class="sourceCode" id="cb262"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">change</span> <span class="op">&lt;-</span> <span class="va">gsw</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"change_abs"</span><span class="op">)</span></code></pre></div>
+<p>In the Constants section of the code, add a statement that creates a new variable that defines how the layer will be styled. This styling shows areas where the surface water occurrence has decreased/increased in red/green. Areas where surface water occurrence is relatively unchanged are shown in black.</p>
+<div class="sourceCode" id="cb263"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">VIS_CHANGE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  min <span class="op">=</span> <span class="op">-</span><span class="fl">50</span>,
+  max <span class="op">=</span> <span class="fl">50</span>,
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"limegreen"</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<p>At the end of the Map Layers section of code, add a statement that adds a new layer to the map.</p>
+<div class="sourceCode" id="cb264"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">74.4557</span>, <span class="op">-</span><span class="fl">8.4289</span>, <span class="fl">11</span><span class="op">)</span> <span class="co"># Ucayali River, Peru</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  eeObject <span class="op">=</span> <span class="va">change</span>,
+  visParams <span class="op">=</span> <span class="va">VIS_CHANGE</span>,
+  name <span class="op">=</span> <span class="st">"occurrence change intensity"</span>
+<span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_03/figure_GSW_04.png" width="95%">
+</center>
+<p>Figure: Screenshot of a surface water change intensity for the Ucayali River near Pucallpa, a city in the Amazonian rainforest of eastern Peru. Red/green indicates a decrease/increase in surface water occurrence between the epochs.</p>
+</div>
+</div>
+<div id="water-class-transition" class="section level2 unnumbered">
+<h2>Water Class Transition<a class="anchor" aria-label="anchor" href="#water-class-transition"><i class="fas fa-link"></i></a>
+</h2>
+<p>The water transition layer captures changes between three classes of water occurrence (not water, seasonal water, and permanent water) along with two additional classes for ephemeral water (ephemeral permanent and ephemeral seasonal).</p>
+<p>This section of the tutorial will:</p>
+<ol style="list-style-type: decimal">
+<li>add a map layer for visualizing water transition,</li>
+<li>create a grouped reducer for summing the area of each transition class within a specified region-of-interest, and</li>
+<li>create a chart that summarizes the area by transition class.</li>
+</ol>
+<div id="basic-visualization" class="section level3 unnumbered">
+<h3>Basic Visualization<a class="anchor" aria-label="anchor" href="#basic-visualization"><i class="fas fa-link"></i></a>
+</h3>
+<p>In the Asset List section of the script, add the following statement which creates a single band image object called <code>transition</code>:</p>
+<div class="sourceCode" id="cb265"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">transition</span> <span class="op">&lt;-</span> <span class="va">gsw</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"transition"</span><span class="op">)</span></code></pre></div>
+<p>The GSW images contain metadata on the transition class numbers and names, and a default palette for styling the transition classes. When the transition layer is added to the map, these visualzation parameters will be used automatically.</p>
+<p>At the bottom of the Map Layers section of your script, add the following statement which adds a new map layer that displays the transition classes:</p>
+<div class="sourceCode" id="cb266"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="fl">105.26</span>, <span class="fl">11.2134</span>, <span class="fl">9</span><span class="op">)</span> <span class="co"># Mekong River Basin, SouthEast Asia</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  eeObject <span class="op">=</span> <span class="va">transition</span>,
+  name <span class="op">=</span> <span class="st">"Transition classes (1984-2015)"</span>,
+<span class="op">)</span></code></pre></div>
+<p>When you run the script, the transition layer will be displayed.</p>
+<center>
+<img src="images/chapter_03/figure_GSW_05.png" width="95%">
+</center>
+<p>Figure: Screenshot of the Mekong River delta, showing a wide variation in surface water class transitions.</p>
+<p>The map key for the transition classes is:</p>
+<div class="inline-table"><table border="1" class="table table-sm">
+<tr>
+<th>
+Value
+</th>
+<th>
+Symbol
+</th>
+<th>
+Label
+</th>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td style="background-color: #FFFFFF;">
+</td>
+<td>
+Not water
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td style="background-color: #0000FF;">
+</td>
+<td>
+Permanent
+</td>
+</tr>
+<tr>
+<td>
+2
+</td>
+<td style="background-color: #22B14C;">
+</td>
+<td>
+New permanent
+</td>
+</tr>
+<tr>
+<td>
+3
+</td>
+<td style="background-color: #D1102D;">
+</td>
+<td>
+Lost permanent
+</td>
+</tr>
+<tr>
+<td>
+4
+</td>
+<td style="background-color: #99D9EA;">
+</td>
+<td>
+Seasonal
+</td>
+</tr>
+<tr>
+<td>
+5
+</td>
+<td style="background-color: #B5E61D;">
+</td>
+<td>
+New seasonal
+</td>
+</tr>
+<tr>
+<td>
+6
+</td>
+<td style="background-color: #E6A1AA;">
+</td>
+<td>
+Lost seasonal
+</td>
+</tr>
+<tr>
+<td>
+7
+</td>
+<td style="background-color: #FF7F27;">
+</td>
+<td>
+Seasonal to permanent
+</td>
+</tr>
+<tr>
+<td>
+8
+</td>
+<td style="background-color: #FFC90E;">
+</td>
+<td>
+Permanent to seasonal
+</td>
+</tr>
+<tr>
+<td>
+9
+</td>
+<td style="background-color: #7F7F7F;">
+</td>
+<td>
+Ephemeral permanent
+</td>
+</tr>
+<tr>
+<td>
+10
+</td>
+<td style="background-color: #C3C3C3;">
+</td>
+<td>
+Ephemeral seasonal
+</td>
+</tr>
+</table></div>
+</div>
+<div id="summarizing-area-by-transition-class" class="section level3 unnumbered">
+<h3>Summarizing Area by Transition Class<a class="anchor" aria-label="anchor" href="#summarizing-area-by-transition-class"><i class="fas fa-link"></i></a>
+</h3>
+<p>In this section we will once again use the geometry polygon tool to define a region-of-interest. If you want to analyze a new location, you will want to first select and delete the original polygon that you create so that you don’t get results from the combined areas. See the <a href="">Geometry tools</a> section of the Rstudio from information on how to modify geometries.</p>
+<p>For this example we will create a new polygon within the Mekong River delta.</p>
+<div class="sourceCode" id="cb267"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">roi</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Polygon</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">105.61356262001948</span>, <span class="fl">10.292654070507828</span><span class="op">)</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">105.96512512001948</span>, <span class="fl">10.514171198992166</span><span class="op">)</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">105.73166564736323</span>, <span class="fl">10.765211642467452</span><span class="op">)</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">105.37735656533198</span>, <span class="fl">10.516871653561891</span><span class="op">)</span>
+  <span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb268"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="fl">105.26</span>, <span class="fl">11.2134</span>, <span class="fl">9</span><span class="op">)</span> <span class="co"># Mekong River Basin, SouthEast Asia</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  eeObject <span class="op">=</span> <span class="va">transition</span>,
+  name <span class="op">=</span> <span class="st">"Transition classes (1984-2015)"</span>,
+<span class="op">)</span> <span class="op">+</span>
+  <span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">roi</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>, <span class="st">"roi"</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_03/figure_GSW_06.png" width="95%">
+</center>
+<p>Figure: The Mekong River delta in Vietnam, with a region-of-interest.</p>
+<p>In order to calculate the area covered by parts of an image, we will add an additional band to the transition image object that identifies the size of each pixel in square meters using the <code>ee$Image$pixelArea</code> method.</p>
+<div class="sourceCode" id="cb269"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">area_image_with_transition_class</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Image</span><span class="op">$</span><span class="fu">pixelArea</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">transition</span><span class="op">)</span></code></pre></div>
+<p>The resulting image object (<code>area_image_with_transition_class</code>) is a two band image where the first band contains the area information in units of square meters (produced by the <a href=""><code>ee$Image$pixelArea</code> code&gt;</a> method), and the second band contains the transition class information.</p>
+<p>We then summarize the class transitions within a region of interest (<code>roi</code>) using the <a href=""><code>ee$Image$reduceRegion</code></a> method and a <a href="">grouped reducer</a> which acts to sum up the area within each transition class:</p>
+<div class="sourceCode" id="cb270"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">reduction_results</span> <span class="op">&lt;-</span> <span class="va">area_image_with_transition_class</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">group</span><span class="op">(</span>
+    groupField <span class="op">=</span> <span class="fl">1</span>,
+    groupName <span class="op">=</span> <span class="st">"transition_class_value"</span>
+  <span class="op">)</span>,
+  geometry <span class="op">=</span> <span class="va">roi</span>,
+  scale <span class="op">=</span> <span class="fl">30</span>,
+  bestEffort <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Dictionary</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">reduction_results</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="global-forest-change.html">Global Forest Change</a></div>
+<div class="next"><a href="video-tutorials-1.html">Video Tutorials</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#global-surface-water">Global Surface Water</a></li>
+<li>
+<a class="nav-link" href="#introduction-1">Introduction</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#references">References</a></li>
+<li><a class="nav-link" href="#audience">Audience</a></li>
+<li><a class="nav-link" href="#license-and-attribution-1">License and Attribution</a></li>
+<li><a class="nav-link" href="#get-access-to-earth-engine">Get access to Earth Engine</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#water-occurrence-1984-2015">Water Occurrence (1984-2015)</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#creating-a-basic-visualization">Creating a Basic Visualization</a></li>
+<li><a class="nav-link" href="#refactoring-to-improve-your-code">Refactoring to Improve Your Code</a></li>
+<li><a class="nav-link" href="#adding-visualization-parameters">Adding Visualization Parameters</a></li>
+<li><a class="nav-link" href="#creating-a-threshold-layer">Creating a Threshold Layer</a></li>
+<li><a class="nav-link" href="#going-to-interesting-parts-of-the-world">Going to Interesting Parts of the World</a></li>
+<li><a class="nav-link" href="#refactoring-again">Refactoring, again…</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#water-occurrence-change-intensity">Water Occurrence Change Intensity</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#visualization-1">Visualization</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#water-class-transition">Water Class Transition</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#basic-visualization">Basic Visualization</a></li>
+<li><a class="nav-link" href="#summarizing-area-by-transition-class">Summarizing Area by Transition Class</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/03_api_tutorials.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/03_api_tutorials.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

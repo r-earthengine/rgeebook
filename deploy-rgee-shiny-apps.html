@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Deploy rgee Shiny apps | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Deploy rgee Shiny apps | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deploy rgee Shiny apps | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="Google Earth Engine (GEE) allows users to create apps by three different approaches: user tokens, service accounts and client-side authentication. In this tutorial, we will get focus on the first...">
+<meta property="og:description" content="Google Earth Engine (GEE) allows users to create apps by three different approaches: user tokens, service accounts and client-side authentication. In this tutorial, we will get focus on the first...">
+<meta name="twitter:description" content="Google Earth Engine (GEE) allows users to create apps by three different approaches: user tokens, service accounts and client-side authentication. In this tutorial, we will get focus on the first...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="active" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="deploy-rgee-shiny-apps" class="section level1 unnumbered">
+<h1>Deploy rgee Shiny apps<a class="anchor" aria-label="anchor" href="#deploy-rgee-shiny-apps"><i class="fas fa-link"></i></a>
+</h1>
+<p>Google Earth Engine (GEE) allows users to create apps by three different approaches: <strong>user tokens</strong>, <a href="https://developers.google.com/earth-engine/guides/service_account">service accounts</a> and <a href="https://github.com/google/earthengine-api/tree/master/demos/client-auth">client-side authentication</a>. In this tutorial, we will get focus on the first option.</p>
+<div id="what-is-an-ee-user-token-eetk" class="section level2 unnumbered">
+<h2>
+<strong>What is an EE user token (EEtk)?</strong><a class="anchor" aria-label="anchor" href="#what-is-an-ee-user-token-eetk"><i class="fas fa-link"></i></a>
+</h2>
+<p>An EEtk is a 100-character text string (OAuth2 credential) stored on your local system that is used to identify and authenticate users (See Figure below). In other words, it will permit to connect the EE Web REST API with their local system.</p>
+<p><br></p>
+<center>
+<img src="images/rgee_shinyapps/r4_01.png" width="95%">
+</center>
+<p><br></p>
+<p>In <strong>rgee</strong> the authentication procedure is triggered internally by <a href="https://r-spatial.github.io/rgee/reference/ee_Initialize.html"><strong>ee_Initialize</strong></a>. This <a href="https://github.com/google/earthengine-api/blob/b4c068924b1c7574ee717761cb9fe0499a3b932b/python/ee/data.py#L210%60">function</a> will search for the ‘<strong><em>credentials</em></strong>’ file (it stores the EEtk) on the path: <strong>~/.config/earthengine/</strong>.</p>
+<p><br></p>
+<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%s/credentials"</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html">dirname</a></span><span class="op">(</span><span class="fu">rgee</span><span class="fu">::</span><span class="fu">ee_get_earthengine_path</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><br></p>
+<p>If the file exists, then an <a href="https://google-auth.readthedocs.io/en/stable/reference/google.oauth2.credentials.html">Oauth2 Credential</a> object is created using a <a href="https://developers.google.com/identity/protocols/oauth2">refresh token</a> grant. This <em>refresh token</em> must come from a Google account registered in GEE if not a <em>Bad Request error</em> will be invoked. Once the Oauth2 Credential is successfully loaded, it is dynamically passed to all EE methods (See <a href="https://github.com/google/earthengine-api/blob/b4c068924b1c7574ee717761cb9fe0499a3b932b/python/ee/__init__.py#L125">Initialize</a>) in order to realize independent calls to the Web REST API. As you realize, the <strong><em>credentials</em></strong> file is crucial to interact with the EE API and if it does not exist on your system, it will simply not be possible to use rgee.</p>
+<center>
+<br><strong>Please never show or share your token with anyone, it will give full access to all your Earth Engine resources.</strong>
+</center>
+</div>
+<div id="deploying-a-simple-rgee-shiny-app-on-shinyapps.io" class="section level2 unnumbered">
+<h2>
+<strong>Deploying a simple rgee shiny app on shinyapps.io</strong><a class="anchor" aria-label="anchor" href="#deploying-a-simple-rgee-shiny-app-on-shinyapps.io"><i class="fas fa-link"></i></a>
+</h2>
+<p>Deploying a rgee application can be a bit tricky, as you must perform the following task:</p>
+<ol style="list-style-type: decimal">
+<li>Install R packages.</li>
+<li>Install Python and third-party packages.</li>
+<li>
+<strong>Set the <em>credentials</em> file in the path <em>~/.config/earthengine/</em></strong>.</li>
+</ol>
+<p>The first step is automatically accomplished for <a href="https://www.shinyapps.io/"><strong>shinyapps.io</strong></a>. On the other hand, the second and third steps need to configure manually the virtual machine. To make the process straightforward we create <a href="https://github.com/csaybar/shiny_rgee_template">shiny_rgee</a> template.</p>
+<br><center>
+<img src="images/rgee_shinyapps/r4_02.png" width="95%">
+</center>
+<p><br></p>
+<p>To use shiny_rgee template, first download it by running on terminal:</p>
+<pre><code>git clone https://github.com/csaybar/shiny_rgee_template.git</code></pre>
+<p>Load the rgeeApp.Rproj and modify the .Renviron file according to their personal token user information. It is available in your shinyapps profile <a href="https://www.shinyapps.io/admin/#/tokens" class="uri">https://www.shinyapps.io/admin/#/tokens</a>.</p>
+<br><center>
+<img src="https://user-images.githubusercontent.com/16768318/146477123-6bec91ed-d5bb-42e6-aa6d-5f6b08d08d7f.png" width="95%">
+</center>
+<p><br></p>
+<p><a href="https://github.com/csaybar/shiny_rgee_template/blob/main/.Renviron"><strong>.Renviron</strong></a></p>
+<pre><code>    SHINY_ACC_NAME="your_account_name"
+    TOKEN="a_token_you_got_from_shinyapps.io"
+    SECRET="a_secret_you_recieved_fromshinyapps.io"
+    MASTERNAME="name_of_the_shiny_app"</code></pre>
+<p><br></p>
+<p>Finally run the <a href="https://github.com/csaybar/shiny_rgee_template/blob/main/deploy.R"><strong>deploy.R</strong></a> file.</p>
+<div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/reticulate/">reticulate</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/rsconnect">rsconnect</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="co"># 1. Create the credentials file</span>
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span>
+<span class="co"># 2. Copy credentials file to the project folder</span>
+<span class="va">file_credentials</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%s/credentials"</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html">dirname</a></span><span class="op">(</span><span class="fu">rgee</span><span class="fu">::</span><span class="fu">ee_get_earthengine_path</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/files.html">file.copy</a></span><span class="op">(</span><span class="va">file_credentials</span>, to <span class="op">=</span> <span class="st">"."</span><span class="op">)</span>
+<span class="co"># 3. Set ShinyApps account info</span>
+<span class="co"># FIRST MODIFY LOCAL .Renviron!!</span>
+<span class="va">error_on_missing_name</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">name</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="va">name</span>, unset<span class="op">=</span><span class="cn">NA</span><span class="op">)</span>
+  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/stop.html">stop</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"cannot find "</span>,<span class="va">name</span><span class="op">)</span>,call. <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="op">}</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"\""</span>, <span class="st">''</span>,<span class="va">var</span><span class="op">)</span>
+<span class="op">}</span>
+<span class="fu">setAccountInfo</span><span class="op">(</span>name   <span class="op">=</span> <span class="fu">error_on_missing_name</span><span class="op">(</span><span class="st">"SHINY_ACC_NAME"</span><span class="op">)</span>,
+               token  <span class="op">=</span> <span class="fu">error_on_missing_name</span><span class="op">(</span><span class="st">"TOKEN"</span><span class="op">)</span>,
+               secret <span class="op">=</span> <span class="fu">error_on_missing_name</span><span class="op">(</span><span class="st">"SECRET"</span><span class="op">)</span><span class="op">)</span>
+<span class="co"># 4. Run the application</span>
+<span class="fu">deployApp</span><span class="op">(</span>
+  appFiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"app.R"</span>, <span class="st">"utils.R"</span>, <span class="st">"credentials"</span><span class="op">)</span>,
+  appTitle <span class="op">=</span> <span class="st">"rgee_app_demo"</span>,
+  lint <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span>
+<span class="co"># 5. Delete EE credentials file</span>
+<span class="fu"><a href="https://rdrr.io/r/base/files.html">file.remove</a></span><span class="op">(</span><span class="st">"credentials"</span><span class="op">)</span></code></pre></div>
+<p><br></p>
+<p>After a couple of minutes, the app will be available on shinyapps.io.
+See our live demo in <strong><a href="https://cesar-aybar.shinyapps.io/rgee_app_demo/" class="uri">https://cesar-aybar.shinyapps.io/rgee_app_demo/</a></strong>.</p>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></div>
+<div class="next"><a href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#deploy-rgee-shiny-apps">Deploy rgee Shiny apps</a></li>
+<li><a class="nav-link" href="#what-is-an-ee-user-token-eetk">What is an EE user token (EEtk)?</a></li>
+<li><a class="nav-link" href="#deploying-a-simple-rgee-shiny-app-on-shinyapps.io">Deploying a simple rgee shiny app on shinyapps.io</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/02_dev_env.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/02_dev_env.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

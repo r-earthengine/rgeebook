@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>rgeeExtra | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="rgeeExtra | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="rgeeExtra | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="The rgeeExtra R package extends the following Earth Engine classes: ee$Feature ee$FeatureCollection ee$Geometry ee$Image ee$ImageCollection ee$List ee$Number New utility methods and constructors...">
+<meta property="og:description" content="The rgeeExtra R package extends the following Earth Engine classes: ee$Feature ee$FeatureCollection ee$Geometry ee$Image ee$ImageCollection ee$List ee$Number New utility methods and constructors...">
+<meta name="twitter:description" content="The rgeeExtra R package extends the following Earth Engine classes: ee$Feature ee$FeatureCollection ee$Geometry ee$Image ee$ImageCollection ee$List ee$Number New utility methods and constructors...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="active" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="rgeeextra" class="section level1 unnumbered">
+<h1>rgeeExtra<a class="anchor" aria-label="anchor" href="#rgeeextra"><i class="fas fa-link"></i></a>
+</h1>
+<p>The rgeeExtra R package extends the following Earth Engine classes:</p>
+<ul>
+<li>ee$Feature</li>
+<li>ee$FeatureCollection</li>
+<li>ee$Geometry</li>
+<li>ee$Image</li>
+<li>ee$ImageCollection</li>
+<li>ee$List</li>
+<li>ee$Number</li>
+</ul>
+<p>New utility methods and constructors are added to above-mentioned classes in order to create a more fluid code by being friendly with the R pipe chaining. These methods are mandatory for some pre-processing and processing tasks (e.g. clouds masking, shadows masking, image scaling, spectral indices computation, etc.), and they are presented as simple functions that give researchers, students and analysts the chance to analyze data with far fewer lines of code.</p>
+<p>Look at this simple example where a <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR">Sentinel-2 Surface Reflectance Image Collection</a> is pre-processed and processed in just one step:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rgeeExtra</span><span class="op">)</span>
+
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span>
+
+
+<span class="co"># Lima, Peru</span>
+<span class="va">point</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">77.04111</span>, <span class="op">-</span><span class="fl">12.02228</span><span class="op">)</span>
+
+<span class="co"># Estimate the NDVI of a specific ee$Image</span>
+<span class="va">S2</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">'COPERNICUS/S2_SR'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+   <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterBounds</span><span class="op">(</span><span class="va">point</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co"># Filter by geometry (EE API)</span>
+   <span class="fu">ee_ImageCollection_closest</span><span class="op">(</span><span class="st">'2020-10-15'</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># Get the closest image to a specific date (rgeeExtra)</span>
+   <span class="fu">ee_model_cloudmask</span><span class="op">(</span>prob <span class="op">=</span> <span class="fl">70L</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># Cloud mask using ee_extra algorithm.</span>
+   <span class="fu">ee_ImageCollection_scaleAndOffset</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co"># Convert from integer to float (real values)</span>
+   <span class="fu">ee_ImageCollection_spectralIndex</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'NDVI'</span>,<span class="st">'NDWI'</span>,<span class="st">'BAIS2'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># Compute spectral indices</span>
+   <span class="st">'[['</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Yes rgeeExtra also support subsettings operators!</span>
+
+<span class="co"># Get the band names</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">S2</span><span class="op">)</span>
+
+<span class="co"># Get the band names</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">centerObject</span><span class="op">(</span><span class="va">point</span>, <span class="fl">11</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">S2</span><span class="op">[[</span><span class="st">"NDVI"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_00/figure_rgee_02.png" title="fig:" width="600" alt="NDVI Sentinel-2 Lima, Peru">
+</center>
+<p>Let’s see some of the main features of eemont and how simple they are compared to the GEE API original methods:</p>
+<div id="subsettings" class="section level2 unnumbered">
+<h2>Subsettings<a class="anchor" aria-label="anchor" href="#subsettings"><i class="fas fa-link"></i></a>
+</h2>
+<p>rgeeExtra also supports subsetting operators!. It works similar to the fantastic <a href="https://cran.r-project.org/web/packages/raster/index.html">raster R package</a> created by Robert J. Hijmans.</p>
+<div id="rgee-style" class="section level3 unnumbered">
+<h3>rgee style<a class="anchor" aria-label="anchor" href="#rgee-style"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># it does not supported without dozen of lines!</span></code></pre></div>
+</div>
+<div id="rgeeextra-style" class="section level3 unnumbered">
+<h3>rgeeExtra style<a class="anchor" aria-label="anchor" href="#rgeeextra-style"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="op">)</span>
+<span class="va">ic</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">ic</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="co"># Replace an ee$Image from an ee$ImageCollection.</span>
+<span class="va">ic</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span> <span class="co"># From the ee$ImageCollection get the image with index 3. The index starts with 1.</span>
+<span class="va">ic</span><span class="op">[[</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span> <span class="co"># From the ee$ImageCollection get the images with index 4 and 5.</span>
+<span class="va">ic</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"Mar"</span><span class="op">]</span><span class="op">]</span> <span class="co"># From the ee$ImageCollection get the images with index 3, and select the band with name "Mar"</span></code></pre></div>
+</div>
+</div>
+<div id="overloaded-operators" class="section level2 unnumbered">
+<h2>Overloaded Operators<a class="anchor" aria-label="anchor" href="#overloaded-operators"><i class="fas fa-link"></i></a>
+</h2>
+<p>The following operators are overloaded: +, -, *, /, //, %, ** , &lt;&lt;, &gt;&gt;, &amp;, |, &lt;, &lt;=, ==, !=, &gt;, &gt;=, -, ~. (and you can avoid the eecImage$expression() method!)</p>
+<div id="rgee-style-1" class="section level3 unnumbered">
+<h3>rgee style<a class="anchor" aria-label="anchor" href="#rgee-style-1"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">S2</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"COPERNICUS/S2_SR"</span><span class="op">)</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">scaleImage</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">scaling</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"B.*"</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">scaling</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="fl">0.0001</span><span class="op">)</span>
+  <span class="va">scaling</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AOT"</span>, <span class="st">"WVP"</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">scaling</span> <span class="op">&lt;-</span> <span class="va">scaling</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="fl">0.001</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">scaling</span><span class="op">)</span>
+  <span class="va">notScaling</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+      <span class="st">"SCL"</span>,
+      <span class="st">"TCI.*"</span>,
+      <span class="st">"MSK.*"</span>,
+      <span class="st">"QA.*"</span>
+    <span class="op">)</span>
+  <span class="op">)</span>
+  <span class="va">x</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">notScaling</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">S2</span> <span class="op">&lt;-</span> <span class="fu">scaleImage</span><span class="op">(</span><span class="va">S2</span><span class="op">)</span>
+
+<span class="va">exp</span> <span class="op">&lt;-</span> <span class="st">"2.5*(N-R)/(N+(6*R)-(7.5*B)+1)"</span>
+
+<span class="va">imgDict</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  N <span class="op">=</span> <span class="va">S2</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"B8"</span><span class="op">)</span>,
+  R <span class="op">=</span> <span class="va">S2</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"B4"</span><span class="op">)</span>,
+  B <span class="op">=</span> <span class="va">S2</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"B2"</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="va">EVI</span> <span class="op">&lt;-</span> <span class="va">S2</span><span class="op">$</span><span class="fu">expression</span><span class="op">(</span><span class="va">exp</span>, <span class="va">imgDict</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="rgeeextra-style-1" class="section level3 unnumbered">
+<h3>rgeeExtra style<a class="anchor" aria-label="anchor" href="#rgeeextra-style-1"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">S2</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="va">Dataset</span><span class="op">$</span><span class="va">COPERNICUS_S2_SR</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ee_ImageCollection_scaleAndOffset</span><span class="op">(</span><span class="op">)</span>
+          
+<span class="va">N</span> <span class="op">&lt;-</span> <span class="va">S2</span><span class="op">[[</span><span class="st">"B8"</span><span class="op">]</span><span class="op">]</span>
+<span class="va">R</span> <span class="op">&lt;-</span> <span class="va">S2</span><span class="op">[[</span><span class="st">"B4"</span><span class="op">]</span><span class="op">]</span>
+<span class="va">B</span> <span class="op">&lt;-</span> <span class="va">S2</span><span class="op">[[</span><span class="st">"B2"</span><span class="op">]</span><span class="op">]</span>
+
+<span class="va">EVI</span> <span class="op">=</span> <span class="fl">2.5</span><span class="op">*</span><span class="op">(</span><span class="va">N</span><span class="op">-</span><span class="va">R</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">N</span><span class="op">+</span><span class="op">(</span><span class="fl">6</span><span class="op">*</span><span class="va">R</span><span class="op">)</span><span class="op">-</span><span class="op">(</span><span class="fl">7.5</span><span class="op">*</span><span class="va">B</span><span class="op">)</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+<div id="clouds-and-shadows-masking" class="section level2 unnumbered">
+<h2>Clouds and Shadows Masking<a class="anchor" aria-label="anchor" href="#clouds-and-shadows-masking"><i class="fas fa-link"></i></a>
+</h2>
+<p>Masking clouds and shadows can be done using eemont with just one method: <code>maskClouds()!</code></p>
+<div id="rgee-style-2" class="section level3 unnumbered">
+<h3>rgee style<a class="anchor" aria-label="anchor" href="#rgee-style-2"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ds</span> <span class="op">&lt;-</span> <span class="st">'LANDSAT/LC08/C01/T1_SR'</span>
+
+<span class="va">maskCloudsShadows</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">cloud_c</span> <span class="op">&lt;-</span> <span class="fl">2</span><span class="op">**</span><span class="fl">3</span>
+  <span class="va">cloud_s</span> <span class="op">&lt;-</span> <span class="fl">2</span><span class="op">**</span><span class="fl">5</span>
+  <span class="va">qa</span> <span class="op">&lt;-</span> <span class="st">'pixel_qa'</span>
+  <span class="va">qa</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="va">qa</span><span class="op">)</span>
+  <span class="va">cm</span> <span class="op">&lt;-</span> <span class="va">qa</span><span class="op">$</span><span class="fu">bitwiseAnd</span><span class="op">(</span><span class="va">cloud_c</span><span class="op">)</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>
+  <span class="va">sm</span> <span class="op">&lt;-</span> <span class="va">qa</span><span class="op">$</span><span class="fu">bitwiseAnd</span><span class="op">(</span><span class="va">cloud_s</span><span class="op">)</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>
+  <span class="va">mask</span> <span class="op">&lt;-</span> <span class="va">cm</span><span class="op">$</span><span class="fu">And</span><span class="op">(</span><span class="va">sm</span><span class="op">)</span>
+  <span class="va">img</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">mask</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">maskCloudsShadows</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="rgeeextra-style-2" class="section level3 unnumbered">
+<h3>rgeeExtra style<a class="anchor" aria-label="anchor" href="#rgeeextra-style-2"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ds</span> <span class="op">&lt;-</span> <span class="st">'LANDSAT/LC08/C01/T1_SR'</span>
+<span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ee_model_cloudmask</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+<div id="image-scaling-and-offsetting" class="section level2 unnumbered">
+<h2>Image Scaling and Offsetting<a class="anchor" aria-label="anchor" href="#image-scaling-and-offsetting"><i class="fas fa-link"></i></a>
+</h2>
+<p>Scaling and offsetting can also be done using eemont with just one method: <code><a href="https://rdrr.io/r/base/scale.html">scale()</a></code>!</p>
+<div id="rgee-style-3" class="section level3 unnumbered">
+<h3>rgee style<a class="anchor" aria-label="anchor" href="#rgee-style-3"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">scaleBands</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">scaling</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'NDVI'</span>, <span class="st">'EVI'</span>, <span class="st">'sur.*'</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">scaling</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="fl">0.0001</span><span class="op">)</span>
+  <span class="va">scaling</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'.*th'</span><span class="op">)</span>
+  <span class="va">scaling</span> <span class="op">&lt;-</span> <span class="va">scaling</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="fl">0.01</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">scaling</span><span class="op">)</span>
+  <span class="va">notScaling</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'DetailedQA'</span>, <span class="st">'DayOfYear'</span>, <span class="st">'SummaryQA'</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">x</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">notScaling</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">ds</span> <span class="op">&lt;-</span> <span class="st">'MODIS/006/MOD13Q1'</span>
+
+<span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">scaleBands</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="rgeeextra-style-3" class="section level3 unnumbered">
+<h3>rgeeExtra style<a class="anchor" aria-label="anchor" href="#rgeeextra-style-3"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ds</span> <span class="op">&lt;-</span> <span class="st">'MODIS/006/MOD13Q1'</span>
+          
+<span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ee_ImageCollection_scaleAndOffset</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+<div id="complete-preprocessing" class="section level2 unnumbered">
+<h2>Complete Preprocessing<a class="anchor" aria-label="anchor" href="#complete-preprocessing"><i class="fas fa-link"></i></a>
+</h2>
+<p>The complete preprocessing workflow (Masking clouds and shadows, and image scaling and offsetting) can be done using eemont with just one method: <code>preprocess()</code>!</p>
+<div id="rgee-style-4" class="section level3 unnumbered">
+<h3>rgee style<a class="anchor" aria-label="anchor" href="#rgee-style-4"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ds</span> <span class="op">&lt;-</span> <span class="st">'LANDSAT/LC08/C01/T1_SR'</span>
+
+<span class="va">maskCloudsShadows</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">cloud_c</span> <span class="op">&lt;-</span> <span class="fl">2</span><span class="op">**</span><span class="fl">3</span>
+  <span class="va">cloud_s</span> <span class="op">&lt;-</span> <span class="fl">2</span><span class="op">**</span><span class="fl">5</span>
+  <span class="va">qa</span> <span class="op">&lt;-</span> <span class="st">'pixel_qa'</span>
+  <span class="va">qa</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="va">qa</span><span class="op">)</span>
+  <span class="va">cm</span> <span class="op">&lt;-</span> <span class="va">qa</span><span class="op">$</span><span class="fu">bitwiseAnd</span><span class="op">(</span><span class="va">cloud_c</span><span class="op">)</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>
+  <span class="va">sm</span> <span class="op">&lt;-</span> <span class="va">qa</span><span class="op">$</span><span class="fu">bitwiseAnd</span><span class="op">(</span><span class="va">cloud_s</span><span class="op">)</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>
+  <span class="va">mask</span> <span class="op">&lt;-</span> <span class="va">cm</span><span class="op">$</span><span class="fu">And</span><span class="op">(</span><span class="va">sm</span><span class="op">)</span>
+  <span class="va">img</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">mask</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">scaleBands</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">scaling</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'B[1-7]'</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">scaling</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="fl">0.0001</span><span class="op">)</span>
+  <span class="va">scaling</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'B10'</span>, <span class="st">'B11'</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">scaling</span> <span class="op">&lt;-</span> <span class="va">scaling</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="fl">0.1</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">scaling</span><span class="op">)</span>
+  <span class="va">notScaling</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+    <span class="st">'sr_aerosol'</span>,
+    <span class="st">'pixel_qa'</span>,
+    <span class="st">'radsat_qa'</span>
+  <span class="op">)</span><span class="op">)</span>
+  <span class="va">x</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">notScaling</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">maskCloudsShadows</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">scaleBands</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="rgeeextra-style-4" class="section level3 unnumbered">
+<h3>rgeeExtra style<a class="anchor" aria-label="anchor" href="#rgeeextra-style-4"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ds</span> <span class="op">&lt;-</span> <span class="st">'LANDSAT/LC08/C01/T1_SR'</span>
+<span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu">ee_ImageCollection_preprocess</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+<div id="spectral-indices" class="section level2 unnumbered">
+<h2>Spectral Indices<a class="anchor" aria-label="anchor" href="#spectral-indices"><i class="fas fa-link"></i></a>
+</h2>
+<p>Do you need to compute several spectral indices? Use the <code>ee_ImageCollection_spectralIndex()</code> or <code>ee_Image_spectralIndex</code> functions! The
+indices are taken from <a href="https://github.com/davemlz/awesome-spectral-indices">Awesome Spectral Indices</a>.</p>
+<div id="rgee-style-5" class="section level3 unnumbered">
+<h3>rgee style<a class="anchor" aria-label="anchor" href="#rgee-style-5"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">scaleBands</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">scaling</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"B[1-7]"</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">scaling</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="fl">0.0001</span><span class="op">)</span>
+  <span class="va">scaling</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B10"</span>, <span class="st">"B11"</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">scaling</span> <span class="op">&lt;-</span> <span class="va">scaling</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="fl">0.1</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">scaling</span><span class="op">)</span>
+  <span class="va">notScaling</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+    <span class="st">"sr_aerosol"</span>,
+    <span class="st">"pixel_qa"</span>,
+    <span class="st">"radsat_qa"</span>
+  <span class="op">)</span><span class="op">)</span>
+  <span class="va">x</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">notScaling</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">addIndices</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span><span class="op">)</span>
+  <span class="va">a</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+  <span class="va">a</span> <span class="op">&lt;-</span> <span class="va">a</span><span class="op">$</span><span class="fu">rename</span><span class="op">(</span><span class="st">"NDVI"</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B3"</span><span class="op">)</span>
+  <span class="va">b</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+  <span class="va">b</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="fu">rename</span><span class="op">(</span><span class="st">"GNDVI"</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B3"</span>, <span class="st">"B6"</span><span class="op">)</span>
+  <span class="va">c</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+  <span class="va">c</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">$</span><span class="fu">rename</span><span class="op">(</span><span class="st">"NDSI"</span><span class="op">)</span>
+  <span class="va">img</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, <span class="va">c</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">scaleImage</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">addIndices</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="rgeeextra-style-5" class="section level3 unnumbered">
+<h3>rgeeExtra style<a class="anchor" aria-label="anchor" href="#rgeeextra-style-5"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ds</span> <span class="op">&lt;-</span> <span class="st">'LANDSAT/LC08/C01/T1_SR'</span>
+          
+<span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ee_ImageCollection_scaleAndOffset</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ee_ImageCollection_spectralIndex</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'NDVI'</span>, <span class="st">'GNDVI'</span>, <span class="st">'NDSI'</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>The list of available indices can be retrieved by running:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">ee_list_spectral_indices</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>Information about the indices can also be checked:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">indices</span> <span class="op">&lt;-</span> <span class="fu">ee_spectral_indices</span><span class="op">(</span><span class="op">)</span> 
+<span class="va">indices</span><span class="op">$</span><span class="va">BAIS2</span><span class="op">$</span><span class="va">formula</span>
+<span class="va">indices</span><span class="op">$</span><span class="va">BAIS2</span><span class="op">$</span><span class="va">reference</span></code></pre></div>
+</div>
+</div>
+<div id="closest-image-to-a-specific-date" class="section level2 unnumbered">
+<h2>Closest Image to a Specific Date<a class="anchor" aria-label="anchor" href="#closest-image-to-a-specific-date"><i class="fas fa-link"></i></a>
+</h2>
+<p>Struggling to get the closest image to a specific date? Here is the solution: the <code>closest()</code> method!</p>
+<div id="rgee-style-6" class="section level3 unnumbered">
+<h3>rgee style<a class="anchor" aria-label="anchor" href="#rgee-style-6"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ds</span> <span class="op">&lt;-</span> <span class="st">'COPERNICUS/S5P/OFFL/L3_NO2'</span>
+
+<span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">76.21</span>, <span class="fl">3.45</span><span class="op">)</span>
+<span class="va">poi</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="va">xy</span><span class="op">)</span>
+
+<span class="va">date</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">'2020-10-15'</span><span class="op">)</span>
+<span class="va">date</span> <span class="op">&lt;-</span> <span class="va">date</span><span class="op">$</span><span class="fu">millis</span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">setTimeDelta</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">prop</span> <span class="op">&lt;-</span> <span class="st">'system:time_start'</span>
+  <span class="va">prop</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="va">prop</span><span class="op">)</span>
+  <span class="va">prop</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Number</span><span class="op">(</span><span class="va">prop</span><span class="op">)</span>              
+  <span class="va">delta</span> <span class="op">&lt;-</span> <span class="va">prop</span><span class="op">$</span><span class="fu">subtract</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>
+  <span class="va">delta</span> <span class="op">&lt;-</span> <span class="va">delta</span><span class="op">$</span><span class="fu">abs</span><span class="op">(</span><span class="op">)</span>              
+  <span class="va">img</span><span class="op">$</span><span class="fu">set</span><span class="op">(</span><span class="st">'dateDist'</span>, <span class="va">delta</span><span class="op">)</span>
+<span class="op">}</span>
+
+                  
+<span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterBounds</span><span class="op">(</span><span class="va">poi</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">setTimeDelta</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">sort</span><span class="op">(</span><span class="st">'dateDist'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="rgeeextra-style-6" class="section level3 unnumbered">
+<h3>rgeeExtra style<a class="anchor" aria-label="anchor" href="#rgeeextra-style-6"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ds</span> <span class="op">&lt;-</span> <span class="st">'COPERNICUS/S5P/OFFL/L3_NO2'</span>
+          
+<span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">76.21</span>, <span class="fl">3.45</span><span class="op">)</span>
+<span class="va">poi</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="va">xy</span><span class="op">)</span>
+
+<span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterBounds</span><span class="op">(</span><span class="va">poi</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu">ee_ImageCollection_closest</span><span class="op">(</span><span class="st">'2020-10-15'</span><span class="op">)</span></code></pre></div>
+
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="overview.html">Overview</a></div>
+<div class="next"><a href="visualization.html">Visualization</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#rgeeextra">rgeeExtra</a></li>
+<li>
+<a class="nav-link" href="#subsettings">Subsettings</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#rgee-style">rgee style</a></li>
+<li><a class="nav-link" href="#rgeeextra-style">rgeeExtra style</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#overloaded-operators">Overloaded Operators</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#rgee-style-1">rgee style</a></li>
+<li><a class="nav-link" href="#rgeeextra-style-1">rgeeExtra style</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#clouds-and-shadows-masking">Clouds and Shadows Masking</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#rgee-style-2">rgee style</a></li>
+<li><a class="nav-link" href="#rgeeextra-style-2">rgeeExtra style</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#image-scaling-and-offsetting">Image Scaling and Offsetting</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#rgee-style-3">rgee style</a></li>
+<li><a class="nav-link" href="#rgeeextra-style-3">rgeeExtra style</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#complete-preprocessing">Complete Preprocessing</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#rgee-style-4">rgee style</a></li>
+<li><a class="nav-link" href="#rgeeextra-style-4">rgeeExtra style</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#spectral-indices">Spectral Indices</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#rgee-style-5">rgee style</a></li>
+<li><a class="nav-link" href="#rgeeextra-style-5">rgeeExtra style</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#closest-image-to-a-specific-date">Closest Image to a Specific Date</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#rgee-style-6">rgee style</a></li>
+<li><a class="nav-link" href="#rgeeextra-style-6">rgeeExtra style</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/00_r_gui.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/00_r_gui.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

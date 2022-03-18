@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Video Tutorials | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Video Tutorials | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Video Tutorials | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="Tutorials These video tutorials are from lectures or hands-on trainings conducted at Earth Engine User Summits and Earth Outreach digital events. Introduction to Earth Engine (condensed) Learn...">
+<meta property="og:description" content="Tutorials These video tutorials are from lectures or hands-on trainings conducted at Earth Engine User Summits and Earth Outreach digital events. Introduction to Earth Engine (condensed) Learn...">
+<meta name="twitter:description" content="Tutorials These video tutorials are from lectures or hands-on trainings conducted at Earth Engine User Summits and Earth Outreach digital events. Introduction to Earth Engine (condensed) Learn...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="active" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="video-tutorials-1" class="section level1 unnumbered">
+<h1>Video Tutorials<a class="anchor" aria-label="anchor" href="#video-tutorials-1"><i class="fas fa-link"></i></a>
+</h1>
+<div id="tutorials-1" class="section level2 unnumbered">
+<h2>Tutorials<a class="anchor" aria-label="anchor" href="#tutorials-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>These video tutorials are from lectures or hands-on trainings conducted at Earth Engine User Summits and <a href="https://earthoutreachonair.withgoogle.com/">Earth Outreach digital events</a>.</p>
+<div id="introduction-to-earth-engine-condensed" class="section level3 unnumbered">
+<h3>Introduction to Earth Engine (condensed)<a class="anchor" aria-label="anchor" href="#introduction-to-earth-engine-condensed"><i class="fas fa-link"></i></a>
+</h3>
+<p>Learn about Earth Engine from developer advocate Noel Gorelick in this fast-paced intro.</p>
+<p><a href="https://docs.google.com/presentation/d/1iZtkBNzl2HBWFT0wEhwCov89kyiBO7rSHcmMa6WNMa8">companion slides</a></p>
+<p><a href="https://code.earthengine.google.com/?accept_repo=users/gorelick/EE101-B">code repository</a></p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/m1ejxSi3l8s" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+</div>
+<div id="hands-on-intermediate-training" class="section level3 unnumbered">
+<h3>Hands-on Intermediate Training<a class="anchor" aria-label="anchor" href="#hands-on-intermediate-training"><i class="fas fa-link"></i></a>
+</h3>
+<p>Topics covered include classification, spectral unmixing and terrain visualization.</p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_CJoxXuC81s" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+</div>
+<div id="tables-and-vectors" class="section level3 unnumbered">
+<h3>Tables and Vectors<a class="anchor" aria-label="anchor" href="#tables-and-vectors"><i class="fas fa-link"></i></a>
+</h3>
+<p>Overview of tables and vectors in Earth Engine. Topics include how to load, manipulate, display and analyze vector and tabular data in Earth Engine.</p>
+<p><a href="https://docs.google.com/presentation/d/1D7rezUHPElCfYWHMRNBChHjbEv6nXDD8xnh7_YgyK6A/edit?usp=sharing">companion slides</a></p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/XLE-apehUCk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+</div>
+<div id="importing-and-exporting" class="section level3 unnumbered">
+<h3>Importing and Exporting<a class="anchor" aria-label="anchor" href="#importing-and-exporting"><i class="fas fa-link"></i></a>
+</h3>
+<p>Topics covered include importing and exporting Earth Engine data, the command line interface, and map publishing.</p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/C_Yvg2XGZdI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+<ul>
+<li>
+</ul>
+</div>
+<div id="classification" class="section level3 unnumbered">
+<h3>Classification<a class="anchor" aria-label="anchor" href="#classification"><i class="fas fa-link"></i></a>
+</h3>
+<p>Learn all about classifiers (both supervised and unsupervised), training data, test data, the dreaded “computed value too large” message, and the awesome linear regression reducer.</p>
+<p><a href="https://docs.google.com/presentation/d/1esEXY4rlyl3J2oXxfhSPBHQvxie_Fmda6wSDu_S2aQo">companion slides</a></p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/6KIJB4A6VbI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+<p>Topics covered include supervised and unsupervised classification.</p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NPplRtH2N94" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+</div>
+<div id="machine-learning" class="section level3 unnumbered">
+<h3>Machine Learning<a class="anchor" aria-label="anchor" href="#machine-learning"><i class="fas fa-link"></i></a>
+</h3>
+<div id="machine-learning-best-practices" class="section level4 unnumbered">
+<h4>Machine Learning Best Practices<a class="anchor" aria-label="anchor" href="#machine-learning-best-practices"><i class="fas fa-link"></i></a>
+</h4>
+<p>With the pace of modern machine learning, building and training neural networks is hard. Learn some best practices and sift through the overwhelming amount of information available with a focus on remote sensing.</p>
+<p><a href="https://docs.google.com/presentation/d/1FCsI_X8tD3u5naij2apyzmYOBBsfd6xVWMV76y1JEqI">companion slides</a></p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/4cqbblDhhGc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+</div>
+<div id="neural-segmentation" class="section level4 unnumbered">
+<h4>Neural Segmentation<a class="anchor" aria-label="anchor" href="#neural-segmentation"><i class="fas fa-link"></i></a>
+</h4>
+<p>Arguably the most common application of ML to earth observation imagery is pixel level segmentation and regression. With neural networks, a whole new set of techniques are possible that eclipse existing methods in terms of generality, but come with their own set of challenges. Learn applications and training regimens ranging from supervised to fully unsupervised.</p>
+<p><a href="https://docs.google.com/presentation/d/1LRhtWkSLcFh0LPlWaOnHYlQUIDoCTaLIW-DY07E_wMA">companion slides</a></p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/EtxJY2Zo_-g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+</div>
+</div>
+<div id="arrays-and-matrices" class="section level3 unnumbered">
+<h3>Arrays and Matrices<a class="anchor" aria-label="anchor" href="#arrays-and-matrices"><i class="fas fa-link"></i></a>
+</h3>
+<p>Overview of array and matrix operations the Earth Engine way. Topics include linear modeling, matrix solving, eigen analysis, covariance reducers.</p>
+<p><a href="https://docs.google.com/presentation/d/1lPtQPK008NkQ734wCRjHAQX2xFR3a0YZuRFX3SoOMZ0">companion slides</a></p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-qo8L5GmKO0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+</div>
+<div id="time-series-analysis" class="section level3 unnumbered">
+<h3>Time Series Analysis<a class="anchor" aria-label="anchor" href="#time-series-analysis"><i class="fas fa-link"></i></a>
+</h3>
+<p>Overview of time series analysis the Earth Engine way. Topics covered include linear modeling, auto-correlation, cross-correlation, auto-regressive models and smoothing.</p>
+<p><a href="https://docs.google.com/presentation/d/1J1rUtf-bkfaJwYJY-tU17kzKI4U8FnF7Q2_VWqWdaak/edit?usp=sharing">companion slides</a></p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xQGNAYL7z80" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+</div>
+<div id="earth-engine-and-the-google-cloud-platform" class="section level3 unnumbered">
+<h3>Earth Engine and the Google Cloud Platform<a class="anchor" aria-label="anchor" href="#earth-engine-and-the-google-cloud-platform"><i class="fas fa-link"></i></a>
+</h3>
+<p>Introduction to interoperability between Earth Engine and the Google Cloud Platform.</p>
+<p><a href="https://docs.google.com/presentation/d/1fEbJNe29e30s-J0vVTTLoD17nEqUUs84WNpImh6ss3U">companion slides</a></p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CKYPhCwyoy4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+</div>
+<div id="google-maps-api" class="section level3 unnumbered">
+<h3>Google Maps API<a class="anchor" aria-label="anchor" href="#google-maps-api"><i class="fas fa-link"></i></a>
+</h3>
+<p>Create a “Hello World” Maps API webpage, and learn how to do things like change the options (background map type, initial location, etc.), overlay data and KML layers, and start to showcase your first Earth Engine maps.</p>
+<p><a href="https://docs.google.com/presentation/d/1bVZcXIog-igAXkhmq8KUbOYY3IZ5xw6BRf3TVqOcSf4">companion slides</a></p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/pJygMsGr1eY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+</div>
+<div id="publishing-and-storytelling-with-your-earth-engine-results" class="section level3 unnumbered">
+<h3>Publishing and storytelling with your Earth Engine results<a class="anchor" aria-label="anchor" href="#publishing-and-storytelling-with-your-earth-engine-results"><i class="fas fa-link"></i></a>
+</h3>
+<p>Get an overview of how to use Google’s geo tools to tell your stories and share your data. Topics include Google Earth, Google Maps (APIs), My Maps, Tour Builder, and Street View.</p>
+<p><a href="https://docs.google.com/presentation/d/13_H2ywA0MIlkhXuK-hhqB8YpO76Bqg8l0hM2xAWnvLk">companion slides</a></p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/URXbxzaK2ZA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+</div>
+<div id="datasets" class="section level3 unnumbered">
+<h3>Datasets<a class="anchor" aria-label="anchor" href="#datasets"><i class="fas fa-link"></i></a>
+</h3>
+<div id="synthetic-aperture-radar-sentinel-1" class="section level4 unnumbered">
+<h4>Synthetic Aperture Radar (Sentinel-1)<a class="anchor" aria-label="anchor" href="#synthetic-aperture-radar-sentinel-1"><i class="fas fa-link"></i></a>
+</h4>
+<p>Take a deep dive into one of the more unique datasets in the Earth Engine data catalog. This session provides an introduction to Synthetic Aperture Radar (SAR) data and working with scripts analyzing Sentinel-1 SAR data.</p>
+<p><a href="https://docs.google.com/presentation/d/e/2PACX-1vTT9Cw8ROlIPMgN3_k_M-zpPC97nrmuDf9dRy3q98xY-lLvi3HPlDaGbcR_pfbJNs4TBDZli9BC8WKL/pub?start=false&amp;loop=false&amp;delayms=3000">companion slides</a></p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/KYi6V1W28UM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  <div class="chapter-nav">
+<div class="prev"><a href="global-surface-water.html">Global Surface Water</a></div>
+<div class="next"><a href="how-earth-engine-works.html">How Earth Engine works</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#video-tutorials-1">Video Tutorials</a></li>
+<li>
+<a class="nav-link" href="#tutorials-1">Tutorials</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#introduction-to-earth-engine-condensed">Introduction to Earth Engine (condensed)</a></li>
+<li><a class="nav-link" href="#hands-on-intermediate-training">Hands-on Intermediate Training</a></li>
+<li><a class="nav-link" href="#tables-and-vectors">Tables and Vectors</a></li>
+<li><a class="nav-link" href="#importing-and-exporting">Importing and Exporting</a></li>
+<li><a class="nav-link" href="#classification">Classification</a></li>
+<li><a class="nav-link" href="#machine-learning">Machine Learning</a></li>
+<li><a class="nav-link" href="#arrays-and-matrices">Arrays and Matrices</a></li>
+<li><a class="nav-link" href="#time-series-analysis">Time Series Analysis</a></li>
+<li><a class="nav-link" href="#earth-engine-and-the-google-cloud-platform">Earth Engine and the Google Cloud Platform</a></li>
+<li><a class="nav-link" href="#google-maps-api">Google Maps API</a></li>
+<li><a class="nav-link" href="#publishing-and-storytelling-with-your-earth-engine-results">Publishing and storytelling with your Earth Engine results</a></li>
+<li><a class="nav-link" href="#datasets">Datasets</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/03_api_tutorials.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/03_api_tutorials.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

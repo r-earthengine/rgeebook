@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Join | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Join | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Join | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Join Overview Joins are used to combine elements from different collections (e.g. ImageCollection or...">
+<meta property="og:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Join Overview Joins are used to combine elements from different collections (e.g. ImageCollection or...">
+<meta name="twitter:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Join Overview Joins are used to combine elements from different collections (e.g. ImageCollection or...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="active" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="join" class="section level1 unnumbered">
+<h1>Join<a class="anchor" aria-label="anchor" href="#join"><i class="fas fa-link"></i></a>
+</h1>
+<p>This section requires the next libraries:</p>
+<div class="sourceCode" id="cb452"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rgeeExtra</span><span class="op">)</span>
+
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div id="join-overview" class="section level2 unnumbered">
+<h2>Join Overview<a class="anchor" aria-label="anchor" href="#join-overview"><i class="fas fa-link"></i></a>
+</h2>
+<p>Joins are used to combine elements from different collections (e.g. <code>ImageCollection</code> or <code>FeatureCollection</code>) based on a condition specified by an <code>ee$Filter</code>. The filter is constructed with arguments for the properties in each collection that are related to each other. Specifically, <code>leftField</code> specifies the property in the primary collection that is related to the <code>rightField</code> in the secondary collection. The type of filter (e.g. <code>equals</code>, <code>greaterThanOrEquals</code>, <code>lessThan</code>, etc.) indicates the relationship between the fields. The type of join indicates one-to-many or one-to-one relationships between the elements in the collections and how many matches to retain. The output of a join is produced by <code>join$apply()</code> and will vary according to the type of join.</p>
+</div>
+<div id="simple-joins" class="section level2 unnumbered">
+<h2>Simple Joins<a class="anchor" aria-label="anchor" href="#simple-joins"><i class="fas fa-link"></i></a>
+</h2>
+<p>A simple join returns elements from the <code>primary</code> collection that match any element in the <code>secondary</code> collection according to the match condition in the filter. To perform a simple join, use an <code>ee$Join$simple()</code>. This might be useful for finding the common elements among different collections or filtering one collection by another. For example, consider two image collections which (might) have some matching elements, where “matching” is defined by the condition specified in a filter. For example, let matching mean the image IDs are equal. Since the matching images in both collections are the same, use a simple join to discover this set of matching images:</p>
+<div class="sourceCode" id="cb453"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load a Landsat 8 image collection at a point of interest.</span>
+<span class="va">collection</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterBounds</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">122.09</span>, <span class="fl">37.42</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Define start and end dates with which to filter the collections.</span>
+<span class="va">april</span> <span class="op">&lt;-</span> <span class="st">"2014-04-01"</span>
+<span class="va">may</span> <span class="op">&lt;-</span> <span class="st">"2014-05-01"</span>
+<span class="va">june</span> <span class="op">&lt;-</span> <span class="st">"2014-06-01"</span>
+<span class="va">july</span> <span class="op">&lt;-</span> <span class="st">"2014-07-01"</span>
+
+<span class="co"># The primary collection is Landsat images from April to June.</span>
+<span class="va">primary</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">filterDate</span><span class="op">(</span><span class="va">april</span>, <span class="va">june</span><span class="op">)</span>
+
+<span class="co"># The secondary collection is Landsat images from May to July.</span>
+<span class="va">secondary</span> <span class="op">&lt;-</span> <span class="va">collection</span><span class="op">$</span><span class="fu">filterDate</span><span class="op">(</span><span class="va">may</span>, <span class="va">july</span><span class="op">)</span>
+
+<span class="co"># Use an equals filter to define how the collections match.</span>
+<span class="va">filter</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">equals</span><span class="op">(</span>
+  <span class="va">leftField</span><span class="op">&lt;-</span> <span class="st">"system:index"</span>,
+  <span class="va">rightField</span><span class="op">&lt;-</span> <span class="st">"system:index"</span>
+<span class="op">)</span>
+
+<span class="co"># Create the join.</span>
+<span class="va">simpleJoin</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Join</span><span class="op">$</span><span class="fu">simple</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Apply the join.</span>
+<span class="va">simpleJoined</span> <span class="op">&lt;-</span> <span class="va">simpleJoin</span><span class="op">$</span><span class="fu">apply</span><span class="op">(</span><span class="va">primary</span>, <span class="va">secondary</span>, <span class="va">filter</span><span class="op">)</span>
+
+<span class="co"># Display the result.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Simple join: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu">ee_get_date_ic</span><span class="op">(</span><span class="va">simpleJoined</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre translate="no" dir="ltr">
+Image LANDSAT/LC8_L1T_TOA/LC80440342014125LGN00 (12 bands)
+Image LANDSAT/LC8_L1T_TOA/LC80440342014141LGN00 (12 bands)
+</pre>
+<p>In the previous example, observe that the collections to join temporally overlap by about a month. Note that when this join is applied, the output will be an <code>ImageCollection</code> with only the matching images in the <code>primary</code> collection.</p>
+</div>
+<div id="inverted-joins" class="section level2 unnumbered">
+<h2>Inverted Joins<a class="anchor" aria-label="anchor" href="#inverted-joins"><i class="fas fa-link"></i></a>
+</h2>
+<p>Suppose that the purpose of the join is to retain all images in the <code>primary</code> collection that are not in the <code>secondary</code> collection. You can perform this type of inverted join using <code>ee$Join$inverted()</code>. Using the filter, <code>primary</code> and <code>secondary</code> collections as defined in the <a href="">simple join example</a>, specify the inverted join as:</p>
+<div class="sourceCode" id="cb454"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define the join.</span>
+<span class="va">invertedJoin</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Join</span><span class="op">$</span><span class="fu">inverted</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Apply the join.</span>
+<span class="va">invertedJoined</span> <span class="op">&lt;-</span> <span class="va">invertedJoin</span><span class="op">$</span><span class="fu">apply</span><span class="op">(</span><span class="va">primary</span>, <span class="va">secondary</span>, <span class="va">filter</span><span class="op">)</span>
+
+<span class="co"># Display the result.</span>
+<span class="fu">ee_get_date_ic</span><span class="op">(</span><span class="va">invertedJoined</span><span class="op">)</span></code></pre></div>
+<pre translate="no" dir="ltr">
+Image LANDSAT/LC8_L1T_TOA/LC80440342014093LGN00 (12 bands)
+Image LANDSAT/LC8_L1T_TOA/LC80440342014109LGN00 (12 bands)
+</pre>
+<p>The inverted join contains the images from April 3 and April 19, indicating the images that are present in the <code>primary</code> collection but not in the <code>secondary</code> collection.</p>
+</div>
+<div id="inner-joins" class="section level2 unnumbered">
+<h2>Inner Joins<a class="anchor" aria-label="anchor" href="#inner-joins"><i class="fas fa-link"></i></a>
+</h2>
+<p>To enumerate all matches between the elements of two collections, use an <code>ee$Join$inner()</code>. The output of an inner join is a <code>FeatureCollection</code> (even if joining one <code>ImageCollection</code> to another <code>ImageCollection</code>). Each feature in the output represents a match, where the matching elements are stored in two properties of the feature. For example, <code>feature$get('primary')</code> is the element in the primary collection that matches the element from the secondary collection stored in <code>feature$get('secondary')</code>. (Different names for these properties can be specified as arguments to <code>inner()</code>, but <code>‘primary’</code> and <code>‘secondary’</code> are the defaults). One-to-many relationships are represented by multiple features in the output. If an element in either collection doesn’t have a match, it is not present in the output.</p>
+<p>Join examples using <code>ImageCollection</code> inputs apply without modification to <code>FeatureCollection</code> inputs. It is also possible to join a <code>FeatureCollection</code> to an <code>ImageCollection</code> and vice versa. Consider the following toy example of inner join:</p>
+<div class="sourceCode" id="cb455"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create the primary collection.</span>
+<span class="va">primaryFeatures</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">foo</span><span class="op">&lt;-</span> <span class="fl">0</span>, <span class="va">label</span><span class="op">&lt;-</span> <span class="st">"a"</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">foo</span><span class="op">&lt;-</span> <span class="fl">1</span>, <span class="va">label</span><span class="op">&lt;-</span> <span class="st">"b"</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">foo</span><span class="op">&lt;-</span> <span class="fl">1</span>, <span class="va">label</span><span class="op">&lt;-</span> <span class="st">"c"</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">foo</span><span class="op">&lt;-</span> <span class="fl">2</span>, <span class="va">label</span><span class="op">&lt;-</span> <span class="st">"d"</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Create the secondary collection.</span>
+<span class="va">secondaryFeatures</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">bar</span><span class="op">&lt;-</span> <span class="fl">1</span>, <span class="va">label</span><span class="op">&lt;-</span> <span class="st">"e"</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">bar</span><span class="op">&lt;-</span> <span class="fl">1</span>, <span class="va">label</span><span class="op">&lt;-</span> <span class="st">"f"</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">bar</span><span class="op">&lt;-</span> <span class="fl">2</span>, <span class="va">label</span><span class="op">&lt;-</span> <span class="st">"g"</span><span class="op">)</span><span class="op">)</span>,
+  <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">bar</span><span class="op">&lt;-</span> <span class="fl">3</span>, <span class="va">label</span><span class="op">&lt;-</span> <span class="st">"h"</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Use an equals filter to specify how the collections match.</span>
+<span class="va">toyFilter</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">equals</span><span class="op">(</span>
+  <span class="va">leftField</span><span class="op">&lt;-</span> <span class="st">"foo"</span>,
+  <span class="va">rightField</span><span class="op">&lt;-</span> <span class="st">"bar"</span>
+<span class="op">)</span>
+
+<span class="co"># Define the join.</span>
+<span class="va">innerJoin</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Join</span><span class="op">$</span><span class="fu">inner</span><span class="op">(</span><span class="st">"primary"</span>, <span class="st">"secondary"</span><span class="op">)</span>
+
+<span class="co"># Apply the join.</span>
+<span class="va">toyJoin</span> <span class="op">&lt;-</span> <span class="va">innerJoin</span><span class="op">$</span><span class="fu">apply</span><span class="op">(</span><span class="va">primaryFeatures</span>, <span class="va">secondaryFeatures</span>, <span class="va">toyFilter</span><span class="op">)</span>
+
+<span class="co"># Print the result.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Inner join toy example:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">toyJoin</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>In the previous example, notice that the relationship between the tables is defined in the filter, which indicates that fields <code>‘foo’</code> and <code>‘bar’</code> are the join fields. An inner join is then specified and applied to the collections. Inspect the output and observe that each possible match is represented as one <code>Feature</code>.</p>
+<p>For a motivated example, consider joining MODIS <code>ImageCollection</code> objects. MODIS quality data are sometimes stored in a separate collection from the image data, so an inner join is convenient for joining the two collections in order to apply the quality data. In this case, the image acquisition times are identical, so an equals filter handles the job of specifying this relationship between the two collections:</p>
+<div class="sourceCode" id="cb456"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Make a date filter to get images in this date range.</span>
+<span class="va">dateFilter</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">date</span><span class="op">(</span><span class="st">"2014-01-01"</span>, <span class="st">"2014-02-01"</span><span class="op">)</span>
+
+<span class="co"># Load a MODIS collection with EVI data.</span>
+<span class="va">mcd43a4</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"MODIS/MCD43A4_006_EVI"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">dateFilter</span><span class="op">)</span>
+
+<span class="co"># Load a MODIS collection with quality data.</span>
+<span class="va">mcd43a2</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"MODIS/006/MCD43A2"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">dateFilter</span><span class="op">)</span>
+
+<span class="co"># Define an inner join.</span>
+<span class="va">innerJoin</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Join</span><span class="op">$</span><span class="fu">inner</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Specify an equals filter for image timestamps.</span>
+<span class="va">filterTimeEq</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">equals</span><span class="op">(</span>
+  <span class="va">leftField</span><span class="op">&lt;-</span> <span class="st">"system:time_start"</span>,
+  <span class="va">rightField</span><span class="op">&lt;-</span> <span class="st">"system:time_start"</span>
+<span class="op">)</span>
+
+<span class="co"># Apply the join.</span>
+<span class="va">innerJoinedMODIS</span> <span class="op">&lt;-</span> <span class="va">innerJoin</span><span class="op">$</span><span class="fu">apply</span><span class="op">(</span><span class="va">mcd43a4</span>, <span class="va">mcd43a2</span>, <span class="va">filterTimeEq</span><span class="op">)</span>
+
+<span class="co"># Display the join result: a FeatureCollection.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Inner join output:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">innerJoinedMODIS</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>To make use of the joined images in the output <code>FeatureCollection</code>, <code>map()</code> a combining function over the output. For example, the matching images can be stacked together such that the quality bands are added to the image data:</p>
+<div class="sourceCode" id="cb457"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Map a function to merge the results in the output FeatureCollection.</span>
+<span class="va">joinedMODIS</span> <span class="op">&lt;-</span> <span class="va">innerJoinedMODIS</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">feature</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">ee</span><span class="op">$</span><span class="va">Image</span><span class="op">$</span><span class="fu">cat</span><span class="op">(</span><span class="va">feature</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"primary"</span><span class="op">)</span>, <span class="va">feature</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"secondary"</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span><span class="op">)</span>
+
+<span class="co"># Print the result of merging.</span>
+<span class="fu">ee_get_date_ic</span><span class="op">(</span><span class="va">joinedMODIS</span><span class="op">)</span></code></pre></div>
+<p>Although this function is mapped over a <code>FeatureCollection</code>, the result is an <code>ImageCollection</code>. Each image in the resultant <code>ImageCollection</code> has all the bands of the images in the primary collection (in this example just <code>‘EVI’</code>) and all the bands of the matching image in the secondary collection (the quality bands).</p>
+</div>
+<div id="save-all-joins" class="section level2 unnumbered">
+<h2>Save-All Joins<a class="anchor" aria-label="anchor" href="#save-all-joins"><i class="fas fa-link"></i></a>
+</h2>
+<p>Saving joins are one way of representing one-to-many relationships in Earth Engine. Unlike an <a href="">inner join</a>, a saving join stores matches from the <code>secondary</code> collection as a named property of the features in the <code>primary</code> collection. To save all such matches, use an <code>ee$Join$saveAll()</code>. If there is a one-to-many relationship, a <code>saveAll()</code> join stores all matching features as an <code>ee$List</code>. Unmatched elements in the <code>primary</code> collection are dropped. For example, suppose there is a need to get all MODIS imagery acquired within two days of each Landsat image in a collection. This example uses a <code>saveAll()</code> join for that purpose:</p>
+<div class="sourceCode" id="cb458"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load a primary collection: Landsat imagery.</span>
+<span class="va">primary</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterDate</span><span class="op">(</span><span class="st">"2014-04-01"</span>, <span class="st">"2014-06-01"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterBounds</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">122.092</span>, <span class="fl">37.42</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Load a secondary collection: MODIS imagery.</span>
+<span class="va">modSecondary</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"MODIS/006/MOD09GA"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterDate</span><span class="op">(</span><span class="st">"2014-03-01"</span>, <span class="st">"2014-07-01"</span><span class="op">)</span>
+
+<span class="co"># Define an allowable time difference: two days in milliseconds.</span>
+<span class="va">twoDaysMillis</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">24</span> <span class="op">*</span> <span class="fl">60</span> <span class="op">*</span> <span class="fl">60</span> <span class="op">*</span> <span class="fl">1000</span>
+
+<span class="co"># Create a time filter to define a match as overlapping timestamps.</span>
+<span class="va">timeFilter</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">Or</span><span class="op">(</span>
+  <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">maxDifference</span><span class="op">(</span>
+    <span class="va">difference</span><span class="op">&lt;-</span> <span class="va">twoDaysMillis</span>,
+    <span class="va">leftField</span><span class="op">&lt;-</span> <span class="st">"system:time_start"</span>,
+    <span class="va">rightField</span><span class="op">&lt;-</span> <span class="st">"system:time_end"</span>
+  <span class="op">)</span>,
+  <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">maxDifference</span><span class="op">(</span>
+    <span class="va">difference</span><span class="op">&lt;-</span> <span class="va">twoDaysMillis</span>,
+    <span class="va">leftField</span><span class="op">&lt;-</span> <span class="st">"system:time_end"</span>,
+    <span class="va">rightField</span><span class="op">&lt;-</span> <span class="st">"system:time_start"</span>
+  <span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Define the join.</span>
+<span class="va">saveAllJoin</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Join</span><span class="op">$</span><span class="fu">saveAll</span><span class="op">(</span>
+  <span class="va">matchesKey</span><span class="op">&lt;-</span> <span class="st">"terra"</span>,
+  <span class="va">ordering</span><span class="op">&lt;-</span> <span class="st">"system:time_start"</span>,
+  <span class="va">ascending</span><span class="op">&lt;-</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
+
+<span class="co"># Apply the join.</span>
+<span class="va">landsatModis</span> <span class="op">&lt;-</span> <span class="va">saveAllJoin</span><span class="op">$</span><span class="fu">apply</span><span class="op">(</span><span class="va">primary</span>, <span class="va">modSecondary</span>, <span class="va">timeFilter</span><span class="op">)</span>
+
+<span class="co"># Display the result.</span>
+<span class="fu">ee_get_date_ic</span><span class="op">(</span><span class="va">landsatModis</span><span class="op">)</span></code></pre></div>
+<p>In this example, note that the <code>secondary</code> MODIS collection is pre-filtered to be chronologically similar to the <code>primary</code> Landsat collection for efficiency. To compare the Landsat acquisition time to the MODIS composite time, which has a daily range, the filter compares the endpoints of the image timestamps. The join is defined with the name of the property used to store the list of matches for each Landsat image (<code>‘terra’</code>) and optional parameter to sort the list of matches by the <code>system:time_start</code> property</p>
+<p>Inspection of the result indicates that images within the primary collection have the added <code>terra</code> property which stores a list of the matching MODIS images.</p>
+</div>
+<div id="save-best-joins" class="section level2 unnumbered">
+<h2>Save-Best Joins<a class="anchor" aria-label="anchor" href="#save-best-joins"><i class="fas fa-link"></i></a>
+</h2>
+<p>To save only the best match for each element in a collection, use an <code>ee$Join$saveBest()</code>. The <code>saveBest()</code> join functions in an equivalent way to the <code>saveAll()</code> join, except for each element in the <code>primary</code> collection, it saves the element from the <code>secondary</code> collection with the best match. Unmatched elements in the primary collection are dropped. Suppose the intention is to find a meteorological image closest in time to each Landsat image in the <code>primary</code> collection. To perform this join, the <code>ee$Filter</code> must be redefined for a single join condition (combined filters will not work with <code>saveBest()</code> since it is ambiguous how to combine ranks from multiple sub-Filters):</p>
+<div class="sourceCode" id="cb459"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load a primary collection: Landsat imagery.</span>
+<span class="va">primary</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterDate</span><span class="op">(</span><span class="st">"2014-04-01"</span>, <span class="st">"2014-06-01"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterBounds</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">122.092</span>, <span class="fl">37.42</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Load a secondary collection: GRIDMET meteorological data</span>
+<span class="va">gridmet</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"IDAHO_EPSCOR/GRIDMET"</span><span class="op">)</span>
+
+<span class="co"># Define a max difference filter to compare timestamps.</span>
+<span class="va">maxDiffFilter</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">maxDifference</span><span class="op">(</span>
+  <span class="va">difference</span><span class="op">&lt;-</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">24</span> <span class="op">*</span> <span class="fl">60</span> <span class="op">*</span> <span class="fl">60</span> <span class="op">*</span> <span class="fl">1000</span>,
+  <span class="va">leftField</span><span class="op">&lt;-</span> <span class="st">"system:time_start"</span>,
+  <span class="va">rightField</span><span class="op">&lt;-</span> <span class="st">"system:time_start"</span>
+<span class="op">)</span>
+
+<span class="co"># Define the join.</span>
+<span class="va">saveBestJoin</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Join</span><span class="op">$</span><span class="fu">saveBest</span><span class="op">(</span>
+  <span class="va">matchKey</span><span class="op">&lt;-</span> <span class="st">"bestImage"</span>,
+  <span class="va">measureKey</span><span class="op">&lt;-</span> <span class="st">"timeDiff"</span>
+<span class="op">)</span>
+
+<span class="co"># Apply the join.</span>
+<span class="va">landsatMet</span> <span class="op">&lt;-</span> <span class="va">saveBestJoin</span><span class="op">$</span><span class="fu">apply</span><span class="op">(</span><span class="va">primary</span>, <span class="va">gridmet</span>, <span class="va">maxDiffFilter</span><span class="op">)</span>
+
+<span class="co"># Print the result.</span>
+<span class="fu">ee_get_date_ic</span><span class="op">(</span><span class="va">landsatMet</span><span class="op">)</span></code></pre></div>
+<p>Note that a <code>saveBest()</code> join defines the name of the property with which to store the best match (<code>‘bestImage’</code>) and the name of the property with which to store the goodness of the match metric (<code>‘timeDiff’</code>). Inspection of the results indicates that a matching DAYMET image has been added to the property <code>bestImage</code> for each Landsat scene in the <code>primary</code> collection. Each of these DAYMET images has the property <code>timeDiff</code> indicating the time difference in milliseconds between the DAYMET image and the Landsat image, which will be minimum among the DAYMET images passing the condition in the filter.</p>
+</div>
+<div id="save-first-joins" class="section level2 unnumbered">
+<h2>Save-First Joins<a class="anchor" aria-label="anchor" href="#save-first-joins"><i class="fas fa-link"></i></a>
+</h2>
+<p>To save only the first match for each element in a collection, use an <code>ee$Join$saveFirst()</code>. The <code>saveFirst()</code> join functions in an equivalent way to the <code>saveAll()</code> join, except for each element in the <code>primary</code> collection, it simply saves the first element from the <code>secondary</code> collection matching the condition specified in the <code>ee.Filter</code>. Unmatched elements in the <code>primary</code> collection are dropped. Unless a sorting property and an order are supplied (as in the <a href="">saveAll example</a>), the first element saved might be any of the elements in the list found by <code>saveAll()</code> with the same filter.</p>
+</div>
+<div id="spatial-joins" class="section level2 unnumbered">
+<h2>Spatial Joins<a class="anchor" aria-label="anchor" href="#spatial-joins"><i class="fas fa-link"></i></a>
+</h2>
+<p>Collections can be joined by spatial location as well as by property values. To join based on spatial location, use a <code>withinDistance()</code> filter with <code>.geo</code> join fields specified. The <code>.geo</code> field indicates that the item’s geometry is to be used to compute the distance metric. For example, consider the task of finding all <a href="">power plants</a> within 100 kilometers of Yosemite National Park, USA. For that purpose, use a filter on the geometry fields, with the maximum distance set to 100 kilometers using the <code>distance</code> parameter:</p>
+<div class="sourceCode" id="cb460"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load a primary collection: protected areas (Yosemite National Park).</span>
+<span class="va">primary</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">"WCMC/WDPA/current/polygons"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">"NAME"</span>, <span class="st">"Yosemite National Park"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Load a secondary collection: power plants.</span>
+<span class="va">powerPlants</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">"WRI/GPPD/power_plants"</span><span class="op">)</span>
+
+<span class="co"># Define a spatial filter, with distance 100 km.</span>
+<span class="va">distFilter</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">withinDistance</span><span class="op">(</span>
+  <span class="va">distance</span><span class="op">&lt;-</span> <span class="fl">100000</span>,
+  <span class="va">leftField</span><span class="op">&lt;-</span> <span class="st">".geo"</span>,
+  <span class="va">rightField</span><span class="op">&lt;-</span> <span class="st">".geo"</span>,
+  <span class="va">maxError</span><span class="op">&lt;-</span> <span class="fl">10</span>
+<span class="op">)</span>
+
+<span class="co"># Define a saveAll join.</span>
+<span class="va">distSaveAll</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Join</span><span class="op">$</span><span class="fu">saveAll</span><span class="op">(</span>
+  <span class="va">matchesKey</span><span class="op">&lt;-</span> <span class="st">"points"</span>,
+  <span class="va">measureKey</span><span class="op">&lt;-</span> <span class="st">"distance"</span>
+<span class="op">)</span>
+
+<span class="co"># Apply the join.</span>
+<span class="va">spatialJoined</span> <span class="op">&lt;-</span> <span class="va">distSaveAll</span><span class="op">$</span><span class="fu">apply</span><span class="op">(</span><span class="va">primary</span>, <span class="va">powerPlants</span>, <span class="va">distFilter</span><span class="op">)</span>
+
+<span class="co"># Print the result.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">spatialJoined</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Note that the previous example joins a <code>FeatureCollection</code> to another <code>FeatureCollection</code>. The <code>saveAll()</code> join sets a property (<code>points</code>) on each feature in the <code>primary</code> collection which stores a list of the points within 100 km of the feature. The distance of each point to the feature is stored in the <code>distance</code> property of each joined point.</p>
+<p>Spatial joins can also be used to identify which features in one collection intersect those in another. For example, consider two feature collections: a <code>primary</code> collection containing polygons representing the boundaries of US states, a <code>secondary</code> collection containing point locations representing power plants. Suppose there is need to determine the number intersecting each state. This can be accomplished with a spatial join as follows:</p>
+<div class="sourceCode" id="cb461"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load the primary collection: US state boundaries.</span>
+<span class="va">states</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">"TIGER/2018/States"</span><span class="op">)</span>
+
+<span class="co"># Load the secondary collection: power plants.</span>
+<span class="va">powerPlants</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">"WRI/GPPD/power_plants"</span><span class="op">)</span>
+
+<span class="co"># Define a spatial filter as geometries that intersect.</span>
+<span class="va">spatialFilter</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">intersects</span><span class="op">(</span>
+  <span class="va">leftField</span><span class="op">&lt;-</span> <span class="st">".geo"</span>,
+  <span class="va">rightField</span><span class="op">&lt;-</span> <span class="st">".geo"</span>,
+  <span class="va">maxError</span><span class="op">&lt;-</span> <span class="fl">10</span>
+<span class="op">)</span>
+
+<span class="co"># Define a save all join.</span>
+<span class="va">saveAllJoin</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Join</span><span class="op">$</span><span class="fu">saveAll</span><span class="op">(</span>
+  <span class="va">matchesKey</span><span class="op">&lt;-</span> <span class="st">"power_plants"</span>
+<span class="op">)</span>
+
+<span class="co"># Apply the join.</span>
+<span class="va">intersectJoined</span> <span class="op">&lt;-</span> <span class="va">saveAllJoin</span><span class="op">$</span><span class="fu">apply</span><span class="op">(</span><span class="va">states</span>, <span class="va">powerPlants</span>, <span class="va">spatialFilter</span><span class="op">)</span>
+
+<span class="co"># Add power plant count per state as a property.</span>
+<span class="va">intersectJoined</span> <span class="op">&lt;-</span> <span class="va">intersectJoined</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">state</span><span class="op">)</span> <span class="op">{</span>
+  <span class="co"># Get "power_plant" intersection list, count how many intersected this state.</span>
+  <span class="va">nPowerPlants</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="va">state</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"power_plants"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">size</span><span class="op">(</span><span class="op">)</span>
+  <span class="co"># Return the state feature with a new property: power plant count.</span>
+  <span class="va">state</span><span class="op">$</span><span class="fu">set</span><span class="op">(</span><span class="st">"n_power_plants"</span>, <span class="va">nPowerPlants</span><span class="op">)</span>
+<span class="op">}</span><span class="op">)</span>
+
+<span class="co"># Make a bar chart for the number of power plants per state.</span>
+
+
+<span class="co"># Print the chart to the console.</span></code></pre></div>
+<p>In the previous example, note that the intersects() filter doesn’t store a distance as the withinDistance() filter does. The output should look something like Figure 1.</p>
+<center>
+<img src="images/chapter_05/figure_joi_01.png" width="90%">
+</center>
+<p>Figure 1. Bar chart showing the number of power plants intersecting each US state.</p>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="reducer.html">Reducer</a></div>
+<div class="next"><a href="array.html">Array</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#join">Join</a></li>
+<li><a class="nav-link" href="#join-overview">Join Overview</a></li>
+<li><a class="nav-link" href="#simple-joins">Simple Joins</a></li>
+<li><a class="nav-link" href="#inverted-joins">Inverted Joins</a></li>
+<li><a class="nav-link" href="#inner-joins">Inner Joins</a></li>
+<li><a class="nav-link" href="#save-all-joins">Save-All Joins</a></li>
+<li><a class="nav-link" href="#save-best-joins">Save-Best Joins</a></li>
+<li><a class="nav-link" href="#save-first-joins">Save-First Joins</a></li>
+<li><a class="nav-link" href="#spatial-joins">Spatial Joins</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/05_object_methods.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/05_object_methods.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

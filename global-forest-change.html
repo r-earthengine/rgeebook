@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Global Forest Change | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Global Forest Change | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Global Forest Change | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Introduction to Forest Change Analysis in Earth Engine    Figure: Forest change estimated by Hansen et...">
+<meta property="og:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Introduction to Forest Change Analysis in Earth Engine    Figure: Forest change estimated by Hansen et...">
+<meta name="twitter:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Introduction to Forest Change Analysis in Earth Engine    Figure: Forest change estimated by Hansen et...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="active" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="global-forest-change" class="section level1 unnumbered">
+<h1>Global Forest Change<a class="anchor" aria-label="anchor" href="#global-forest-change"><i class="fas fa-link"></i></a>
+</h1>
+<p>This section requires the next libraries:</p>
+<div class="sourceCode" id="cb228"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rgeeExtra</span><span class="op">)</span>
+
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div id="introduction-to-forest-change-analysis-in-earth-engine" class="section level2 unnumbered">
+<h2>Introduction to Forest Change Analysis in Earth Engine<a class="anchor" aria-label="anchor" href="#introduction-to-forest-change-analysis-in-earth-engine"><i class="fas fa-link"></i></a>
+</h2>
+<figure><table class="columns"><tr>
+<td>
+<img alt="global" class="screenshot" src="images/chapter_03/figure_GFC_01.png" width="100%">
+</td>
+<td>
+<img alt="Indonesia" class="screenshot" src="images/chapter_03/figure_GFC_02.png" width="100%">
+</td>
+</tr></table></figure><center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_GFC_04.png" width="40%">
+</center>
+<p>Figure: Forest change estimated by Hansen et al. (2013). Global Change, 2000 - 2012 (left); Change in Riau, Indonesia, 2000 - 2012 (right)</p>
+<p>Welcome to the Google Earth Engine tutorial for using <a href="http:#www.sciencemag.org/content/342/6160/850">Hansen et al. (2013)</a> global forest cover and change data and Forest Monitoring for Action (FORMA, <a href="https:#www.cgdev.org/sites/default/files/1423248_file_Hammer_Kraft_Wheeler_FORMA_FINAL.pdf">Hammer et al. 2009</a>) data from <a href="http://www.globalforestwatch.org/">Global Forest Watch</a>. This tutorial provides examples of how to use Earth Engine to visualize these data, how to compute forest change over time and other statistics within a region of interest and how to download both the data and results of analyses.</p>
+<div id="license-and-attribution" class="section level3 unnumbered">
+<h3>License and Attribution<a class="anchor" aria-label="anchor" href="#license-and-attribution"><i class="fas fa-link"></i></a>
+</h3>
+<p>The data described in this tutorial are licensed under a Creative Commons Attribution 4.0 International License. Please use the recommended citation on the relevant <a href="https://developers.google.com/earth-engine/datasets">dataset description page</a>.</p>
+</div>
+<div id="prerequisites-1" class="section level3 unnumbered">
+<h3>Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>The tutorial assumes no programming background, although it does assume a willingness to learn some programming. Before proceeding, please make sure to:</p>
+<ul>
+<li><p><a href="https://signup.earthengine.google.com/">Signup for Earth Engine</a>. Once you have been accepted, you will receive an email with additional information.</p></li>
+<li><p>Get familiar with the Earth Engine Rstudio, the IDE for writing Earth Engine R code in Rstudio. Learn more <a href="https://r-earthengine.com/rgeebook/earth-engine-in-rstudio.html">here</a>.</p></li>
+<li><p>If you are unfamiliar with R, check out the <a href="https://r-earthengine.com/rgeebook/introduction-to-r-for-earth-engine.html">R for Earth Engine tutorial</a>.</p></li>
+<li><p>If you are unfamiliar with the Earth Engine API, check out the <a href="https://r-earthengine.com/rgeebook/the-earth-engine-api.html">Introduction to the Earth Engine API</a> tutorial.</p></li>
+</ul>
+<p>Once you’re familiar with R, the Earth Engine API and Rstudio, <a href="https://r-earthengine.com/rgeebook/global-forest-change.html">get started on the tutorial</a>.</p>
+</div>
+</div>
+<div id="introduction-to-hansen-et-al.-global-forest-change-data" class="section level2 unnumbered">
+<h2>Introduction to Hansen et al. Global Forest Change Data<a class="anchor" aria-label="anchor" href="#introduction-to-hansen-et-al.-global-forest-change-data"><i class="fas fa-link"></i></a>
+</h2>
+<p>The <a href="https://developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2020_v1_8">Hansen et al. (2013) Global Forest Change dataset</a> in Earth Engine represents forest change, at 30 meters resolution, globally, between 2000 and 2014. Let’s start by adding the Hansen et al. data to the map. Either import the global forest change data by searching for “Hansen forest” and naming the import <code>gfc2014</code>, or copy the following code into the Rstudio:</p>
+<div class="sourceCode" id="cb229"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gfc2014</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'UMD/hansen/global_forest_change_2015'</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">gfc2014</span><span class="op">)</span></code></pre></div>
+<p>Click on the <strong>Run</strong> button at the top of the Rstudio and you should see something like Figure 1.</p>
+<center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_code_01.png" width="100%">
+</center>
+<p>Figure: Default visualization of Hansen et al. (2013) forest change data.</p>
+<p>Don’t worry, you’ll make it look better soon. (<a href="https://r-earthengine.com/rgeebook/image.html">Learn more about default image visualizations in Earth Engine</a>). By the end of this section, you’ll have an image that looks something like Figure 2, where green represents where the study detected forest in the year 2000, red is estimated forest loss over the study period, blue is forest gain during that period, magenta is areas where forest has been both lost and gained, and non-forest areas are masked.</p>
+<center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_code_12.png" width="100%">
+</center>
+<p>Figure: Custom visualization of Hansen et al. (2013) forest change data.</p>
+<p>Recall that when a multi-band image is added to a map, the first three bands of the image are chosen as red, green, and blue, respectively, and stretched according to the data type of each band. The reason the image looks red is that the first three bands are treecover2000, loss, and gain. The treecover2000 band is expressed as a percent and has values much higher than loss (green) and gain (blue) which are binary ({0, 1}). The image therefore displays as overwhelmingly red.</p>
+<p>The bands in the Global Forest Change data are:</p>
+<div class="inline-table"><table class="table table-sm">
+<tr>
+<th>
+Band Name
+</th>
+<th>
+Description
+</th>
+<th>
+Range
+</th>
+</tr>
+<tr>
+<td>
+treecover2000
+</td>
+<td>
+Percentage of tree cover in the pixel.
+</td>
+<td>
+0 - 100
+</td>
+</tr>
+<tr>
+<td>
+loss
+</td>
+<td>
+1 if loss ever happen during the study period.
+</td>
+<td>
+0 or 1
+</td>
+</tr>
+<tr>
+<td>
+gain
+</td>
+<td>
+1 if gain ever happen during the study period.
+</td>
+<td>
+0 or 1
+</td>
+</tr>
+<tr>
+<td>
+lossyear
+</td>
+<td>
+The year loss occurred, one-indexed from year 2001, or zero if no
+loss occurred.
+</td>
+<td>
+0 - 12
+</td>
+</tr>
+<tr>
+<td>
+first_b30
+</td>
+<td>
+The Landsat 7 red band built from the first valid pixels in 2000
+(or older if there were no valid pixels in 2000).
+</td>
+<td>
+0 - 255
+</td>
+</tr>
+<tr>
+<td>
+first_b40
+</td>
+<td>
+The Landsat 7 near infrared band built from the first valid pixels
+in 2000.
+</td>
+<td>
+0 - 255
+</td>
+</tr>
+<tr>
+<td>
+first_b50
+</td>
+<td>
+The first Landsat 7 short wave infrared band built from the first
+valid pixels in 2000.
+</td>
+<td>
+0 - 255
+</td>
+</tr>
+<tr>
+<td>
+first_b70
+</td>
+<td>
+The second Landsat 7 short wave infrared band built from the first
+valid pixels in 2000.
+</td>
+<td>
+0 - 255
+</td>
+</tr>
+<tr>
+<td>
+last_b30
+</td>
+<td>
+The Landsat 7 red band built from the latest valid pixels in 2012.
+</td>
+<td>
+0 - 255
+</td>
+</tr>
+<tr>
+<td>
+last_b40
+</td>
+<td>
+The Landsat 7 near infrared band built from the latest valid pixels
+in 2012.
+</td>
+<td>
+0 - 255
+</td>
+</tr>
+<tr>
+<td>
+last_b50
+</td>
+<td>
+The first Landsat 7 short wave infrared band built from the latest
+valid pixels 2012.
+</td>
+<td>
+0 - 255
+</td>
+</tr>
+<tr>
+<td>
+last_b70
+</td>
+<td>
+The second Landsat 7 short wave infrared band built from the latest
+valid pixels 2012.
+</td>
+<td>
+0 - 255
+</td>
+</tr>
+<tr>
+<td>
+datamask
+</td>
+<td>
+No data (0), mapped land surface (1), and permanent water bodies
+(2).
+</td>
+<td>
+0, 1, 2
+</td>
+</tr>
+</table></div>
+<p>To display forest cover in the year 2000 as a grayscale image, you can use the treecover2000 band, specified in the second argument to Map.addLayer():</p>
+<div class="sourceCode" id="cb230"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">gfc2014</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="st">'treecover2000'</span><span class="op">)</span>, <span class="st">'treecover2000'</span><span class="op">)</span></code></pre></div>
+<p>This results in an image that should look something like Figure 3.</p>
+<center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_code_02.png" width="100%">
+</center>
+<p>Figure: Grayscale image of year 2000 tree cover in the South America.</p>
+<p>Here’s an image that uses 3 bands, Landsat bands 5, 4, and 3 for 2015. This band combination shows healthy vegetation as green and soil as mauve::</p>
+<div class="sourceCode" id="cb231"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">gfc2014</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'last_b50'</span>, <span class="st">'last_b40'</span>, <span class="st">'last_b30'</span><span class="op">)</span><span class="op">)</span>, <span class="st">'false color'</span><span class="op">)</span></code></pre></div>
+<p>The result should look something like Figure 4.</p>
+<center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_code_03.png" width="100%">
+</center>
+<p>Figure: Landsat 7, year 2015 false color composite of the South America.</p>
+<p>One nice visualization of the Global Forest Change dataset shows forest extent in 2000 as green, forest loss as red, and forest gain as blue. Specifically, make loss the first band (red), treecover2000 the second band (green), and gain the third band (blue):</p>
+<div class="sourceCode" id="cb232"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">gfc2014</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'loss'</span>, <span class="st">'treecover2000'</span>, <span class="st">'gain'</span><span class="op">)</span><span class="op">)</span>, <span class="st">'green'</span><span class="op">)</span></code></pre></div>
+<p>The loss and gain band values are binary, so they will be barely visible on the image, which should look something like Figure 5.</p>
+<center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_code_04.png" width="100%">
+</center>
+<p>Figure: Year 2000 tree cover in the South America (green).</p>
+<p>We’d like forest loss to show up as bright red and forest gain to show up as bright blue. To fix this, we can use the visualization parameter max to set the range to which the image data are stretched. Note that the max visualization parameter takes a list of values, corresponding to maxima for each band:</p>
+<div class="sourceCode" id="cb233"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">gfc2014</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'loss'</span>, <span class="st">'treecover2000'</span>, <span class="st">'gain'</span><span class="op">)</span>,
+  max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">255</span>, <span class="fl">1</span><span class="op">)</span>
+<span class="op">)</span>, <span class="st">'forest cover, loss, gain'</span><span class="op">)</span></code></pre></div>
+<p>The result should look something like Figure 6.</p>
+<center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_code_05.png" width="100%">
+</center>
+<p>Figure: South America forest loss (red), year 2000 forest cover (green) and gain (blue).</p>
+<p>This results in an image that is green where there’s forest, red where there’s forest loss, blue where there’s forest gain, and magenta where there’s both gain and loss. A closer inspection, however, reveals that it’s not quite right. Instead of loss being marked as red, it’s orange. This is because the bright red pixels mix with the underlying green pixels, producing orange pixels. Similarly the pixels where there’s forest, loss, and gain are pink - a combination of green, bright red and bright blue. See Figure 7 for an illustration.</p>
+<center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_code_06.png" width="100%">
+</center>
+<p>Figure: US Pacific North West forest loss (red), year 2000 cover (green) and gain (blue).</p>
+<p>To get the image promised at the beginning of the tutorial, you can create separate images for forest, loss, gain, and for both loss and gain. Add each of these images to the map in the order that’s best for display.</p>
+<div id="palettes" class="section level3 unnumbered">
+<h3>Palettes<a class="anchor" aria-label="anchor" href="#palettes"><i class="fas fa-link"></i></a>
+</h3>
+<p>To display each image as a different color, you can use the <code>palette</code> parameter of <code>Map$addLayer()</code> for single band images. Palettes let you set the color scheme with which the image is displayed (<a href="https://r-earthengine.com/rgeebook/image.html">learn more about palettes</a>). Recall from the Earth Engine API tutorial that <a href="https://r-earthengine.com/rgeebook/the-earth-engine-api.html">the colors in a palette are linearly stretched to the <code>min</code> and <code>max</code></a>.</p>
+<p>For example, to use a green palette to display the forest extent image, you could use:</p>
+<div class="sourceCode" id="cb234"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">gfc2014</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'treecover2000'</span><span class="op">)</span>,
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'000000'</span>, <span class="st">'00FF00'</span><span class="op">)</span>
+<span class="op">)</span>, <span class="st">'forest cover palette'</span><span class="op">)</span></code></pre></div>
+<p>The result should look something like Figure 8.</p>
+<center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_code_07.png" width="100%">
+</center>
+<p>Fgiure: Year 2000 forest cover in South America.</p>
+<p>Zooming in gives a better sense for the resolution of the imagery. Figure 9 shows an area around Mariscal Estigarribia in Paraguay.</p>
+<center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_code_08.png" width="100%">
+</center>
+<p>Figure: Year 2000 treecover around Mariscal Estigarribia in Paraguay.</p>
+<p>The image shown in Figure 3 is a bit dark. The problem is that the <code>treecover2000</code> band has a byte data type ([0, 255]), when in fact the values are precentages ([0, 100]). To brighten the image, you can set the <code>min</code> and/or <code>max</code> parameters accordingly. The palette is then stretched between those extrema.</p>
+<div class="sourceCode" id="cb235"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">gfc2014</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'treecover2000'</span><span class="op">)</span>,
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'000000'</span>, <span class="st">'00FF00'</span><span class="op">)</span>,
+  max <span class="op">=</span> <span class="fl">100</span>
+<span class="op">)</span>, <span class="st">'forest cover percent'</span><span class="op">)</span></code></pre></div>
+<p>The result should look something like Figure 9. Note that in this example, only the <code>max</code> is set. The <code>min</code> is zero by default.</p>
+<center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_code_09.png" width="100%">
+</center>
+<p>Figure: Year 2000 forest cover around Mariscal Estigarribia in Paraguay, stretched to [0, 100].</p>
+</div>
+<div id="masking-3" class="section level3 unnumbered">
+<h3>Masking<a class="anchor" aria-label="anchor" href="#masking-3"><i class="fas fa-link"></i></a>
+</h3>
+<p>All of the images shown so far have had big black areas were there the data is zero. For example, there are no trees in the ocean. To make these areas transparent, you can mask their values. Every pixel in Earth Engine has both a value and a mask. The image is rendered with transparency set by the mask, with zero being completely transparent and one being completely opaque.</p>
+<p>You can mask an image with itself. For example, if you mask the <code>treecover2000</code> band with itself, all the areas in which forest cover is zero will be transparent:</p>
+<div class="sourceCode" id="cb236"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">gfc2014</span><span class="op">$</span><span class="fu">mask</span><span class="op">(</span><span class="va">gfc2014</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'treecover2000'</span><span class="op">)</span>,
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'000000'</span>, <span class="st">'00FF00'</span><span class="op">)</span>,
+  max <span class="op">=</span> <span class="fl">100</span>
+<span class="op">)</span>, <span class="st">'forest cover masked'</span><span class="op">)</span></code></pre></div>
+<p>The result should look something like figure.</p>
+<center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_code_10.png" width="100%">
+</center>
+<p>Figure: Year 2000 tree cover, stretched and masked.</p>
+</div>
+<div id="example" class="section level3 unnumbered">
+<h3>Example<a class="anchor" aria-label="anchor" href="#example"><i class="fas fa-link"></i></a>
+</h3>
+<p>It’s almost possible to make a visualization of the Hansen data like the one at the beginning of the tutorial. In this example, we’re putting everything together with one small difference. Instead of specifying the bands parameter in the <code>Map$addLayer</code> call, we’re creating new images using <code>select()</code>:</p>
+<div class="sourceCode" id="cb237"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">treeCover</span> <span class="op">&lt;-</span> <span class="va">gfc2014</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'treecover2000'</span><span class="op">)</span><span class="op">)</span>
+<span class="va">lossImage</span> <span class="op">&lt;-</span> <span class="va">gfc2014</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'loss'</span><span class="op">)</span><span class="op">)</span>
+<span class="va">gainImage</span> <span class="op">&lt;-</span> <span class="va">gfc2014</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'gain'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Add the tree cover layer in green.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">treeCover</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">treeCover</span><span class="op">)</span>,
+             <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'000000'</span>, <span class="st">'00FF00'</span><span class="op">)</span>, max <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="st">'Forest Cover'</span><span class="op">)</span><span class="op">+</span>
+
+<span class="co"># Add the loss layer in red.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">lossImage</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">lossImage</span><span class="op">)</span>,
+             <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'FF0000'</span><span class="op">)</span><span class="op">)</span>, <span class="st">'Loss'</span><span class="op">)</span><span class="op">+</span>
+
+<span class="co"># Add the gain layer in blue.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">gainImage</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">gainImage</span><span class="op">)</span>,
+             <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'0000FF'</span><span class="op">)</span><span class="op">)</span>, <span class="st">'Gain'</span><span class="op">)</span></code></pre></div>
+<p>The result should look something like Figure 11.</p>
+<center>
+<img alt="Legend" class="screenshot" src="images/chapter_03/figure_code_11.png" width="100%">
+</center>
+<p>Figure: Forest loss (red), year 2000 cover (green) and gain (blue).</p>
+<p>Observe that there are three <code>addLayer()</code> calls. Each <code>addLayer()</code> call adds a layer to the map. Mousing over the <code>Layers</code> button in the upper right of the map reveals these layers. Each layer can be turned off or on using the checkbox next to it, and the opacity of the layer can be affected by the slider next to the layer name.</p>
+<p>We’re almost able to make the image shown at the start of the tutorial. However, the layer showing the pixels with both loss and gain is missing. It is missing because we need to know how to perform some calculations on image bands before we can calculate which pixels show both loss and gain. This is the topic of the <a href="">next section</a>.</p>
+</div>
+</div>
+<div id="quantifying-forest-change" class="section level2 unnumbered">
+<h2>Quantifying Forest Change<a class="anchor" aria-label="anchor" href="#quantifying-forest-change"><i class="fas fa-link"></i></a>
+</h2>
+<p>Let’s start with the calculation needed to create a band that shows pixels where the Hansen et al. data show both loss and gain.</p>
+<p>The Hansen et al. dataset has a band whose pixels are 1 where loss occurred and 0 otherwise (<code>loss</code>) and a band that is 1 where gain has occurred and a 0 otherwise (<code>gain</code>). To create a band where pixels in both the <code>loss</code> and the <code>gain</code> bands have a 1, you can use the <code>And()</code> logical method on images. The <code>And()</code> method is called like <code>image1$And(image2)</code> and returns an image in which pixels are 1 where both image1 and image2 are 1, and 0 elsewhere:</p>
+<div class="sourceCode" id="cb238"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load the data and select the bands of interest.</span>
+<span class="va">gfc2014</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'UMD/hansen/global_forest_change_2015'</span><span class="op">)</span>
+<span class="va">lossImage</span> <span class="op">&lt;-</span><span class="va">gfc2014</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'loss'</span><span class="op">)</span>
+<span class="va">gainImage</span> <span class="op">&lt;-</span> <span class="va">gfc2014</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'gain'</span><span class="op">)</span>
+
+<span class="co"># Use the and() method to create the lossAndGain image.</span>
+<span class="va">gainAndLoss</span> <span class="op">&lt;-</span> <span class="va">gainImage</span><span class="op">$</span><span class="fu">And</span><span class="op">(</span><span class="va">lossImage</span><span class="op">)</span>
+
+<span class="co"># Show the loss and gain image.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">gainAndLoss</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">gainAndLoss</span><span class="op">)</span>,
+             <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>palette<span class="op">=</span> <span class="st">'FF00FF'</span><span class="op">)</span>, <span class="st">'Gain and Loss'</span><span class="op">)</span></code></pre></div>
+<p>The result, zoomed into Arkansas with satellite view, should look something like Figure 1.</p>
+<center>
+<img src="images/chapter_03/figure_QFC_01.png" width="100%">
+</center>
+<p>Figure: Pixels with forest loss and gain in Arkansas.</p>
+<p>Combining this example with the result from the previous section, it’s now possible to recreate the figure from the beginning of the tutorial:</p>
+<div class="sourceCode" id="cb239"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Displaying forest, loss, gain, and pixels where both loss and gain occur.</span>
+<span class="va">gfc2014</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'UMD/hansen/global_forest_change_2015'</span><span class="op">)</span>
+<span class="va">lossImage</span> <span class="op">&lt;-</span> <span class="va">gfc2014</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'loss'</span><span class="op">)</span>
+<span class="va">gainImage</span> <span class="op">&lt;-</span> <span class="va">gfc2014</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'gain'</span><span class="op">)</span>
+<span class="va">treeCover</span> <span class="op">&lt;-</span> <span class="va">gfc2014</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'treecover2000'</span><span class="op">)</span>
+
+<span class="co"># Use the and() method to create the lossAndGain image.</span>
+<span class="va">gainAndLoss</span> <span class="op">&lt;-</span> <span class="va">gainImage</span><span class="op">$</span><span class="fu">And</span><span class="op">(</span><span class="va">lossImage</span><span class="op">)</span>
+
+<span class="co"># Add the tree cover layer in green.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">treeCover</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">treeCover</span><span class="op">)</span>,
+             <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>palette<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'000000'</span>, <span class="st">'00FF00'</span><span class="op">)</span>, max<span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="st">'Forest Cover'</span><span class="op">)</span>
+
+<span class="co"># Add the loss layer in red.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">lossImage</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">lossImage</span><span class="op">)</span>,
+             <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>palette<span class="op">=</span> <span class="st">'FF0000'</span><span class="op">)</span>, <span class="st">'Loss'</span><span class="op">)</span>
+
+<span class="co"># Add the gain layer in blue.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">gainImage</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">gainImage</span><span class="op">)</span>,
+             <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>palette<span class="op">=</span> <span class="st">'0000FF'</span><span class="op">)</span>, <span class="st">'Gain'</span><span class="op">)</span>
+
+<span class="co"># Show the loss and gain image.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">gainAndLoss</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">gainAndLoss</span><span class="op">)</span>,
+             <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>palette<span class="op">=</span> <span class="st">'FF00FF'</span><span class="op">)</span>, <span class="st">'Gain and Loss'</span><span class="op">)</span></code></pre></div>
+<div id="quantifying-forest-change-in-a-region-of-interest" class="section level3 unnumbered">
+<h3>Quantifying Forest Change in a Region of Interest<a class="anchor" aria-label="anchor" href="#quantifying-forest-change-in-a-region-of-interest"><i class="fas fa-link"></i></a>
+</h3>
+<p>Now that you’re more familiar with the bands in the Hansen et al. dataset, we can use concepts learned so far to compute statistics about forest gain and loss in a region of interest. For this we’ll need to use vector data (points, lines, and polygons). A vector dataset is represented as a <code>FeatureCollection</code> in Earth Engine. (Learn more about <a href="https://r-earthengine.com/rgeebook/feature-featurecollection.html">feature collections</a>)</p>
+<p>In this section, we’ll compare the total amount of forest loss that happened within the Congo Republic in the year 2012 to the amount of forest loss that happened within the country’s protected areas at the same time.</p>
+<p><a href="https://r-earthengine.com/rgeebook/the-earth-engine-api.html">As you learned in the Earth Engine API tutorial</a>, the key method for calculating statistics in an image region is <code>reduceRegion()</code>. (<a href="https://r-earthengine.com/rgeebook/reducer.html">Learn more about reducing image regions</a>.) For example, suppose we want to calculate the number of pixels estimated to represent forest loss during the study period. For that purpose, consider the following code:</p>
+<div class="sourceCode" id="cb240"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load country features from Large Scale International Boundary (LSIB) dataset.</span>
+<span class="va">countries</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">'USDOS/LSIB_SIMPLE/2017'</span><span class="op">)</span>
+
+<span class="co"># Subset the Congo Republic feature from countries.</span>
+<span class="va">congo</span> <span class="op">&lt;-</span> <span class="va">countries</span><span class="op">$</span><span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">'country_na'</span>, <span class="st">'Rep of the Congo'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Get the forest loss image.</span>
+<span class="va">gfc2014</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'UMD/hansen/global_forest_change_2015'</span><span class="op">)</span>
+<span class="va">lossImage</span> <span class="op">&lt;-</span> <span class="va">gfc2014</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'loss'</span><span class="op">)</span>
+
+<span class="co"># Sum the values of forest loss pixels in the Congo Republic.</span>
+<span class="va">stats</span> <span class="op">&lt;-</span> <span class="va">lossImage</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span>,
+  geometry <span class="op">=</span> <span class="va">congo</span>,
+  scale <span class="op">=</span> <span class="fl">30</span>
+<span class="op">)</span>
+<span class="va">ee</span><span class="op">$</span><span class="va">Dictionary</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">stats</span><span class="op">)</span></code></pre></div>
+<p>This example uses the <code>ee$Reducer$sum()</code> reducer to sum the values of the pixels in <code>lossImage</code> within the <code>congo</code> feature. Because <code>lossImage</code> consists of pixels that have a value of 1 or 0 (for loss or not loss, respectively), the sum of these values is equivalent to the number of pixels of loss in the region.</p>
+<p>Unfortunately, running the script as it is results in an error.</p>
+<p>The default maximum number of pixels in <code>reduceRegion()</code> is 10 million. This error message indicates that the Congo Republic covers about 383 million Landsat pixels. Luckily, <code>reduceRegion()</code> takes many parameters, one of which (<code>maxPixels</code>) lets you control how many pixels are used in the computation. Specifying this parameter allows the computation to succeed:</p>
+<div class="sourceCode" id="cb241"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load country features from Large Scale International Boundary (LSIB) dataset.</span>
+<span class="va">countries</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">'USDOS/LSIB_SIMPLE/2017'</span><span class="op">)</span>
+
+<span class="co"># Subset the Congo Republic feature from countries.</span>
+<span class="va">congo</span> <span class="op">&lt;-</span> <span class="va">countries</span><span class="op">$</span><span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">'country_na'</span>, <span class="st">'Rep of the Congo'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Get the forest loss image.</span>
+<span class="va">gfc2014</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'UMD/hansen/global_forest_change_2015'</span><span class="op">)</span>
+<span class="va">lossImage</span> <span class="op">&lt;-</span> <span class="va">gfc2014</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'loss'</span><span class="op">)</span>
+
+<span class="co"># Sum the values of forest loss pixels in the Congo Republic.</span>
+<span class="va">stats</span> <span class="op">&lt;-</span> <span class="va">lossImage</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span>,
+  geometry <span class="op">=</span> <span class="va">congo</span>,
+  scale <span class="op">=</span> <span class="fl">30</span>,
+  maxPixels <span class="op">=</span> <span class="fl">1e9</span>
+<span class="op">)</span>
+<span class="va">ee</span><span class="op">$</span><span class="va">Dictionary</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">stats</span><span class="op">)</span></code></pre></div>
+<p>By expanding the object printed to the console, observe that the result is 4897933 pixels of forest lost. You can clean up the printout in the console a bit by labeling the output and getting the result of interest from the dictionary returned by <code>reduceRegion()</code>:</p>
+<div class="sourceCode" id="cb242"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"pixels representing loss: "</span>, <span class="va">ee</span><span class="op">$</span><span class="va">Dictionary</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">stats</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">'loss'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="calculating-pixel-areas" class="section level3 unnumbered">
+<h3>Calculating Pixel Areas<a class="anchor" aria-label="anchor" href="#calculating-pixel-areas"><i class="fas fa-link"></i></a>
+</h3>
+<p>You’re almost ready to answer the question of how much area was lost in the Congo Republic, and how much of that was in protected areas. The remaining part is to convert pixels into actual area. This conversion is important because we don’t necessarily know the size of the pixels input to <code>reduceRegion()</code>. To help compute areas, Earth Engine has the <code>ee$Image$pixelArea()</code> method which generates an image in which the value of each pixel is the pixel’s area in square meters. Multiplying the loss image with this area image and then summing over the result gives us a measure of area:</p>
+<div class="sourceCode" id="cb243"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load country features from Large Scale International Boundary (LSIB) dataset.</span>
+<span class="va">countries</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">'USDOS/LSIB_SIMPLE/2017'</span><span class="op">)</span>
+
+<span class="co"># Subset the Congo Republic feature from countries.</span>
+<span class="va">congo</span> <span class="op">&lt;-</span> <span class="va">countries</span><span class="op">$</span><span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">'country_na'</span>, <span class="st">'Rep of the Congo'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Get the forest loss image.</span>
+<span class="va">gfc2014</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'UMD/hansen/global_forest_change_2015'</span><span class="op">)</span>
+<span class="va">lossImage</span> <span class="op">&lt;-</span> <span class="va">gfc2014</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'loss'</span><span class="op">)</span>
+<span class="va">areaImage</span> <span class="op">&lt;-</span> <span class="va">lossImage</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Image</span><span class="op">$</span><span class="fu">pixelArea</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Sum the values of forest loss pixels in the Congo Republic.</span>
+<span class="va">stats</span> <span class="op">&lt;-</span> <span class="va">areaImage</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span>,
+  geometry <span class="op">=</span> <span class="va">congo</span>,
+  scale <span class="op">=</span> <span class="fl">30</span>,
+  maxPixels <span class="op">=</span> <span class="fl">1e9</span>
+<span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"pixels representing loss: "</span>, <span class="va">ee</span><span class="op">$</span><span class="va">Dictionary</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">stats</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">'loss'</span><span class="op">)</span><span class="op">)</span>, <span class="st">" square meters"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Now the result is 4,372,566,344 square meters lost over the study period.</p>
+<p>You are now ready to answer the question at the start of this section - how much forest area was lost in the Congo Republic in 2012, and how much of that was in protected areas?</p>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="global-forest-change.html#cb244-1"></a><span class="co"># Load country features from Large Scale International Boundary (LSIB) dataset.</span></span>
+<span id="cb244-2"><a href="global-forest-change.html#cb244-2"></a>countries &lt;-<span class="st">  </span>ee<span class="op">$</span><span class="kw">FeatureCollection</span>(<span class="st">'USDOS/LSIB_SIMPLE/2017'</span>)</span>
+<span id="cb244-3"><a href="global-forest-change.html#cb244-3"></a></span>
+<span id="cb244-4"><a href="global-forest-change.html#cb244-4"></a><span class="co"># Subset the Congo Republic feature from countries.</span></span>
+<span id="cb244-5"><a href="global-forest-change.html#cb244-5"></a>congo &lt;-<span class="st"> </span>ee<span class="op">$</span><span class="kw">Feature</span>(</span>
+<span id="cb244-6"><a href="global-forest-change.html#cb244-6"></a>  countries</span>
+<span id="cb244-7"><a href="global-forest-change.html#cb244-7"></a>  <span class="op">$</span><span class="kw">filter</span>(ee<span class="op">$</span>Filter<span class="op">$</span><span class="kw">eq</span>(<span class="st">'country_na'</span>, <span class="st">'Rep of the Congo'</span>))</span>
+<span id="cb244-8"><a href="global-forest-change.html#cb244-8"></a>  <span class="op">$</span><span class="kw">first</span>()</span>
+<span id="cb244-9"><a href="global-forest-change.html#cb244-9"></a>)</span>
+<span id="cb244-10"><a href="global-forest-change.html#cb244-10"></a></span>
+<span id="cb244-11"><a href="global-forest-change.html#cb244-11"></a><span class="co"># Subset protected areas to the bounds of the congo feature</span></span>
+<span id="cb244-12"><a href="global-forest-change.html#cb244-12"></a><span class="co"># and other criteria. Clip to the intersection with congo.</span></span>
+<span id="cb244-13"><a href="global-forest-change.html#cb244-13"></a>protectedAreas &lt;-<span class="st"> </span>ee<span class="op">$</span><span class="kw">FeatureCollection</span>(<span class="st">'WCMC/WDPA/current/polygons'</span>)<span class="op">$</span><span class="kw">filter</span>(ee<span class="op">$</span>Filter<span class="op">$</span><span class="kw">And</span>(</span>
+<span id="cb244-14"><a href="global-forest-change.html#cb244-14"></a>  ee<span class="op">$</span>Filter<span class="op">$</span><span class="kw">bounds</span>(congo<span class="op">$</span><span class="kw">geometry</span>()),</span>
+<span id="cb244-15"><a href="global-forest-change.html#cb244-15"></a>  ee<span class="op">$</span>Filter<span class="op">$</span><span class="kw">neq</span>(<span class="st">'IUCN_CAT'</span>, <span class="st">'VI'</span>),</span>
+<span id="cb244-16"><a href="global-forest-change.html#cb244-16"></a>  ee<span class="op">$</span>Filter<span class="op">$</span><span class="kw">neq</span>(<span class="st">'STATUS'</span>, <span class="st">'proposed'</span>),</span>
+<span id="cb244-17"><a href="global-forest-change.html#cb244-17"></a>  ee<span class="op">$</span>Filter<span class="op">$</span><span class="kw">lt</span>(<span class="st">'STATUS_YR'</span>, <span class="dv">2010</span>)</span>
+<span id="cb244-18"><a href="global-forest-change.html#cb244-18"></a>))</span>
+<span id="cb244-19"><a href="global-forest-change.html#cb244-19"></a><span class="op">$</span><span class="kw">map</span>(<span class="cf">function</span>(feat){</span>
+<span id="cb244-20"><a href="global-forest-change.html#cb244-20"></a>  <span class="kw">return</span>(congo<span class="op">$</span><span class="kw">intersection</span>(feat))</span>
+<span id="cb244-21"><a href="global-forest-change.html#cb244-21"></a>})</span>
+<span id="cb244-22"><a href="global-forest-change.html#cb244-22"></a></span>
+<span id="cb244-23"><a href="global-forest-change.html#cb244-23"></a><span class="co"># Get the loss image.</span></span>
+<span id="cb244-24"><a href="global-forest-change.html#cb244-24"></a>gfc2014 &lt;-<span class="st"> </span>ee<span class="op">$</span><span class="kw">Image</span>(<span class="st">'UMD/hansen/global_forest_change_2015'</span>)</span>
+<span id="cb244-25"><a href="global-forest-change.html#cb244-25"></a>lossIn2012 &lt;-<span class="st"> </span>gfc2014<span class="op">$</span><span class="kw">select</span>(<span class="st">'lossyear'</span>)<span class="op">$</span><span class="kw">eq</span>(<span class="dv">12</span>)</span>
+<span id="cb244-26"><a href="global-forest-change.html#cb244-26"></a>areaImage &lt;-<span class="st"> </span>lossIn2012<span class="op">$</span><span class="kw">multiply</span>(ee<span class="op">$</span>Image<span class="op">$</span><span class="kw">pixelArea</span>())</span>
+<span id="cb244-27"><a href="global-forest-change.html#cb244-27"></a></span>
+<span id="cb244-28"><a href="global-forest-change.html#cb244-28"></a><span class="co"># Calculate the area of loss pixels in the Congo Republic.</span></span>
+<span id="cb244-29"><a href="global-forest-change.html#cb244-29"></a>stats &lt;-<span class="st"> </span>areaImage<span class="op">$</span><span class="kw">reduceRegion</span>(</span>
+<span id="cb244-30"><a href="global-forest-change.html#cb244-30"></a>  <span class="dt">reducer =</span> ee<span class="op">$</span>Reducer<span class="op">$</span><span class="kw">sum</span>(),</span>
+<span id="cb244-31"><a href="global-forest-change.html#cb244-31"></a>  <span class="dt">geometry =</span> congo<span class="op">$</span><span class="kw">geometry</span>(),</span>
+<span id="cb244-32"><a href="global-forest-change.html#cb244-32"></a>  <span class="dt">scale =</span> <span class="dv">30</span>,</span>
+<span id="cb244-33"><a href="global-forest-change.html#cb244-33"></a>  <span class="dt">maxPixels =</span> <span class="fl">1e9</span></span>
+<span id="cb244-34"><a href="global-forest-change.html#cb244-34"></a>)</span>
+<span id="cb244-35"><a href="global-forest-change.html#cb244-35"></a></span>
+<span id="cb244-36"><a href="global-forest-change.html#cb244-36"></a><span class="kw">print</span>(<span class="kw">paste0</span>(<span class="st">"Area lost in the Congo Republic: "</span>, </span>
+<span id="cb244-37"><a href="global-forest-change.html#cb244-37"></a>             ee<span class="op">$</span>Dictionary<span class="op">$</span><span class="kw">getInfo</span>(stats<span class="op">$</span><span class="kw">get</span>(<span class="st">'lossyear'</span>)),</span>
+<span id="cb244-38"><a href="global-forest-change.html#cb244-38"></a>             <span class="st">" square meters"</span>)) </span>
+<span id="cb244-39"><a href="global-forest-change.html#cb244-39"></a></span>
+<span id="cb244-40"><a href="global-forest-change.html#cb244-40"></a><span class="co"># Calculate the area of loss pixels in the protected areas.</span></span>
+<span id="cb244-41"><a href="global-forest-change.html#cb244-41"></a>stats &lt;-<span class="st"> </span>areaImage<span class="op">$</span><span class="kw">reduceRegion</span>(</span>
+<span id="cb244-42"><a href="global-forest-change.html#cb244-42"></a>  <span class="dt">reducer =</span> ee<span class="op">$</span>Reducer<span class="op">$</span><span class="kw">sum</span>(),</span>
+<span id="cb244-43"><a href="global-forest-change.html#cb244-43"></a>  <span class="dt">geometry =</span> protectedAreas<span class="op">$</span><span class="kw">geometry</span>(),</span>
+<span id="cb244-44"><a href="global-forest-change.html#cb244-44"></a>  <span class="dt">scale =</span> <span class="dv">30</span>,</span>
+<span id="cb244-45"><a href="global-forest-change.html#cb244-45"></a>  <span class="dt">maxPixels =</span> <span class="fl">1e9</span></span>
+<span id="cb244-46"><a href="global-forest-change.html#cb244-46"></a>)</span>
+<span id="cb244-47"><a href="global-forest-change.html#cb244-47"></a></span>
+<span id="cb244-48"><a href="global-forest-change.html#cb244-48"></a><span class="kw">print</span>(<span class="kw">paste0</span>(<span class="st">"Area lost in protected areas: "</span>, </span>
+<span id="cb244-49"><a href="global-forest-change.html#cb244-49"></a>             ee<span class="op">$</span>Dictionary<span class="op">$</span><span class="kw">getInfo</span>(stats<span class="op">$</span><span class="kw">get</span>(<span class="st">'lossyear'</span>)), </span>
+<span id="cb244-50"><a href="global-forest-change.html#cb244-50"></a>             <span class="st">" square meters"</span>)) </span></code></pre></div>
+<p>The output indicates that of the 348,036,295 square meters of forest lost in the Congo Republic in 2012, 11,880,976 of those were in protected areas, as represented in the <a href="https://developers.google.com/earth-engine/datasets/catalog/WCMC_WDPA_current_polygons">World Database on Protected Areas table</a>.</p>
+<p>The only changes between this script and the one just prior are the addition of the protected area information and changing the script from looking at overall loss to looking at loss in 2012. This required two changes. First, there’s a new <code>lossIn2012</code> image which has a 1 where loss was recorded in 2012, 0 otherwise. Second, because the name of the band is different (<code>lossyear</code> instead of <code>loss</code>) the property name had to change in the print statement.</p>
+<p>In the next section, we will explore some advanced methods for computing and charting forest loss for every year, instead of just one year as we did in this section.</p>
+</div>
+</div>
+<div id="charting-yearly-forest-loss" class="section level2 unnumbered">
+<h2>Charting Yearly Forest Loss<a class="anchor" aria-label="anchor" href="#charting-yearly-forest-loss"><i class="fas fa-link"></i></a>
+</h2>
+<div id="calculating-yearly-forest-loss" class="section level3 unnumbered">
+<h3>Calculating Yearly Forest Loss<a class="anchor" aria-label="anchor" href="#calculating-yearly-forest-loss"><i class="fas fa-link"></i></a>
+</h3>
+<p>In the previous section you learned how to <a href="">calculate total forest area lost</a> in the given region of interest using the <code>reduceRegion</code> method. Instead of calculating the total loss, it would be helpful to compute the loss for each year. The way to achieve this in Earth Engine is using a <a href="https://r-earthengine.com/rgeebook/reducer.html">Grouped Reducer</a>.</p>
+<p>To group output of <code>reduceRegion()</code>, you can specify a grouping band that defines groups by integer pixel values. In the following example, we slightly modify the previous code and add the <code>lossYear</code> band to the original image. Each pixel in the <code>lossYear</code> band contain values from 0 to 14 - indicating the year in which the loss occurred. We also change the reducer to a grouped reducer, specifying the band index of the grouping band (1) so the pixel areas will be summed and grouped according to the value in the <code>lossYear</code> band.</p>
+<div class="sourceCode" id="cb245"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load country boundaries from LSIB.</span>
+<span class="va">countries</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">'USDOS/LSIB_SIMPLE/2017'</span><span class="op">)</span>
+<span class="co"># Get a feature collection with just the Congo feature.</span>
+<span class="va">congo</span> <span class="op">&lt;-</span> <span class="va">countries</span><span class="op">$</span><span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">'country_co'</span>, <span class="st">'CF'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Get the loss image.</span>
+<span class="co"># This dataset is updated yearly, so we get the latest version.</span>
+<span class="va">gfc2017</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'UMD/hansen/global_forest_change_2017_v1_5'</span><span class="op">)</span>
+<span class="va">lossImage</span> <span class="op">&lt;-</span> <span class="va">gfc2017</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'loss'</span><span class="op">)</span>
+<span class="va">lossAreaImage</span> <span class="op">&lt;-</span> <span class="va">lossImage</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Image</span><span class="op">$</span><span class="fu">pixelArea</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">lossYear</span> <span class="op">&lt;-</span> <span class="va">gfc2017</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'lossyear'</span><span class="op">)</span>
+<span class="va">lossByYear</span> <span class="op">&lt;-</span> <span class="va">lossAreaImage</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">lossYear</span><span class="op">)</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">group</span><span class="op">(</span>
+    groupField <span class="op">=</span> <span class="fl">1</span>
+  <span class="op">)</span>,
+  geometry <span class="op">=</span> <span class="va">congo</span>,
+  scale <span class="op">=</span> <span class="fl">30</span>,
+  maxPixels <span class="op">=</span> <span class="fl">1e9</span>
+<span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Dictionary</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">lossByYear</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
+<p>Once you run the above code, you will see the yearly forest loss area printed out in a nested list called <code>groups</code>. We can format the output a little to make the result a dictionary, with year as the key and loss area as the value. Notice that we are using the <code><a href="https://rdrr.io/r/base/format.html">format()</a></code> method to convert the year values from 0-14 to 2000-2014.</p>
+<div class="sourceCode" id="cb246"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb246-1"><a href="global-forest-change.html#cb246-1"></a><span class="kw">var</span> statsFormatted <span class="op">=</span> <span class="va">ee</span>.<span class="at">List</span>(<span class="va">lossByYear</span>.<span class="at">get</span>(<span class="st">'groups'</span>))</span>
+<span id="cb246-2"><a href="global-forest-change.html#cb246-2"></a>  .<span class="at">map</span>(<span class="kw">function</span>(el) <span class="op">{</span></span>
+<span id="cb246-3"><a href="global-forest-change.html#cb246-3"></a>    <span class="kw">var</span> d <span class="op">=</span> <span class="va">ee</span>.<span class="at">Dictionary</span>(el)<span class="op">;</span></span>
+<span id="cb246-4"><a href="global-forest-change.html#cb246-4"></a>    <span class="cf">return</span> [<span class="va">ee</span>.<span class="at">Number</span>(<span class="va">d</span>.<span class="at">get</span>(<span class="st">'group'</span>)).<span class="at">format</span>(<span class="st">"20%02d"</span>)<span class="op">,</span> <span class="va">d</span>.<span class="at">get</span>(<span class="st">'sum'</span>)]<span class="op">;</span></span>
+<span id="cb246-5"><a href="global-forest-change.html#cb246-5"></a>  <span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb246-6"><a href="global-forest-change.html#cb246-6"></a><span class="kw">var</span> statsDictionary <span class="op">=</span> <span class="va">ee</span>.<span class="at">Dictionary</span>(<span class="va">statsFormatted</span>.<span class="at">flatten</span>())<span class="op">;</span></span>
+<span id="cb246-7"><a href="global-forest-change.html#cb246-7"></a><span class="at">print</span>(statsDictionary)<span class="op">;</span></span></code></pre></div>
+</div>
+<div id="making-a-chart" class="section level3 unnumbered">
+<h3>Making a chart<a class="anchor" aria-label="anchor" href="#making-a-chart"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb247"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb247-1"><a href="global-forest-change.html#cb247-1"></a><span class="kw">var</span> chart <span class="op">=</span> <span class="va">ui</span>.<span class="va">Chart</span>.<span class="va">array</span>.<span class="at">values</span>(<span class="op">{</span></span>
+<span id="cb247-2"><a href="global-forest-change.html#cb247-2"></a>  <span class="dt">array</span><span class="op">:</span> <span class="va">statsDictionary</span>.<span class="at">values</span>()<span class="op">,</span></span>
+<span id="cb247-3"><a href="global-forest-change.html#cb247-3"></a>  <span class="dt">axis</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb247-4"><a href="global-forest-change.html#cb247-4"></a>  <span class="dt">xLabels</span><span class="op">:</span> <span class="va">statsDictionary</span>.<span class="at">keys</span>()</span>
+<span id="cb247-5"><a href="global-forest-change.html#cb247-5"></a><span class="op">}</span>).<span class="at">setChartType</span>(<span class="st">'ColumnChart'</span>)</span>
+<span id="cb247-6"><a href="global-forest-change.html#cb247-6"></a>  .<span class="at">setOptions</span>(<span class="op">{</span></span>
+<span id="cb247-7"><a href="global-forest-change.html#cb247-7"></a>    <span class="dt">title</span><span class="op">:</span> <span class="st">'Yearly Forest Loss'</span><span class="op">,</span></span>
+<span id="cb247-8"><a href="global-forest-change.html#cb247-8"></a>    <span class="dt">hAxis</span><span class="op">:</span> <span class="op">{</span><span class="dt">title</span><span class="op">:</span> <span class="st">'Year'</span><span class="op">,</span> <span class="dt">format</span><span class="op">:</span> <span class="st">'####'</span><span class="op">},</span></span>
+<span id="cb247-9"><a href="global-forest-change.html#cb247-9"></a>    <span class="dt">vAxis</span><span class="op">:</span> <span class="op">{</span><span class="dt">title</span><span class="op">:</span> <span class="st">'Area (square meters)'</span><span class="op">},</span></span>
+<span id="cb247-10"><a href="global-forest-change.html#cb247-10"></a>    <span class="dt">legend</span><span class="op">:</span> <span class="op">{</span> <span class="dt">position</span><span class="op">:</span> <span class="st">"none"</span> <span class="op">},</span></span>
+<span id="cb247-11"><a href="global-forest-change.html#cb247-11"></a>    <span class="dt">lineWidth</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb247-12"><a href="global-forest-change.html#cb247-12"></a>    <span class="dt">pointSize</span><span class="op">:</span> <span class="dv">3</span></span>
+<span id="cb247-13"><a href="global-forest-change.html#cb247-13"></a>  <span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb247-14"><a href="global-forest-change.html#cb247-14"></a><span class="at">print</span>(chart)<span class="op">;</span></span></code></pre></div>
+</div>
+</div>
+<div id="introduction-to-forest-monitoring-for-action-forma-data" class="section level2 unnumbered">
+<h2>Introduction to Forest Monitoring for Action (FORMA) data<a class="anchor" aria-label="anchor" href="#introduction-to-forest-monitoring-for-action-forma-data"><i class="fas fa-link"></i></a>
+</h2>
+<p>FORMA is a <a href="http:#modis.gsfc.nasa.gov/about/">MODIS</a> based 500 x 500 meter twice-monthly deforestation alerting system for the humid tropical forests. The <a href="https://developers.google.com/earth-engine/datasets/catalog/FORMA_FORMA_500m">FORMA 500 dataset</a> in Earth Engine is an image with alerts starting in January 2006 and updated monthly. Each alert has a time associated with it in a single band named <code>alert_date</code> in units of <a href="https://en.wikipedia.org/wiki/Unix_time">epoch seconds</a>. Filtering FORMA by dates and calculating alerts within areas of interest are two of the most important things you can do with the FORMA dataset.</p>
+<div id="filtering-forma-by-date" class="section level3 unnumbered">
+<h3>Filtering FORMA by Date<a class="anchor" aria-label="anchor" href="#filtering-forma-by-date"><i class="fas fa-link"></i></a>
+</h3>
+<p>To show just those alerts that occur in 2012, find pixels that have times between the first day of 2012 and the first day of 2013, expressed in seconds since midnight, January 1, 1970:</p>
+<div class="sourceCode" id="cb248"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Convert dates from milliseconds to seconds.</span>
+<span class="va">start</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">'2012-01-01'</span><span class="op">)</span><span class="op">$</span><span class="fu">millis</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">divide</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>
+<span class="va">end</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">'2013-01-01'</span><span class="op">)</span><span class="op">$</span><span class="fu">millis</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">divide</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>
+
+<span class="co"># Load the FORMA 500 dataset.</span>
+<span class="va">forma</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'FORMA/FORMA_500m'</span><span class="op">)</span>
+
+<span class="co"># Create a binary layer from the dates of interest.</span>
+<span class="va">forma2012</span> <span class="op">&lt;-</span> <span class="va">forma</span><span class="op">$</span><span class="fu">gte</span><span class="op">(</span><span class="va">start</span><span class="op">)</span><span class="op">$</span><span class="fu">And</span><span class="op">(</span><span class="va">forma</span><span class="op">$</span><span class="fu">lte</span><span class="op">(</span><span class="va">end</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="fl">15.87</span>, <span class="op">-</span><span class="fl">0.391</span>, <span class="fl">7</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">forma2012</span><span class="op">$</span><span class="fu">mask</span><span class="op">(</span><span class="va">forma2012</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">'FF0000'</span><span class="op">)</span>,
+  <span class="st">'FORMA alerts in 2012'</span>
+<span class="op">)</span></code></pre></div>
+<p>In this example, <code>forma2012</code> is a binary image containing only those pixels that have times occurring in 2012 (i.e. all other pixels are masked).</p>
+</div>
+<div id="counting-forma-alerts-in-a-region-of-interest" class="section level3 unnumbered">
+<h3>Counting FORMA Alerts in a Region of Interest<a class="anchor" aria-label="anchor" href="#counting-forma-alerts-in-a-region-of-interest"><i class="fas fa-link"></i></a>
+</h3>
+<p>As we did in the previous section with the Hansen et al. data, we can start by counting the number of FORMA alerts (pixels) in an area of interest. For example, to count the number of alerts in protected areas of the Congo Republic in 2012, build on the previous example as follows:</p>
+<div class="sourceCode" id="cb249"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load country features from Large Scale International Boundary (LSIB) dataset.</span>
+<span class="va">countries</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">'USDOS/LSIB_SIMPLE/2017'</span><span class="op">)</span>
+
+<span class="co"># Subset the Congo Republic feature from countries.</span>
+<span class="va">congo</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Feature</span><span class="op">(</span>
+  <span class="va">countries</span><span class="op">$</span>
+    <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="st">'country_na'</span>, <span class="st">'Rep of the Congo'</span><span class="op">)</span><span class="op">)</span><span class="op">$</span>
+    <span class="fu">first</span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Subset protected areas to the bounds of the congo feature</span>
+<span class="co"># and other criteria. Clip to the intersection with congo.</span>
+<span class="va">protectedAreas</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">FeatureCollection</span><span class="op">(</span><span class="st">'WCMC/WDPA/current/polygons'</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">And</span><span class="op">(</span>
+    <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">bounds</span><span class="op">(</span><span class="va">congo</span><span class="op">$</span><span class="fu">geometry</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+    <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">neq</span><span class="op">(</span><span class="st">'IUCN_CAT'</span>, <span class="st">'VI'</span><span class="op">)</span>,
+    <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">neq</span><span class="op">(</span><span class="st">'STATUS'</span>, <span class="st">'proposed'</span><span class="op">)</span>,
+    <span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">lt</span><span class="op">(</span><span class="st">'STATUS_YR'</span>, <span class="fl">2010</span><span class="op">)</span>
+  <span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">feat</span><span class="op">)</span><span class="op">{</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">congo</span><span class="op">$</span><span class="fu">intersection</span><span class="op">(</span><span class="va">feat</span><span class="op">)</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">)</span>
+
+<span class="co"># Display protected areas on the map.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">protectedAreas</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">'000000'</span><span class="op">)</span>,
+  <span class="st">'Congo Republic protected areas'</span>
+<span class="op">)</span>
+
+<span class="co"># Calculate the number of FORMA pixels in protected</span>
+<span class="co"># areas of the Congo Republic, 2012.</span>
+<span class="va">stats</span> <span class="op">&lt;-</span> <span class="va">forma2012</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span>,
+  geometry <span class="op">=</span> <span class="va">protectedAreas</span><span class="op">$</span><span class="fu">geometry</span><span class="op">(</span><span class="op">)</span>,
+  scale <span class="op">=</span> <span class="fl">500</span>
+<span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'Number of FORMA pixels, 2012: '</span>, <span class="va">ee</span><span class="op">$</span><span class="va">Dictionary</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">stats</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">'constant'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="counting-forma-alerts-in-several-regions-of-interest" class="section level3 unnumbered">
+<h3>Counting FORMA Alerts in Several Regions of Interest<a class="anchor" aria-label="anchor" href="#counting-forma-alerts-in-several-regions-of-interest"><i class="fas fa-link"></i></a>
+</h3>
+<p>So far, we’ve been computing statistics in a single region at a time. For computing statistics in multiple regions at once, you can use <code>reduceRegions()</code>. Again building on the previous example:</p>
+<div class="sourceCode" id="cb250"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="va">regionsStats</span> <span class="op">&lt;-</span> <span class="va">forma2012</span><span class="op">$</span><span class="fu">reduceRegions</span><span class="op">(</span>
+  collection <span class="op">=</span> <span class="va">protectedAreas</span>,
+  reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span>,
+  scale <span class="op">=</span> <span class="va">forma2012</span><span class="op">$</span><span class="fu">projection</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">nominalScale</span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Dictionary</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="va">regionsStats</span><span class="op">)</span><span class="op">)</span>
+      </code></pre></div>
+<p>Examine the object printed to the console and observe that the output of <code>reduceRegions()</code> is another <code>FeatureCollection</code>. Note that every region in the collection of the Congo Republic protected areas now has an additional property, <code>sum</code>, named after the reducer. The value of this property is the output of the reducer, or the number of 2012 alerts in the protected areas.</p>
+<div id="comparing-forma-and-hansen-et-al.-datasets" class="section level4 unnumbered">
+<h4>Comparing FORMA and Hansen et al. Datasets<a class="anchor" aria-label="anchor" href="#comparing-forma-and-hansen-et-al.-datasets"><i class="fas fa-link"></i></a>
+</h4>
+<p>To compare the FORMA and Hansen et al. datasets, you can use logical operators. (<a href="https://r-earthengine.com/rgeebook/image.html">Learn more about logical operations</a>). Specifically, we’d like to make an image in which pixels marked by both FORMA and the Hansen et al. data as deforestation are 1 and the rest are zero. This code makes such an image for 2012 and displays it along with other predicted deforestation layers:</p>
+<div class="sourceCode" id="cb251"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Convert dates from milliseconds to seconds.</span>
+<span class="va">start</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">'2012-01-01'</span><span class="op">)</span><span class="op">$</span><span class="fu">millis</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">divide</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>
+<span class="va">end</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">'2013-01-01'</span><span class="op">)</span><span class="op">$</span><span class="fu">millis</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">divide</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>
+<span class="va">region</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Rectangle</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">59.81163</span>, <span class="op">-</span><span class="fl">9.43348</span>, <span class="op">-</span><span class="fl">59.27561</span>, <span class="op">-</span><span class="fl">9.22818</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Load the FORMA 500 dataset.</span>
+<span class="va">forma</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'FORMA/FORMA_500m'</span><span class="op">)</span>
+
+<span class="co"># Create a binary layer from the dates of interest.</span>
+<span class="va">forma2012</span> <span class="op">&lt;-</span> <span class="va">forma</span><span class="op">$</span><span class="fu">gte</span><span class="op">(</span><span class="va">start</span><span class="op">)</span><span class="op">$</span><span class="fu">And</span><span class="op">(</span><span class="va">forma</span><span class="op">$</span><span class="fu">lte</span><span class="op">(</span><span class="va">end</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Load Hansen et al. data and get change in 2012.</span>
+<span class="va">gfc</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">'UMD/hansen/global_forest_change_2015'</span><span class="op">)</span>
+<span class="va">gfc12</span> <span class="op">&lt;-</span> <span class="va">gfc</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">'lossyear'</span><span class="op">)</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="fl">12</span><span class="op">)</span>
+
+<span class="co"># Create an image which is one where the datasets</span>
+<span class="co"># both show deforestation and zero elsewhere.</span>
+<span class="va">gfc_forma</span> <span class="op">&lt;-</span> <span class="va">gfc12</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="fu">And</span><span class="op">(</span><span class="va">forma2012</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Display data on the map.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">59.58813</span>, <span class="op">-</span><span class="fl">9.36439</span>, <span class="fl">11</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">forma</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">forma</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">'00FF00'</span><span class="op">)</span>, <span class="st">'Forma (green)'</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">gfc12</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">gfc12</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">'FF0000'</span><span class="op">)</span>, <span class="st">'Hansen (red)'</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">gfc_forma</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">gfc_forma</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">'FFFF00'</span><span class="op">)</span>,
+  <span class="st">'Hansen &amp; FORMA (yellow)'</span>
+<span class="op">)</span></code></pre></div>
+<p>This concludes the overview of forest change datasets in Earth Engine. We’re looking forward to seeing what you can do with them!</p>
+</div>
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="the-earth-engine-api.html">The Earth Engine API</a></div>
+<div class="next"><a href="global-surface-water.html">Global Surface Water</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#global-forest-change">Global Forest Change</a></li>
+<li>
+<a class="nav-link" href="#introduction-to-forest-change-analysis-in-earth-engine">Introduction to Forest Change Analysis in Earth Engine</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#license-and-attribution">License and Attribution</a></li>
+<li><a class="nav-link" href="#prerequisites-1">Prerequisites</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#introduction-to-hansen-et-al.-global-forest-change-data">Introduction to Hansen et al. Global Forest Change Data</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#palettes">Palettes</a></li>
+<li><a class="nav-link" href="#masking-3">Masking</a></li>
+<li><a class="nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#quantifying-forest-change">Quantifying Forest Change</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#quantifying-forest-change-in-a-region-of-interest">Quantifying Forest Change in a Region of Interest</a></li>
+<li><a class="nav-link" href="#calculating-pixel-areas">Calculating Pixel Areas</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#charting-yearly-forest-loss">Charting Yearly Forest Loss</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#calculating-yearly-forest-loss">Calculating Yearly Forest Loss</a></li>
+<li><a class="nav-link" href="#making-a-chart">Making a chart</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#introduction-to-forest-monitoring-for-action-forma-data">Introduction to Forest Monitoring for Action (FORMA) data</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#filtering-forma-by-date">Filtering FORMA by Date</a></li>
+<li><a class="nav-link" href="#counting-forma-alerts-in-a-region-of-interest">Counting FORMA Alerts in a Region of Interest</a></li>
+<li><a class="nav-link" href="#counting-forma-alerts-in-several-regions-of-interest">Counting FORMA Alerts in Several Regions of Interest</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/03_api_tutorials.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/03_api_tutorials.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Extra considerations | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Extra considerations | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Extra considerations | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="Differences in the R and Python syntax may also cause errors in certain circumstances. We identified four common cases. Each of them is discussed in detail below. 1. The map message error in List...">
+<meta property="og:description" content="Differences in the R and Python syntax may also cause errors in certain circumstances. We identified four common cases. Each of them is discussed in detail below. 1. The map message error in List...">
+<meta name="twitter:description" content="Differences in the R and Python syntax may also cause errors in certain circumstances. We identified four common cases. Each of them is discussed in detail below. 1. The map message error in List...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="active" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="extra-considerations" class="section level1 unnumbered">
+<h1>Extra considerations<a class="anchor" aria-label="anchor" href="#extra-considerations"><i class="fas fa-link"></i></a>
+</h1>
+<p>Differences in the R and Python syntax may also cause errors in certain circumstances. We identified four common cases. Each of them is discussed in detail below.</p>
+<div id="the-map-message-error-in-list-ee-objects" class="section level2 unnumbered">
+<h2>1. The map message error in List EE objects<a class="anchor" aria-label="anchor" href="#the-map-message-error-in-list-ee-objects"><i class="fas fa-link"></i></a>
+</h2>
+<p>This issue happens when the <strong>map</strong> method is used while: (1) running a reticulate version
+lower than &lt; 1.14 (please update it!); or (2) leading with <strong>ee$List</strong> objects. For instance:</p>
+<div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mylist</span> <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">List</span><span class="op">$</span><span class="fu">sequence</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
+<span class="va">mylist</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Number</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; Error in py_call_impl(callable, dots$args, dots$keywords): RuntimeError: Evaluation error: argument "x" is missing, with no default.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Detailed traceback: </span>
+<span class="co">#&gt;   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/apifunction.py", line 205, in &lt;lambda&gt;</span>
+<span class="co">#&gt;     return lambda *args, **kwargs: func.call(*args, **kwargs)  # pylint: disable=unnecessary-lambda</span>
+<span class="co">#&gt;   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/function.py", line 67, in call</span>
+<span class="co">#&gt;     return self.apply(self.nameArgs(args, kwargs))</span>
+<span class="co">#&gt;   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/function.py", line 80, in apply</span>
+<span class="co">#&gt;     result = computedobject.ComputedObject(self, self.promoteArgs(named_args))</span>
+<span class="co">#&gt;   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/function.py", line 107, in promoteArgs</span>
+<span class="co">#&gt;     promoted_args[name] = Function._promoter(args[name], spec['type'])</span>
+<span class="co">#&gt;   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/__init__.py", line 242, in _Promote</span>
+<span class="co">#&gt;     return CustomFunction.create(arg, 'Object', ['Object'] * args_count)</span>
+<span class="co">#&gt;   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/customfunction.py", line 121, in create</span>
+<span class="co">#&gt;     return CustomFunction(signature, func)</span>
+<span class="co">#&gt;   File "/home/aybarpc01/.virtualenvs/r-reticulate/lib/python3.7/site-packages/ee/customfunction.py", line 47, in __init__</span>
+<span class="co">#&gt;     self._body = body(*variables)</span>
+<span class="co">#&gt;   File "/home/aybarpc01/R/x86_64-pc-linux-gnu-library/3.6/reticulate/python/rpytools/call.py", line 21, in python_function</span>
+<span class="co">#&gt;     raise RuntimeError(res[kErrorKey])</span></code></pre></div>
+<p>The code before is perfectly valid but <code>rgee</code> will produce an error. This problem should be easily solved by adding the function <strong>ee_utils_pyfunc</strong>. It will permit to wrap R functions before to send it to <code>reticulate</code>. Let’s see:</p>
+<div class="sourceCode" id="cb167"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mylist</span> <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">List</span><span class="op">$</span><span class="fu">sequence</span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span>
+<span class="va">mynewlist</span> <span class="op">=</span> <span class="va">mylist</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span>
+  <span class="fu">ee_utils_pyfunc</span><span class="op">(</span>
+    <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Number</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>   
+  <span class="op">)</span>
+<span class="op">)</span>
+<span class="va">mynewlist</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11</span></code></pre></div>
+</div>
+<div id="do-not-forget-the-l" class="section level2 unnumbered">
+<h2>2. Do not forget the L<a class="anchor" aria-label="anchor" href="#do-not-forget-the-l"><i class="fas fa-link"></i></a>
+</h2>
+<p>When you define a number in R, it generates a value with double precision by default.
+This does not happen in Python since it creates an int value by default.</p>
+<p><strong>Python</strong></p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb168-1"><a href="extra-considerations.html#cb168-1"></a><span class="bu">type</span>(<span class="dv">1</span>)</span>
+<span id="cb168-2"><a href="extra-considerations.html#cb168-2"></a><span class="co">#&gt; &lt;class 'int'&gt;</span></span></code></pre></div>
+<p><strong>R</strong></p>
+<div class="sourceCode" id="cb169"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+<span class="co">#&gt; [1] "numeric"</span></code></pre></div>
+<p>But why does this matter? Let’s explain with an example:</p>
+<p><strong>Python</strong></p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb170-1"><a href="extra-considerations.html#cb170-1"></a>ee.Initialize()</span>
+<span id="cb170-2"><a href="extra-considerations.html#cb170-2"></a>and_bitwise <span class="op">=</span> ee.Number(<span class="dv">32</span>).bitwiseAnd(<span class="dv">100</span>)</span>
+<span id="cb170-3"><a href="extra-considerations.html#cb170-3"></a>and_bitwise.getInfo()</span>
+<span id="cb170-4"><a href="extra-considerations.html#cb170-4"></a><span class="co">#&gt; 32</span></span></code></pre></div>
+<p><strong>R</strong></p>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="extra-considerations.html#cb171-1"></a>and_bitwise =<span class="st"> </span>ee<span class="op">$</span><span class="kw">Number</span>(<span class="dv">32</span>)<span class="op">$</span><span class="kw">bitwiseAnd</span>(<span class="dv">100</span>) <span class="co">#caution: silent error</span></span>
+<span id="cb171-2"><a href="extra-considerations.html#cb171-2"></a>and_bitwise<span class="op">$</span><span class="kw">getInfo</span>()</span>
+<span id="cb171-3"><a href="extra-considerations.html#cb171-3"></a><span class="kw">Traceback</span> (most recent call last)<span class="op">:</span></span>
+<span id="cb171-4"><a href="extra-considerations.html#cb171-4"></a><span class="st">  </span>File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span>, <span class="cf">in</span> <span class="op">&lt;</span>module<span class="op">&gt;</span></span>
+<span id="cb171-5"><a href="extra-considerations.html#cb171-5"></a><span class="st">  </span>File <span class="st">"/home/aybarpc01/.local/lib/python3.7/site-packages/ee/computedobject.py"</span>, line <span class="dv">95</span>, <span class="cf">in</span> getInfo</span>
+<span id="cb171-6"><a href="extra-considerations.html#cb171-6"></a>    return <span class="kw">data.computeValue</span>(self)</span>
+<span id="cb171-7"><a href="extra-considerations.html#cb171-7"></a>  File <span class="st">"/home/aybarpc01/.local/lib/python3.7/site-packages/ee/data.py"</span>, line <span class="dv">490</span>, <span class="cf">in</span> computeValue</span>
+<span id="cb171-8"><a href="extra-considerations.html#cb171-8"></a>    return <span class="kw">send_</span>(<span class="st">'/value'</span>, ({<span class="st">'json'</span><span class="op">:</span><span class="st"> </span><span class="kw">obj.serialize</span>(), <span class="st">'json_format'</span><span class="op">:</span><span class="st"> 'v2'</span>}))</span>
+<span id="cb171-9"><a href="extra-considerations.html#cb171-9"></a>  File <span class="st">"/home/aybarpc01/.local/lib/python3.7/site-packages/ee/data.py"</span>, line <span class="dv">1186</span>, <span class="cf">in</span> send_</span>
+<span id="cb171-10"><a href="extra-considerations.html#cb171-10"></a>    raise <span class="kw">ee_exception.EEException</span>(json_content[<span class="st">'error'</span>][<span class="st">'message'</span>])</span>
+<span id="cb171-11"><a href="extra-considerations.html#cb171-11"></a>ee.ee_exception.EEException<span class="op">:</span><span class="st"> </span>Number.bitwiseAnd<span class="op">:</span><span class="st"> </span>Bitwise operands must be integer only.</span></code></pre></div>
+<p>Users need to take into consideration that most of the arguments of the
+Earth Engine methods are strict to admit only <strong>integer values</strong>. The
+creation of integers in R is quite simple; you just need to add the
+letter <strong>L</strong> to the end of a number or employ the function <code>as.integer</code>.
+The <strong>correct code</strong> in R would be:</p>
+<div class="sourceCode" id="cb172"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">and_bitwise</span> <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Number</span><span class="op">(</span><span class="fl">32L</span><span class="op">)</span><span class="op">$</span><span class="fu">bitwiseAnd</span><span class="op">(</span><span class="fl">100L</span><span class="op">)</span>
+<span class="va">and_bitwise</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; [1] 32</span></code></pre></div>
+</div>
+<div id="be-careful-with-eedate" class="section level2 unnumbered">
+<h2>3. Be careful with ee$Date<a class="anchor" aria-label="anchor" href="#be-careful-with-eedate"><i class="fas fa-link"></i></a>
+</h2>
+<p>This problem also appears due to differences between the design of R and
+Python as programming languages. Currently, R only supports integer data
+type of 32 bits. Such integers can only count up to about 2 billion. Unfortunately,
+this range is insufficient to deal with <a href="https://developers.google.com/earth-engine/glossary/">Google Earth
+Engine timestamp</a>
+which is saved in milliseconds since the <a href="https://en.wikipedia.org/wiki/Unix_time">UNIX epoch</a>.</p>
+<p><strong>Python</strong></p>
+<div class="sourceCode" id="cb173"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb173-1"><a href="extra-considerations.html#cb173-1"></a>my_date <span class="op">=</span> ee.Date(<span class="st">'1990-01-01'</span>)</span>
+<span id="cb173-2"><a href="extra-considerations.html#cb173-2"></a>my_date.getInfo()</span>
+<span id="cb173-3"><a href="extra-considerations.html#cb173-3"></a><span class="co">#&gt; {'type': 'Date', 'value': 631152000000} # greater than 2 billion</span></span></code></pre></div>
+<p><strong>R</strong></p>
+<div class="sourceCode" id="cb174"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">my_date</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Date</span><span class="op">(</span><span class="st">'1990-01-01'</span><span class="op">)</span>
+<span class="va">my_date</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; $type</span>
+<span class="co">#&gt; [1] "Date"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $value</span>
+<span class="co">#&gt; [1] -208192512</span></code></pre></div>
+<p>The problems with <code>ee$Date</code> just appear in the last mile (Python to R or
+vice-versa, <code>reticulate</code>), and they should not be too severe if treated
+with care. <code>rgee</code> implements two functions to deal with Earth Engine
+dates: <code>eedate_to_rdate</code> and <code>rdate_to_eedate</code>.</p>
+<div class="sourceCode" id="cb175"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Era5 dataset</span>
+<span class="va">era_img</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"ECMWF/ERA5/DAILY"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filterDate</span><span class="op">(</span><span class="st">"2019-01-01"</span>, <span class="st">"2019-12-31"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">first</span><span class="op">(</span><span class="op">)</span>
+<span class="co"># Extracting init date</span>
+<span class="va">ee_date</span> <span class="op">&lt;-</span> <span class="va">era_img</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">'system:time_start'</span><span class="op">)</span>
+<span class="va">ee_date</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span> <span class="co"># Silent error</span>
+<span class="co">#&gt; [1] 112573440</span>
+<span class="fu">eedate_to_rdate</span><span class="op">(</span>ee_date <span class="op">=</span> <span class="va">ee_date</span>, timestamp <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; [1] 1.546301e+12</span></code></pre></div>
+</div>
+<div id="take-into-consideration-reserved-words-in-r" class="section level2 unnumbered">
+<h2>4. Take into consideration reserved words in R<a class="anchor" aria-label="anchor" href="#take-into-consideration-reserved-words-in-r"><i class="fas fa-link"></i></a>
+</h2>
+<p>A reserved word is a word that cannot be used as an identifier, such as the name
+of a variable or a function. According with <code><a href="https://rdrr.io/r/base/Reserved.html">?reserved</a></code>, the reserved words in R’s parser
+are: <code>if</code>, <code>else</code>, <strong><code>repeat</code></strong>, <code>while</code>, <code>function</code>, <code>for</code>, <code>in</code>, <code><a href="https://rdrr.io/r/base/Control.html">next</a></code>, <code><a href="https://rdrr.io/r/base/Control.html">break</a></code>, <code>TRUE</code>, <code>FALSE</code>, <code>NULL</code>,
+<code>Inf</code>, <code>NaN</code>, <code>NA</code>, <code>NA_integer_</code>, <code>NA_real_</code>, <code>NA_complex_</code>, <code>NA_character_</code>. Of these words,
+the only one that is part of the Earth Engine API is <strong>repeat</strong>.</p>
+<p>We can find <strong>repeat</strong> as a
+method for an Earth Engine List object. See <strong><a href="https://developers.google.com/earth-engine/apidocs/ee-list-repeat"><code>ee$List$repeat(value, count)</code></a></strong>:</p>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="extra-considerations.html#cb176-1"></a>ee_list &lt;-<span class="st"> </span>ee<span class="op">$</span><span class="kw">List</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</span>
+<span id="cb176-2"><a href="extra-considerations.html#cb176-2"></a>ee_list<span class="op">$</span><span class="cf">repeat</span>(<span class="dv">10</span>,<span class="dv">2</span>)<span class="op">$</span><span class="kw">getInfo</span>()</span>
+<span id="cb176-3"><a href="extra-considerations.html#cb176-3"></a><span class="co">#&gt; Error: unexpected 'repeat' in "ee_list$repeat"</span></span></code></pre></div>
+<p>To avoid this error use backticks/quotation marks:</p>
+<div class="sourceCode" id="cb177"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ee_list</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">List</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>
+<span class="va">ee_list</span><span class="op">$</span><span class="st">'repeat'</span><span class="op">(</span><span class="fl">10</span>,<span class="fl">2</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; 10 10</span></code></pre></div>
+
+</div>
+</div>
+
+
+
+  <div class="chapter-nav">
+<div class="prev"><a href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></div>
+<div class="next"><a href="overview-1.html">Overview</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#extra-considerations">Extra considerations</a></li>
+<li><a class="nav-link" href="#the-map-message-error-in-list-ee-objects">1. The map message error in List EE objects</a></li>
+<li><a class="nav-link" href="#do-not-forget-the-l">2. Do not forget the L</a></li>
+<li><a class="nav-link" href="#be-careful-with-eedate">3. Be careful with ee$Date</a></li>
+<li><a class="nav-link" href="#take-into-consideration-reserved-words-in-r">4. Take into consideration reserved words in R</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/02_dev_env.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/02_dev_env.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

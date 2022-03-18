@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Scale | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Scale | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Scale | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Understanding how Earth Engine handles scale is crucial to interpreting scientific results obtained from...">
+<meta property="og:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Understanding how Earth Engine handles scale is crucial to interpreting scientific results obtained from...">
+<meta name="twitter:description" content="This section requires the next libraries: library(rgee) library(rgeeExtra) ee_Initialize() Understanding how Earth Engine handles scale is crucial to interpreting scientific results obtained from...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="active" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="scale" class="section level1 unnumbered">
+<h1>Scale<a class="anchor" aria-label="anchor" href="#scale"><i class="fas fa-link"></i></a>
+</h1>
+<p>This section requires the next libraries:</p>
+<div class="sourceCode" id="cb285"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rgeeExtra</span><span class="op">)</span>
+
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>Understanding how Earth Engine handles scale is crucial to interpreting scientific results obtained from Earth Engine. Here, scale means pixel resolution. Unlike other GIS and image processing platforms, the scale of analysis is determined from the output, rather than the input. Specifically, when you make a request for results, an image to display or a statistic, for example, you specify the scale at which data is input to the analysis. This concept is illustrated in Figure 1.</p>
+<center>
+<img src="images/chapter_04/figure_SC_01.png" width="80%">
+</center>
+<p>Figure: A graphic representation of an image dataset in Earth Engine. Dashed lines represent the pyramiding policy for aggregating 2x2 blocks of 4 pixels. Earth Engine uses the scale specified by the output to determine the appropriate level of the image pyramid to use as input.</p>
+<div id="image-pyramids" class="section level2 unnumbered">
+<h2>Image Pyramids<a class="anchor" aria-label="anchor" href="#image-pyramids"><i class="fas fa-link"></i></a>
+</h2>
+<p>Image assets in Earth Engine exist at multiple scales, in <a href="https://en.wikipedia.org/wiki/Pyramid_(image_processing)">image pyramids</a>. The pyramiding policy (represented by dashed lines in Figure 1) determines how each pixel at a given level of the pyramid is computed from the aggregation of a 2x2 block of pixels at the next lower level. For continuous valued images, the pixel values of upper levels of the pyramid are the mean of pixels at the next lower level. For discrete valued images, pixel values of upper levels of the pyramid are a sample (usually the top left pixel) of pixels at the next lower level.</p>
+<p>The lowest level of the image pyramid represents image data at native resolution, when it is ingested into Earth Engine. During ingestion, the data are aggregated (according to the pyramiding policy) to create higher pyramid levels. The data are aggregated until the entire image fits within a 256x256 pixel tile. When you use an image in your code, Earth Engine chooses a level of the pyramid with the closest scale less than or equal to the scale specified by your analysis and resamples (using nearest neighbor by default) as necessary.</p>
+</div>
+<div id="scale-of-analysis" class="section level2 unnumbered">
+<h2>Scale of analysis<a class="anchor" aria-label="anchor" href="#scale-of-analysis"><i class="fas fa-link"></i></a>
+</h2>
+<p>Scale of analysis in Earth Engine is determined on a “pull” basis. The scale at which to request inputs to a computation is determined from the output. For example, if you add an image to the map with <code>Map$addLayer()</code>, the zoom level of the map in the Rstudio determines the scale at which inputs are requested from the image pyramid. For other computations, you specify <code>scale</code> as an argument. For example, using the NIR band of a Landsat image, which has 30 meters native resolution:</p>
+<div class="sourceCode" id="cb286"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1/LC08_044034_20140318"</span><span class="op">)</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"B4"</span><span class="op">)</span>
+
+<span class="va">printAtScale</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">scale</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span>
+    <span class="st">"Pixel value at "</span>, <span class="va">scale</span>, <span class="st">" meters scale"</span>,
+    <span class="va">image</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+      reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span>,
+      geometry <span class="op">=</span> <span class="va">image</span><span class="op">$</span><span class="fu">geometry</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">centroid</span><span class="op">(</span><span class="op">)</span>,
+      <span class="co"># The scale determines the pyramid level from which to pull the input</span>
+      scale <span class="op">=</span> <span class="va">scale</span>
+    <span class="op">)</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"B4"</span><span class="op">)</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span>
+  <span class="op">)</span>
+<span class="op">}</span>
+
+<span class="fu">printAtScale</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="co"># 8883</span>
+<span class="fu">printAtScale</span><span class="op">(</span><span class="fl">30</span><span class="op">)</span> <span class="co"># 8883</span>
+<span class="fu">printAtScale</span><span class="op">(</span><span class="fl">50</span><span class="op">)</span> <span class="co"># 8337</span>
+<span class="fu">printAtScale</span><span class="op">(</span><span class="fl">70</span><span class="op">)</span> <span class="co"># 9215</span>
+<span class="fu">printAtScale</span><span class="op">(</span><span class="fl">200</span><span class="op">)</span> <span class="co"># 8775</span>
+<span class="fu">printAtScale</span><span class="op">(</span><span class="fl">500</span><span class="op">)</span> <span class="co"># 8300</span></code></pre></div>
+<p>In this example, note that the pixel value at a constant location (the image centroid) varies based on scale. This is due to the fact that different pyramid levels are selected for different scales. For similar scales, nearest neighbor resampling results in the same pixel value being returned. The important point is that by varying the scale, different image inputs are requested.</p>
+<p><strong>Note</strong>: To avoid ambiguity, always specify scale when you use a function which has a scale parameter.</p>
+<p>When you visualize an image by adding it to the map, Earth Engine determines scale from the zoom level. Consider the following simple example, which simply displays a Landsat image:</p>
+<div class="sourceCode" id="cb287"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1/LC08_044034_20140318"</span><span class="op">)</span>
+
+<span class="va">Map</span><span class="op">$</span><span class="fu">centerObject</span><span class="op">(</span><span class="va">image</span>, <span class="fl">17</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">image</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B4"</span>, <span class="st">"B3"</span>, <span class="st">"B2"</span><span class="op">)</span>, max <span class="op">=</span> <span class="fl">12000</span><span class="op">)</span>, <span class="st">"image"</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_04/figure_code_01.png" width="95%">
+</center>
+<p>The map starts zoomed all the way in, such that the native resolution pixels are clearly visible. Zooming out far enough will not display the same pixels, but will instead display higher levels of the image pyramid. It is also worth noting that the Rstudio map uses the <a href="http://epsg.io/3857">maps mercator (EPSG:3857)</a> projection, so the appropriate level of the image pyramid also needs to be reprojected prior to display. Learn more about how Earth Engine handles projections from the <a href="https://r-earthengine.com/rgeebook/projections.html">projections doc</a>.</p>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="deferred-exacution.html">Deferred exacution</a></div>
+<div class="next"><a href="projections.html">Projections</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#scale">Scale</a></li>
+<li><a class="nav-link" href="#image-pyramids">Image Pyramids</a></li>
+<li><a class="nav-link" href="#scale-of-analysis">Scale of analysis</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/04_concepts.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/04_concepts.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

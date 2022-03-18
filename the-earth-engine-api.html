@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>The Earth Engine API | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="The Earth Engine API | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="The Earth Engine API | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="Welcome to the introductory tutorial for the Google Earth Engine R API. This tutorial provides examples of how to use Earth Engine to analyze geospatial raster and vector data. By the end of the...">
+<meta property="og:description" content="Welcome to the introductory tutorial for the Google Earth Engine R API. This tutorial provides examples of how to use Earth Engine to analyze geospatial raster and vector data. By the end of the...">
+<meta name="twitter:description" content="Welcome to the introductory tutorial for the Google Earth Engine R API. This tutorial provides examples of how to use Earth Engine to analyze geospatial raster and vector data. By the end of the...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="active" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="the-earth-engine-api" class="section level1 unnumbered">
+<h1>The Earth Engine API<a class="anchor" aria-label="anchor" href="#the-earth-engine-api"><i class="fas fa-link"></i></a>
+</h1>
+<p>Welcome to the introductory tutorial for the Google Earth Engine R API. This tutorial provides examples of how to use Earth Engine to analyze geospatial raster and vector data. By the end of the tutorial, you will have seen most of the basic functionality of the Earth Engine API.</p>
+<div id="prerequisites" class="section level3 unnumbered">
+<h3>Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>
+<a href="https://signup.earthengine.google.com/">Signup for Earth Engine</a>. Once you have been accepted, you will receive an email with additional information.</li>
+<li>If you are unfamiliar with R, check out the <a href="https://r-earthengine.com/rgeebook/introduction-to-r-for-earth-engine.html">R for Earth Engine tutorial</a> before proceeding.</li>
+</ul>
+<p>Once you’re familiar with R and the Rstudio, visit the next section to learn about visualizing images and image bands</p>
+</div>
+<div id="visualizing-images-and-image-bands" class="section level2 unnumbered">
+<h2>Visualizing Images and Image Bands<a class="anchor" aria-label="anchor" href="#visualizing-images-and-image-bands"><i class="fas fa-link"></i></a>
+</h2>
+<p>Now that you’re ready to begin writing in R of the Earth Engine , start by copying the following code into the Code Editor:</p>
+<div class="sourceCode" id="cb203"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Instantiate an image with the Image constructor.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"CGIAR/SRTM90_V4"</span><span class="op">)</span>
+
+<span class="co">## Zoom to a location.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">112.8598</span>, <span class="fl">36.2841</span>, <span class="fl">9</span><span class="op">)</span> <span class="co">## Center on the Grand Canyon.</span>
+
+<span class="co">## Display the image on the map.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">image</span><span class="op">)</span></code></pre></div>
+<p>Click the <strong>Run</strong> button at the top of the Rstudio and observe that a very gray image appears on the map. Don’t worry, you’ll make it look better soon.</p>
+<div id="image-constructor" class="section level4 unnumbered">
+<h4>Image Constructor<a class="anchor" aria-label="anchor" href="#image-constructor"><i class="fas fa-link"></i></a>
+</h4>
+<p>The first new thing in this example is the image constructor <code>ee$Image()</code>. The argument provided to the constructor is the string ID of an image in the Earth Engine data catalog.</p>
+<p>To discover an image ID, search in the <a href="https://developers.google.com/earth-engine/datasets/">Earth Engine Data Catalog</a> using the search tool. For example, type ‘elevation’ into the search field and note that a list of rasters is returned. Click the ‘SRTM Digital Elevation Data Version 4’ entry to see more information about that dataset. On the right side of the dataset description is an <strong>Image ID</strong> field. Observe that the image ID in the example is copied from the image ID shown in the dataset description.</p>
+</div>
+<div id="configuring-the-map" class="section level4 unnumbered">
+<h4>Configuring the Map<a class="anchor" aria-label="anchor" href="#configuring-the-map"><i class="fas fa-link"></i></a>
+</h4>
+<p>The second new part of this example is the <code>Map$setCenter()</code> call. This method on the <code>Map</code> object, which represents the Map display in the Rstudio, centers the map at the given longitude, latitude (in decimal degrees) and zoom level where 1 is zoomed out so that the map shows the entire Earth’s surface. Larger numbers zoom in from there.</p>
+</div>
+<div id="adding-a-layer-to-the-map" class="section level4 unnumbered">
+<h4>Adding a layer to the Map<a class="anchor" aria-label="anchor" href="#adding-a-layer-to-the-map"><i class="fas fa-link"></i></a>
+</h4>
+<p>The last line in the example says: use the <code>Map</code> object’s <code>addLayer()</code> method to add an image to the map display in the Rstudio.</p>
+<p>Congratulations! You’ve created your first Earth Engine script. In the next section, you’ll learn how to make that image look a little better.</p>
+</div>
+<div id="digression-images-in-earth-engine" class="section level3 unnumbered">
+<h3>Digression: Images in Earth Engine<a class="anchor" aria-label="anchor" href="#digression-images-in-earth-engine"><i class="fas fa-link"></i></a>
+</h3>
+<p>Images in Earth Engine (see <a href="https://r-earthengine.com/rgeebook/image.html">this page</a> for more details) are made up of one or more bands. Each band in an image has its own name, pixel values, pixel resolution, and projection. As you’ll soon discover, the SRTM image has one band: ‘elevation’.</p>
+<p>When you add an image to a map using <code>Map$addLayer()</code>, Earth Engine needs to determine how to map the values in the image band(s) to colors on the display. If a single-band image is added to a map, by default Earth Engine displays the band in grayscale, where the minimum value is assigned to black, and the maximum value is assigned to white. If you don’t specify what the minimum and maximum should be, Earth Engine will use default values. For example, the image you just added to the map is displayed as a grayscale image stretched to the full range of the data, or signed 16-bit integer [-32768, 32767]. (<code>float</code> bands are stretched to [0, 1] and <code>byte</code> bands are stretched to [0, 255] by default).</p>
+<p>You can discover the data type of the image by printing it and inspecting the image object in the <strong>Console</strong> tab. For example, paste the following after the previous code:</p>
+<div class="sourceCode" id="cb204"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"SRTM image"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>When you click run, note that an object appears in the console.</p>
+</div>
+<div id="customizing-layer-visualization" class="section level3 unnumbered">
+<h3>Customizing layer visualization<a class="anchor" aria-label="anchor" href="#customizing-layer-visualization"><i class="fas fa-link"></i></a>
+</h3>
+<p>To change the way the data are stretched, you can provide another parameter to the <code>Map$addLayer()</code> call. Specifically, the second parameter, <code>visParams</code>, lets you specify the minimum and maximum values to display. Suppose that through such experimentation, you determine that the data should be stretched to [0, 3000]. To display the image using this range, use:</p>
+<div class="sourceCode" id="cb205"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">image</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span>,
+  <span class="st">"custom visualization"</span>
+<span class="op">)</span></code></pre></div>
+<p>Note that the <code>visParams</code> parameter is an object, with properties specifying the <code>min</code> and the <code>max</code>. Note that the third parameter for <code>Map$addLayer()</code> is the name of the layer that is displayed in the Layer manager. The result should look something like Figure. Hover the mouse over the <strong>Layers</strong> box on the left to see the effect of renaming that layer.</p>
+<center>
+<img src="images/chapter_03/figure_api_01.png" width="95%">
+</center>
+<p>Figure: Elevation image as grayscale, stretched to [0, 3000].</p>
+<p>To display a single band using a color palette, add a <code>palette</code> property to the <code>visParams</code> object:</p>
+<div class="sourceCode" id="cb206"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">image</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">3000</span>, palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span><span class="op">)</span><span class="op">)</span>,
+  <span class="st">"custom palette"</span>
+<span class="op">)</span></code></pre></div>
+<p>The result should look something like Figure .</p>
+<center>
+<img src="images/chapter_03/figure_api_02.png" width="95%">
+</center>
+<p>Figure: Elevation image as a color ramp from blue to red, stretched to [0, 3000].</p>
+</div>
+<div id="digression-palettes" class="section level3 unnumbered">
+<h3>Digression: Palettes<a class="anchor" aria-label="anchor" href="#digression-palettes"><i class="fas fa-link"></i></a>
+</h3>
+<p>Palettes let you set the color scheme for single-band images. A palette is a comma delimited list of color strings which are linearly interpolated between the maximum and minimum values in the visualization parameters (or defaults according to the band type, as described previously). For example, pixels less than or equal to the minimum will be displayed with the first color in the list; pixels greater than or equal to the maximum will be displayed with the last color in the list. Intermediate colors are linearly stretched to intermediate pixel values.</p>
+<p>The colors are defined using the web standard CSS color value scheme (see <a href="https://en.wikipedia.org/wiki/Web_colors">this external reference</a> to learn more). Colors can be specified by name or as hexadecimal strings indicating the combination of red, green and blue. The lowest value in any of the three positions is 00 (representing the decimal number 0), while the highest is FF (representing the decimal number 255). The string ‘000000’ represents the color black, ‘FFFFFF’ is white, ‘FF0000’ is red, ‘00FF00’ is green, and ‘0000FF’ is blue. See the <a href="https://r-earthengine.com/rgeebook/image.html">Color palettes section</a> for more detail. Other stretches are possible by using Styled Layer Descriptors, as described in <a href="https://r-earthengine.com/rgeebook/image.html">Styled Layer Descriptors section</a>.</p>
+<p>Later in this tutorial, you’ll learn how to display multi-band imagery. But first, visit the next page to learn about performing computations with images.</p>
+</div>
+</div>
+<div id="computations-using-images" class="section level2 unnumbered">
+<h2>Computations using Images<a class="anchor" aria-label="anchor" href="#computations-using-images"><i class="fas fa-link"></i></a>
+</h2>
+<p>Now that you know how to load and display an image, it’s time to apply a computation to it. For example, you can compute the slope of terrain, by passing the SRTM elevation image to the <code>slope</code> method of the <code>ee$Terrain</code> package.</p>
+<div class="sourceCode" id="cb207"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Load the SRTM image.</span>
+<span class="va">srtm</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"CGIAR/SRTM90_V4"</span><span class="op">)</span>
+
+<span class="co">## Apply an algorithm to an image.</span>
+<span class="va">slope</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Terrain</span><span class="op">$</span><span class="fu">slope</span><span class="op">(</span><span class="va">srtm</span><span class="op">)</span>
+
+<span class="co">## Display the result.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">112.8598</span>, <span class="fl">36.2841</span>, <span class="fl">9</span><span class="op">)</span> <span class="co">## Center on the Grand Canyon.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">slope</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">60</span><span class="op">)</span>,
+  <span class="st">"slope"</span>
+<span class="op">)</span></code></pre></div>
+<p>Note that in the code <code>ee$Terrain$slope(srtm)</code>, the <code>srtm</code> image is provided as an argument to the slope algorithm. The result should look something like Figure.</p>
+<center>
+<img src="images/chapter_03/figure_api_03.png" width="95%">
+</center>
+<p>Figure: Slope image.</p>
+<div id="image-math" class="section level3 unnumbered">
+<h3>Image math<a class="anchor" aria-label="anchor" href="#image-math"><i class="fas fa-link"></i></a>
+</h3>
+<p>There are also methods in the <code>ee$Image</code> class that can be invoked on an image object. For example, suppose you’d like to do some math using image bands (sometimes called <em>band math</em> or <em>map algebra</em>). For example, you may be interested in trigonometric operations on an aspect image. To accomplish that, first convert an aspect image to radians, then call <code><a href="https://rdrr.io/r/base/Trig.html">sin()</a></code> on it. Reusing our <code>srtm</code> image.</p>
+<div class="sourceCode" id="cb208"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Get the aspect (in degrees).</span>
+<span class="va">aspect</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Terrain</span><span class="op">$</span><span class="fu">aspect</span><span class="op">(</span><span class="va">srtm</span><span class="op">)</span>
+
+<span class="co">## Convert to radians, compute the sin of the aspect.</span>
+<span class="va">sinImage</span> <span class="op">&lt;-</span> <span class="va">aspect</span><span class="op">$</span><span class="fu">divide</span><span class="op">(</span><span class="fl">180</span><span class="op">)</span><span class="op">$</span><span class="fu">multiply</span><span class="op">(</span><span class="va">pi</span><span class="op">)</span><span class="op">$</span><span class="fu">sin</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co">## Display the result.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">sinImage</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, max <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
+  <span class="st">"sin"</span>
+<span class="op">)</span></code></pre></div>
+<p>The result should look something like Figure . It’s worth taking a closer look at the <code>aspect$divide(180)$multiply(pi)$sin()</code> code. By chaining multiple methods like this, the code says, ‘divide the aspect by 180, multiply the result of that by π, and finally take the sin’. You can perform complex mathematical operations on images by combining methods in this manner.</p>
+<center>
+<img src="images/chapter_03/figure_api_04.png" width="95%">
+</center>
+<p>Figure: Sin of terrain aspect.</p>
+</div>
+<div id="image-statistics" class="section level3 unnumbered">
+<h3>Image statistics<a class="anchor" aria-label="anchor" href="#image-statistics"><i class="fas fa-link"></i></a>
+</h3>
+<p>Another useful class of operations on images involves computing pixel statistics in image regions, or raster-vector overlays. To compute statistics in Earth Engine, use a reducer as represented by classes in the <code>ee$Reducer</code> <a href="https:#developers.google.com/earth-engine/guides/reducers_intro">package</a>.For example, suppose you’re interested in the mean of elevation in some region.</p>
+<p>Next, get the mean pixel value in the polygon using the following code:</p>
+<div class="sourceCode" id="cb209"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">polygon</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Polygon</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3.807648573314655</span>, <span class="fl">51.280649018952</span><span class="op">)</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3.807648573314655</span>, <span class="fl">50.42759747456426</span><span class="op">)</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5.653351698314655</span>, <span class="fl">50.42759747456426</span><span class="op">)</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5.653351698314655</span>, <span class="fl">51.280649018952</span><span class="op">)</span>
+  <span class="op">)</span>, <span class="cn">NULL</span>, <span class="cn">FALSE</span>
+<span class="op">)</span>
+
+<span class="co">## Compute the mean elevation in the polygon.</span>
+<span class="va">meanDict</span> <span class="op">&lt;-</span> <span class="va">srtm</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span>,
+  geometry <span class="op">=</span> <span class="va">polygon</span>,
+  scale <span class="op">=</span> <span class="fl">90</span>
+<span class="op">)</span>
+
+<span class="co">## Get the mean from the dictionary and print it.</span>
+<span class="va">mean</span> <span class="op">&lt;-</span> <span class="va">meanDict</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"elevation"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Mean elevation: "</span>, <span class="va">mean</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>There are several things to note here. First, observe that <code>reduceRegion()</code> is a method available for <code>Image</code> objects <a href="https://r-earthengine.com/rgeebook/reducer.html">learn more about reducing regions here</a>. Second, the method arguments are provided in a R object that is passed as a single argument. (Specifically, the keys of the object are the names of the method parameters. The values are the arguments to the method). Third, the <code>reducer</code> parameter specifies the type of statistic to compute and the <code>geometry</code> parameter specifies the region in which to compute the statistic. The <code>scale</code> parameter is the pixel size in meters to use. To avoid ambiguity, you should always specify scale when doing reductions as Earth Engine may not be able to automatically determine the appropriate scale from the inputs. (<a href="https://r-earthengine.com/rgeebook/scale.html">Learn more about scale in Earth Engine</a>).</p>
+<p>Lastly, the return value of <code>reduceRegion()</code> is a dictionary in which keys are band names and values are the pixel statistics for the bands. The <code><a href="https://rdrr.io/r/base/get.html">get()</a></code> method on a dictionary returns the value corresponding to the key provided as an argument. In this case, the <code>srtm</code> image has one band, ‘elevation’, so the example code gets that statistic from the dictionary and prints it.</p>
+<p>When you run this code, if you get an error that looks like:</p>
+<center>
+<img src="images/chapter_03/figure_api_05.png" width="70%">
+</center>
+<p>Fear not! There are several things you can do to resolve the error. The <code>reduceRegion()</code> method has a check to make sure you consider whether you really want to include so many pixels in your computation. This is intended to prevent you from accidentally doing something silly, like trying compute the mean of every one-meter pixel in the world (don’t do that). To resolve the error, either set the <code>bestEffort</code> parameter to <code>TRUE</code> by adding <code>bestEffort: TRUE</code> to the dictionary of parameters, or set the <code>maxPixels</code> parameter to a value higher than the default of 10 million pixels, or both. If <code>bestEffort</code> is TRUE, Earth Engine will automatically recompute the scale such that <code>maxPixels</code> is not exceeded.</p>
+<div class="sourceCode" id="cb210"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">polygon</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Polygon</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">40</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">65</span>, <span class="fl">40</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">65</span>, <span class="fl">60</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">60</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co">## Compute the mean elevation in the polygon.</span>
+<span class="va">meanDict</span> <span class="op">&lt;-</span> <span class="va">srtm</span><span class="op">$</span><span class="fu">reduceRegion</span><span class="op">(</span>
+  reducer <span class="op">=</span> <span class="va">ee</span><span class="op">$</span><span class="va">Reducer</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span>,
+  geometry <span class="op">=</span> <span class="va">polygon</span>,
+  bestEffort <span class="op">=</span> <span class="cn">TRUE</span>,
+  scale <span class="op">=</span> <span class="fl">90</span>
+<span class="op">)</span>
+
+<span class="co">## Get the mean from the dictionary and print it.</span>
+<span class="va">mean</span> <span class="op">&lt;-</span> <span class="va">meanDict</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"elevation"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Mean elevation"</span>, <span class="va">mean</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="digression-scale-in-earth-engine" class="section level3 unnumbered">
+<h3>Digression: Scale in Earth Engine<a class="anchor" aria-label="anchor" href="#digression-scale-in-earth-engine"><i class="fas fa-link"></i></a>
+</h3>
+<p>In the previous example, scale is set to approximately the native resolution of the SRTM image. You can discover the native resolution of an image with:</p>
+<div class="sourceCode" id="cb211"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">scale</span> <span class="op">&lt;-</span> <span class="va">srtm</span><span class="op">$</span><span class="fu">projection</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">nominalScale</span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"SRTM scale in meters"</span>, <span class="va">scale</span><span class="op">$</span><span class="fu">getInfo</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>If you specify a scale smaller than the native resolution, Earth Engine will happily resample the input image using nearest neighbor, then include all those smaller pixels in the computation. If you set the scale to be larger, Earth Engine will use input pixels from an aggregated version of the input (i.e. get pixels from a higher level of the image pyramid). Learn more about how Earth Engine handles scale in <a href="https://r-earthengine.com/rgeebook/scale.html">this doc</a>.</p>
+<p>So far, you’ve been working with a single image with a single band. In the next section, you’ll learn about multi-band images and image collections.</p>
+</div>
+</div>
+<div id="image-collections" class="section level2 unnumbered">
+<h2>Image Collections<a class="anchor" aria-label="anchor" href="#image-collections"><i class="fas fa-link"></i></a>
+</h2>
+<p>An image collection refers to a set of Earth Engine images. For example, the collection of all Landsat 8 images is an <code>ee$ImageCollection</code>. Like the SRTM image you have been working with, image collections also have an ID. As with single images, you can discover the ID of an image collection by searching the <a href="https://developers.google.com/earth-engine/datasets">Earth Engine data catalog</a> and looking at the details page of the dataset. For example, search for ‘landsat 8 toa’ and click on the first result, which should correspond to the <a href="https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C01_T1_TOA">USGS Landsat 8 Collection 1 Tier 1 TOA Reflectance</a> dataset. Copy the ID into the image collection constructor:</p>
+<div class="sourceCode" id="cb212"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">l8</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA"</span><span class="op">)</span></code></pre></div>
+<div id="filtering-image-collections" class="section level3 unnumbered">
+<h3>Filtering image collections<a class="anchor" aria-label="anchor" href="#filtering-image-collections"><i class="fas fa-link"></i></a>
+</h3>
+<p>It’s worth noting that this collection represents every Landsat 8 scene collected, all over the Earth. Often it is useful to extract a single image, or subset of images, on which to test algorithms. The way to limit the collection by time or space is by filtering it. For example, to filter the collection to images that cover a particular location, first define your area of interest with a point (or line or polygon). Then, filter the <code>l8</code> collection to get only the images that intersect the point, then add a second filter to limit the collection to only the images that were acquired in 2015:</p>
+<div class="sourceCode" id="cb213"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">point</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="op">-</span><span class="fl">77.67416408465883</span>, <span class="op">-</span><span class="fl">9.157901605369615</span><span class="op">)</span>
+
+<span class="va">spatialFiltered</span> <span class="op">&lt;-</span> <span class="va">l8</span><span class="op">$</span><span class="fu">filterBounds</span><span class="op">(</span><span class="va">point</span><span class="op">)</span>
+<span class="fu">ee_get_date_ic</span><span class="op">(</span><span class="va">spatialFiltered</span><span class="op">)</span>
+
+<span class="va">temporalFiltered</span> <span class="op">&lt;-</span> <span class="va">spatialFiltered</span><span class="op">$</span><span class="fu">filterDate</span><span class="op">(</span><span class="st">"2015-01-01"</span>, <span class="st">"2015-12-31"</span><span class="op">)</span>
+<span class="fu">ee_get_date_ic</span><span class="op">(</span><span class="va">temporalFiltered</span><span class="op">)</span></code></pre></div>
+<p>Here, <code>filterBounds()</code> and <code>filterDate()</code> are shortcut methods for the more general <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code> method on image collections, which takes an <code>ee.Filter()</code> as its argument. The argument to <code>filterBounds()</code> is the point you definied and the arguments to <code>filterDate()</code> are two dates, expressed as strings.</p>
+<p>Note that you can see the filtered collections with <code>ee_get_date_ic()</code>. You can’t print more than 5000 things at once, so you couldn’t, for example, print the entire <code>l8</code> collection. This is one way to discover the ID of an individual image. Another, more programmatic way to get individual images for analysis is to sort the collection in order to get the most recent, oldest, or optimal image relative to some metadata property. You can use <code>CLOUD_COVER</code> property to get the least cloudy image in 2015 in your area of interest:</p>
+<div class="sourceCode" id="cb214"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># This will sort from least to most cloudy.</span>
+<span class="va">sorted</span> <span class="op">&lt;-</span> <span class="va">temporalFiltered</span><span class="op">$</span><span class="fu">sort</span><span class="op">(</span><span class="st">"CLOUD_COVER"</span><span class="op">)</span>
+
+<span class="co"># Get the first (least cloudy) image.</span>
+<span class="va">scene</span> <span class="op">&lt;-</span> <span class="va">sorted</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>You’re now ready to display the image!</p>
+</div>
+<div id="digression-displaying-rgb-images" class="section level3 unnumbered">
+<h3>Digression: Displaying RGB images<a class="anchor" aria-label="anchor" href="#digression-displaying-rgb-images"><i class="fas fa-link"></i></a>
+</h3>
+<p>When a multi-band image is added to a map, Earth Engine chooses the first three bands of the image and displays them as red, green, and blue by default, stretching them according to the data type, as described previously. Usually, this won’t do. For example, if you add the Landsat image (<code>scene</code> in the previous example) to the map, the result is unsatisfactory:</p>
+<div class="sourceCode" id="cb215"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Map</span><span class="op">$</span><span class="fu">centerObject</span><span class="op">(</span><span class="va">scene</span>, <span class="fl">8</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">scene</span>,
+  <span class="op">{</span><span class="op">}</span>,
+  <span class="st">"default RGB"</span>
+<span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_03/figure_api_06.png" width="95%">
+</center>
+<p>Note that first, the map is centered on the image at zoom scale 8. Then the image is displayed with an empty object (<code><a href="https://rdrr.io/r/base/Paren.html">{}</a></code>) for the <code>visParams</code> parameter. As a result, the image is displayed with the default visualization: first three bands map to R, G, B, respectively, and stretched to [0, 1] since the bands are <code>float</code> data type. This means that the coastal aerosol band (‘B1’) is rendered in red, the blue band (‘B2’) is rendered in green, and the green band (‘B3’) is rendered in blue. To render the image as a true-color composite, you need to tell Earth Engine to use the Landsat 8 bands ‘B4’, ‘B3’, and ‘B2’ for R, G, and B, respectively. Specify which <code>bands</code> to use with the bands property of the <code>visParams</code> object. Learn more about Landsat bands at <a href="https://www.usgs.gov/faqs/what-are-band-designations-landsat-satellites">this reference</a>.</p>
+<p>You also need to provide <code>min</code> and <code>max</code> values suitable for displaying reflectance from typical Earth surface targets. Although lists can be used to specify different values for each band, here it’s sufficient to specify <code>0.3</code> as <code>max</code> and use the default value of zero for the <code>min</code> parameter. Combining the visualization parameters into one object and displaying:</p>
+<div class="sourceCode" id="cb216"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">visParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B4"</span>, <span class="st">"B3"</span>, <span class="st">"B2"</span><span class="op">)</span>, max <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">scene</span>,
+  <span class="va">visParams</span>, 
+  <span class="st">"true-color composite"</span>
+<span class="op">)</span></code></pre></div>
+<p>The result should look something like Figure. Note that this code assigns the object of visualization parameters to a variable for possible future use. As you’ll soon discover, that object will be useful when you visualize image collections!</p>
+<center>
+<img src="images/chapter_03/figure_api_07.png" width="95%">
+</center>
+<p>Figure: Landsat 8 TOA reflectance image as a true-color composite, stretched to [0, 0.3].</p>
+<p>Try playing with visualizing different bands. Another favorite combination is ‘B5’, ‘B4’, and ‘B3’ which is called a false-color composite. Some other interesting false-color composites are described <a href="https://www.usgs.gov/media/images/common-landsat-band-rgb-composites">here</a>.</p>
+<p>Since Earth Engine is designed to do large-scale analyses, you are not limited to working with just one scene. Now it’s time to display a whole collection as an RGB composite!</p>
+</div>
+<div id="displaying-image-collections" class="section level3 unnumbered">
+<h3>Displaying image collections<a class="anchor" aria-label="anchor" href="#displaying-image-collections"><i class="fas fa-link"></i></a>
+</h3>
+<p>Adding an image collection to a map is similar to adding an image to a map, you have use <code>Map$addLayers</code>. For example, using MODIS images collection in the <code>dataset</code> collection and the <code>visParams</code> object defined previously,</p>
+<div class="sourceCode" id="cb217"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"MODIS/MCD43A4_006_EVI"</span><span class="op">)</span><span class="op">$</span>
+  <span class="fu">filter</span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">Filter</span><span class="op">$</span><span class="fu">date</span><span class="op">(</span><span class="st">"2018-04-01"</span>, <span class="st">"2018-05-01"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">colorized</span> <span class="op">&lt;-</span> <span class="va">dataset</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"EVI"</span><span class="op">)</span>
+<span class="va">colorizedVis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  min <span class="op">=</span> <span class="fl">0.0</span>,
+  max <span class="op">=</span> <span class="fl">1.0</span>,
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+    <span class="st">"FFFFFF"</span>, <span class="st">"CE7E45"</span>, <span class="st">"DF923D"</span>, <span class="st">"F1B555"</span>, <span class="st">"FCD163"</span>, <span class="st">"99B718"</span>, <span class="st">"74A901"</span>,
+    <span class="st">"66A000"</span>, <span class="st">"529400"</span>, <span class="st">"3E8601"</span>, <span class="st">"207401"</span>, <span class="st">"056201"</span>, <span class="st">"004C00"</span>, <span class="st">"023B01"</span>,
+    <span class="st">"012E01"</span>, <span class="st">"011D01"</span>, <span class="st">"011301"</span>
+  <span class="op">)</span>
+<span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">setCenter</span><span class="op">(</span><span class="op">-</span><span class="fl">7.03125</span>, <span class="fl">31.0529339857</span>, <span class="fl">2</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayers</span><span class="op">(</span>eeObject <span class="op">=</span> <span class="va">colorized</span>, visParams <span class="op">=</span> <span class="va">colorizedVis</span>, name <span class="op">=</span> <span class="st">"Colorized"</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_03/figure_api_08.png" width="95%">
+</center>
+<p>Figure: MODIS Combined 16-Day EVI</p>
+<p>Note that now you can zoom out and see a continuous mosaic where MODIS imagery is collected (i.e. over land).</p>
+</div>
+</div>
+<div id="compositing-masking-and-mosaicking" class="section level2 unnumbered">
+<h2>Compositing, Masking, and Mosaicking<a class="anchor" aria-label="anchor" href="#compositing-masking-and-mosaicking"><i class="fas fa-link"></i></a>
+</h2>
+<p>With the <a href="https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC8_L1T_TOA">Landsat 8 TOA reflectance collection</a> loaded into a variable called l8, you saw that the following code:</p>
+<div class="sourceCode" id="cb218"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">l8</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA"</span><span class="op">)</span>
+<span class="va">landsat2016</span> <span class="op">&lt;-</span> <span class="va">l8</span><span class="op">$</span><span class="fu">filterDate</span><span class="op">(</span><span class="st">"2016-01-01"</span>, <span class="st">"2016-12-31"</span><span class="op">)</span></code></pre></div>
+<p>One of the problems with this composite is that it’s full of clouds.</p>
+<div id="compositing-with-reducers" class="section level3 unnumbered">
+<h3>Compositing with Reducers<a class="anchor" aria-label="anchor" href="#compositing-with-reducers"><i class="fas fa-link"></i></a>
+</h3>
+<p>You were first introduced to reducers for getting statistics in an image region. That was a spatial reduction. Reducing an image collection to an image is a temporal reduction when the collection represents images over time. The type of <code>Reducer</code> you use defines how Earth Engine handles overlapping pixels. Landsat 8 visits the same spot on the Earth every 16 days. That means that over a 6 month period, there will be approximately 12 images (and more where the scenes overlap). Each pixel on the map is derived from a stack of pixels - one from each image in the collection being displayed.</p>
+<p>Merely adding the collection to the map results in selecting the most recent pixel - the one from the latest image in the stack. This behavior may be altered, using Earth Engine reducers. For example, rather than take the most recent pixel from the stack, Earth Engine can be instructed to pick the median value in the stack. This has the benefit of removing clouds (which have a high value) and shadows (which have a low value). When an image collection is reduced using the median reducer, the composite value is the median in each band, over time. For example, using Landsat scenes in 2016:</p>
+<div class="sourceCode" id="cb219"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Get the median over time, in each band, in each pixel.</span>
+<span class="va">median</span> <span class="op">&lt;-</span> <span class="va">l8</span><span class="op">$</span><span class="fu">filterDate</span><span class="op">(</span><span class="st">"2016-01-01"</span>, <span class="st">"2016-12-31"</span><span class="op">)</span><span class="op">$</span><span class="fu">median</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Make a handy variable of visualization parameters.</span>
+<span class="va">visParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B4"</span>, <span class="st">"B3"</span>, <span class="st">"B2"</span><span class="op">)</span>, max <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>
+
+<span class="co"># Display the median composite.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">median</span>, <span class="va">visParams</span>, <span class="st">"median"</span><span class="op">)</span></code></pre></div>
+<p>The new thing in this code is the <code><a href="https://rdrr.io/r/stats/median.html">median()</a></code> method applied to an image collection. Like the filtering methods, this is a shortcut for the more general <code>reduce()</code> method on image collections which takes an <code>ee$Reducer()</code> as an argument. When considering a reducer for an image collection, note that the output is an image, so reducers with non-numeric outputs, for example <code>histogram</code> or <code>toList</code> reducers, won’t work with an image collection.</p>
+<center>
+<img src="images/chapter_03/figure_api_09.png" width="95%">
+</center>
+<p>Figure: Landsat 8 median composite.</p>
+<p>When you zoom out on the median composite, you should see something like next figure. This should look considerably better than the composite you made previously. At this point, it’s worth stepping back and considering what’s been done to make that median composite. Earth Engine has loaded the entire Landsat 8 collection over the continental south american, and has calculated the median for every pixel. That’s a lot of data! Of course, you could compute annual medians, by first filtering the collection, <a href="https://developers.google.com/earth-engine/tutorials/tutorial_api_04#filtering-image-collections">as you’ve done previously</a>. The point is that if you had to download all that imagery and make this composite, it would be a big project. With Earth Engine, you get a result in seconds!</p>
+<p>Learn more about compositing and mosaicking <a href="https://r-earthengine.com/rgeebook/imagecollection.html">here</a>.</p>
+</div>
+<div id="masking-2" class="section level3 unnumbered">
+<h3>Masking<a class="anchor" aria-label="anchor" href="#masking-2"><i class="fas fa-link"></i></a>
+</h3>
+<p>Although the median composite is an improvement over the recent-value composite, you may want to mask parts of the image. Masking pixels in an image makes those pixels transparent and excludes them from analysis. Each pixel in each band of an image has a mask. Those with a mask value of 0 or below will be transparent. Those with a mask of any value above 0 will be rendered. The mask of an image is set using a call like <code>image1$mask(image2)</code>. This call takes the values of <code>image2</code> and makes them the mask of <code>image1</code>. Any pixels in image2 that have the value 0 will be made transparent in <code>image1</code>.</p>
+<p>For example, suppose you would like to mask all the water pixels in the median composite. A water mask can be created using the dataset described by <a href="https://doi.org/10.1126/science.1244693">Hansen et al. (2013)</a> which is in the Earth Engine data catalog. (Learn more about the Hansen et al. dataset in <a href="https://r-earthengine.com/rgeebook/global-forest-change.html">this tutorial</a>). In this dataset, water has a value of 2, land has the value 1, and ‘no data’ has the value 0. Use a bit of logic to create a mask image that has zeros where there’s no land:</p>
+<div class="sourceCode" id="cb220"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load or import the Hansen et al. forest change dataset.</span>
+<span class="va">hansenImage</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span><span class="st">"UMD/hansen/global_forest_change_2020_v1_8"</span><span class="op">)</span>
+
+<span class="co"># Select the land/water mask.</span>
+<span class="va">datamask</span> <span class="op">&lt;-</span> <span class="va">hansenImage</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"datamask"</span><span class="op">)</span>
+
+<span class="co"># Create a binary mask.</span>
+<span class="va">mask</span> <span class="op">&lt;-</span> <span class="va">datamask</span><span class="op">$</span><span class="fu">eq</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+
+<span class="co"># Update the composite mask with the water mask.</span>
+<span class="va">maskedComposite</span> <span class="op">&lt;-</span> <span class="va">median</span><span class="op">$</span><span class="fu">updateMask</span><span class="op">(</span><span class="va">mask</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">maskedComposite</span>, <span class="va">visParams</span>, <span class="st">"masked"</span><span class="op">)</span></code></pre></div>
+<center>
+<img src="images/chapter_03/figure_api_10.png" width="95%">
+</center>
+<p>There are a couple new things in this code that are worth mentioning in detail. First, the <code>select()</code> function is useful for extracting the bands of interest from an image. Here, we select only the band we care about: <code>datamask</code>. The next new thing is the logical operator <code>eq()</code> which stands for “equals.” We use <code>eq(1)</code> to create a binary image in which all the pixels that do not have the value of 1 in the <code>datamask</code> band (those that are water or no data) get a value of 0 in the resulting image.</p>
+<p>As a result of this masking, all the pixels in the median composite that are over land (according to the <a href="">Hansen et al. dataset</a>) are visible, but those over water (or nodata) are transparent and will be excluded from any analysis you do on the <code>maskedComposite</code> image.</p>
+</div>
+<div id="mosaicking-1" class="section level3 unnumbered">
+<h3>Mosaicking<a class="anchor" aria-label="anchor" href="#mosaicking-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>By combining the concepts of image collections, logical operators, masking and compositing, you can achieve interesting cartographic results. For example, suppose you want an image in which land pixels are displayed in true-color and all the other pixels are displayed in blue, you can do something like:</p>
+<div class="sourceCode" id="cb221"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Make a water image out of the mask.</span>
+<span class="va">water</span> <span class="op">&lt;-</span> <span class="va">mask</span><span class="op">$</span><span class="fu">Not</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Mask water with itself to mask all the zeros (non-water).</span>
+<span class="va">water</span> <span class="op">&lt;-</span> <span class="va">water</span><span class="op">$</span><span class="fu">mask</span><span class="op">(</span><span class="va">water</span><span class="op">)</span>
+
+<span class="co"># Make an image collection of visualization images.</span>
+<span class="va">mosaic</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  <span class="va">median</span><span class="op">$</span><span class="fu">visualize</span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B4"</span>, <span class="st">"B3"</span>, <span class="st">"B2"</span><span class="op">)</span>, max <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>,
+  <span class="va">water</span><span class="op">$</span><span class="fu">visualize</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"000044"</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">mosaic</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Display the mosaic.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">mosaic</span>,
+  <span class="op">{</span><span class="op">}</span>,
+  <span class="st">"custom mosaic"</span>
+<span class="op">)</span></code></pre></div>
+<p>There’s a lot going on in that code, so let’s dissect it. First, we use the <code>not()</code> logical operator to invert the mask we made earlier. Specifically, <code>not()</code> turns all the zeros into ones and all the non-zeros into zeros. It’s not completely correct to call that variable <code>water</code> because it includes some nodata pixels as well, but it’s OK in the present cartographic context. The next thing is to mask the “water” with itself. This results in an image in which all the water pixels are 1’s and everything else is masked. The final step is to combine the images with <code>mosaic()</code>. Since <code>mosaic()</code> works on an image collection, we pass a list of images that we want to combine into the image collection constructor, then call <code>mosaic()</code> as the final step. The order of the images in that list is important. Specifically, the output image will contain the last unmasked pixel from the stack of images in the input collection. In this case, that works because the water layer is the last (top) image in the collection, and only contains un-masked pixels where water occurs.</p>
+<p>Note that the images in the collection are visualization images. When you call <code>[visualize()]</code>(<a href="https://developers.google.com/earth-engine/apidocs/ee-image-visualize" class="uri">https://developers.google.com/earth-engine/apidocs/ee-image-visualize</a>) on an image, it gets turned into a 3-band, 8-bit image according to the visualization parameters you pass in. The default visualization parameters work fine for 3-band, 8-bit images, so you don’t need visualization parameters when you add the image to the map. The result should look like Figure 7.</p>
+<center>
+<img src="images/chapter_03/figure_api_11.png" width="95%">
+</center>
+<p>At this point, you’ve seen ways to visualize image collections as recent-value composites, methods for compositing image collections using reducers, and methods for making custom composites by masking and mosaicking a collection of images. In the next page, learn how to add a vegetation index to every image in a collection and use the index to make a “greenest pixel” composite.</p>
+</div>
+</div>
+<div id="ndvi-mapping-a-function-over-a-collection-quality-mosaicking" class="section level2 unnumbered">
+<h2>NDVI, Mapping a Function over a Collection, Quality Mosaicking<a class="anchor" aria-label="anchor" href="#ndvi-mapping-a-function-over-a-collection-quality-mosaicking"><i class="fas fa-link"></i></a>
+</h2>
+<p>Previously, you learned how to get individual Landsat scenes by doing something like this, where <code>l8</code> and <code>point</code> are imports representing the Landsat 8 TOA collection and an area-of-interest geometry:</p>
+<div class="sourceCode" id="cb222"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define a point of interest. Use the UI Drawing Tools to import a point</span>
+<span class="co"># geometry and name it "point" or set the point coordinates with the</span>
+<span class="co"># ee$Geometry$Point() function as demonstrated here.</span>
+<span class="va">point</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">122.292</span>, <span class="fl">37.9018</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Import the Landsat 8 TOA image collection.</span>
+<span class="va">l8</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">ImageCollection</span><span class="op">(</span><span class="st">"LANDSAT/LC08/C01/T1_TOA"</span><span class="op">)</span>
+
+<span class="co"># Get the least cloudy image in 2015.</span>
+<span class="va">image</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="fu">Image</span><span class="op">(</span>
+  <span class="va">l8</span><span class="op">$</span><span class="fu">filterBounds</span><span class="op">(</span><span class="va">point</span><span class="op">)</span><span class="op">$</span>
+    <span class="fu">filterDate</span><span class="op">(</span><span class="st">"2015-01-01"</span>, <span class="st">"2015-12-31"</span><span class="op">)</span><span class="op">$</span>
+    <span class="fu">sort</span><span class="op">(</span><span class="st">"CLOUD_COVER"</span><span class="op">)</span><span class="op">$</span>
+    <span class="fu">first</span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<p>Suppose now that you want to compute a Normalized Difference Vegetation Index (NDVI) image from the Landsat image. Vegetation reflects light in the near-infrared (NIR) part of the electromagnetic spectrum and absorbs light in the red part <a href="https://science.nasa.gov/ems/08_nearinfraredwaves">(Learn more about NIR reflectance from vegetation)</a>. NDVI uses this to create a single value roughly reflecting the photosynthetic activity occurring at a pixel. The calculation is (NIR - red) / (NIR + red). This results in a number between 1 and -1, where pixels with high photosynthetic activity have a high NDVI. This is one way to compute NDVI in Earth Engine:</p>
+<div class="sourceCode" id="cb223"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Compute the Normalized Difference Vegetation Index (NDVI).</span>
+<span class="va">nir</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"B5"</span><span class="op">)</span>
+<span class="va">red</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"B4"</span><span class="op">)</span>
+<span class="va">ndvi</span> <span class="op">&lt;-</span> <span class="va">nir</span><span class="op">$</span><span class="fu">subtract</span><span class="op">(</span><span class="va">red</span><span class="op">)</span><span class="op">$</span><span class="fu">divide</span><span class="op">(</span><span class="va">nir</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="va">red</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">rename</span><span class="op">(</span><span class="st">"NDVI"</span><span class="op">)</span>
+
+<span class="co"># Display the result.</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">centerObject</span><span class="op">(</span><span class="va">image</span>, <span class="fl">9</span><span class="op">)</span>
+<span class="va">ndviParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  min <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,
+  max <span class="op">=</span> <span class="fl">1</span>,
+  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"white"</span>, <span class="st">"green"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="va">ndvi</span>, <span class="va">ndviParams</span>, <span class="st">"NDVI image"</span><span class="op">)</span></code></pre></div>
+<p>The result should look something like figure. Note that we use the <code>select()</code> function you learned about in the previous section on masking to get the NIR and red bands, then compute NDVI using image mathematical operators that that you have also seen before in the section on <code>Image</code> math. Finally, display the image with a palette. Here we used color names instead of hex strings in the palette. (See <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value">this external reference about CSS color</a> for details.)</p>
+<center>
+<img src="images/chapter_03/figure_api_12.png" width="95%">
+</center>
+<p>Figure: NDVI for a single Landsat scene. Blue is low and green is high NDVI.</p>
+<p>The normalized difference operation is so ubiquitous in remote sensing, there is a <a href="https://developers.google.com/earth-engine/apidocs/ee-image-normalizeddifference">shortcut function</a> on an <code>ee$Image</code> that is useful for simplifying the code in the previous example:</p>
+<div class="sourceCode" id="cb224"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ndvi</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">rename</span><span class="op">(</span><span class="st">"NDVI"</span><span class="op">)</span></code></pre></div>
+<div id="mapping-a-function-over-a-collection" class="section level3 unnumbered">
+<h3>Mapping a Function over a Collection<a class="anchor" aria-label="anchor" href="#mapping-a-function-over-a-collection"><i class="fas fa-link"></i></a>
+</h3>
+<p>Suppose now that you want to add NDVI to every image in an image collection. The way to do that in Earth Engine is to <code>map()</code> a function over the collection. Don’t confuse <code>map()</code> with the <code>Map</code> object. The former is a method on a collection, and uses <em>map</em> in the <a href="https://en.wikipedia.org/wiki/Map_(parallel_pattern)">parallel computing sense</a> of applying a function to every element in a collection. The function defines the operations that will be applied to every element in the collection. You have seen a simple function in the R tutorial, but now we’re going to make a function that includes Earth Engine functionality. For example, copy the previous NDVI code into a function which returns the input image with an NDVI band:</p>
+<div class="sourceCode" id="cb225"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">addNDVI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">image</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">ndvi</span> <span class="op">&lt;-</span> <span class="va">image</span><span class="op">$</span><span class="fu">normalizedDifference</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B5"</span>, <span class="st">"B4"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">rename</span><span class="op">(</span><span class="st">"NDVI"</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">image</span><span class="op">$</span><span class="fu">addBands</span><span class="op">(</span><span class="va">ndvi</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># Test the addNDVI function on a single image.</span>
+<span class="va">ndvi</span> <span class="op">&lt;-</span> <span class="fu">addNDVI</span><span class="op">(</span><span class="va">image</span><span class="op">)</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="st">"NDVI"</span><span class="op">)</span></code></pre></div>
+<p>This code might not be as efficient for computing NDVI for a single image, but this function can be used as an argument to <code>map()</code> in order to add an NDVI band to every image in the collection. It’s often useful to first test a function on a single image, to make sure the function is behaving as you expect. Once you’ve tested the function on an individual image and have determined that it does what you want, you can map it over the collection:</p>
+<div class="sourceCode" id="cb226"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">withNDVI</span> <span class="op">&lt;-</span> <span class="va">l8</span><span class="op">$</span><span class="fu">map</span><span class="op">(</span><span class="va">addNDVI</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="make-a-greenest-pixel-composite" class="section level3 unnumbered">
+<h3>Make a greenest pixel composite<a class="anchor" aria-label="anchor" href="#make-a-greenest-pixel-composite"><i class="fas fa-link"></i></a>
+</h3>
+<p>Now that you’ve made an image collection in which each image has an NDVI band, we can explore a new way to make composites: <code>qualityMosaic()</code>. You may have noticed discontinuities between Landsat paths, even in the median pixel composite. Part of the reason for that may be due to differences in <a href="https://en.wikipedia.org/wiki/Phenology">phenology</a> as a result of images in adjacent paths being collected at different times (specifically, 8 days apart). One way to minimize this is to try to set pixel values in the composite from roughly the same phenological stage, for example the time of maximum greenness of plants (when the leaves are on and photosynthetically active). If we let max greenness be defined by the maximum NDVI, we can use <code>qualityMosaic()</code> to make a composite in which each pixel contains the maximum NDVI pixel from the collection. Now you can make use of the added NDVI band in your <code>withNDVI</code> collection:</p>
+<div class="sourceCode" id="cb227"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Make a "greenest" pixel composite.</span>
+<span class="va">greenest</span> <span class="op">&lt;-</span> <span class="va">withNDVI</span><span class="op">$</span><span class="fu">qualityMosaic</span><span class="op">(</span><span class="st">"NDVI"</span><span class="op">)</span>
+
+<span class="co"># Display the result.</span>
+<span class="va">visParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B4"</span>, <span class="st">"B3"</span>, <span class="st">"B2"</span><span class="op">)</span>, max <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  <span class="va">greenest</span>,
+  <span class="va">visParams</span>,
+  <span class="st">"Greenest pixel composite"</span>
+<span class="op">)</span></code></pre></div>
+<p>The result of this code should look something like Figure 9. Comparing Figure 9 to the median composite shown in Figure 6, observe that the greenest pixel composite is indeed much greener. However, close examination of water bodies should make a different problem apparent. Specifically, water bodies now appear cloudy. This is due to the way the <code>qualityMosaic()</code> method works: at each location, the entire time series is examined and the pixel with the maximum value in the NDVI band is set as the composite value. Because NDVI is higher over clouds than water, water areas get cloudy pixels, while vegetated areas all appear green because NDVI is highest when the vegetation in the pixel is photosynthetically active.</p>
+<center>
+<img src="images/chapter_03/figure_api_13.png" width="95%">
+</center>
+<p>Now you’ve seen several ways to composite and mosaic images in Earth Engine. You can make recent-value, median, or greenest-pixel composites from images filtered by time and place or all images in the collection. You’ve learned how to do computations on the imagery and extract information.</p>
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></div>
+<div class="next"><a href="global-forest-change.html">Global Forest Change</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li>
+<a class="nav-link" href="#the-earth-engine-api">The Earth Engine API</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#prerequisites">Prerequisites</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#visualizing-images-and-image-bands">Visualizing Images and Image Bands</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#digression-images-in-earth-engine">Digression: Images in Earth Engine</a></li>
+<li><a class="nav-link" href="#customizing-layer-visualization">Customizing layer visualization</a></li>
+<li><a class="nav-link" href="#digression-palettes">Digression: Palettes</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#computations-using-images">Computations using Images</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#image-math">Image math</a></li>
+<li><a class="nav-link" href="#image-statistics">Image statistics</a></li>
+<li><a class="nav-link" href="#digression-scale-in-earth-engine">Digression: Scale in Earth Engine</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#image-collections">Image Collections</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#filtering-image-collections">Filtering image collections</a></li>
+<li><a class="nav-link" href="#digression-displaying-rgb-images">Digression: Displaying RGB images</a></li>
+<li><a class="nav-link" href="#displaying-image-collections">Displaying image collections</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#compositing-masking-and-mosaicking">Compositing, Masking, and Mosaicking</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#compositing-with-reducers">Compositing with Reducers</a></li>
+<li><a class="nav-link" href="#masking-2">Masking</a></li>
+<li><a class="nav-link" href="#mosaicking-1">Mosaicking</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#ndvi-mapping-a-function-over-a-collection-quality-mosaicking">NDVI, Mapping a Function over a Collection, Quality Mosaicking</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#mapping-a-function-over-a-collection">Mapping a Function over a Collection</a></li>
+<li><a class="nav-link" href="#make-a-greenest-pixel-composite">Make a greenest pixel composite</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/03_api_tutorials.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/03_api_tutorials.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

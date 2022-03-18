@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Integrate Rmarkdown and rgee | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Integrate Rmarkdown and rgee | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Integrate Rmarkdown and rgee | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="1. The problem GEE offers on-the-fly computation for rendering EE spatial objects: library(rgee) library(rgeeExtra) ee_Initialize() img &lt;- ee$Image$Dataset$CGIAR_SRTM90_V4 Map$addLayer(log1p(img),...">
+<meta property="og:description" content="1. The problem GEE offers on-the-fly computation for rendering EE spatial objects: library(rgee) library(rgeeExtra) ee_Initialize() img &lt;- ee$Image$Dataset$CGIAR_SRTM90_V4 Map$addLayer(log1p(img),...">
+<meta name="twitter:description" content="1. The problem GEE offers on-the-fly computation for rendering EE spatial objects: library(rgee) library(rgeeExtra) ee_Initialize() img &lt;- ee$Image$Dataset$CGIAR_SRTM90_V4 Map$addLayer(log1p(img),...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="active" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="integrate-rmarkdown-and-rgee" class="section level1 unnumbered">
+<h1>Integrate Rmarkdown and rgee<a class="anchor" aria-label="anchor" href="#integrate-rmarkdown-and-rgee"><i class="fas fa-link"></i></a>
+</h1>
+<div id="the-problem" class="section level2 unnumbered">
+<h2>1. The problem<a class="anchor" aria-label="anchor" href="#the-problem"><i class="fas fa-link"></i></a>
+</h2>
+<p>GEE offers on-the-fly computation for rendering EE spatial objects:</p>
+<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rgeeExtra</span><span class="op">)</span>
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="op">)</span>
+<span class="va">img</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Image</span><span class="op">$</span><span class="va">Dataset</span><span class="op">$</span><span class="va">CGIAR_SRTM90_V4</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log1p</a></span><span class="op">(</span><span class="va">img</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<br><center>
+<img src="images/rgee_plusrmarkdown/r6_01.png" width="95%">
+</center>
+<p><br></p>
+<p>However, this interactive map service <strong>is temporary</strong>, disappearing after a short period of time (~ 4 hours). This makes <code>Map$addLayer</code> unusable for report generation. In this vignette, we will learn to create a <strong>permanent interactive map</strong>.</p>
+</div>
+<div id="a-tentative-workaround" class="section level2 unnumbered">
+<h2>2. A tentative workaround<a class="anchor" aria-label="anchor" href="#a-tentative-workaround"><i class="fas fa-link"></i></a>
+</h2>
+<p>Instead of using GEE API for creating interactive maps, we will use <a href="https://github.com/developmentseed/titiler"><strong>titiler</strong></a>. titiler creates web map tiles dynamically based on COG (STAC) resources. Since an exported EE task to retrieve images can return a COG, we just have to move these results to a <strong>storage web service with <a href="https://www.cogeo.org/">HTTP GET range requests</a></strong>.</p>
+<br><center>
+<img src="images/rgee_plusrmarkdown/r6_02.png" width="95%">
+</center>
+<p><br></p>
+<p>Fortunately, <a href="https://cloud.google.com/storage/docs/json_api/v1/objects/get">GCS counts with this feature</a>, so if we manage to move our results to GCS, the work would be already done :)</p>
+<pre><code>GET /OBJECT_NAME HTTP/1.1
+Host: BUCKET_NAME.storage.googleapis.com
+Content-Length: 0
+Authorization: AUTHENTICATION_STRING
+Range: bytes=BYTE_RANGE
+If-Match: ENTITY_TAG
+If-Modified-Since: DATE
+If-None-Match: ENTITY_TAG
+If-Unmodified-Since: DATE</code></pre>
+</div>
+<div id="show-me-the-code" class="section level2 unnumbered">
+<h2>3. Show me the code<a class="anchor" aria-label="anchor" href="#show-me-the-code"><i class="fas fa-link"></i></a>
+</h2>
+<p>First, load <code>rgee</code> and <code>googleCloudStorageR</code> and initialize the EE API. You must have correctly configured a service account key, if not check our tutorial “<a href="https://r-spatial.github.io/rgee/articles/rgee05.html"><strong>how to integrate Google Cloud Storage and rgee</strong></a>”.</p>
+<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/rgee/">rgee</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudStorageR/">googleCloudStorageR</a></span><span class="op">)</span>
+<span class="co"># Init the EE API</span>
+<span class="fu">ee_Initialize</span><span class="op">(</span><span class="st">"csaybar"</span>, gcs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co"># Validate your SaK</span>
+<span class="co"># ee_utils_sak_validate(bucket = "rgee_examples")</span></code></pre></div>
+<p>Define your study area.</p>
+<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Define an study area</span>
+<span class="va">EE_geom</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">Geometry</span><span class="op">$</span><span class="fu">Point</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">70.06240</span>, <span class="op">-</span><span class="fl">6.52077</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">buffer</span><span class="op">(</span><span class="fl">5000</span><span class="op">)</span></code></pre></div>
+<p>Select an <code>ee$Image</code>, for instance, a Landsat-8 image.</p>
+<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">l8img</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="va">Dataset</span><span class="op">$</span><span class="va">LANDSAT_LC08_C02_T2_L2</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterDate</span><span class="op">(</span><span class="st">'2021-06-01'</span>, <span class="st">'2021-12-01'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">filterBounds</span><span class="op">(</span><span class="va">EE_geom</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">ee</span><span class="op">$</span><span class="va">ImageCollection</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>Move <code>l8img</code> from EE to GCS.</p>
+<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gcs_l8_name</span>  <span class="op">&lt;-</span> <span class="st">"l8demo2"</span> <span class="co"># name of the image in GCS.</span>
+<span class="va">BUCKET_NAME</span> <span class="op">&lt;-</span> <span class="st">"rgee_examples"</span> <span class="co"># set here your bucket name</span>
+<span class="va">task</span> <span class="op">&lt;-</span> <span class="fu">ee_image_to_gcs</span><span class="op">(</span>
+  image <span class="op">=</span> <span class="va">l8img</span><span class="op">$</span><span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"SR_B%s"</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>,
+  region <span class="op">=</span> <span class="va">EE_geom</span>,
+  fileNamePrefix <span class="op">=</span> <span class="va">gcs_l8_name</span>,
+  timePrefix <span class="op">=</span> <span class="cn">FALSE</span>,
+  bucket <span class="op">=</span> <span class="va">BUCKET_NAME</span>,
+  scale <span class="op">=</span> <span class="fl">10</span>,
+  formatOptions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cloudOptimized <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># Return a COG rather than a TIFF file.</span>
+<span class="op">)</span>
+<span class="va">task</span><span class="op">$</span><span class="fu">start</span><span class="op">(</span><span class="op">)</span>
+<span class="fu">ee_monitoring</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>Titiler needs resources downloadable for anyone. Therefore, <strong>we recommend you to work with GCS buckets with fine-grained access</strong>. In this way, you can decide individually which objects to make public. On the other hand, if you decide to work with buckets with uniform access, you will have to expose the entire bucket!. The code below makes a specific object in your bucket <strong>public to internet</strong>.</p>
+<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Make PUBLIC the GCS object </span>
+<span class="fu">googleCloudStorageR</span><span class="fu">::</span><span class="fu">gcs_update_object_acl</span><span class="op">(</span>
+  object_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">gcs_l8_name</span>, <span class="st">".tif"</span><span class="op">)</span>,
+  bucket <span class="op">=</span> <span class="va">BUCKET_NAME</span>,
+  entity_type <span class="op">=</span> <span class="st">"allUsers"</span>
+<span class="op">)</span></code></pre></div>
+<p>Finally, use <code>Map$addLayer</code> to display the COG resource. By default, <code>Map$addLayer</code> use the open endpoint: <a href="https://api.cogeo.xyz/docs" class="uri">https://api.cogeo.xyz/docs</a>.</p>
+<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">img_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"https://storage.googleapis.com/%s/%s.tif"</span>, <span class="va">BUCKET_NAME</span>, <span class="va">gcs_l8_name</span><span class="op">)</span>
+<span class="va">visParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>bands<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SR_B4"</span>,<span class="st">"SR_B3"</span>,<span class="st">"SR_B2"</span><span class="op">)</span>, min <span class="op">=</span> <span class="fl">8000</span>, max <span class="op">=</span> <span class="fl">20000</span>, nodata <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">centerObject</span><span class="op">(</span><span class="va">img_id</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  eeObject <span class="op">=</span> <span class="va">img_id</span>, 
+  visParams <span class="op">=</span> <span class="va">visParams</span>,
+  name <span class="op">=</span> <span class="st">"My_first_COG"</span>,
+  titiler_server <span class="op">=</span> <span class="st">"https://api.cogeo.xyz/"</span>
+<span class="op">)</span></code></pre></div>
+<p>If you prefer to use <a href="https://api.cogeo.xyz/docs">titiler syntax</a>, set the parameter
+<code>titiler_viz_convert</code> as FALSE.</p>
+<div class="sourceCode" id="cb127"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">visParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>expression <span class="op">=</span> <span class="st">"B4,B3,B2"</span>, rescale <span class="op">=</span> <span class="st">"8000, 20000"</span>, resampling_method <span class="op">=</span> <span class="st">"cubic"</span><span class="op">)</span>
+<span class="va">Map</span><span class="op">$</span><span class="fu">addLayer</span><span class="op">(</span>
+  eeObject <span class="op">=</span> <span class="va">img_id</span>, 
+  visParams <span class="op">=</span> <span class="va">visParams</span>,
+  name <span class="op">=</span> <span class="st">"My_first_COG"</span>,
+  titiler_server <span class="op">=</span> <span class="st">"https://api.cogeo.xyz/"</span>,
+  titiler_viz_convert <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span></code></pre></div>
+<br><center>
+<img src="images/rgee_plusrmarkdown/r6_03.png" width="95%">
+</center>
+<p><br></p>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="sync-gcs-and-rgee.html">sync GCS and rgee</a></div>
+<div class="next"><a href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#integrate-rmarkdown-and-rgee">Integrate Rmarkdown and rgee</a></li>
+<li><a class="nav-link" href="#the-problem">1. The problem</a></li>
+<li><a class="nav-link" href="#a-tentative-workaround">2. A tentative workaround</a></li>
+<li><a class="nav-link" href="#show-me-the-code">3. Show me the code</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/02_dev_env.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/02_dev_env.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

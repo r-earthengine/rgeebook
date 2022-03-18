@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Deferred exacution | Earth Engine with R</title>
+<meta name="author" content="rgee team">
+<meta name="generator" content="bookdown 0.25.2 with bs4_book()">
+<meta property="og:title" content="Deferred exacution | Earth Engine with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deferred exacution | Earth Engine with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1.9000/transition.js"></script><script src="libs/bs3compat-0.3.1.9000/tabs.js"></script><script src="libs/bs3compat-0.3.1.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-141212623-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-141212623-1');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<meta name="description" content="The Client vs. Server doc describes how objects referenced in your script can be either client-side or server-side. The complete script contains not only the objects you want to use, but also a...">
+<meta property="og:description" content="The Client vs. Server doc describes how objects referenced in your script can be either client-side or server-side. The complete script contains not only the objects you want to use, but also a...">
+<meta name="twitter:description" content="The Client vs. Server doc describes how objects referenced in your script can be either client-side or server-side. The complete script contains not only the objects you want to use, but also a...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Earth Engine with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="earthengine-examples.html">earthengine-examples</a></li>
+<li><a class="" href="rgee-cheatsheet.html">rgee-cheatsheet</a></li>
+<li class="book-part">R Guides</li>
+<li><a class="" href="overview.html">Overview</a></li>
+<li><a class="" href="rgeeextra.html">rgeeExtra</a></li>
+<li><a class="" href="visualization.html">Visualization</a></li>
+<li class="book-part">Get Started</li>
+<li><a class="" href="r-quickstart.html">R Quickstart</a></li>
+<li><a class="" href="coding-best-practices.html">Coding Best Practices</a></li>
+<li><a class="" href="debugging.html">Debugging</a></li>
+<li class="book-part">Development Environments</li>
+<li><a class="" href="earth-engine-in-rstudio.html">Earth Engine in Rstudio</a></li>
+<li><a class="" href="r-and-python-requirements.html">R and Python requirements</a></li>
+<li><a class="" href="sync-gcs-and-rgee.html">sync GCS and rgee</a></li>
+<li><a class="" href="integrate-rmarkdown-and-rgee.html">Integrate Rmarkdown and rgee</a></li>
+<li><a class="" href="deploy-rgee-shiny-apps.html">Deploy rgee Shiny apps</a></li>
+<li><a class="" href="comparing-rgee-vs-python-and-javascript.html">Comparing rgee vs Python and Javascript</a></li>
+<li><a class="" href="extra-considerations.html">Extra considerations</a></li>
+<li class="book-part">API Tutorials</li>
+<li><a class="" href="overview-1.html">Overview</a></li>
+<li><a class="" href="introduction-to-r-for-earth-engine.html">Introduction to R for Earth Engine</a></li>
+<li><a class="" href="the-earth-engine-api.html">The Earth Engine API</a></li>
+<li><a class="" href="global-forest-change.html">Global Forest Change</a></li>
+<li><a class="" href="global-surface-water.html">Global Surface Water</a></li>
+<li><a class="" href="video-tutorials-1.html">Video Tutorials</a></li>
+<li class="book-part">Concepts</li>
+<li><a class="" href="how-earth-engine-works.html">How Earth Engine works</a></li>
+<li><a class="" href="client-vs-server.html">Client vs Server</a></li>
+<li><a class="active" href="deferred-exacution.html">Deferred exacution</a></li>
+<li><a class="" href="scale.html">Scale</a></li>
+<li><a class="" href="projections.html">Projections</a></li>
+<li class="book-part">Objects and Methods</li>
+<li><a class="" href="objects-and-methods-overview.html">Objects and Methods Overview</a></li>
+<li><a class="" href="image.html">Image</a></li>
+<li><a class="" href="imagecollection.html">ImageCollection</a></li>
+<li><a class="" href="geometry.html">Geometry</a></li>
+<li><a class="" href="feature-featurecollection.html">Feature &amp; FeatureCollection</a></li>
+<li><a class="" href="reducer.html">Reducer</a></li>
+<li><a class="" href="join.html">Join</a></li>
+<li><a class="" href="array.html">Array</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/r-earthengine/rgeebook">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="deferred-exacution" class="section level1 unnumbered">
+<h1>Deferred exacution<a class="anchor" aria-label="anchor" href="#deferred-exacution"><i class="fas fa-link"></i></a>
+</h1>
+<p>The <a href="https://r-earthengine.com/rgeebook/client-vs-server.html">Client vs. Server</a> doc describes how objects referenced in your script can be either client-side or server-side. The complete script contains not only the objects you want to use, but also a set of instructions that tell Earth Engine what to do with them. This doc describes how those instructions are sent to Google for processing and how the results are sent back to your web browser (the client) for display.</p>
+<p>When you write a script in Earth Engine (R), that code does NOT run directly on Earth Engine servers at Google. Instead, the <a href="https://github.com/r-spatial/rgee">client library</a> encodes the script into a set of <a href="http://www.json.org/">JSON</a> objects, sends the objects to Google and waits for a response. Each object represents a set of operations required to get a particular output, an image to display in the client, for example. Consider the following R code, run in the Rstudio:</p>
+<div class="sourceCode" id="cb282"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb282-1"><a href="deferred-exacution.html#cb282-1"></a><span class="kw">var</span> image <span class="op">=</span> <span class="va">ee</span>.<span class="at">Image</span>(<span class="st">'CGIAR/SRTM90_V4'</span>)<span class="op">;</span></span>
+<span id="cb282-2"><a href="deferred-exacution.html#cb282-2"></a><span class="kw">var</span> operation <span class="op">=</span> <span class="va">image</span>.<span class="at">add</span>(<span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb282-3"><a href="deferred-exacution.html#cb282-3"></a><span class="at">print</span>(<span class="va">operation</span>.<span class="at">toString</span>())<span class="op">;</span></span>
+<span id="cb282-4"><a href="deferred-exacution.html#cb282-4"></a><span class="at">print</span>(operation)<span class="op">;</span></span></code></pre></div>
+<p>The first print statement will output the JSON structure that the client library uses to describe that image to the server at Google:</p>
+<div class="sourceCode" id="cb283"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb283-1"><a href="deferred-exacution.html#cb283-1"></a><span class="va">ee</span>.<span class="at">Image</span>(<span class="op">{</span></span>
+<span id="cb283-2"><a href="deferred-exacution.html#cb283-2"></a>  <span class="st">"type"</span><span class="op">:</span> <span class="st">"Invocation"</span><span class="op">,</span></span>
+<span id="cb283-3"><a href="deferred-exacution.html#cb283-3"></a>  <span class="st">"arguments"</span><span class="op">:</span> <span class="op">{</span></span>
+<span id="cb283-4"><a href="deferred-exacution.html#cb283-4"></a>    <span class="st">"image1"</span><span class="op">:</span> <span class="op">{</span></span>
+<span id="cb283-5"><a href="deferred-exacution.html#cb283-5"></a>      <span class="st">"type"</span><span class="op">:</span> <span class="st">"Invocation"</span><span class="op">,</span></span>
+<span id="cb283-6"><a href="deferred-exacution.html#cb283-6"></a>      <span class="st">"arguments"</span><span class="op">:</span> <span class="op">{</span></span>
+<span id="cb283-7"><a href="deferred-exacution.html#cb283-7"></a>        <span class="st">"id"</span><span class="op">:</span> <span class="st">"CGIAR/SRTM90_V4"</span></span>
+<span id="cb283-8"><a href="deferred-exacution.html#cb283-8"></a>      <span class="op">},</span></span>
+<span id="cb283-9"><a href="deferred-exacution.html#cb283-9"></a>      <span class="st">"functionName"</span><span class="op">:</span> <span class="st">"Image.load"</span></span>
+<span id="cb283-10"><a href="deferred-exacution.html#cb283-10"></a>    <span class="op">},</span></span>
+<span id="cb283-11"><a href="deferred-exacution.html#cb283-11"></a>    <span class="st">"image2"</span><span class="op">:</span> <span class="op">{</span></span>
+<span id="cb283-12"><a href="deferred-exacution.html#cb283-12"></a>      <span class="st">"type"</span><span class="op">:</span> <span class="st">"Invocation"</span><span class="op">,</span></span>
+<span id="cb283-13"><a href="deferred-exacution.html#cb283-13"></a>      <span class="st">"arguments"</span><span class="op">:</span> <span class="op">{</span></span>
+<span id="cb283-14"><a href="deferred-exacution.html#cb283-14"></a>        <span class="st">"value"</span><span class="op">:</span> <span class="dv">10</span></span>
+<span id="cb283-15"><a href="deferred-exacution.html#cb283-15"></a>      <span class="op">},</span></span>
+<span id="cb283-16"><a href="deferred-exacution.html#cb283-16"></a>      <span class="st">"functionName"</span><span class="op">:</span> <span class="st">"Image.constant"</span></span>
+<span id="cb283-17"><a href="deferred-exacution.html#cb283-17"></a>    <span class="op">}</span></span>
+<span id="cb283-18"><a href="deferred-exacution.html#cb283-18"></a>  <span class="op">},</span></span>
+<span id="cb283-19"><a href="deferred-exacution.html#cb283-19"></a>  <span class="st">"functionName"</span><span class="op">:</span> <span class="st">"Image.add"</span></span>
+<span id="cb283-20"><a href="deferred-exacution.html#cb283-20"></a><span class="op">}</span>)</span>
+<span id="cb283-21"><a href="deferred-exacution.html#cb283-21"></a>    </span></code></pre></div>
+<p>The second print statement will send the request to Google and output the <a href="https://en.wikipedia.org/wiki/POST_(HTTP)">POST</a> response from Google servers. To see the response in all its JSON glory, click the <code>JSON</code> link on the right side of the console, next to the printed object:</p>
+<div class="sourceCode" id="cb284"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb284-1"><a href="deferred-exacution.html#cb284-1"></a><span class="op">{</span></span>
+<span id="cb284-2"><a href="deferred-exacution.html#cb284-2"></a>  <span class="st">"type"</span><span class="op">:</span> <span class="st">"Image"</span><span class="op">,</span></span>
+<span id="cb284-3"><a href="deferred-exacution.html#cb284-3"></a>  <span class="st">"bands"</span><span class="op">:</span> [</span>
+<span id="cb284-4"><a href="deferred-exacution.html#cb284-4"></a>    <span class="op">{</span></span>
+<span id="cb284-5"><a href="deferred-exacution.html#cb284-5"></a>      <span class="st">"id"</span><span class="op">:</span> <span class="st">"elevation"</span><span class="op">,</span></span>
+<span id="cb284-6"><a href="deferred-exacution.html#cb284-6"></a>      <span class="st">"data_type"</span><span class="op">:</span> <span class="op">{</span></span>
+<span id="cb284-7"><a href="deferred-exacution.html#cb284-7"></a>        <span class="st">"type"</span><span class="op">:</span> <span class="st">"PixelType"</span><span class="op">,</span></span>
+<span id="cb284-8"><a href="deferred-exacution.html#cb284-8"></a>        <span class="st">"precision"</span><span class="op">:</span> <span class="st">"int"</span><span class="op">,</span></span>
+<span id="cb284-9"><a href="deferred-exacution.html#cb284-9"></a>        <span class="st">"min"</span><span class="op">:</span> <span class="dv">-32758</span><span class="op">,</span></span>
+<span id="cb284-10"><a href="deferred-exacution.html#cb284-10"></a>        <span class="st">"max"</span><span class="op">:</span> <span class="dv">32777</span></span>
+<span id="cb284-11"><a href="deferred-exacution.html#cb284-11"></a>      <span class="op">},</span></span>
+<span id="cb284-12"><a href="deferred-exacution.html#cb284-12"></a>      <span class="st">"crs"</span><span class="op">:</span> <span class="st">"EPSG:4326"</span><span class="op">,</span></span>
+<span id="cb284-13"><a href="deferred-exacution.html#cb284-13"></a>      <span class="st">"crs_transform"</span><span class="op">:</span> [</span>
+<span id="cb284-14"><a href="deferred-exacution.html#cb284-14"></a>        <span class="fl">0.0008333333535119891</span><span class="op">,</span></span>
+<span id="cb284-15"><a href="deferred-exacution.html#cb284-15"></a>        <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb284-16"><a href="deferred-exacution.html#cb284-16"></a>        <span class="dv">-180</span><span class="op">,</span></span>
+<span id="cb284-17"><a href="deferred-exacution.html#cb284-17"></a>        <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb284-18"><a href="deferred-exacution.html#cb284-18"></a>        <span class="fl">-0.0008333333535119891</span><span class="op">,</span></span>
+<span id="cb284-19"><a href="deferred-exacution.html#cb284-19"></a>        <span class="dv">60</span></span>
+<span id="cb284-20"><a href="deferred-exacution.html#cb284-20"></a>      ]</span>
+<span id="cb284-21"><a href="deferred-exacution.html#cb284-21"></a>    <span class="op">}</span></span>
+<span id="cb284-22"><a href="deferred-exacution.html#cb284-22"></a>  ]</span>
+<span id="cb284-23"><a href="deferred-exacution.html#cb284-23"></a><span class="op">}</span></span>
+<span id="cb284-24"><a href="deferred-exacution.html#cb284-24"></a>    </span></code></pre></div>
+<p>Nothing is sent to Google for processing until there is a request for it. In this example, <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> is sufficient to request the result of the computation. (In R, it’s necessary to call <code>getInfo()</code> on the object being printed; otherwise the request JSON is printed). No processing is done on the server until that result is explicitly requested.</p>
+<p>Another example of requesting something is displaying it on the map with <code>Map$addLayer()</code>. When this request is sent to Google, only the tiles necessary to display the result in the Rstudio are returned. Specifically, the position of the map and the zoom level determine which data get processed and turned into images that can be displayed on the map. If you pan or zoom, note that other tiles are computed lazily. This on-demand system allows for parallelization and efficient processing, but also means that the image displayed on the map is produced from different inputs depending on the zoom level and location of the map bounds as visible in the Rstudio. Learn more about how inputs to a computation are determined from the request in the <a href="https://r-earthengine.com/rgeebook/scale.html">Scale</a> doc.</p>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="client-vs-server.html">Client vs Server</a></div>
+<div class="next"><a href="scale.html">Scale</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav"><li><a class="nav-link" href="#deferred-exacution">Deferred exacution</a></li></ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/r-earthengine/rgeebook/blob/master/chapters/04_concepts.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/r-earthengine/rgeebook/edit/master/chapters/04_concepts.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Earth Engine with R</strong>" was written by rgee team. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>
