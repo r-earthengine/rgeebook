@@ -978,29 +978,29 @@ ee_Initialize()
 
 Figure 1. Forest change estimated by Hansen et al. (2013). Global Change, 2000 - 2012 (left); Change in Riau, Indonesia, 2000 - 2012 (right)
 
-Welcome to the Google Earth Engine tutorial for using [Hansen et al. (2013)](http:#www.sciencemag.org/content/342/6160/850) global forest cover and change data and Forest Monitoring for Action (FORMA, [Hammer et al. 2009](https:#www.cgdev.org/sites/default/files/1423248_file_Hammer_Kraft_Wheeler_FORMA_FINAL.pdf)) data from [Global Forest Watch](http:#www.globalforestwatch.org/). This tutorial provides examples of how to use Earth Engine to visualize these data, how to compute forest change over time and other statistics within a region of interest and how to download both the data and results of analyses.
+Welcome to the Google Earth Engine tutorial for using [Hansen et al. (2013)](http:#www.sciencemag.org/content/342/6160/850) global forest cover and change data and Forest Monitoring for Action (FORMA, [Hammer et al. 2009](https:#www.cgdev.org/sites/default/files/1423248_file_Hammer_Kraft_Wheeler_FORMA_FINAL.pdf)) data from [Global Forest Watch](http://www.globalforestwatch.org/). This tutorial provides examples of how to use Earth Engine to visualize these data, how to compute forest change over time and other statistics within a region of interest and how to download both the data and results of analyses.
 
 ### License and Attribution {-}
 
-The data described in this tutorial are licensed under a Creative Commons Attribution 4.0 International License. Please use the recommended citation on the relevant [dataset description page](https:#developers.google.com/earth-engine/datasets).
+The data described in this tutorial are licensed under a Creative Commons Attribution 4.0 International License. Please use the recommended citation on the relevant [dataset description page](https://developers.google.com/earth-engine/datasets).
 
 ### Prerequisites {-}
 
 The tutorial assumes no programming background, although it does assume a willingness to learn some programming. Before proceeding, please make sure to:
  
- - Signup for Earth Engine. Once you have been accepted, you will receive an email with additional information.
+ - [Signup for Earth Engine](https://signup.earthengine.google.com/). Once you have been accepted, you will receive an email with additional information.
  
- - Get familiar with the [Earth Engine Rstudio](), the IDE for writing Earth Engine R code in Rstudio. Learn more [here]().
+ - Get familiar with the Earth Engine Rstudio, the IDE for writing Earth Engine R code in Rstudio. Learn more [here](https://r-earthengine.com/rgeebook/earth-engine-in-rstudio.html).
  
- - If you are unfamiliar with R, check out the [R for Earth Engine tutorial]().
+ - If you are unfamiliar with R, check out the [R for Earth Engine tutorial](https://r-earthengine.com/rgeebook/introduction-to-r-for-earth-engine.html).
  
- - If you are unfamiliar with the Earth Engine API, check out the [Introduction to the Earth Engine API]() tutorial.
+ - If you are unfamiliar with the Earth Engine API, check out the [Introduction to the Earth Engine API](https://r-earthengine.com/rgeebook/the-earth-engine-api.html) tutorial.
 
-Once you're familiar with R, the Earth Engine API and Rstudio, [get started on the tutorial]().
+Once you're familiar with R, the Earth Engine API and Rstudio, [get started on the tutorial](https://r-earthengine.com/rgeebook/global-forest-change.html).
 
 ## Introduction to Hansen et al. Global Forest Change Data {-}
 
-The [Hansen et al. (2013) Global Forest Change dataset](https:#developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2015_v1_3) in Earth Engine represents forest change, at 30 meters resolution, globally, between 2000 and 2014. Let's start by adding the Hansen et al. data to the map. Either import the global forest change data ([learn more about searching and importing datasets]()) by searching for "Hansen forest" and naming the import `gfc2014`, or copy the following code into the Rstudio:
+The [Hansen et al. (2013) Global Forest Change dataset](https://developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2020_v1_8) in Earth Engine represents forest change, at 30 meters resolution, globally, between 2000 and 2014. Let's start by adding the Hansen et al. data to the map. Either import the global forest change data by searching for "Hansen forest" and naming the import `gfc2014`, or copy the following code into the Rstudio:
 
 ```{r}
 gfc2014 <- ee$Image('UMD/hansen/global_forest_change_2015')
@@ -1013,15 +1013,15 @@ Click on the **Run** button at the top of the Rstudio and you should see somethi
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_01.png"  width=100%>
 </center>
 
-Figure 1. Default visualization of Hansen et al. (2013) forest change data.
+Default visualization of Hansen et al. (2013) forest change data.
 
-Don't worry, you'll make it look better soon. ([Learn more about default image visualizations in Earth Engine]()). By the end of this section, you'll have an image that looks something like Figure 2, where green represents where the study detected forest in the year 2000, red is estimated forest loss over the study period, blue is forest gain during that period, magenta is areas where forest has been both lost and gained, and non-forest areas are masked.
+Don't worry, you'll make it look better soon. ([Learn more about default image visualizations in Earth Engine](https://r-earthengine.com/rgeebook/image.html)). By the end of this section, you'll have an image that looks something like Figure 2, where green represents where the study detected forest in the year 2000, red is estimated forest loss over the study period, blue is forest gain during that period, magenta is areas where forest has been both lost and gained, and non-forest areas are masked.
 
 <center>
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_12.png"  width=100%>
 </center>
 
-Figure 2. Custom visualization of Hansen et al. (2013) forest change data.
+Custom visualization of Hansen et al. (2013) forest change data.
 
 Recall that when a multi-band image is added to a map, the first three bands of the image are chosen as red, green, and blue, respectively, and stretched according to the data type of each band. The reason the image looks red is that the first three bands are treecover2000, loss, and gain. The treecover2000 band is expressed as a percent and has values much higher than loss (green) and gain (blue) which are binary ({0, 1}). The image therefore displays as overwhelmingly red.
 
@@ -1095,7 +1095,7 @@ This results in an image that should look something like Figure 3.
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_02.png"  width=100%>
 </center>
 
-Figure 3. Grayscale image of year 2000 tree cover in the South America.
+Grayscale image of year 2000 tree cover in the South America.
 
 Here's an image that uses 3 bands, Landsat bands 5, 4, and 3 for 2015. This band combination shows healthy vegetation as green and soil as mauve::
 
@@ -1110,7 +1110,7 @@ The result should look something like Figure 4.
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_03.png"  width=100%>
 </center>
 
-Figure 4. Landsat 7, year 2015 false color composite of the South America.
+Landsat 7, year 2015 false color composite of the South America.
 
 One nice visualization of the Global Forest Change dataset shows forest extent in 2000 as green, forest loss as red, and forest gain as blue. Specifically, make loss the first band (red), treecover2000 the second band (green), and gain the third band (blue):
 
@@ -1124,7 +1124,7 @@ The loss and gain band values are binary, so they will be barely visible on the 
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_04.png"  width=100%>
 </center>
 
-Figure 5. Year 2000 tree cover in the South America (green).
+Year 2000 tree cover in the South America (green).
 
 We'd like forest loss to show up as bright red and forest gain to show up as bright blue. To fix this, we can use the visualization parameter max to set the range to which the image data are stretched. Note that the max visualization parameter takes a list of values, corresponding to maxima for each band:
 
@@ -1141,7 +1141,7 @@ The result should look something like Figure 6.
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_05.png"  width=100%>
 </center>
 
-Figure 6. South America forest loss (red), year 2000 forest cover (green) and gain (blue).
+South America forest loss (red), year 2000 forest cover (green) and gain (blue).
 
 This results in an image that is green where there's forest, red where there's forest loss, blue where there's forest gain, and magenta where there's both gain and loss. A closer inspection, however, reveals that it's not quite right. Instead of loss being marked as red, it's orange. This is because the bright red pixels mix with the underlying green pixels, producing orange pixels. Similarly the pixels where there's forest, loss, and gain are pink - a combination of green, bright red and bright blue. See Figure 7 for an illustration.
 
@@ -1149,13 +1149,13 @@ This results in an image that is green where there's forest, red where there's f
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_06.png"  width=100%>
 </center>
 
-Figure 7. US Pacific North West forest loss (red), year 2000 cover (green) and gain (blue).
+US Pacific North West forest loss (red), year 2000 cover (green) and gain (blue).
 
 To get the image promised at the beginning of the tutorial, you can create separate images for forest, loss, gain, and for both loss and gain. Add each of these images to the map in the order that's best for display.
 
 ### Palettes {-}
 
-To display each image as a different color, you can use the `palette` parameter of `Map$addLayer()` for single band images. Palettes let you set the color scheme with which the image is displayed ([learn more about palettes]()). Recall from the Earth Engine API tutorial that [the colors in a palette are linearly stretched to the `min` and `max`]().
+To display each image as a different color, you can use the `palette` parameter of `Map$addLayer()` for single band images. Palettes let you set the color scheme with which the image is displayed ([learn more about palettes](https://r-earthengine.com/rgeebook/image.html)). Recall from the Earth Engine API tutorial that [the colors in a palette are linearly stretched to the `min` and `max`](https://r-earthengine.com/rgeebook/the-earth-engine-api.html).
 
 For example, to use a green palette to display the forest extent image, you could use:
 
@@ -1171,7 +1171,7 @@ The result should look something like Figure 8.
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_07.png"  width=100%>
 </center>
 
-Figure 8. Year 2000 forest cover in South America.
+Year 2000 forest cover in South America.
 
 Zooming in gives a better sense for the resolution of the imagery. Figure 9 shows an area around Mariscal Estigarribia in Paraguay.
 
@@ -1179,7 +1179,7 @@ Zooming in gives a better sense for the resolution of the imagery. Figure 9 show
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_08.png"  width=100%>
 </center>
 
-Figure 9. Year 2000 treecover around Mariscal Estigarribia in Paraguay.
+Year 2000 treecover around Mariscal Estigarribia in Paraguay.
 
 The image shown in Figure 3 is a bit dark. The problem is that the `treecover2000` band has a byte data type ([0, 255]), when in fact the values are precentages ([0, 100]). To brighten the image, you can set the `min` and/or `max` parameters accordingly. The palette is then stretched between those extrema.
 
@@ -1198,7 +1198,7 @@ The result should look something like Figure 9. Note that in this example, only 
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_09.png"  width=100%>
 </center>
 
-Figure 9. Year 2000 forest cover around Mariscal Estigarribia in Paraguay, stretched to [0, 100].
+Year 2000 forest cover around Mariscal Estigarribia in Paraguay, stretched to [0, 100].
 
 ### Masking {-}
 
@@ -1214,13 +1214,13 @@ Map$addLayer(gfc2014$mask(gfc2014), list(
 ), 'forest cover masked')
 ```
 
-The result should look something like Figure 10.
+The result should look something like figure.
 
 <center>
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_10.png"  width=100%>
 </center>
 
-Figure 10. Year 2000 tree cover, stretched and masked.
+Year 2000 tree cover, stretched and masked.
 
 ### Example {-}
 
@@ -1250,7 +1250,7 @@ The result should look something like Figure 11.
     <img alt="Legend" class="screenshot" src="./images/chapter_03/figure_code_11.png"  width=100%>
 </center>
 
-Figure 11. Forest loss (red), year 2000 cover (green) and gain (blue).
+Forest loss (red), year 2000 cover (green) and gain (blue).
 
 Observe that there are three `addLayer()` calls. Each `addLayer()` call adds a layer to the map. Mousing over the `Layers` button in the upper right of the map reveals these layers. Each layer can be turned off or on using the checkbox next to it, and the opacity of the layer can be affected by the slider next to the layer name.
 
@@ -1282,9 +1282,9 @@ The result, zoomed into Arkansas with satellite view, should look something like
 <img src="./images/chapter_03/figure_QFC_01.png" width=100%>
 </center>
 
-Figure 1. Pixels with forest loss and gain in Arkansas.
+Pixels with forest loss and gain in Arkansas.
 
-Combining this example with the result from the [previous section](), it's now possible to recreate the figure from the beginning of the tutorial:
+Combining this example with the result from the previous section, it's now possible to recreate the figure from the beginning of the tutorial:
 
 ```{r}
 # Displaying forest, loss, gain, and pixels where both loss and gain occur.
@@ -1315,11 +1315,11 @@ Map$addLayer(gainAndLoss$updateMask(gainAndLoss),
 
 ### Quantifying Forest Change in a Region of Interest {-}
 
-Now that you're more familiar with the bands in the Hansen et al. dataset, we can use concepts learned so far to compute statistics about forest gain and loss in a region of interest. For this we'll need to use vector data (points, lines, and polygons). A vector dataset is represented as a `FeatureCollection` in Earth Engine. (Learn more about [feature collections]() and how to [import vector data]().)
+Now that you're more familiar with the bands in the Hansen et al. dataset, we can use concepts learned so far to compute statistics about forest gain and loss in a region of interest. For this we'll need to use vector data (points, lines, and polygons). A vector dataset is represented as a `FeatureCollection` in Earth Engine. (Learn more about [feature collections](https://r-earthengine.com/rgeebook/feature-featurecollection.html))
 
 In this section, we'll compare the total amount of forest loss that happened within the Congo Republic in the year 2012 to the amount of forest loss that happened within the country's protected areas at the same time.
 
-[As you learned in the Earth Engine API tutorial](), the key method for calculating statistics in an image region is `reduceRegion()`. ([Learn more about reducing image regions]().) For example, suppose we want to calculate the number of pixels estimated to represent forest loss during the study period. For that purpose, consider the following code:
+[As you learned in the Earth Engine API tutorial](https://r-earthengine.com/rgeebook/the-earth-engine-api.html), the key method for calculating statistics in an image region is `reduceRegion()`. ([Learn more about reducing image regions](https://r-earthengine.com/rgeebook/reducer.html).) For example, suppose we want to calculate the number of pixels estimated to represent forest loss during the study period. For that purpose, consider the following code:
 
 ```{r}
 # Load country features from Large Scale International Boundary (LSIB) dataset.
@@ -1345,7 +1345,7 @@ This example uses the `ee$Reducer$sum()` reducer to sum the values of the pixels
 
 Unfortunately, running the script as it is results in an error. 
 
-The default maximum number of pixels in [`reduceRegion()`]() is 10 million. This error message indicates that the Congo Republic covers about 383 million Landsat pixels. Luckily, [`reduceRegion()`]() takes many parameters, one of which (`maxPixels`) lets you control how many pixels are used in the computation. Specifying this parameter allows the computation to succeed:
+The default maximum number of pixels in `reduceRegion()` is 10 million. This error message indicates that the Congo Republic covers about 383 million Landsat pixels. Luckily, `reduceRegion()` takes many parameters, one of which (`maxPixels`) lets you control how many pixels are used in the computation. Specifying this parameter allows the computation to succeed:
 
 ```{r}
 # Load country features from Large Scale International Boundary (LSIB) dataset.
@@ -1457,17 +1457,17 @@ print(paste0("Area lost in protected areas: ",
              ee$Dictionary$getInfo(stats$get('lossyear')), 
              " square meters")) 
 ```
-The output indicates that of the 348,036,295 square meters of forest lost in the Congo Republic in 2012, 11,880,976 of those were in protected areas, as represented in the [World Database on Protected Areas table]().
+The output indicates that of the 348,036,295 square meters of forest lost in the Congo Republic in 2012, 11,880,976 of those were in protected areas, as represented in the [World Database on Protected Areas table](https://developers.google.com/earth-engine/datasets/catalog/WCMC_WDPA_current_polygons).
 
 The only changes between this script and the one just prior are the addition of the protected area information and changing the script from looking at overall loss to looking at loss in 2012. This required two changes. First, there's a new `lossIn2012` image which has a 1 where loss was recorded in 2012, 0 otherwise. Second, because the name of the band is different (`lossyear` instead of `loss`) the property name had to change in the print statement.
 
-In the [next section](), we will explore some advanced methods for computing and charting forest loss for every year, instead of just one year as we did in this section.
+In the next section, we will explore some advanced methods for computing and charting forest loss for every year, instead of just one year as we did in this section.
 
 ## Charting Yearly Forest Loss {-}
 
 ### Calculating Yearly Forest Loss {-}
 
-In the previous section you learned how to [calculate total forest area lost]() in the given region of interest using the `reduceRegion` method. Instead of calculating the total loss, it would be helpful to compute the loss for each year. The way to achieve this in Earth Engine is using a [Grouped Reducer]().
+In the previous section you learned how to [calculate total forest area lost]() in the given region of interest using the `reduceRegion` method. Instead of calculating the total loss, it would be helpful to compute the loss for each year. The way to achieve this in Earth Engine is using a [Grouped Reducer](https://r-earthengine.com/rgeebook/reducer.html).
 
 To group output of `reduceRegion()`, you can specify a grouping band that defines groups by integer pixel values. In the following example, we slightly modify the previous code and add the `lossYear` band to the original image. Each pixel in the `lossYear` band contain values from 0 to 14 - indicating the year in which the loss occurred. We also change the reducer to a grouped reducer, specifying the band index of the grouping band (1) so the pixel areas will be summed and grouped according to the value in the `lossYear` band.
 
@@ -1530,7 +1530,7 @@ print(chart);
 
 ## Introduction to Forest Monitoring for Action (FORMA) data {-}
 
-FORMA is a [MODIS](http:#modis.gsfc.nasa.gov/about/) based 500 x 500 meter twice-monthly deforestation alerting system for the humid tropical forests. The [FORMA 500 dataset](https:#developers.google.com/earth-engine/datasets/catalog/FORMA_FORMA_500m) in Earth Engine is an image with alerts starting in January 2006 and updated monthly. Each alert has a time associated with it in a single band named `alert_date` in units of [epoch seconds](https:#en.wikipedia.org/wiki/Unix_time). Filtering FORMA by dates and calculating alerts within areas of interest are two of the most important things you can do with the FORMA dataset.
+FORMA is a [MODIS](http:#modis.gsfc.nasa.gov/about/) based 500 x 500 meter twice-monthly deforestation alerting system for the humid tropical forests. The [FORMA 500 dataset](https://developers.google.com/earth-engine/datasets/catalog/FORMA_FORMA_500m) in Earth Engine is an image with alerts starting in January 2006 and updated monthly. Each alert has a time associated with it in a single band named `alert_date` in units of [epoch seconds](https://en.wikipedia.org/wiki/Unix_time). Filtering FORMA by dates and calculating alerts within areas of interest are two of the most important things you can do with the FORMA dataset.
 
 ### Filtering FORMA by Date {-}
 
@@ -1559,7 +1559,7 @@ In this example, `forma2012` is a binary image containing only those pixels that
 
 ### Counting FORMA Alerts in a Region of Interest {-}
 
-[As we did in the previous section]() with the Hansen et al. data, we can start by counting the number of FORMA alerts (pixels) in an area of interest. For example, to count the number of alerts in protected areas of the Congo Republic in 2012, build on the previous example as follows:
+As we did in the previous section with the Hansen et al. data, we can start by counting the number of FORMA alerts (pixels) in an area of interest. For example, to count the number of alerts in protected areas of the Congo Republic in 2012, build on the previous example as follows:
 
 ```{r}
 # Load country features from Large Scale International Boundary (LSIB) dataset.
@@ -1622,7 +1622,7 @@ Examine the object printed to the console and observe that the output of `reduce
 
 #### Comparing FORMA and Hansen et al. Datasets {-}
 
-To compare the FORMA and Hansen et al. datasets, you can use logical operators. ([Learn more about logical operations]()). Specifically, we'd like to make an image in which pixels marked by both FORMA and the Hansen et al. data as deforestation are 1 and the rest are zero. This code makes such an image for 2012 and displays it along with other predicted deforestation layers:
+To compare the FORMA and Hansen et al. datasets, you can use logical operators. ([Learn more about logical operations](https://r-earthengine.com/rgeebook/image.html)). Specifically, we'd like to make an image in which pixels marked by both FORMA and the Hansen et al. data as deforestation are 1 and the rest are zero. This code makes such an image for 2012 and displays it along with other predicted deforestation layers:
 
 ```{r}
 # Convert dates from milliseconds to seconds.
@@ -1670,7 +1670,7 @@ ee_Initialize()
 
 ## Introduction {-}
 
-Welcome to the Google Earth Engine tutorial for working with the global surface water (GSW) dataset. This dataset is described in the Nature letter [High-resolution mapping of global surface water and its long-term changes](https:#www.nature.com/articles/nature20584.epdf?author_access_token=C5JSvooRop4jWxyp_qRPLNRgN0jAjWel9jnR3ZoTv0MqBuzCNsmw_DFxRd7sX93nfPzcbm_xTiPLlZMl7XrUhadm6EiT9cGdDNgn1s6EWrPWH3IeadLUjApplBoaS6xH). This tutorial provides examples of how to use Earth Engine to visualize data layers available in the GSW dataset, and presents some typical visualizations and analyses.
+Welcome to the Google Earth Engine tutorial for working with the global surface water (GSW) dataset. This dataset is described in the Nature letter [High-resolution mapping of global surface water and its long-term changes](https://www.nature.com/articles/nature20584.epdf?author_access_token=C5JSvooRop4jWxyp_qRPLNRgN0jAjWel9jnR3ZoTv0MqBuzCNsmw_DFxRd7sX93nfPzcbm_xTiPLlZMl7XrUhadm6EiT9cGdDNgn1s6EWrPWH3IeadLUjApplBoaS6xH). This tutorial provides examples of how to use Earth Engine to visualize data layers available in the GSW dataset, and presents some typical visualizations and analyses.
 
 The tutorial is broken up into sections. Within each section, code will be built up gradually with short code snippets and explanatory text. At the end of each section, the complete working script will be presented.
 
@@ -1686,7 +1686,7 @@ The tutorial is broken up into sections. Within each section, code will be built
   
 ### Audience {-}
 
-This tutorial assumes you are familiar with concepts presented in the [Earth Engine Rstudio]() documentation pages and have worked through the [Earth Engine API tutorial]().
+This tutorial assumes you are familiar with concepts presented in the [Earth Engine Rstudio](https://r-earthengine.com/rgeebook/earth-engine-in-rstudio.html) documentation pages and have worked through the [Earth Engine API tutorial](https://r-earthengine.com/rgeebook/the-earth-engine-api.html).
 
 ### License and Attribution {-}
 
@@ -1698,7 +1698,7 @@ If you are using the data as a layer in a published map, please include the foll
 
 Access to Earth Engine is free, but requires signup. To get access, please fill out our [Earth Engine signup form](https:#earthengine.google.com/signup) to apply for an Evaluator account. Those granted access will receive an email within a few business days with further instructions.
 
-Once you're familiar with the Rstudio, [get started on the tutorial]()!
+Once you're familiar with the Rstudio, get started on next section!
 
 ## Water Occurrence (1984-2015) {-}
 
@@ -1723,7 +1723,7 @@ occurrence <- gsw$select('occurrence')
 Map$addLayer(occurrence)
 ```
 
-The first statement references the Earth Engine [Image object]() for the GSW dataset, and stores it in a variable named `gsw`. The second statement selects a single layer of the GSW dataset, and stores it in a variable called `occurrence`. The third statement adds the occurrence image to the Rstudio's interactive map.
+The first statement references the Earth Engine [Image object](https://r-earthengine.com/rgeebook/image.html) for the GSW dataset, and stores it in a variable named `gsw`. The second statement selects a single layer of the GSW dataset, and stores it in a variable called `occurrence`. The third statement adds the occurrence image to the Rstudio's interactive map.
 
 Click on the Rstudio's "Run" button, and after a few seconds you should see a map with grey coloring along the coastlines, similar to Figure 1.
 
@@ -1733,7 +1733,7 @@ Click on the Rstudio's "Run" button, and after a few seconds you should see a ma
 
 Figure 1. Default visualization of the global surface water occurrence data layer.
 
-In most areas, the GSW dataset appears transparent, because locations where either Landsat images were not collected (i.e. ocean areas) or where water was not detected by any observations in the 32 years are [masked out]().
+In most areas, the GSW dataset appears transparent, because locations where either Landsat images were not collected (i.e. ocean areas) or where water was not detected by any observations in the 32 years are [masked out](https://r-earthengine.com/rgeebook/the-earth-engine-api.html).
 
 ### Refactoring to Improve Your Code {-}
 
@@ -1779,7 +1779,7 @@ Run the script again, and view the revised results from our styling changes.
 <img src="./images/chapter_03/figure_GSW_02.png" width=95%>
 </center>
 
-Figure 2. Screenshot of water occurrence for the Paraná Delta near Buenos Aires, using a transparent red color for the 0% minimum value endpoint and a solid blue color for the maximum value endpoint.
+Screenshot of water occurrence for the Paraná Delta near Buenos Aires, using a transparent red color for the 0% minimum value endpoint and a solid blue color for the maximum value endpoint.
 
 The water areas are now blue! Progress!
 
@@ -1817,7 +1817,7 @@ Map$addLayer(
 <img src="./images/chapter_03/figure_GSW_03.png" width=95%>
 </center>
 
-Figure 3. Screenshot of a 90% water mask for the Paraná Delta near Buenos Aires.
+Figure: Screenshot of a 90% water mask for the Paraná Delta near Buenos Aires.
 
 ### Going to Interesting Parts of the World {-}
 
@@ -1913,7 +1913,7 @@ Map$addLayer(
 <img src="./images/chapter_03/figure_GSW_03b.png" width=95%>
 </center>
 
-In the [next section](), you explore how water occurrence has changed over time.
+In the next section, you explore how water occurrence has changed over time.
 
 ## Water Occurrence Change Intensity {-}
 
@@ -1957,7 +1957,7 @@ Map$addLayer(
 <img src="./images/chapter_03/figure_GSW_04.png" width=95%>
 </center>
 
-Figure 4. Screenshot of a surface water change intensity for the Ucayali River near Pucallpa, a city in the Amazonian rainforest of eastern Peru. Red/green indicates a decrease/increase in surface water occurrence between the epochs.
+Figure: Screenshot of a surface water change intensity for the Ucayali River near Pucallpa, a city in the Amazonian rainforest of eastern Peru. Red/green indicates a decrease/increase in surface water occurrence between the epochs.
 
 ## Water Class Transition {-}
 
@@ -1996,7 +1996,7 @@ When you run the script, the transition layer will be displayed.
 <img src="./images/chapter_03/figure_GSW_05.png" width=95%>
 </center>
 
-Figure 10. Screenshot of the Mekong River delta, showing a wide variation in surface water class transitions.
+Figure: Screenshot of the Mekong River delta, showing a wide variation in surface water class transitions.
 
 The map key for the transition classes is:
 
@@ -2093,7 +2093,7 @@ Map$addLayer(
 <img src="./images/chapter_03/figure_GSW_06.png" width=95%>
 </center>
 
-Figure 6. The Mekong River delta in Vietnam, with a region-of-interest.
+Figure: The Mekong River delta in Vietnam, with a region-of-interest.
 
 In order to calculate the area covered by parts of an image, we will add an additional band to the transition image object that identifies the size of each pixel in square meters using the `ee$Image$pixelArea` method.
 
